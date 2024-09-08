@@ -4,6 +4,7 @@ using Adw;
 
 public class MangoJuice : Gtk.Application {
     private Button saveButton;
+    private Button resetButton; // Добавляем кнопку Reset
     private Switch[] gpu_switches;
     private Switch[] cpu_switches;
     private Switch[] other_switches;
@@ -421,6 +422,15 @@ public class MangoJuice : Gtk.Application {
         custom_command_box.set_margin_bottom(FLOW_BOX_MARGIN);
         custom_command_box.append(new Label(""));
         custom_command_box.append(custom_command_entry);
+
+        // Добавляем кнопку "Reset"
+        resetButton = new Button.with_label("Reset");
+        resetButton.add_css_class("destructive-action"); // Делаем кнопку красной
+        resetButton.clicked.connect(() => {
+            delete_mangohub_conf();
+        });
+
+        custom_command_box.append(resetButton);
         box2.append(custom_command_box);
 
         // Создаем HeaderBar
@@ -673,6 +683,21 @@ public class MangoJuice : Gtk.Application {
         } catch (Error e) {
             stderr.printf("Ошибка при проверке запущенных процессов: %s\n", e.message);
             return false;
+        }
+    }
+
+    private void delete_mangohub_conf() {
+        var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
+        var file = config_dir.get_child("MangoHud.conf");
+        if (file.query_exists()) {
+            try {
+                file.delete();
+                warning("MangoHud.conf file deleted.");
+            } catch (Error e) {
+                stderr.printf("Ошибка при удалении файла: %s\n", e.message);
+            }
+        } else {
+            warning("MangoHud.conf file does not exist.");
         }
     }
 
