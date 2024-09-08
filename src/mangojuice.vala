@@ -65,7 +65,7 @@ public class MangoJuice : Gtk.Application {
         "Time", "Arch"
     };
     private string[] wine_label_texts = {
-        "Wine Version", "Engine Ver", "Short names"
+        "Version", "Engine Ver", "Short names"
     };
     private string[] options_label_texts = {
         "Hud Version", "Gamemode", "VKbasalt", "Fcat", "FSR", "HDR"
@@ -100,7 +100,7 @@ public class MangoJuice : Gtk.Application {
 
     protected override void activate() {
         var window = new Gtk.ApplicationWindow(this);
-        window.set_default_size(200, 100);
+        window.set_default_size(960,600); // Размера окна
         window.set_title("MangoJuice"); // Устанавливаем заголовок окна
 
         var main_box = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
@@ -109,7 +109,7 @@ public class MangoJuice : Gtk.Application {
         var scrolled_window = new ScrolledWindow();
         scrolled_window.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
         scrolled_window.set_vexpand(true);
-
+ 
         var grid = new Grid();
         grid.set_row_spacing(GRID_ROW_SPACING);
         grid.set_column_spacing(GRID_COLUMN_SPACING);
@@ -284,7 +284,7 @@ public class MangoJuice : Gtk.Application {
         wine_labels = new Label[WINE_SWITCHES_COUNT];
         var wine_flow_box = new FlowBox();
         wine_flow_box.set_homogeneous(true);
-        wine_flow_box.set_max_children_per_line(3);
+        wine_flow_box.set_max_children_per_line(6);
         wine_flow_box.set_min_children_per_line(3);
         wine_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         wine_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
@@ -354,7 +354,7 @@ public class MangoJuice : Gtk.Application {
         battery_labels = new Label[BATTERY_SWITCHES_COUNT];
         var battery_flow_box = new FlowBox();
         battery_flow_box.set_homogeneous(true);
-        battery_flow_box.set_max_children_per_line(4);
+        battery_flow_box.set_max_children_per_line(6);
         battery_flow_box.set_min_children_per_line(4);
         battery_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         battery_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
@@ -389,7 +389,7 @@ public class MangoJuice : Gtk.Application {
         other_extra_labels = new Label[OTHER_EXTRA_SWITCHES_COUNT];
         var other_extra_flow_box = new FlowBox();
         other_extra_flow_box.set_homogeneous(true);
-        other_extra_flow_box.set_max_children_per_line(3);
+        other_extra_flow_box.set_max_children_per_line(6);
         other_extra_flow_box.set_min_children_per_line(3);
         other_extra_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         other_extra_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
@@ -420,7 +420,7 @@ public class MangoJuice : Gtk.Application {
         saveButton.add_css_class("suggested-action"); // Добавляем акцентный цвет
         header_bar.pack_end(saveButton); // Добавляем кнопку "Save" в правый угол заголовка
 
-        saveButton.clicked.connect(() => {
+        saveButton.clicked.connect((_sender) => {
             save_states_to_file();
             if (vkcube_was_running) {
                 restart_mangohud();
@@ -431,7 +431,7 @@ public class MangoJuice : Gtk.Application {
 
         // Добавляем кнопку "Test" в левую часть заголовка
         var testButton = new Button.with_label("Test");
-        testButton.clicked.connect(() => {
+        testButton.clicked.connect((_sender) => {
             try {
                 Process.spawn_command_line_async("mangohud vkcube");
             } catch (Error e) {
@@ -443,24 +443,10 @@ public class MangoJuice : Gtk.Application {
         // Устанавливаем HeaderBar в качестве заголовка окна
         window.set_titlebar(header_bar);
 
-        // Создаем Grid для центрирования box1
-        var center_grid = new Grid();
-        center_grid.set_vexpand(true);
-        center_grid.set_hexpand(true);
-        center_grid.set_halign(Align.CENTER);
-        center_grid.set_valign(Align.CENTER);
-        center_grid.attach(box1, 0, 0, 1, 1);
-
-        // Добавляем Adw.ViewStack в основной бокс
-        main_box.append(view_stack);
-
-        grid.attach(saveButton, 0, 4, 6, 1);
 
         main_box.append(scrolled_window);
-        scrolled_window.set_child(grid);
+        scrolled_window.set_child(view_stack);
 
-        // Добавляем center_grid в main_box
-        main_box.append(center_grid);
 
         window.set_child(main_box);
         window.present();
