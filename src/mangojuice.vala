@@ -76,7 +76,6 @@ public class MangoJuice : Gtk.Application {
     private string[] other_extra_label_texts = { // Добавляем массив для текстов меток "Other"
         "Media Info", "Network", "Full ON"
     };
-
     private const int GPU_SWITCHES_COUNT = 15;
     private const int CPU_SWITCHES_COUNT = 6;
     private const int OTHER_SWITCHES_COUNT = 4;
@@ -433,6 +432,9 @@ public class MangoJuice : Gtk.Application {
         var testButton = new Button.with_label("Test");
         testButton.clicked.connect((_sender) => {
             try {
+                // Завершаем текущий процесс vkcube
+                Process.spawn_command_line_sync("pkill vkcube");
+                // Запускаем новый экземпляр mangohud vkcube
                 Process.spawn_command_line_async("mangohud vkcube");
             } catch (Error e) {
                 stderr.printf("Ошибка при запуске команды: %s\n", e.message);
