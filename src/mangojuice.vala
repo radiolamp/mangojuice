@@ -10,16 +10,17 @@ public class MangoJuice : Gtk.Application {
     private Switch[] system_switches;
     private Switch[] wine_switches;
     private Switch[] options_switches;
-    private Switch[] battery_switches; // Добавляем массив для переключателей "Battery"
-    private Switch[] other_extra_switches; // Добавляем массив для переключателей "Other"
+    private Switch[] battery_switches;
+    private Switch[] other_extra_switches;
     private Label[] gpu_labels;
     private Label[] cpu_labels;
     private Label[] other_labels;
     private Label[] system_labels;
     private Label[] wine_labels;
     private Label[] options_labels;
-    private Label[] battery_labels; // Добавляем массив для меток "Battery"
-    private Label[] other_extra_labels; // Добавляем массив для меток "Other"
+    private Label[] battery_labels;
+    private Label[] other_extra_labels;
+    private Entry custom_command_entry; // Добавляем поле ввода текста
     private string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
@@ -42,10 +43,10 @@ public class MangoJuice : Gtk.Application {
     private string[] options_config_vars = {
         "version", "gamemode", "vkbasalt", "fcat", "fsr", "hdr"
     };
-    private string[] battery_config_vars = { // Добавляем массив для переменных "Battery"
+    private string[] battery_config_vars = {
         "battery", "battery_watt", "battery_time", "device_battery"
     };
-    private string[] other_extra_config_vars = { // Добавляем массив для переменных "Other"
+    private string[] other_extra_config_vars = {
         "media_player", "network", "full"
     };
     private string[] gpu_label_texts = {
@@ -70,10 +71,10 @@ public class MangoJuice : Gtk.Application {
     private string[] options_label_texts = {
         "Hud Version", "Gamemode", "VKbasalt", "Fcat", "FSR", "HDR"
     };
-    private string[] battery_label_texts = { // Добавляем массив для текстов меток "Battery"
+    private string[] battery_label_texts = {
         "Percentage", "Wattage", "Time remain", "Devisec"
     };
-    private string[] other_extra_label_texts = { // Добавляем массив для текстов меток "Other"
+    private string[] other_extra_label_texts = {
         "Media Info", "Network", "Full ON"
     };
     private const int GPU_SWITCHES_COUNT = 15;
@@ -82,8 +83,8 @@ public class MangoJuice : Gtk.Application {
     private const int SYSTEM_SWITCHES_COUNT = 6;
     private const int WINE_SWITCHES_COUNT = 3;
     private const int OPTIONS_SWITCHES_COUNT = 6;
-    private const int BATTERY_SWITCHES_COUNT = 4; // Добавляем константу для количества переключателей "Battery"
-    private const int OTHER_EXTRA_SWITCHES_COUNT = 3; // Добавляем константу для количества переключателей "Other"
+    private const int BATTERY_SWITCHES_COUNT = 4;
+    private const int OTHER_EXTRA_SWITCHES_COUNT = 3;
     private const int MAIN_BOX_SPACING = 10;
     private const int GRID_ROW_SPACING = 10;
     private const int GRID_COLUMN_SPACING = 10;
@@ -208,7 +209,7 @@ public class MangoJuice : Gtk.Application {
         var other_flow_box = new FlowBox();
         other_flow_box.set_homogeneous(true);
         other_flow_box.set_max_children_per_line(5);
-                other_flow_box.set_min_children_per_line(5);
+        other_flow_box.set_min_children_per_line(5);
         other_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         other_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         other_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -410,6 +411,18 @@ public class MangoJuice : Gtk.Application {
 
         box2.append(other_extra_flow_box);
 
+        // Добавляем поле ввода текста рядом с переключателем "FULL ON"
+        custom_command_entry = new Entry();
+        custom_command_entry.placeholder_text = "Raw Custom Cmd";
+        var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        custom_command_box.set_margin_start(FLOW_BOX_MARGIN);
+        custom_command_box.set_margin_end(FLOW_BOX_MARGIN);
+        custom_command_box.set_margin_top(FLOW_BOX_MARGIN);
+        custom_command_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        custom_command_box.append(new Label(""));
+        custom_command_box.append(custom_command_entry);
+        box2.append(custom_command_box);
+
         // Создаем HeaderBar
         var header_bar = new Gtk.HeaderBar();
         header_bar.set_show_title_buttons(true);
@@ -445,10 +458,8 @@ public class MangoJuice : Gtk.Application {
         // Устанавливаем HeaderBar в качестве заголовка окна
         window.set_titlebar(header_bar);
 
-
         main_box.append(scrolled_window);
         scrolled_window.set_child(view_stack);
-
 
         window.set_child(main_box);
         window.present();
@@ -522,14 +533,20 @@ public class MangoJuice : Gtk.Application {
                 data_stream.put_string("%s%s\n".printf(state, options_config_vars[i]));
             }
 
-            for (int i = 0; i < battery_switches.length; i++) { // Добавляем сохранение состояний переключателей "Battery"
+            for (int i = 0; i < battery_switches.length; i++) {
                 var state = battery_switches[i].active ? "" : "#";
                 data_stream.put_string("%s%s\n".printf(state, battery_config_vars[i]));
             }
 
-            for (int i = 0; i < other_extra_switches.length; i++) { // Добавляем сохранение состояний переключателей "Other"
+            for (int i = 0; i < other_extra_switches.length; i++) {
                 var state = other_extra_switches[i].active ? "" : "#";
                 data_stream.put_string("%s%s\n".printf(state, other_extra_config_vars[i]));
+            }
+
+            // Сохраняем значение поля ввода текста
+            var custom_command = custom_command_entry.text;
+            if (custom_command != "") {
+                data_stream.put_string("%s\n".printf(custom_command));
             }
 
             data_stream.close();
@@ -597,7 +614,7 @@ public class MangoJuice : Gtk.Application {
                     }
                 }
 
-                for (int i = 0; i < battery_config_vars.length; i++) { // Добавляем загрузку состояний переключателей "Battery"
+                for (int i = 0; i < battery_config_vars.length; i++) {
                     if (line.has_prefix("#%s".printf(battery_config_vars[i]))) {
                         battery_switches[i].active = false;
                     } else if (line.has_prefix("%s".printf(battery_config_vars[i]))) {
@@ -605,12 +622,18 @@ public class MangoJuice : Gtk.Application {
                     }
                 }
 
-                for (int i = 0; i < other_extra_config_vars.length; i++) { // Добавляем загрузку состояний переключателей "Other"
+                for (int i = 0; i < other_extra_config_vars.length; i++) {
                     if (line.has_prefix("#%s".printf(other_extra_config_vars[i]))) {
                         other_extra_switches[i].active = false;
                     } else if (line.has_prefix("%s".printf(other_extra_config_vars[i]))) {
                         other_extra_switches[i].active = true;
                     }
+                }
+
+                // Загружаем значение поля ввода текста
+                if (line.has_prefix("custom_command=")) {
+                    var custom_command = line.substring("custom_command=".length);
+                    custom_command_entry.text = custom_command;
                 }
             }
         } catch (Error e) {
