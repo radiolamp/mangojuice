@@ -65,7 +65,7 @@ public class MangoJuice : Gtk.Application {
         "Time", "Arch"
     };
     private string[] wine_label_texts = {
-        "Version", "Engine Ver", "Short names"
+        "Wine Version", "Engine Ver", "Short names"
     };
     private string[] options_label_texts = {
         "Hud Version", "Gamemode", "VKbasalt", "Fcat", "FSR", "HDR"
@@ -100,7 +100,7 @@ public class MangoJuice : Gtk.Application {
 
     protected override void activate() {
         var window = new Gtk.ApplicationWindow(this);
-        window.set_default_size(960,580); // Размера окна
+        window.set_default_size(200, 100);
         window.set_title("MangoJuice"); // Устанавливаем заголовок окна
 
         var main_box = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
@@ -109,7 +109,6 @@ public class MangoJuice : Gtk.Application {
         var scrolled_window = new ScrolledWindow();
         scrolled_window.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
         scrolled_window.set_vexpand(true);
-        scrolled_window.set_min_content_height(-1);
 
         var grid = new Grid();
         grid.set_row_spacing(GRID_ROW_SPACING);
@@ -140,7 +139,7 @@ public class MangoJuice : Gtk.Application {
         var gpu_flow_box = new FlowBox();
         gpu_flow_box.set_homogeneous(true);
         gpu_flow_box.set_max_children_per_line(5);
-        gpu_flow_box.set_min_children_per_line(3);
+        gpu_flow_box.set_min_children_per_line(5);
         gpu_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         gpu_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         gpu_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -175,7 +174,7 @@ public class MangoJuice : Gtk.Application {
         var cpu_flow_box = new FlowBox();
         cpu_flow_box.set_homogeneous(true);
         cpu_flow_box.set_max_children_per_line(5);
-        cpu_flow_box.set_min_children_per_line(3);
+        cpu_flow_box.set_min_children_per_line(5);
         cpu_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         cpu_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         cpu_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -210,7 +209,7 @@ public class MangoJuice : Gtk.Application {
         var other_flow_box = new FlowBox();
         other_flow_box.set_homogeneous(true);
         other_flow_box.set_max_children_per_line(5);
-        other_flow_box.set_min_children_per_line(3);
+                other_flow_box.set_min_children_per_line(5);
         other_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         other_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         other_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -251,7 +250,7 @@ public class MangoJuice : Gtk.Application {
         var system_flow_box = new FlowBox();
         system_flow_box.set_homogeneous(true);
         system_flow_box.set_max_children_per_line(6);
-        system_flow_box.set_min_children_per_line(3);
+        system_flow_box.set_min_children_per_line(6);
         system_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         system_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         system_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -285,7 +284,7 @@ public class MangoJuice : Gtk.Application {
         wine_labels = new Label[WINE_SWITCHES_COUNT];
         var wine_flow_box = new FlowBox();
         wine_flow_box.set_homogeneous(true);
-        wine_flow_box.set_max_children_per_line(6);
+        wine_flow_box.set_max_children_per_line(3);
         wine_flow_box.set_min_children_per_line(3);
         wine_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         wine_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
@@ -321,7 +320,7 @@ public class MangoJuice : Gtk.Application {
         var options_flow_box = new FlowBox();
         options_flow_box.set_homogeneous(true);
         options_flow_box.set_max_children_per_line(6);
-        options_flow_box.set_min_children_per_line(3);
+        options_flow_box.set_min_children_per_line(6);
         options_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         options_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         options_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -355,8 +354,8 @@ public class MangoJuice : Gtk.Application {
         battery_labels = new Label[BATTERY_SWITCHES_COUNT];
         var battery_flow_box = new FlowBox();
         battery_flow_box.set_homogeneous(true);
-        battery_flow_box.set_max_children_per_line(6);
-        battery_flow_box.set_min_children_per_line(3);
+        battery_flow_box.set_max_children_per_line(4);
+        battery_flow_box.set_min_children_per_line(4);
         battery_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         battery_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         battery_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -390,7 +389,7 @@ public class MangoJuice : Gtk.Application {
         other_extra_labels = new Label[OTHER_EXTRA_SWITCHES_COUNT];
         var other_extra_flow_box = new FlowBox();
         other_extra_flow_box.set_homogeneous(true);
-        other_extra_flow_box.set_max_children_per_line(6);
+        other_extra_flow_box.set_max_children_per_line(3);
         other_extra_flow_box.set_min_children_per_line(3);
         other_extra_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         other_extra_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
@@ -421,7 +420,7 @@ public class MangoJuice : Gtk.Application {
         saveButton.add_css_class("suggested-action"); // Добавляем акцентный цвет
         header_bar.pack_end(saveButton); // Добавляем кнопку "Save" в правый угол заголовка
 
-        saveButton.clicked.connect((_sender) => {
+        saveButton.clicked.connect(() => {
             save_states_to_file();
             if (vkcube_was_running) {
                 restart_mangohud();
@@ -432,7 +431,7 @@ public class MangoJuice : Gtk.Application {
 
         // Добавляем кнопку "Test" в левую часть заголовка
         var testButton = new Button.with_label("Test");
-        testButton.clicked.connect((_sender) => {
+        testButton.clicked.connect(() => {
             try {
                 Process.spawn_command_line_async("mangohud vkcube");
             } catch (Error e) {
@@ -444,24 +443,24 @@ public class MangoJuice : Gtk.Application {
         // Устанавливаем HeaderBar в качестве заголовка окна
         window.set_titlebar(header_bar);
 
-        //  // Создаем Grid для центрирования box1
-        //  var center_grid = new Grid();
-        //  center_grid.set_vexpand(true);
-        //  center_grid.set_hexpand(true);
-        //  center_grid.set_halign(Align.CENTER);
-        //  center_grid.set_valign(Align.CENTER);
-        //  center_grid.attach(box1, 0, 0, 1, 1);
+        // Создаем Grid для центрирования box1
+        var center_grid = new Grid();
+        center_grid.set_vexpand(true);
+        center_grid.set_hexpand(true);
+        center_grid.set_halign(Align.CENTER);
+        center_grid.set_valign(Align.CENTER);
+        center_grid.attach(box1, 0, 0, 1, 1);
 
         // Добавляем Adw.ViewStack в основной бокс
-        //  main_box.append(view_stack);
+        main_box.append(view_stack);
 
-        //  grid.attach(saveButton, 0, 4, 6, 1);
+        grid.attach(saveButton, 0, 4, 6, 1);
 
         main_box.append(scrolled_window);
-        scrolled_window.set_child(view_stack);
+        scrolled_window.set_child(grid);
 
-        //  // Добавляем center_grid в main_box
-        //  main_box.append(center_grid);
+        // Добавляем center_grid в main_box
+        main_box.append(center_grid);
 
         window.set_child(main_box);
         window.present();
@@ -504,6 +503,11 @@ public class MangoJuice : Gtk.Application {
             data_stream.put_string("#engine_color=EB5B5B\n");
             data_stream.put_string("#battery_color=00FF00\n");
             data_stream.put_string("#media_player_color=FFFF00\n");
+
+            for (int i = 0; i < gpu_switches.length; i++) {
+                var state = gpu_switches[i].active ? "" : "#";
+                data_stream.put_string("%s%s\n".printf(state, gpu_config_vars[i]));
+            }
 
             for (int i = 0; i < cpu_switches.length; i++) {
                 var state = cpu_switches[i].active ? "" : "#";
