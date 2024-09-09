@@ -228,9 +228,8 @@ public class MangoJuice : Gtk.Application {
 
         box2.append(custom_command_grid);
 
-        // Создаем HeaderBar
-        var header_bar = new Gtk.HeaderBar();
-        header_bar.set_show_title_buttons(true);
+        // Создаем Adw.HeaderBar
+        var header_bar = new Adw.HeaderBar();
         header_bar.set_title_widget(toolbar_view_switcher); // Устанавливаем ToolbarViewSwitcher в центр заголовка
 
         saveButton = new Button.with_label("Save"); // Переименовываем кнопку "Сохранить" в "Save"
