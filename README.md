@@ -2,8 +2,7 @@ Warning!!!!! PreAlpha
 
 Сборка:
 ```shell 
-meson build
-ninja -C build
+meson setup build
 sudo ninja -C build install
 ```
 Удаление:
