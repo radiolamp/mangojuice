@@ -1,6 +1,7 @@
 using Gtk;
 using GLib;
 using Adw;
+using Gee;
 
 public class MangoJuice : Gtk.Application {
     private Button saveButton;
@@ -199,7 +200,7 @@ public class MangoJuice : Gtk.Application {
         logs_key_combo = new DropDown(logs_key_model, null);
         logs_key_combo.notify["selected-item"].connect(() => {
             if (logs_key_combo.selected_item != null) {
-                save_logs_key_to_file((logs_key_combo.selected_item as StringObject).get_string());
+                update_logs_key_in_file((logs_key_combo.selected_item as StringObject).get_string());
             }
         });
 
@@ -384,7 +385,11 @@ public class MangoJuice : Gtk.Application {
     private void save_switches_to_file(DataOutputStream data_stream, Switch[] switches, string[] config_vars) {
         for (int i = 0; i < switches.length; i++) {
             var state = switches[i].active ? "" : "#";
-            data_stream.put_string("%s%s\n".printf(state, config_vars[i]));
+            try {
+                data_stream.put_string("%s%s\n".printf(state, config_vars[i]));
+            } catch (Error e) {
+                stderr.printf("Ошибка при записи в файл: %s\n", e.message);
+            }
         }
     }
 
@@ -399,14 +404,15 @@ public class MangoJuice : Gtk.Application {
             var file_stream = new DataInputStream(file.read());
             string line;
             while ((line = file_stream.read_line()) != null) {
-                load_switches_from_file(file_stream, gpu_switches, gpu_config_vars);
-                load_switches_from_file(file_stream, cpu_switches, cpu_config_vars);
-                load_switches_from_file(file_stream, other_switches, other_config_vars);
-                load_switches_from_file(file_stream, system_switches, system_config_vars);
-                load_switches_from_file(file_stream, wine_switches, wine_config_vars);
-                load_switches_from_file(file_stream, options_switches, options_config_vars);
-                load_switches_from_file(file_stream, battery_switches, battery_config_vars);
-                load_switches_from_file(file_stream, other_extra_switches, other_extra_config_vars);
+                // Загружаем значения переключателей
+                load_switch_from_file(line, gpu_switches, gpu_config_vars);
+                load_switch_from_file(line, cpu_switches, cpu_config_vars);
+                load_switch_from_file(line, other_switches, other_config_vars);
+                load_switch_from_file(line, system_switches, system_config_vars);
+                load_switch_from_file(line, wine_switches, wine_config_vars);
+                load_switch_from_file(line, options_switches, options_config_vars);
+                load_switch_from_file(line, battery_switches, battery_config_vars);
+                load_switch_from_file(line, other_extra_switches, other_extra_config_vars);
 
                 // Загружаем значение поля ввода текста
                 if (line.has_prefix("custom_command=")) {
@@ -431,15 +437,12 @@ public class MangoJuice : Gtk.Application {
         }
     }
 
-    private void load_switches_from_file(DataInputStream file_stream, Switch[] switches, string[] config_vars) {
-        string line;
-        while ((line = file_stream.read_line()) != null) {
-            for (int i = 0; i < config_vars.length; i++) {
-                if (line.has_prefix("#%s".printf(config_vars[i]))) {
-                    switches[i].active = false;
-                } else if (line.has_prefix("%s".printf(config_vars[i]))) {
-                    switches[i].active = true;
-                }
+    private void load_switch_from_file(string line, Switch[] switches, string[] config_vars) {
+        for (int i = 0; i < config_vars.length; i++) {
+            if (line.has_prefix("#%s".printf(config_vars[i]))) {
+                switches[i].active = false;
+            } else if (line.has_prefix("%s".printf(config_vars[i]))) {
+                switches[i].active = true;
             }
         }
     }
@@ -494,7 +497,7 @@ public class MangoJuice : Gtk.Application {
         }
     }
 
-    private void save_logs_key_to_file(string logs_key) {
+    private void update_logs_key_in_file(string logs_key) {
         var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
         var file = config_dir.get_child("MangoHud.conf");
         if (!file.query_exists()) {
@@ -502,9 +505,21 @@ public class MangoJuice : Gtk.Application {
         }
 
         try {
-            var file_stream = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
-            file_stream.put_string("toggle_logging=%s\n".printf(logs_key));
-            file_stream.close();
+            var lines = new ArrayList<string>();
+            var file_stream = new DataInputStream(file.read());
+            string line;
+            while ((line = file_stream.read_line()) != null) {
+                if (line.has_prefix("toggle_logging=")) {
+                    line = "toggle_logging=%s".printf(logs_key);
+                }
+                lines.add(line);
+            }
+
+            var file_stream_write = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string(l + "\n");
+            }
+            file_stream_write.close();
         } catch (Error e) {
             stderr.printf("Ошибка при записи в файл: %s\n", e.message);
         }
