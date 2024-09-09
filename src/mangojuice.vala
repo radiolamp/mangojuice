@@ -209,6 +209,7 @@ public class MangoJuice : Gtk.Application {
         resetButton.add_css_class("destructive-action"); // Делаем кнопку красной
         resetButton.clicked.connect(() => {
             delete_mangohub_conf();
+            restart_mangohud();
         });
 
         // Создаем Grid для расположения элементов
