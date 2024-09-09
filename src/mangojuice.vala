@@ -22,7 +22,35 @@ public class MangoJuice : Gtk.Application {
     private Label[] battery_labels;
     private Label[] other_extra_labels;
     private Entry custom_command_entry; // Добавляем поле ввода текста
-    private ComboBoxText logs_key_combo; // Добавляем выпадающий список
+    private DropDown logs_key_combo; // Заменяем ComboBoxText на DropDown
+    private StringList logs_key_model; // Добавляем модель для DropDown
+
+    private const string GPU_TITLE = "GPU";
+    private const string CPU_TITLE = "CPU";
+    private const string OTHER_TITLE = "Other";
+    private const string SYSTEM_TITLE = "System";
+    private const string WINE_TITLE = "Wine";
+    private const string OPTIONS_TITLE = "Options";
+    private const string BATTERY_TITLE = "Battery";
+    private const string OTHER_EXTRA_TITLE = "Other";
+
+    private const int GPU_SWITCHES_COUNT = 15;
+    private const int CPU_SWITCHES_COUNT = 6;
+    private const int OTHER_SWITCHES_COUNT = 4;
+    private const int SYSTEM_SWITCHES_COUNT = 6;
+    private const int WINE_SWITCHES_COUNT = 3;
+    private const int OPTIONS_SWITCHES_COUNT = 6;
+    private const int BATTERY_SWITCHES_COUNT = 4;
+    private const int OTHER_EXTRA_SWITCHES_COUNT = 3;
+    private const int MAIN_BOX_SPACING = 10;
+    private const int GRID_ROW_SPACING = 10;
+    private const int GRID_COLUMN_SPACING = 10;
+    private const int FLOW_BOX_ROW_SPACING = 10;
+    private const int FLOW_BOX_COLUMN_SPACING = 10;
+    private const int FLOW_BOX_MARGIN = 10;
+
+    private bool vkcube_was_running = false;
+
     private string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
@@ -79,22 +107,6 @@ public class MangoJuice : Gtk.Application {
     private string[] other_extra_label_texts = {
         "Media Info", "Network", "Full ON"
     };
-    private const int GPU_SWITCHES_COUNT = 15;
-    private const int CPU_SWITCHES_COUNT = 6;
-    private const int OTHER_SWITCHES_COUNT = 4;
-    private const int SYSTEM_SWITCHES_COUNT = 6;
-    private const int WINE_SWITCHES_COUNT = 3;
-    private const int OPTIONS_SWITCHES_COUNT = 6;
-    private const int BATTERY_SWITCHES_COUNT = 4;
-    private const int OTHER_EXTRA_SWITCHES_COUNT = 3;
-    private const int MAIN_BOX_SPACING = 10;
-    private const int GRID_ROW_SPACING = 10;
-    private const int GRID_COLUMN_SPACING = 10;
-    private const int FLOW_BOX_ROW_SPACING = 10;
-    private const int FLOW_BOX_COLUMN_SPACING = 10;
-    private const int FLOW_BOX_MARGIN = 10;
-
-    private bool vkcube_was_running = false;
 
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -102,7 +114,7 @@ public class MangoJuice : Gtk.Application {
 
     protected override void activate() {
         var window = new Gtk.ApplicationWindow(this);
-        window.set_default_size(960,600); // Размера окна
+        window.set_default_size(960, 600); // Размера окна
         window.set_title("MangoJuice"); // Устанавливаем заголовок окна
 
         var main_box = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
@@ -111,7 +123,7 @@ public class MangoJuice : Gtk.Application {
         var scrolled_window = new ScrolledWindow();
         scrolled_window.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
         scrolled_window.set_vexpand(true);
- 
+
         var grid = new Grid();
         grid.set_row_spacing(GRID_ROW_SPACING);
         grid.set_column_spacing(GRID_COLUMN_SPACING);
@@ -127,110 +139,34 @@ public class MangoJuice : Gtk.Application {
         var box3 = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
         var box4 = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
 
-        // Добавляем подзаголовок "GPU" в бокс "Metric"
-        var gpu_label = new Label("GPU");
-        gpu_label.set_halign(Align.CENTER); // Выравниваем по центру
-        gpu_label.set_margin_top(FLOW_BOX_MARGIN); // Отступ сверху
-        gpu_label.set_margin_start(FLOW_BOX_MARGIN); // Отступ слева
-        gpu_label.set_margin_end(FLOW_BOX_MARGIN); // Отступ справа
-        box1.append(gpu_label);
-
-        // Добавляем 15 переключателей под надписью "GPU" в FlowBox
+        // Инициализация массивов
         gpu_switches = new Switch[GPU_SWITCHES_COUNT];
-        gpu_labels = new Label[GPU_SWITCHES_COUNT];
-        var gpu_flow_box = new FlowBox();
-        gpu_flow_box.set_homogeneous(true);
-        gpu_flow_box.set_max_children_per_line(5);
-        gpu_flow_box.set_min_children_per_line(3);
-        gpu_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
-        gpu_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
-        gpu_flow_box.set_margin_start(FLOW_BOX_MARGIN);
-        gpu_flow_box.set_margin_end(FLOW_BOX_MARGIN);
-        gpu_flow_box.set_margin_top(FLOW_BOX_MARGIN);
-        gpu_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        gpu_flow_box.set_selection_mode(SelectionMode.NONE); // Отключаем выделение
-
-        for (int i = 0; i < GPU_SWITCHES_COUNT; i++) {
-            var row_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            gpu_switches[i] = new Switch();
-            gpu_labels[i] = new Label(gpu_label_texts[i]);
-            gpu_labels[i].set_halign(Align.START);
-            row_box.append(gpu_switches[i]);
-            row_box.append(gpu_labels[i]);
-            gpu_flow_box.insert(row_box, -1);
-        }
-
-        box1.append(gpu_flow_box);
-
-        // Добавляем подзаголовок "CPU" в бокс "Metric"
-        var cpu_label = new Label("CPU");
-        cpu_label.set_halign(Align.CENTER); // Выравниваем по центру
-        cpu_label.set_margin_top(FLOW_BOX_MARGIN); // Отступ сверху
-        cpu_label.set_margin_start(FLOW_BOX_MARGIN); // Отступ слева
-        cpu_label.set_margin_end(FLOW_BOX_MARGIN); // Отступ справа
-        box1.append(cpu_label);
-
-        // Добавляем 6 переключателей под надписью "CPU" в FlowBox
         cpu_switches = new Switch[CPU_SWITCHES_COUNT];
-        cpu_labels = new Label[CPU_SWITCHES_COUNT];
-        var cpu_flow_box = new FlowBox();
-        cpu_flow_box.set_homogeneous(true);
-        cpu_flow_box.set_max_children_per_line(5);
-        cpu_flow_box.set_min_children_per_line(3);
-        cpu_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
-        cpu_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
-        cpu_flow_box.set_margin_start(FLOW_BOX_MARGIN);
-        cpu_flow_box.set_margin_end(FLOW_BOX_MARGIN);
-        cpu_flow_box.set_margin_top(FLOW_BOX_MARGIN);
-        cpu_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        cpu_flow_box.set_selection_mode(SelectionMode.NONE); // Отключаем выделение
-
-        for (int i = 0; i < CPU_SWITCHES_COUNT; i++) {
-            var row_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            cpu_switches[i] = new Switch();
-            cpu_labels[i] = new Label(cpu_label_texts[i]);
-            cpu_labels[i].set_halign(Align.START);
-            row_box.append(cpu_switches[i]);
-            row_box.append(cpu_labels[i]);
-            cpu_flow_box.insert(row_box, -1);
-        }
-
-        box1.append(cpu_flow_box);
-
-        // Добавляем подзаголовок "Other" в бокс "Metric"
-        var other_label = new Label("Other");
-        other_label.set_halign(Align.CENTER); // Выравниваем по центру
-        other_label.set_margin_top(FLOW_BOX_MARGIN); // Отступ сверху
-        other_label.set_margin_start(FLOW_BOX_MARGIN); // Отступ слева
-        other_label.set_margin_end(FLOW_BOX_MARGIN); // Отступ справа
-        box1.append(other_label);
-
-        // Добавляем 4 переключателей под надписью "Other" в FlowBox
         other_switches = new Switch[OTHER_SWITCHES_COUNT];
+        system_switches = new Switch[SYSTEM_SWITCHES_COUNT];
+        wine_switches = new Switch[WINE_SWITCHES_COUNT];
+        options_switches = new Switch[OPTIONS_SWITCHES_COUNT];
+        battery_switches = new Switch[BATTERY_SWITCHES_COUNT];
+        other_extra_switches = new Switch[OTHER_EXTRA_SWITCHES_COUNT];
+
+        gpu_labels = new Label[GPU_SWITCHES_COUNT];
+        cpu_labels = new Label[CPU_SWITCHES_COUNT];
         other_labels = new Label[OTHER_SWITCHES_COUNT];
-        var other_flow_box = new FlowBox();
-        other_flow_box.set_homogeneous(true);
-        other_flow_box.set_max_children_per_line(5);
-        other_flow_box.set_min_children_per_line(3);
-        other_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
-        other_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
-        other_flow_box.set_margin_start(FLOW_BOX_MARGIN);
-        other_flow_box.set_margin_end(FLOW_BOX_MARGIN);
-        other_flow_box.set_margin_top(FLOW_BOX_MARGIN);
-        other_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        other_flow_box.set_selection_mode(SelectionMode.NONE); // Отключаем выделение
+        system_labels = new Label[SYSTEM_SWITCHES_COUNT];
+        wine_labels = new Label[WINE_SWITCHES_COUNT];
+        options_labels = new Label[OPTIONS_SWITCHES_COUNT];
+        battery_labels = new Label[BATTERY_SWITCHES_COUNT];
+        other_extra_labels = new Label[OTHER_EXTRA_SWITCHES_COUNT];
 
-        for (int i = 0; i < OTHER_SWITCHES_COUNT; i++) {
-            var row_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            other_switches[i] = new Switch();
-            other_labels[i] = new Label(other_label_texts[i]);
-            other_labels[i].set_halign(Align.START);
-            row_box.append(other_switches[i]);
-            row_box.append(other_labels[i]);
-            other_flow_box.insert(row_box, -1);
-        }
-
-        box1.append(other_flow_box);
+        // Создаем переключатели и метки
+        create_switches_and_labels(box1, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts, GPU_SWITCHES_COUNT);
+        create_switches_and_labels(box1, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts, CPU_SWITCHES_COUNT);
+        create_switches_and_labels(box1, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts, OTHER_SWITCHES_COUNT);
+        create_switches_and_labels(box2, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts, SYSTEM_SWITCHES_COUNT);
+        create_switches_and_labels(box2, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts, WINE_SWITCHES_COUNT);
+        create_switches_and_labels(box2, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts, OPTIONS_SWITCHES_COUNT);
+        create_switches_and_labels(box2, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts, BATTERY_SWITCHES_COUNT);
+        create_switches_and_labels(box2, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts, OTHER_EXTRA_SWITCHES_COUNT);
 
         // Добавляем боксы в Adw.ViewStack с иконками
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
@@ -238,193 +174,33 @@ public class MangoJuice : Gtk.Application {
         view_stack.add_titled(box3, "box3", "Performance").icon_name = "emblem-system-symbolic";
         view_stack.add_titled(box4, "box4", "Visual").icon_name = "preferences-desktop-appearance-symbolic";
 
-        // Добавляем подзаголовок "System" в бокс "Extras"
-        var system_label = new Label("System");
-        system_label.set_halign(Align.CENTER); // Выравниваем по центру
-        system_label.set_margin_top(FLOW_BOX_MARGIN); // Отступ сверху
-        system_label.set_margin_start(FLOW_BOX_MARGIN); // Отступ слева
-        system_label.set_margin_end(FLOW_BOX_MARGIN); // Отступ справа
-        box2.append(system_label);
-
-        // Добавляем 6 переключателей под надписью "System" в FlowBox
-        system_switches = new Switch[SYSTEM_SWITCHES_COUNT];
-        system_labels = new Label[SYSTEM_SWITCHES_COUNT];
-        var system_flow_box = new FlowBox();
-        system_flow_box.set_homogeneous(true);
-        system_flow_box.set_max_children_per_line(6);
-        system_flow_box.set_min_children_per_line(3);
-        system_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
-        system_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
-        system_flow_box.set_margin_start(FLOW_BOX_MARGIN);
-        system_flow_box.set_margin_end(FLOW_BOX_MARGIN);
-        system_flow_box.set_margin_top(FLOW_BOX_MARGIN);
-        system_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        system_flow_box.set_selection_mode(SelectionMode.NONE); // Отключаем выделение
-
-        for (int i = 0; i < SYSTEM_SWITCHES_COUNT; i++) {
-            var row_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            system_switches[i] = new Switch();
-            system_labels[i] = new Label(system_label_texts[i]);
-            system_labels[i].set_halign(Align.START);
-            row_box.append(system_switches[i]);
-            row_box.append(system_labels[i]);
-            system_flow_box.insert(row_box, -1);
-        }
-
-        box2.append(system_flow_box);
-
-        // Добавляем подзаголовок "Wine" в бокс "Extras"
-        var wine_label = new Label("Wine");
-        wine_label.set_halign(Align.CENTER); // Выравниваем по центру
-        wine_label.set_margin_top(FLOW_BOX_MARGIN); // Отступ сверху
-        wine_label.set_margin_start(FLOW_BOX_MARGIN); // Отступ слева
-        wine_label.set_margin_end(FLOW_BOX_MARGIN); // Отступ справа
-        box2.append(wine_label);
-
-        // Добавляем 3 переключателей под надписью "Wine" в FlowBox
-        wine_switches = new Switch[WINE_SWITCHES_COUNT];
-        wine_labels = new Label[WINE_SWITCHES_COUNT];
-        var wine_flow_box = new FlowBox();
-        wine_flow_box.set_homogeneous(true);
-        wine_flow_box.set_max_children_per_line(6);
-        wine_flow_box.set_min_children_per_line(3);
-        wine_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
-        wine_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
-        wine_flow_box.set_margin_start(FLOW_BOX_MARGIN);
-        wine_flow_box.set_margin_end(FLOW_BOX_MARGIN);
-        wine_flow_box.set_margin_top(FLOW_BOX_MARGIN);
-        wine_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        wine_flow_box.set_selection_mode(SelectionMode.NONE); // Отключаем выделение
-
-        for (int i = 0; i < WINE_SWITCHES_COUNT; i++) {
-            var row_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            wine_switches[i] = new Switch();
-            wine_labels[i] = new Label(wine_label_texts[i]);
-            wine_labels[i].set_halign(Align.START);
-            row_box.append(wine_switches[i]);
-            row_box.append(wine_labels[i]);
-            wine_flow_box.insert(row_box, -1);
-        }
-
-        box2.append(wine_flow_box);
-
-        // Добавляем подзаголовок "Options" в бокс "Extras"
-        var options_label = new Label("Options");
-        options_label.set_halign(Align.CENTER); // Выравниваем по центру
-        options_label.set_margin_top(FLOW_BOX_MARGIN); // Отступ сверху
-        options_label.set_margin_start(FLOW_BOX_MARGIN); // Отступ слева
-        options_label.set_margin_end(FLOW_BOX_MARGIN); // Отступ справа
-        box2.append(options_label);
-
-        // Добавляем 6 переключателей под надписью "Options" в FlowBox
-        options_switches = new Switch[OPTIONS_SWITCHES_COUNT];
-        options_labels = new Label[OPTIONS_SWITCHES_COUNT];
-        var options_flow_box = new FlowBox();
-        options_flow_box.set_homogeneous(true);
-        options_flow_box.set_max_children_per_line(6);
-        options_flow_box.set_min_children_per_line(3);
-        options_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
-        options_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
-        options_flow_box.set_margin_start(FLOW_BOX_MARGIN);
-        options_flow_box.set_margin_end(FLOW_BOX_MARGIN);
-        options_flow_box.set_margin_top(FLOW_BOX_MARGIN);
-        options_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        options_flow_box.set_selection_mode(SelectionMode.NONE); // Отключаем выделение
-
-        for (int i = 0; i < OPTIONS_SWITCHES_COUNT; i++) {
-            var row_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            options_switches[i] = new Switch();
-            options_labels[i] = new Label(options_label_texts[i]);
-            options_labels[i].set_halign(Align.START);
-            row_box.append(options_switches[i]);
-            row_box.append(options_labels[i]);
-            options_flow_box.insert(row_box, -1);
-        }
-
-        box2.append(options_flow_box);
-
-        // Добавляем подзаголовок "Battery" в бокс "Extras"
-        var battery_label = new Label("Battery");
-        battery_label.set_halign(Align.CENTER); // Выравниваем по центру
-        battery_label.set_margin_top(FLOW_BOX_MARGIN); // Отступ сверху
-        battery_label.set_margin_start(FLOW_BOX_MARGIN); // Отступ слева
-        battery_label.set_margin_end(FLOW_BOX_MARGIN); // Отступ справа
-        box2.append(battery_label);
-
-        // Добавляем 4 переключателей под надписью "Battery" в FlowBox
-        battery_switches = new Switch[BATTERY_SWITCHES_COUNT];
-        battery_labels = new Label[BATTERY_SWITCHES_COUNT];
-        var battery_flow_box = new FlowBox();
-        battery_flow_box.set_homogeneous(true);
-        battery_flow_box.set_max_children_per_line(6);
-        battery_flow_box.set_min_children_per_line(3);
-        battery_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
-        battery_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
-        battery_flow_box.set_margin_start(FLOW_BOX_MARGIN);
-        battery_flow_box.set_margin_end(FLOW_BOX_MARGIN);
-        battery_flow_box.set_margin_top(FLOW_BOX_MARGIN);
-        battery_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        battery_flow_box.set_selection_mode(SelectionMode.NONE); // Отключаем выделение
-
-        for (int i = 0; i < BATTERY_SWITCHES_COUNT; i++) {
-            var row_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            battery_switches[i] = new Switch();
-            battery_labels[i] = new Label(battery_label_texts[i]);
-            battery_labels[i].set_halign(Align.START);
-            row_box.append(battery_switches[i]);
-            row_box.append(battery_labels[i]);
-            battery_flow_box.insert(row_box, -1);
-        }
-
-        box2.append(battery_flow_box);
-
-        // Добавляем подзаголовок "Other" в бокс "Extras"
-        var other_extra_label = new Label("Other");
-        other_extra_label.set_halign(Align.CENTER); // Выравниваем по центру
-        other_extra_label.set_margin_top(FLOW_BOX_MARGIN); // Отступ сверху
-        other_extra_label.set_margin_start(FLOW_BOX_MARGIN); // Отступ слева
-        other_extra_label.set_margin_end(FLOW_BOX_MARGIN); // Отступ справа
-        box2.append(other_extra_label);
-
-        // Добавляем 3 переключателей под надписью "Other" в FlowBox
-        other_extra_switches = new Switch[OTHER_EXTRA_SWITCHES_COUNT];
-        other_extra_labels = new Label[OTHER_EXTRA_SWITCHES_COUNT];
-        var other_extra_flow_box = new FlowBox();
-        other_extra_flow_box.set_homogeneous(true);
-        other_extra_flow_box.set_max_children_per_line(6);
-        other_extra_flow_box.set_min_children_per_line(3);
-        other_extra_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
-        other_extra_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
-        other_extra_flow_box.set_margin_start(FLOW_BOX_MARGIN);
-        other_extra_flow_box.set_margin_end(FLOW_BOX_MARGIN);
-        other_extra_flow_box.set_margin_top(FLOW_BOX_MARGIN);
-        other_extra_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        other_extra_flow_box.set_selection_mode(SelectionMode.NONE); // Отключаем выделение
-
-        for (int i = 0; i < OTHER_EXTRA_SWITCHES_COUNT; i++) {
-            var row_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            other_extra_switches[i] = new Switch();
-            other_extra_labels[i] = new Label(other_extra_label_texts[i]);
-            other_extra_labels[i].set_halign(Align.START);
-            row_box.append(other_extra_switches[i]);
-            row_box.append(other_extra_labels[i]);
-            other_extra_flow_box.insert(row_box, -1);
-        }
-
-        box2.append(other_extra_flow_box);
-
         // Добавляем поле ввода текста рядом с переключателем "FULL ON"
         custom_command_entry = new Entry();
         custom_command_entry.placeholder_text = "Raw Custom Cmd";
 
         // Добавляем кнопку "Logs key" с выпадающим списком
-        logs_key_combo = new ComboBoxText();
-        logs_key_combo.append("key1", "Key 1");
-        logs_key_combo.append("key2", "Key 2");
-        logs_key_combo.append("key3", "Key 3");
-        logs_key_combo.append("key4", "Key 4");
-        logs_key_combo.changed.connect(() => {
-            save_logs_key_to_file(logs_key_combo.get_active_id());
+        var logs_key_strings = new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" };
+        logs_key_model = new StringList(logs_key_strings);
+
+        var logs_key_factory = new SignalListItemFactory();
+        logs_key_factory.setup.connect((item) => {
+            var list_item = item as ListItem;
+            var label = new Label("");
+            list_item.set_child(label);
+        });
+        logs_key_factory.bind.connect((item) => {
+            var list_item = item as ListItem;
+            var label = list_item.get_child() as Label;
+            if (list_item.item != null) {
+                label.label = (list_item.item as StringObject).get_string();
+            }
+        });
+
+        logs_key_combo = new DropDown(logs_key_model, null);
+        logs_key_combo.notify["selected-item"].connect(() => {
+            if (logs_key_combo.selected_item != null) {
+                save_logs_key_to_file((logs_key_combo.selected_item as StringObject).get_string());
+            }
         });
 
         // Добавляем кнопку "Reset"
@@ -511,6 +287,39 @@ public class MangoJuice : Gtk.Application {
         });
     }
 
+    private void create_switches_and_labels(Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, int count) {
+        var label = new Label(title);
+        label.set_halign(Align.CENTER);
+        label.set_margin_top(FLOW_BOX_MARGIN);
+        label.set_margin_start(FLOW_BOX_MARGIN);
+        label.set_margin_end(FLOW_BOX_MARGIN);
+        parent_box.append(label);
+
+        var flow_box = new FlowBox();
+        flow_box.set_homogeneous(true);
+        flow_box.set_max_children_per_line(6);
+        flow_box.set_min_children_per_line(3);
+        flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
+        flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
+        flow_box.set_margin_start(FLOW_BOX_MARGIN);
+        flow_box.set_margin_end(FLOW_BOX_MARGIN);
+        flow_box.set_margin_top(FLOW_BOX_MARGIN);
+        flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        flow_box.set_selection_mode(SelectionMode.NONE);
+
+        for (int i = 0; i < count; i++) {
+            var row_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+            switches[i] = new Switch();
+            labels[i] = new Label(label_texts[i]);
+            labels[i].set_halign(Align.START);
+            row_box.append(switches[i]);
+            row_box.append(labels[i]);
+            flow_box.insert(row_box, -1);
+        }
+
+        parent_box.append(flow_box);
+    }
+
     private void save_states_to_file() {
         var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
         if (!config_dir.query_exists()) {
@@ -543,45 +352,14 @@ public class MangoJuice : Gtk.Application {
             data_stream.put_string("#battery_color=00FF00\n");
             data_stream.put_string("#media_player_color=FFFF00\n");
 
-            for (int i = 0; i < gpu_switches.length; i++) {
-                var state = gpu_switches[i].active ? "" : "#";
-                data_stream.put_string("%s%s\n".printf(state, gpu_config_vars[i]));
-            }
-
-            for (int i = 0; i < cpu_switches.length; i++) {
-                var state = cpu_switches[i].active ? "" : "#";
-                data_stream.put_string("%s%s\n".printf(state, cpu_config_vars[i]));
-            }
-
-            for (int i = 0; i < other_switches.length; i++) {
-                var state = other_switches[i].active ? "" : "#";
-                data_stream.put_string("%s%s\n".printf(state, other_config_vars[i]));
-            }
-
-            for (int i = 0; i < system_switches.length; i++) {
-                var state = system_switches[i].active ? "" : "#";
-                data_stream.put_string("%s%s\n".printf(state, system_config_vars[i]));
-            }
-
-            for (int i = 0; i < wine_switches.length; i++) {
-                var state = wine_switches[i].active ? "" : "#";
-                data_stream.put_string("%s%s\n".printf(state, wine_config_vars[i]));
-            }
-
-            for (int i = 0; i < options_switches.length; i++) {
-                var state = options_switches[i].active ? "" : "#";
-                data_stream.put_string("%s%s\n".printf(state, options_config_vars[i]));
-            }
-
-            for (int i = 0; i < battery_switches.length; i++) {
-                var state = battery_switches[i].active ? "" : "#";
-                data_stream.put_string("%s%s\n".printf(state, battery_config_vars[i]));
-            }
-
-            for (int i = 0; i < other_extra_switches.length; i++) {
-                var state = other_extra_switches[i].active ? "" : "#";
-                data_stream.put_string("%s%s\n".printf(state, other_extra_config_vars[i]));
-            }
+            save_switches_to_file(data_stream, gpu_switches, gpu_config_vars);
+            save_switches_to_file(data_stream, cpu_switches, cpu_config_vars);
+            save_switches_to_file(data_stream, other_switches, other_config_vars);
+            save_switches_to_file(data_stream, system_switches, system_config_vars);
+            save_switches_to_file(data_stream, wine_switches, wine_config_vars);
+            save_switches_to_file(data_stream, options_switches, options_config_vars);
+            save_switches_to_file(data_stream, battery_switches, battery_config_vars);
+            save_switches_to_file(data_stream, other_extra_switches, other_extra_config_vars);
 
             // Сохраняем значение поля ввода текста
             var custom_command = custom_command_entry.text;
@@ -590,14 +368,23 @@ public class MangoJuice : Gtk.Application {
             }
 
             // Сохраняем значение выбранного элемента в выпадающем списке
-            var logs_key = logs_key_combo.get_active_id();
-            if (logs_key != "") {
-                data_stream.put_string("logs_key=%s\n".printf(logs_key));
+            if (logs_key_combo.selected_item != null) {
+                var logs_key = (logs_key_combo.selected_item as StringObject).get_string();
+                if (logs_key != "") {
+                    data_stream.put_string("toggle_logging=%s\n".printf(logs_key));
+                }
             }
 
             data_stream.close();
         } catch (Error e) {
             stderr.printf("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void save_switches_to_file(DataOutputStream data_stream, Switch[] switches, string[] config_vars) {
+        for (int i = 0; i < switches.length; i++) {
+            var state = switches[i].active ? "" : "#";
+            data_stream.put_string("%s%s\n".printf(state, config_vars[i]));
         }
     }
 
@@ -612,69 +399,14 @@ public class MangoJuice : Gtk.Application {
             var file_stream = new DataInputStream(file.read());
             string line;
             while ((line = file_stream.read_line()) != null) {
-                for (int i = 0; i < gpu_config_vars.length; i++) {
-                    if (line.has_prefix("#%s".printf(gpu_config_vars[i]))) {
-                        gpu_switches[i].active = false;
-                    } else if (line.has_prefix("%s".printf(gpu_config_vars[i]))) {
-                        gpu_switches[i].active = true;
-                    }
-                }
-
-                for (int i = 0; i < cpu_config_vars.length; i++) {
-                    if (line.has_prefix("#%s".printf(cpu_config_vars[i]))) {
-                        cpu_switches[i].active = false;
-                    } else if (line.has_prefix("%s".printf(cpu_config_vars[i]))) {
-                        cpu_switches[i].active = true;
-                    }
-                }
-
-                for (int i = 0; i < other_config_vars.length; i++) {
-                    if (line.has_prefix("#%s".printf(other_config_vars[i]))) {
-                        other_switches[i].active = false;
-                    } else if (line.has_prefix("%s".printf(other_config_vars[i]))) {
-                        other_switches[i].active = true;
-                    }
-                }
-
-                for (int i = 0; i < system_config_vars.length; i++) {
-                    if (line.has_prefix("#%s".printf(system_config_vars[i]))) {
-                        system_switches[i].active = false;
-                    } else if (line.has_prefix("%s".printf(system_config_vars[i]))) {
-                        system_switches[i].active = true;
-                    }
-                }
-
-                for (int i = 0; i < wine_config_vars.length; i++) {
-                    if (line.has_prefix("#%s".printf(wine_config_vars[i]))) {
-                        wine_switches[i].active = false;
-                    } else if (line.has_prefix("%s".printf(wine_config_vars[i]))) {
-                        wine_switches[i].active = true;
-                    }
-                }
-
-                for (int i = 0; i < options_config_vars.length; i++) {
-                    if (line.has_prefix("#%s".printf(options_config_vars[i]))) {
-                        options_switches[i].active = false;
-                    } else if (line.has_prefix("%s".printf(options_config_vars[i]))) {
-                        options_switches[i].active = true;
-                    }
-                }
-
-                for (int i = 0; i < battery_config_vars.length; i++) {
-                    if (line.has_prefix("#%s".printf(battery_config_vars[i]))) {
-                        battery_switches[i].active = false;
-                    } else if (line.has_prefix("%s".printf(battery_config_vars[i]))) {
-                        battery_switches[i].active = true;
-                    }
-                }
-
-                for (int i = 0; i < other_extra_config_vars.length; i++) {
-                    if (line.has_prefix("#%s".printf(other_extra_config_vars[i]))) {
-                        other_extra_switches[i].active = false;
-                    } else if (line.has_prefix("%s".printf(other_extra_config_vars[i]))) {
-                        other_extra_switches[i].active = true;
-                    }
-                }
+                load_switches_from_file(file_stream, gpu_switches, gpu_config_vars);
+                load_switches_from_file(file_stream, cpu_switches, cpu_config_vars);
+                load_switches_from_file(file_stream, other_switches, other_config_vars);
+                load_switches_from_file(file_stream, system_switches, system_config_vars);
+                load_switches_from_file(file_stream, wine_switches, wine_config_vars);
+                load_switches_from_file(file_stream, options_switches, options_config_vars);
+                load_switches_from_file(file_stream, battery_switches, battery_config_vars);
+                load_switches_from_file(file_stream, other_extra_switches, other_extra_config_vars);
 
                 // Загружаем значение поля ввода текста
                 if (line.has_prefix("custom_command=")) {
@@ -683,13 +415,32 @@ public class MangoJuice : Gtk.Application {
                 }
 
                 // Загружаем значение выбранного элемента в выпадающем списке
-                if (line.has_prefix("logs_key=")) {
-                    var logs_key = line.substring("logs_key=".length);
-                    logs_key_combo.set_active_id(logs_key);
+                if (line.has_prefix("toggle_logging=")) {
+                    var logs_key = line.substring("toggle_logging=".length);
+                    for (uint i = 0; i < logs_key_model.get_n_items(); i++) {
+                        var item = logs_key_model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == logs_key) {
+                            logs_key_combo.selected = i;
+                            break;
+                        }
+                    }
                 }
             }
         } catch (Error e) {
             stderr.printf("Ошибка при чтении файла: %s\n", e.message);
+        }
+    }
+
+    private void load_switches_from_file(DataInputStream file_stream, Switch[] switches, string[] config_vars) {
+        string line;
+        while ((line = file_stream.read_line()) != null) {
+            for (int i = 0; i < config_vars.length; i++) {
+                if (line.has_prefix("#%s".printf(config_vars[i]))) {
+                    switches[i].active = false;
+                } else if (line.has_prefix("%s".printf(config_vars[i]))) {
+                    switches[i].active = true;
+                }
+            }
         }
     }
 
@@ -752,7 +503,7 @@ public class MangoJuice : Gtk.Application {
 
         try {
             var file_stream = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
-            file_stream.put_string("logs_key=%s\n".printf(logs_key));
+            file_stream.put_string("toggle_logging=%s\n".printf(logs_key));
             file_stream.close();
         } catch (Error e) {
             stderr.printf("Ошибка при записи в файл: %s\n", e.message);
