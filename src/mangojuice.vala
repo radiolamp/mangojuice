@@ -424,7 +424,7 @@ public class MangoJuice : Gtk.Application {
         custom_command_box.append(custom_command_entry);
 
         // Добавляем кнопку "Reset"
-        resetButton = new Button.with_label("Reset");
+        resetButton = new Button.with_label("Reset Config");
         resetButton.add_css_class("destructive-action"); // Делаем кнопку красной
         resetButton.clicked.connect(() => {
             delete_mangohub_conf();
@@ -479,6 +479,18 @@ public class MangoJuice : Gtk.Application {
 
         // Проверяем, запущен ли vkcube при запуске приложения
         vkcube_was_running = is_vkcube_running();
+
+        // Добавляем обработчик сигнала close-request для закрытия vkcube при закрытии окна
+        window.close_request.connect(() => {
+            if (vkcube_was_running) {
+                try {
+                    Process.spawn_command_line_sync("pkill vkcube");
+                } catch (Error e) {
+                    stderr.printf("Ошибка при закрытии vkcube: %s\n", e.message);
+                }
+            }
+            return false; // Разрешаем закрытие окна
+        });
     }
 
     private void save_states_to_file() {
