@@ -22,6 +22,7 @@ public class MangoJuice : Gtk.Application {
     private Label[] battery_labels;
     private Label[] other_extra_labels;
     private Entry custom_command_entry; // Добавляем поле ввода текста
+    private ComboBoxText logs_key_combo; // Добавляем выпадающий список
     private string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
@@ -415,13 +416,16 @@ public class MangoJuice : Gtk.Application {
         // Добавляем поле ввода текста рядом с переключателем "FULL ON"
         custom_command_entry = new Entry();
         custom_command_entry.placeholder_text = "Raw Custom Cmd";
-        var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        custom_command_box.set_margin_start(FLOW_BOX_MARGIN);
-        custom_command_box.set_margin_end(FLOW_BOX_MARGIN);
-        custom_command_box.set_margin_top(FLOW_BOX_MARGIN);
-        custom_command_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        custom_command_box.append(new Label(""));
-        custom_command_box.append(custom_command_entry);
+
+        // Добавляем кнопку "Logs key" с выпадающим списком
+        logs_key_combo = new ComboBoxText();
+        logs_key_combo.append("key1", "Key 1");
+        logs_key_combo.append("key2", "Key 2");
+        logs_key_combo.append("key3", "Key 3");
+        logs_key_combo.append("key4", "Key 4");
+        logs_key_combo.changed.connect(() => {
+            save_logs_key_to_file(logs_key_combo.get_active_id());
+        });
 
         // Добавляем кнопку "Reset"
         resetButton = new Button.with_label("Reset Config");
@@ -430,8 +434,22 @@ public class MangoJuice : Gtk.Application {
             delete_mangohub_conf();
         });
 
-        custom_command_box.append(resetButton);
-        box2.append(custom_command_box);
+        // Создаем Grid для расположения элементов
+        var custom_command_grid = new Grid();
+        custom_command_grid.set_row_spacing(GRID_ROW_SPACING);
+        custom_command_grid.set_column_spacing(GRID_COLUMN_SPACING);
+        custom_command_grid.set_margin_start(FLOW_BOX_MARGIN);
+        custom_command_grid.set_margin_end(FLOW_BOX_MARGIN);
+        custom_command_grid.set_margin_top(FLOW_BOX_MARGIN);
+        custom_command_grid.set_margin_bottom(FLOW_BOX_MARGIN);
+
+        // Добавляем элементы в Grid
+        custom_command_grid.attach(custom_command_entry, 0, 0, 1, 1);
+        custom_command_grid.attach(new Label("Logs key"), 1, 0, 1, 1);
+        custom_command_grid.attach(logs_key_combo, 2, 0, 1, 1);
+        custom_command_grid.attach(resetButton, 3, 0, 1, 1);
+
+        box2.append(custom_command_grid);
 
         // Создаем HeaderBar
         var header_bar = new Gtk.HeaderBar();
@@ -571,6 +589,12 @@ public class MangoJuice : Gtk.Application {
                 data_stream.put_string("%s\n".printf(custom_command));
             }
 
+            // Сохраняем значение выбранного элемента в выпадающем списке
+            var logs_key = logs_key_combo.get_active_id();
+            if (logs_key != "") {
+                data_stream.put_string("logs_key=%s\n".printf(logs_key));
+            }
+
             data_stream.close();
         } catch (Error e) {
             stderr.printf("Ошибка при записи в файл: %s\n", e.message);
@@ -657,6 +681,12 @@ public class MangoJuice : Gtk.Application {
                     var custom_command = line.substring("custom_command=".length);
                     custom_command_entry.text = custom_command;
                 }
+
+                // Загружаем значение выбранного элемента в выпадающем списке
+                if (line.has_prefix("logs_key=")) {
+                    var logs_key = line.substring("logs_key=".length);
+                    logs_key_combo.set_active_id(logs_key);
+                }
             }
         } catch (Error e) {
             stderr.printf("Ошибка при чтении файла: %s\n", e.message);
@@ -710,6 +740,22 @@ public class MangoJuice : Gtk.Application {
             }
         } else {
             warning("MangoHud.conf file does not exist.");
+        }
+    }
+
+    private void save_logs_key_to_file(string logs_key) {
+        var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
+        var file = config_dir.get_child("MangoHud.conf");
+        if (!file.query_exists()) {
+            return;
+        }
+
+        try {
+            var file_stream = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
+            file_stream.put_string("logs_key=%s\n".printf(logs_key));
+            file_stream.close();
+        } catch (Error e) {
+            stderr.printf("Ошибка при записи в файл: %s\n", e.message);
         }
     }
 

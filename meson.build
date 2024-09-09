@@ -6,6 +6,7 @@ project('mangojuice', 'vala',
 gtk_dep = dependency('gtk4')
 glib_dep = dependency('glib-2.0')
 adw_dep = dependency('libadwaita-1')
+#mango_dep = dependency('mangohud')
 
 # Исходные файлы
 sources = files('src/mangojuice.vala')
