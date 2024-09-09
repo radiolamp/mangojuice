@@ -141,7 +141,7 @@ public class MangoJuice : Gtk.Application {
         var gpu_flow_box = new FlowBox();
         gpu_flow_box.set_homogeneous(true);
         gpu_flow_box.set_max_children_per_line(5);
-        gpu_flow_box.set_min_children_per_line(5);
+        gpu_flow_box.set_min_children_per_line(3);
         gpu_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         gpu_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         gpu_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -176,7 +176,7 @@ public class MangoJuice : Gtk.Application {
         var cpu_flow_box = new FlowBox();
         cpu_flow_box.set_homogeneous(true);
         cpu_flow_box.set_max_children_per_line(5);
-        cpu_flow_box.set_min_children_per_line(5);
+        cpu_flow_box.set_min_children_per_line(3);
         cpu_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         cpu_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         cpu_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -211,7 +211,7 @@ public class MangoJuice : Gtk.Application {
         var other_flow_box = new FlowBox();
         other_flow_box.set_homogeneous(true);
         other_flow_box.set_max_children_per_line(5);
-        other_flow_box.set_min_children_per_line(5);
+        other_flow_box.set_min_children_per_line(3);
         other_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         other_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         other_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -252,7 +252,7 @@ public class MangoJuice : Gtk.Application {
         var system_flow_box = new FlowBox();
         system_flow_box.set_homogeneous(true);
         system_flow_box.set_max_children_per_line(6);
-        system_flow_box.set_min_children_per_line(6);
+        system_flow_box.set_min_children_per_line(3);
         system_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         system_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         system_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -322,7 +322,7 @@ public class MangoJuice : Gtk.Application {
         var options_flow_box = new FlowBox();
         options_flow_box.set_homogeneous(true);
         options_flow_box.set_max_children_per_line(6);
-        options_flow_box.set_min_children_per_line(6);
+        options_flow_box.set_min_children_per_line(3);
         options_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         options_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         options_flow_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -357,7 +357,7 @@ public class MangoJuice : Gtk.Application {
         var battery_flow_box = new FlowBox();
         battery_flow_box.set_homogeneous(true);
         battery_flow_box.set_max_children_per_line(6);
-        battery_flow_box.set_min_children_per_line(4);
+        battery_flow_box.set_min_children_per_line(3);
         battery_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         battery_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
         battery_flow_box.set_margin_start(FLOW_BOX_MARGIN);
