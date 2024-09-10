@@ -6,6 +6,7 @@ using Gee;
 public class MangoJuice : Adw.Application {
     private Button saveButton;
     private Button resetButton;
+    private Button logsPathButton; // Добавляем кнопку для выбора пути к логам
     private Switch[] gpu_switches;
     private Switch[] cpu_switches;
     private Switch[] other_switches;
@@ -23,6 +24,7 @@ public class MangoJuice : Adw.Application {
     private Label[] battery_labels;
     private Label[] other_extra_labels;
     private Entry custom_command_entry;
+    private Entry custom_logs_path_entry;
     private DropDown logs_key_combo;
     private StringList logs_key_model;
     private Scale duracion_scale;
@@ -39,7 +41,7 @@ public class MangoJuice : Adw.Application {
     private const string WINE_TITLE = "Wine";
     private const string OPTIONS_TITLE = "Options";
     private const string BATTERY_TITLE = "Battery";
-    private const string OTHER_EXTRA_TITLE = "Other";
+    private const string OTHER_EXTRA_TITLE = "Other Extras";
 
     private const int GPU_SWITCHES_COUNT = 15;
     private const int CPU_SWITCHES_COUNT = 6;
@@ -48,7 +50,7 @@ public class MangoJuice : Adw.Application {
     private const int WINE_SWITCHES_COUNT = 3;
     private const int OPTIONS_SWITCHES_COUNT = 6;
     private const int BATTERY_SWITCHES_COUNT = 4;
-    private const int OTHER_EXTRA_SWITCHES_COUNT = 3;
+    private const int OTHER_EXTRA_SWITCHES_COUNT = 5;
     private const int MAIN_BOX_SPACING = 10;
     private const int FLOW_BOX_ROW_SPACING = 10;
     private const int FLOW_BOX_COLUMN_SPACING = 10;
@@ -82,7 +84,7 @@ public class MangoJuice : Adw.Application {
         "battery", "battery_watt", "battery_time", "device_battery"
     };
     private string[] other_extra_config_vars = {
-        "media_player", "network", "full"
+        "media_player", "network", "full", "log_versioning", "upload_logs"
     };
     private string[] gpu_label_texts = {
         "GPU Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
@@ -97,29 +99,30 @@ public class MangoJuice : Adw.Application {
         "RAM", "Disk IO", "Procces", "Swap"
     };
     private string[] system_label_texts = {
-        "Distro", "Refresh rate", "Resolution", "Session",
+        "Distro", "Refresh rate*", "Resolution", "Session",
         "Time", "Arch"
     };
     private string[] wine_label_texts = {
         "Version", "Engine Ver", "Short names"
     };
     private string[] options_label_texts = {
-        "Hud Version", "Gamemode", "VKbasalt", "Fcat", "FSR", "HDR"
+        "Hud Version", "Gamemode", "VKbasalt", "Fcat", "FSR*", "HDR*"
     };
     private string[] battery_label_texts = {
-        "Percentage", "Wattage", "Time remain", "Devisec"
+        "Percentage", "Wattage", "Time remain", "Device"
     };
     private string[] other_extra_label_texts = {
-        "Media Info", "Network", "Full ON"
+        "Media Info", "Network", "Full ON", "Log Versioning", "Avtoupload Results"
     };
 
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
+        set_resource_base_path("/data/icons/hicolor/scalable/apps/");
     }
 
     protected override void activate() {
         var window = new Adw.ApplicationWindow(this);
-        window.set_default_size(960, 600);
+        window.set_default_size(970, 600);
         window.set_title("MangoJuice");
 
         var main_box = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
@@ -166,69 +169,7 @@ public class MangoJuice : Adw.Application {
         create_switches_and_labels(box2, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts, BATTERY_SWITCHES_COUNT);
         create_switches_and_labels(box2, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts, OTHER_EXTRA_SWITCHES_COUNT);
 
-        // Создаем слайдеры и метки для значений
-        duracion_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 200, 1);
-        duracion_scale.set_value(100);
-        duracion_scale.set_hexpand(true);
-        duracion_scale.set_margin_start(FLOW_BOX_MARGIN);
-        duracion_scale.set_margin_end(FLOW_BOX_MARGIN);
-        duracion_scale.set_margin_top(FLOW_BOX_MARGIN);
-        duracion_scale.set_margin_bottom(FLOW_BOX_MARGIN);
-        duracion_value_label = new Label("");
-        duracion_value_label.set_halign(Align.END);
-        duracion_scale.value_changed.connect(() => {
-            duracion_value_label.label = "%d s".printf((int)duracion_scale.get_value());
-        });
-
-        autostart_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 30, 1);
-        autostart_scale.set_value(15);
-        autostart_scale.set_hexpand(true);
-        autostart_scale.set_margin_start(FLOW_BOX_MARGIN);
-        autostart_scale.set_margin_end(FLOW_BOX_MARGIN);
-        autostart_scale.set_margin_top(FLOW_BOX_MARGIN);
-        autostart_scale.set_margin_bottom(FLOW_BOX_MARGIN);
-        autostart_value_label = new Label("");
-        autostart_value_label.set_halign(Align.END);
-        autostart_scale.value_changed.connect(() => {
-            autostart_value_label.label = "%d s".printf((int)autostart_scale.get_value());
-        });
-
-        interval_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 500, 1);
-        interval_scale.set_value(250);
-        interval_scale.set_hexpand(true);
-        interval_scale.set_margin_start(FLOW_BOX_MARGIN);
-        interval_scale.set_margin_end(FLOW_BOX_MARGIN);
-        interval_scale.set_margin_top(FLOW_BOX_MARGIN);
-        interval_scale.set_margin_bottom(FLOW_BOX_MARGIN);
-        interval_value_label = new Label("");
-        interval_value_label.set_halign(Align.END);
-        interval_scale.value_changed.connect(() => {
-            interval_value_label.label = "%d ms".printf((int)interval_scale.get_value());
-        });
-
-        var scales_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        scales_box.set_margin_start(FLOW_BOX_MARGIN);
-        scales_box.set_margin_end(FLOW_BOX_MARGIN);
-        scales_box.set_margin_top(FLOW_BOX_MARGIN);
-        scales_box.set_margin_bottom(FLOW_BOX_MARGIN);
-
-        scales_box.append(new Label("Duracion"));
-        scales_box.append(duracion_scale);
-        scales_box.append(duracion_value_label);
-        scales_box.append(new Label("Autostart"));
-        scales_box.append(autostart_scale);
-        scales_box.append(autostart_value_label);
-        scales_box.append(new Label("Interval"));
-        scales_box.append(interval_scale);
-        scales_box.append(interval_value_label);
-
-        var logging_label = new Label("Logging");
-        logging_label.set_halign(Align.START);
-        logging_label.set_margin_top(FLOW_BOX_MARGIN);
-        logging_label.set_margin_start(FLOW_BOX_MARGIN);
-        logging_label.set_margin_end(FLOW_BOX_MARGIN);
-        box2.append(logging_label);
-        box2.append(scales_box);
+        create_scales_and_labels(box2);
 
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
         view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
@@ -237,6 +178,14 @@ public class MangoJuice : Adw.Application {
 
         custom_command_entry = new Entry();
         custom_command_entry.placeholder_text = "Raw Custom Cmd";
+
+        custom_logs_path_entry = new Entry();
+        custom_logs_path_entry.placeholder_text = "HOME";
+
+        logsPathButton = new Button.with_label("Folder logs"); // Добавляем кнопку
+        logsPathButton.clicked.connect(() => {
+            open_folder_chooser_dialog();
+        });
 
         var logs_key_strings = new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" };
         logs_key_model = new StringList(logs_key_strings);
@@ -278,6 +227,9 @@ public class MangoJuice : Adw.Application {
         custom_command_box.append(custom_command_entry);
         custom_command_box.append(new Label("Logs key"));
         custom_command_box.append(logs_key_combo);
+        custom_command_box.append(new Label(""));
+        custom_command_box.append(custom_logs_path_entry);
+        custom_command_box.append(logsPathButton); // Добавляем кнопку в контейнер
         custom_command_box.append(resetButton);
 
         box2.append(custom_command_box);
@@ -367,6 +319,71 @@ public class MangoJuice : Adw.Application {
         parent_box.append(flow_box);
     }
 
+    private void create_scales_and_labels(Box parent_box) {
+        duracion_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 200, 1);
+        duracion_scale.set_value(0);
+        duracion_scale.set_hexpand(true);
+        duracion_scale.set_margin_start(FLOW_BOX_MARGIN);
+        duracion_scale.set_margin_end(FLOW_BOX_MARGIN);
+        duracion_scale.set_margin_top(FLOW_BOX_MARGIN);
+        duracion_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        duracion_value_label = new Label("");
+        duracion_value_label.set_halign(Align.END);
+        duracion_scale.value_changed.connect(() => {
+            duracion_value_label.label = "%d s".printf((int)duracion_scale.get_value());
+        });
+
+        autostart_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 30, 1);
+        autostart_scale.set_value(0);
+        autostart_scale.set_hexpand(true);
+        autostart_scale.set_margin_start(FLOW_BOX_MARGIN);
+        autostart_scale.set_margin_end(FLOW_BOX_MARGIN);
+        autostart_scale.set_margin_top(FLOW_BOX_MARGIN);
+        autostart_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        autostart_value_label = new Label("");
+        autostart_value_label.set_halign(Align.END);
+        autostart_scale.value_changed.connect(() => {
+            autostart_value_label.label = "%d s".printf((int)autostart_scale.get_value());
+        });
+
+        interval_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 500, 1);
+        interval_scale.set_value(0);
+        interval_scale.set_hexpand(true);
+        interval_scale.set_margin_start(FLOW_BOX_MARGIN);
+        interval_scale.set_margin_end(FLOW_BOX_MARGIN);
+        interval_scale.set_margin_top(FLOW_BOX_MARGIN);
+        interval_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        interval_value_label = new Label("");
+        interval_value_label.set_halign(Align.END);
+        interval_scale.value_changed.connect(() => {
+            interval_value_label.label = "%d ms".printf((int)interval_scale.get_value());
+        });
+
+        var scales_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        scales_box.set_margin_start(FLOW_BOX_MARGIN);
+        scales_box.set_margin_end(FLOW_BOX_MARGIN);
+        scales_box.set_margin_top(FLOW_BOX_MARGIN);
+        scales_box.set_margin_bottom(FLOW_BOX_MARGIN);
+
+        scales_box.append(new Label("Duracion"));
+        scales_box.append(duracion_scale);
+        scales_box.append(duracion_value_label);
+        scales_box.append(new Label("Autostart"));
+        scales_box.append(autostart_scale);
+        scales_box.append(autostart_value_label);
+        scales_box.append(new Label("Interval"));
+        scales_box.append(interval_scale);
+        scales_box.append(interval_value_label);
+
+        var logging_label = new Label("Logging");
+        logging_label.set_valign(Align.CENTER);
+        logging_label.set_margin_top(FLOW_BOX_MARGIN);
+        logging_label.set_margin_start(FLOW_BOX_MARGIN);
+        logging_label.set_margin_end(FLOW_BOX_MARGIN);
+        parent_box.append(logging_label);
+        parent_box.append(scales_box);
+    }
+
     private void save_states_to_file() {
         var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
         if (!config_dir.query_exists()) {
@@ -408,10 +425,14 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
-            // Сохраняем значения слайдеров
             data_stream.put_string("log_duracion=%d\n".printf((int)duracion_scale.get_value()));
             data_stream.put_string("autostart_log=%d\n".printf((int)autostart_scale.get_value()));
             data_stream.put_string("log_interval=%d\n".printf((int)interval_scale.get_value()));
+
+            var custom_logs_path = custom_logs_path_entry.text;
+            if (custom_logs_path != "") {
+                data_stream.put_string("output_folder=%s\n".printf(custom_logs_path));
+            }
 
             data_stream.close();
         } catch (Error e) {
@@ -466,7 +487,6 @@ public class MangoJuice : Adw.Application {
                     }
                 }
 
-                // Загружаем значения слайдеров
                 if (line.has_prefix("Custom=Duracion:")) {
                     var value = int.parse(line.substring("Custom=Duracion:".length));
                     duracion_scale.set_value(value);
@@ -481,6 +501,11 @@ public class MangoJuice : Adw.Application {
                     var value = int.parse(line.substring("Custom=Interval:".length));
                     interval_scale.set_value(value);
                     interval_value_label.label = "%d".printf(value);
+                }
+
+                if (line.has_prefix("custom_logs_path=")) {
+                    var custom_logs_path = line.substring("custom_logs_path=".length);
+                    custom_logs_path_entry.text = custom_logs_path;
                 }
             }
         } catch (Error e) {
@@ -571,6 +596,22 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf("Ошибка при записи в файл: %s\n", e.message);
         }
+    }
+
+    private void open_folder_chooser_dialog() {
+        var dialog = new Gtk.FileChooserDialog("Select Logs Folder", this.active_window, FileChooserAction.SELECT_FOLDER,
+            "_Cancel", ResponseType.CANCEL,
+            "_Select", ResponseType.ACCEPT);
+
+        dialog.response.connect((response_id) => {
+            if (response_id == ResponseType.ACCEPT) {
+                var folder_path = dialog.get_file().get_path();
+                custom_logs_path_entry.text = folder_path;
+            }
+            dialog.destroy();
+        });
+
+        dialog.show();
     }
 
     public static int main(string[] args) {
