@@ -5,7 +5,7 @@ using Gee;
 
 public class MangoJuice : Adw.Application {
     private Button saveButton;
-    private Button resetButton; // Добавляем кнопку Reset
+    private Button resetButton;
     private Switch[] gpu_switches;
     private Switch[] cpu_switches;
     private Switch[] other_switches;
@@ -22,9 +22,9 @@ public class MangoJuice : Adw.Application {
     private Label[] options_labels;
     private Label[] battery_labels;
     private Label[] other_extra_labels;
-    private Entry custom_command_entry; // Добавляем поле ввода текста
-    private DropDown logs_key_combo; // Заменяем ComboBoxText на DropDown
-    private StringList logs_key_model; // Добавляем модель для DropDown
+    private Entry custom_command_entry;
+    private DropDown logs_key_combo;
+    private StringList logs_key_model;
 
     private const string GPU_TITLE = "GPU";
     private const string CPU_TITLE = "CPU";
@@ -113,8 +113,8 @@ public class MangoJuice : Adw.Application {
 
     protected override void activate() {
         var window = new Adw.ApplicationWindow(this);
-        window.set_default_size(960, 600); // Размера окна
-        window.set_title("MangoJuice"); // Устанавливаем заголовок окна
+        window.set_default_size(960, 600);
+        window.set_title("MangoJuice");
 
         var main_box = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous(false);
@@ -123,18 +123,15 @@ public class MangoJuice : Adw.Application {
         scrolled_window.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
         scrolled_window.set_vexpand(true);
 
-        // Создаем Adw.ViewStack и Adw.ViewSwitcher
         var view_stack = new ViewStack();
         var toolbar_view_switcher = new ViewSwitcher();
-        toolbar_view_switcher.stack = view_stack; // Используем свойство stack
+        toolbar_view_switcher.stack = view_stack;
 
-        // Создаем боксы
         var box1 = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
         var box2 = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
         var box3 = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
         var box4 = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
 
-        // Инициализация массивов
         gpu_switches = new Switch[GPU_SWITCHES_COUNT];
         cpu_switches = new Switch[CPU_SWITCHES_COUNT];
         other_switches = new Switch[OTHER_SWITCHES_COUNT];
@@ -153,7 +150,6 @@ public class MangoJuice : Adw.Application {
         battery_labels = new Label[BATTERY_SWITCHES_COUNT];
         other_extra_labels = new Label[OTHER_EXTRA_SWITCHES_COUNT];
 
-        // Создаем переключатели и метки
         create_switches_and_labels(box1, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts, GPU_SWITCHES_COUNT);
         create_switches_and_labels(box1, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts, CPU_SWITCHES_COUNT);
         create_switches_and_labels(box1, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts, OTHER_SWITCHES_COUNT);
@@ -163,17 +159,14 @@ public class MangoJuice : Adw.Application {
         create_switches_and_labels(box2, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts, BATTERY_SWITCHES_COUNT);
         create_switches_and_labels(box2, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts, OTHER_EXTRA_SWITCHES_COUNT);
 
-        // Добавляем боксы в Adw.ViewStack с иконками
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
         view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
         view_stack.add_titled(box3, "box3", "Performance").icon_name = "emblem-system-symbolic";
         view_stack.add_titled(box4, "box4", "Visual").icon_name = "preferences-desktop-appearance-symbolic";
 
-        // Добавляем поле ввода текста рядом с переключателем "FULL ON"
         custom_command_entry = new Entry();
         custom_command_entry.placeholder_text = "Raw Custom Cmd";
 
-        // Добавляем кнопку "Logs key" с выпадающим списком
         var logs_key_strings = new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" };
         logs_key_model = new StringList(logs_key_strings);
 
@@ -198,22 +191,19 @@ public class MangoJuice : Adw.Application {
             }
         });
 
-        // Добавляем кнопку "Reset"
         resetButton = new Button.with_label("Reset Config");
-        resetButton.add_css_class("destructive-action"); // Делаем кнопку красной
+        resetButton.add_css_class("destructive-action");
         resetButton.clicked.connect(() => {
             delete_mangohub_conf();
             restart_mangohud();
         });
 
-        // Создаем Box для расположения элементов
         var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         custom_command_box.set_margin_start(FLOW_BOX_MARGIN);
         custom_command_box.set_margin_end(FLOW_BOX_MARGIN);
         custom_command_box.set_margin_top(FLOW_BOX_MARGIN);
         custom_command_box.set_margin_bottom(FLOW_BOX_MARGIN);
 
-        // Добавляем элементы в Box
         custom_command_box.append(custom_command_entry);
         custom_command_box.append(new Label("Logs key"));
         custom_command_box.append(logs_key_combo);
@@ -221,13 +211,12 @@ public class MangoJuice : Adw.Application {
 
         box2.append(custom_command_box);
 
-        // Создаем Adw.HeaderBar
         var header_bar = new Adw.HeaderBar();
-        header_bar.set_title_widget(toolbar_view_switcher); // Устанавливаем ToolbarViewSwitcher в центр заголовка
+        header_bar.set_title_widget(toolbar_view_switcher);
 
-        saveButton = new Button.with_label("Save"); // Переименовываем кнопку "Сохранить" в "Save"
-        saveButton.add_css_class("suggested-action"); // Добавляем акцентный цвет
-        header_bar.pack_end(saveButton); // Добавляем кнопку "Save" в правый угол заголовка
+        saveButton = new Button.with_label("Save");
+        saveButton.add_css_class("suggested-action");
+        header_bar.pack_end(saveButton);
 
         saveButton.clicked.connect(() => {
             save_states_to_file();
@@ -238,13 +227,10 @@ public class MangoJuice : Adw.Application {
             }
         });
 
-        // Добавляем кнопку "Test" в левую часть заголовка
         var testButton = new Button.with_label("Test");
         testButton.clicked.connect(() => {
             try {
-                // Завершаем текущий процесс vkcube
                 Process.spawn_command_line_sync("pkill vkcube");
-                // Запускаем новый экземпляр mangohud vkcube
                 Process.spawn_command_line_async("mangohud vkcube");
             } catch (Error e) {
                 stderr.printf("Ошибка при запуске команды: %s\n", e.message);
@@ -252,7 +238,6 @@ public class MangoJuice : Adw.Application {
         });
         header_bar.pack_start(testButton);
 
-        // Устанавливаем HeaderBar в качестве заголовка окна
         var content_box = new Box(Orientation.VERTICAL, 0);
         content_box.append(header_bar);
         content_box.append(scrolled_window);
@@ -262,13 +247,10 @@ public class MangoJuice : Adw.Application {
 
         window.present();
 
-        // Загрузка состояний переключателей из файла MangoHud.conf
         load_states_from_file();
 
-        // Проверяем, запущен ли vkcube при запуске приложения
         vkcube_was_running = is_vkcube_running();
 
-        // Добавляем обработчик сигнала close-request для закрытия vkcube при закрытии окна
         window.close_request.connect(() => {
             if (vkcube_was_running) {
                 try {
@@ -277,7 +259,7 @@ public class MangoJuice : Adw.Application {
                     stderr.printf("Ошибка при закрытии vkcube: %s\n", e.message);
                 }
             }
-            return false; // Разрешаем закрытие окна
+            return false;
         });
     }
 
@@ -330,7 +312,6 @@ public class MangoJuice : Adw.Application {
             var file_stream = file.replace(null, false, FileCreateFlags.NONE);
             var data_stream = new DataOutputStream(file_stream);
 
-            // Добавляем обязательную надпись в начале файла и временно не реализованные пременные.
             data_stream.put_string("################### File Generated by MangoJuice ###################\n");
             data_stream.put_string("legacy_layout=false\n");
             data_stream.put_string("gpu_load_value=50,90\n");
@@ -355,13 +336,11 @@ public class MangoJuice : Adw.Application {
             save_switches_to_file(data_stream, battery_switches, battery_config_vars);
             save_switches_to_file(data_stream, other_extra_switches, other_extra_config_vars);
 
-            // Сохраняем значение поля ввода текста
             var custom_command = custom_command_entry.text;
             if (custom_command != "") {
                 data_stream.put_string("%s\n".printf(custom_command));
             }
 
-            // Сохраняем значение выбранного элемента в выпадающем списке
             if (logs_key_combo.selected_item != null) {
                 var logs_key = (logs_key_combo.selected_item as StringObject).get_string();
                 if (logs_key != "") {
@@ -397,7 +376,6 @@ public class MangoJuice : Adw.Application {
             var file_stream = new DataInputStream(file.read());
             string line;
             while ((line = file_stream.read_line()) != null) {
-                // Загружаем значения переключателей
                 load_switch_from_file(line, gpu_switches, gpu_config_vars);
                 load_switch_from_file(line, cpu_switches, cpu_config_vars);
                 load_switch_from_file(line, other_switches, other_config_vars);
@@ -407,13 +385,11 @@ public class MangoJuice : Adw.Application {
                 load_switch_from_file(line, battery_switches, battery_config_vars);
                 load_switch_from_file(line, other_extra_switches, other_extra_config_vars);
 
-                // Загружаем значение поля ввода текста
                 if (line.has_prefix("custom_command=")) {
                     var custom_command = line.substring("custom_command=".length);
                     custom_command_entry.text = custom_command;
                 }
 
-                // Загружаем значение выбранного элемента в выпадающем списке
                 if (line.has_prefix("toggle_logging=")) {
                     var logs_key = line.substring("toggle_logging=".length);
                     for (uint i = 0; i < logs_key_model.get_n_items(); i++) {
@@ -442,7 +418,6 @@ public class MangoJuice : Adw.Application {
 
     private void restart_mangohud() {
         try {
-            // Проверяем, запущен ли vkcube
             string[] argv = { "pgrep", "mangohud" };
             int exit_status;
             string standard_output;
@@ -450,9 +425,7 @@ public class MangoJuice : Adw.Application {
             Process.spawn_sync(null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
 
             if (exit_status == 0) {
-                // Закрываем текущий экземпляр vkcube
                 Process.spawn_command_line_sync("pkill vkcube");
-                // Запускаем новый экземпляр mangohud vkcube
                 Process.spawn_command_line_async("mangohud vkcube");
             }
         } catch (Error e) {
