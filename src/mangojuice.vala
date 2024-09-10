@@ -25,6 +25,12 @@ public class MangoJuice : Adw.Application {
     private Entry custom_command_entry;
     private DropDown logs_key_combo;
     private StringList logs_key_model;
+    private Scale duracion_scale;
+    private Scale autostart_scale;
+    private Scale interval_scale;
+    private Label duracion_value_label;
+    private Label autostart_value_label;
+    private Label interval_value_label;
 
     private const string GPU_TITLE = "GPU";
     private const string CPU_TITLE = "CPU";
@@ -153,11 +159,76 @@ public class MangoJuice : Adw.Application {
         create_switches_and_labels(box1, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts, GPU_SWITCHES_COUNT);
         create_switches_and_labels(box1, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts, CPU_SWITCHES_COUNT);
         create_switches_and_labels(box1, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts, OTHER_SWITCHES_COUNT);
+
         create_switches_and_labels(box2, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts, SYSTEM_SWITCHES_COUNT);
         create_switches_and_labels(box2, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts, WINE_SWITCHES_COUNT);
         create_switches_and_labels(box2, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts, OPTIONS_SWITCHES_COUNT);
         create_switches_and_labels(box2, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts, BATTERY_SWITCHES_COUNT);
         create_switches_and_labels(box2, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts, OTHER_EXTRA_SWITCHES_COUNT);
+
+        // Создаем слайдеры и метки для значений
+        duracion_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 200, 1);
+        duracion_scale.set_value(100);
+        duracion_scale.set_hexpand(true);
+        duracion_scale.set_margin_start(FLOW_BOX_MARGIN);
+        duracion_scale.set_margin_end(FLOW_BOX_MARGIN);
+        duracion_scale.set_margin_top(FLOW_BOX_MARGIN);
+        duracion_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        duracion_value_label = new Label("");
+        duracion_value_label.set_halign(Align.END);
+        duracion_scale.value_changed.connect(() => {
+            duracion_value_label.label = "%d s".printf((int)duracion_scale.get_value());
+        });
+
+        autostart_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 30, 1);
+        autostart_scale.set_value(15);
+        autostart_scale.set_hexpand(true);
+        autostart_scale.set_margin_start(FLOW_BOX_MARGIN);
+        autostart_scale.set_margin_end(FLOW_BOX_MARGIN);
+        autostart_scale.set_margin_top(FLOW_BOX_MARGIN);
+        autostart_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        autostart_value_label = new Label("");
+        autostart_value_label.set_halign(Align.END);
+        autostart_scale.value_changed.connect(() => {
+            autostart_value_label.label = "%d s".printf((int)autostart_scale.get_value());
+        });
+
+        interval_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 500, 1);
+        interval_scale.set_value(250);
+        interval_scale.set_hexpand(true);
+        interval_scale.set_margin_start(FLOW_BOX_MARGIN);
+        interval_scale.set_margin_end(FLOW_BOX_MARGIN);
+        interval_scale.set_margin_top(FLOW_BOX_MARGIN);
+        interval_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        interval_value_label = new Label("");
+        interval_value_label.set_halign(Align.END);
+        interval_scale.value_changed.connect(() => {
+            interval_value_label.label = "%d ms".printf((int)interval_scale.get_value());
+        });
+
+        var scales_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        scales_box.set_margin_start(FLOW_BOX_MARGIN);
+        scales_box.set_margin_end(FLOW_BOX_MARGIN);
+        scales_box.set_margin_top(FLOW_BOX_MARGIN);
+        scales_box.set_margin_bottom(FLOW_BOX_MARGIN);
+
+        scales_box.append(new Label("Duracion"));
+        scales_box.append(duracion_scale);
+        scales_box.append(duracion_value_label);
+        scales_box.append(new Label("Autostart"));
+        scales_box.append(autostart_scale);
+        scales_box.append(autostart_value_label);
+        scales_box.append(new Label("Interval"));
+        scales_box.append(interval_scale);
+        scales_box.append(interval_value_label);
+
+        var logging_label = new Label("Logging");
+        logging_label.set_halign(Align.START);
+        logging_label.set_margin_top(FLOW_BOX_MARGIN);
+        logging_label.set_margin_start(FLOW_BOX_MARGIN);
+        logging_label.set_margin_end(FLOW_BOX_MARGIN);
+        box2.append(logging_label);
+        box2.append(scales_box);
 
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
         view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
@@ -314,19 +385,8 @@ public class MangoJuice : Adw.Application {
 
             data_stream.put_string("################### File Generated by MangoJuice ###################\n");
             data_stream.put_string("legacy_layout=false\n");
-            data_stream.put_string("gpu_load_value=50,90\n");
-            data_stream.put_string("#gpu_load_color=8FF0A4,F8E45C,CC0000\n");
-            data_stream.put_string("#vram_color=AD64C1\n");
-            data_stream.put_string("cpu_load_value=50,90\n");
-            data_stream.put_string("#cpu_load_color=33D17A,F9F06B,CC0000\n");
-            data_stream.put_string("#core_bars\n");
-            data_stream.put_string("#ram_color=C26693\n");
             data_stream.put_string("fps\n");
-            data_stream.put_string("#wine_color=EB5B5B\n");
-            data_stream.put_string("#engine_color=EB5B5B\n");
-            data_stream.put_string("#battery_color=00FF00\n");
-            data_stream.put_string("#media_player_color=FFFF00\n");
-
+            
             save_switches_to_file(data_stream, gpu_switches, gpu_config_vars);
             save_switches_to_file(data_stream, cpu_switches, cpu_config_vars);
             save_switches_to_file(data_stream, other_switches, other_config_vars);
@@ -347,6 +407,11 @@ public class MangoJuice : Adw.Application {
                     data_stream.put_string("toggle_logging=%s\n".printf(logs_key));
                 }
             }
+
+            // Сохраняем значения слайдеров
+            data_stream.put_string("log_duracion=%d\n".printf((int)duracion_scale.get_value()));
+            data_stream.put_string("autostart_log=%d\n".printf((int)autostart_scale.get_value()));
+            data_stream.put_string("log_interval=%d\n".printf((int)interval_scale.get_value()));
 
             data_stream.close();
         } catch (Error e) {
@@ -399,6 +464,23 @@ public class MangoJuice : Adw.Application {
                             break;
                         }
                     }
+                }
+
+                // Загружаем значения слайдеров
+                if (line.has_prefix("Custom=Duracion:")) {
+                    var value = int.parse(line.substring("Custom=Duracion:".length));
+                    duracion_scale.set_value(value);
+                    duracion_value_label.label = "%d".printf(value);
+                }
+                if (line.has_prefix("Custom=Autostart:")) {
+                    var value = int.parse(line.substring("Custom=Autostart:".length));
+                    autostart_scale.set_value(value);
+                    autostart_value_label.label = "%d".printf(value);
+                }
+                if (line.has_prefix("Custom=Interval:")) {
+                    var value = int.parse(line.substring("Custom=Interval:".length));
+                    interval_scale.set_value(value);
+                    interval_value_label.label = "%d".printf(value);
                 }
             }
         } catch (Error e) {
