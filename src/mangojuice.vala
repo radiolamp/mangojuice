@@ -44,8 +44,6 @@ public class MangoJuice : Adw.Application {
     private const int BATTERY_SWITCHES_COUNT = 4;
     private const int OTHER_EXTRA_SWITCHES_COUNT = 3;
     private const int MAIN_BOX_SPACING = 10;
-    private const int GRID_ROW_SPACING = 10;
-    private const int GRID_COLUMN_SPACING = 10;
     private const int FLOW_BOX_ROW_SPACING = 10;
     private const int FLOW_BOX_COLUMN_SPACING = 10;
     private const int FLOW_BOX_MARGIN = 10;
@@ -124,10 +122,6 @@ public class MangoJuice : Adw.Application {
         var scrolled_window = new ScrolledWindow();
         scrolled_window.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
         scrolled_window.set_vexpand(true);
-
-        var grid = new Grid();
-        grid.set_row_spacing(GRID_ROW_SPACING);
-        grid.set_column_spacing(GRID_COLUMN_SPACING);
 
         // Создаем Adw.ViewStack и Adw.ViewSwitcher
         var view_stack = new ViewStack();
@@ -212,22 +206,20 @@ public class MangoJuice : Adw.Application {
             restart_mangohud();
         });
 
-        // Создаем Grid для расположения элементов
-        var custom_command_grid = new Grid();
-        custom_command_grid.set_row_spacing(GRID_ROW_SPACING);
-        custom_command_grid.set_column_spacing(GRID_COLUMN_SPACING);
-        custom_command_grid.set_margin_start(FLOW_BOX_MARGIN);
-        custom_command_grid.set_margin_end(FLOW_BOX_MARGIN);
-        custom_command_grid.set_margin_top(FLOW_BOX_MARGIN);
-        custom_command_grid.set_margin_bottom(FLOW_BOX_MARGIN);
+        // Создаем Box для расположения элементов
+        var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        custom_command_box.set_margin_start(FLOW_BOX_MARGIN);
+        custom_command_box.set_margin_end(FLOW_BOX_MARGIN);
+        custom_command_box.set_margin_top(FLOW_BOX_MARGIN);
+        custom_command_box.set_margin_bottom(FLOW_BOX_MARGIN);
 
-        // Добавляем элементы в Grid
-        custom_command_grid.attach(custom_command_entry, 0, 0, 1, 1);
-        custom_command_grid.attach(new Label("Logs key"), 1, 0, 1, 1);
-        custom_command_grid.attach(logs_key_combo, 2, 0, 1, 1);
-        custom_command_grid.attach(resetButton, 3, 0, 1, 1);
+        // Добавляем элементы в Box
+        custom_command_box.append(custom_command_entry);
+        custom_command_box.append(new Label("Logs key"));
+        custom_command_box.append(logs_key_combo);
+        custom_command_box.append(resetButton);
 
-        box2.append(custom_command_grid);
+        box2.append(custom_command_box);
 
         // Создаем Adw.HeaderBar
         var header_bar = new Adw.HeaderBar();
@@ -237,7 +229,7 @@ public class MangoJuice : Adw.Application {
         saveButton.add_css_class("suggested-action"); // Добавляем акцентный цвет
         header_bar.pack_end(saveButton); // Добавляем кнопку "Save" в правый угол заголовка
 
-        saveButton.clicked.connect((_sender) => {
+        saveButton.clicked.connect(() => {
             save_states_to_file();
             if (vkcube_was_running) {
                 restart_mangohud();
@@ -248,7 +240,7 @@ public class MangoJuice : Adw.Application {
 
         // Добавляем кнопку "Test" в левую часть заголовка
         var testButton = new Button.with_label("Test");
-        testButton.clicked.connect((_sender) => {
+        testButton.clicked.connect(() => {
             try {
                 // Завершаем текущий процесс vkcube
                 Process.spawn_command_line_sync("pkill vkcube");
