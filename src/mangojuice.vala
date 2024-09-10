@@ -3,7 +3,7 @@ using GLib;
 using Adw;
 using Gee;
 
-public class MangoJuice : Gtk.Application {
+public class MangoJuice : Adw.Application {
     private Button saveButton;
     private Button resetButton; // Добавляем кнопку Reset
     private Switch[] gpu_switches;
@@ -114,7 +114,7 @@ public class MangoJuice : Gtk.Application {
     }
 
     protected override void activate() {
-        var window = new Gtk.ApplicationWindow(this);
+        var window = new Adw.ApplicationWindow(this);
         window.set_default_size(960, 600); // Размера окна
         window.set_title("MangoJuice"); // Устанавливаем заголовок окна
 
@@ -261,12 +261,13 @@ public class MangoJuice : Gtk.Application {
         header_bar.pack_start(testButton);
 
         // Устанавливаем HeaderBar в качестве заголовка окна
-        window.set_titlebar(header_bar);
+        var content_box = new Box(Orientation.VERTICAL, 0);
+        content_box.append(header_bar);
+        content_box.append(scrolled_window);
+        window.set_content(content_box);
 
-        main_box.append(scrolled_window);
         scrolled_window.set_child(view_stack);
 
-        window.set_child(main_box);
         window.present();
 
         // Загрузка состояний переключателей из файла MangoHud.conf
