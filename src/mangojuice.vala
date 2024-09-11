@@ -15,6 +15,7 @@ public class MangoJuice : Adw.Application {
     private Switch[] options_switches;
     private Switch[] battery_switches;
     private Switch[] other_extra_switches;
+    private Switch[] box3_switches; // Добавляем массив для переключателей в box3
     private Label[] gpu_labels;
     private Label[] cpu_labels;
     private Label[] other_labels;
@@ -23,6 +24,7 @@ public class MangoJuice : Adw.Application {
     private Label[] options_labels;
     private Label[] battery_labels;
     private Label[] other_extra_labels;
+    private Label[] box3_labels; // Добавляем массив для меток в box3
     private Entry custom_command_entry;
     private Entry custom_logs_path_entry;
     private DropDown logs_key_combo;
@@ -33,6 +35,10 @@ public class MangoJuice : Adw.Application {
     private Label duracion_value_label;
     private Label autostart_value_label;
     private Label interval_value_label;
+    private DropDown fps_limit_method;
+    private DropDown toggle_fps_limit;
+    private Scale scale;
+    private Label fps_limit_label;
 
     private const string GPU_TITLE = "GPU";
     private const string CPU_TITLE = "CPU";
@@ -42,6 +48,8 @@ public class MangoJuice : Adw.Application {
     private const string OPTIONS_TITLE = "Options";
     private const string BATTERY_TITLE = "Battery";
     private const string OTHER_EXTRA_TITLE = "Other Extras";
+    private const string BOX3_TITLE = "Infotmation"; // Добавляем заголовок для box3
+    private const string LIMITERS_TITLE = "Limiters FPS"; // Добавляем заголовок для Limiters
 
     private const int GPU_SWITCHES_COUNT = 15;
     private const int CPU_SWITCHES_COUNT = 6;
@@ -51,6 +59,7 @@ public class MangoJuice : Adw.Application {
     private const int OPTIONS_SWITCHES_COUNT = 6;
     private const int BATTERY_SWITCHES_COUNT = 4;
     private const int OTHER_EXTRA_SWITCHES_COUNT = 5;
+    private const int BOX3_SWITCHES_COUNT = 7; // Добавляем количество переключателей для box3
     private const int MAIN_BOX_SPACING = 10;
     private const int FLOW_BOX_ROW_SPACING = 10;
     private const int FLOW_BOX_COLUMN_SPACING = 10;
@@ -86,6 +95,9 @@ public class MangoJuice : Adw.Application {
     private string[] other_extra_config_vars = {
         "media_player", "network", "full", "log_versioning", "upload_logs"
     };
+    private string[] box3_config_vars = { // Добавляем переменные конфигурации для box3
+        "fps", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count"
+    };
     private string[] gpu_label_texts = {
         "GPU Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
         "GPU Temp", "Memory Temp", "Juntion", "Fans", "Model",
@@ -112,7 +124,10 @@ public class MangoJuice : Adw.Application {
         "Percentage", "Wattage", "Time remain", "Device"
     };
     private string[] other_extra_label_texts = {
-        "Media Info", "Network", "Full ON", "Log Versioning", "Avtoupload Results"
+        "Media", "Network", "Full ON", "Log Versioning", "Avtoupload Results"
+    };
+    private string[] box3_label_texts = { // Добавляем тексты меток для box3
+        "FPS", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame"
     };
 
     public MangoJuice() {
@@ -149,6 +164,7 @@ public class MangoJuice : Adw.Application {
         options_switches = new Switch[OPTIONS_SWITCHES_COUNT];
         battery_switches = new Switch[BATTERY_SWITCHES_COUNT];
         other_extra_switches = new Switch[OTHER_EXTRA_SWITCHES_COUNT];
+        box3_switches = new Switch[BOX3_SWITCHES_COUNT]; // Инициализируем массив для box3
 
         gpu_labels = new Label[GPU_SWITCHES_COUNT];
         cpu_labels = new Label[CPU_SWITCHES_COUNT];
@@ -158,6 +174,7 @@ public class MangoJuice : Adw.Application {
         options_labels = new Label[OPTIONS_SWITCHES_COUNT];
         battery_labels = new Label[BATTERY_SWITCHES_COUNT];
         other_extra_labels = new Label[OTHER_EXTRA_SWITCHES_COUNT];
+        box3_labels = new Label[BOX3_SWITCHES_COUNT]; // Инициализируем массив для box3
 
         create_switches_and_labels(box1, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts, GPU_SWITCHES_COUNT);
         create_switches_and_labels(box1, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts, CPU_SWITCHES_COUNT);
@@ -170,6 +187,48 @@ public class MangoJuice : Adw.Application {
         create_switches_and_labels(box2, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts, OTHER_EXTRA_SWITCHES_COUNT);
 
         create_scales_and_labels(box2);
+
+        create_switches_and_labels(box3, BOX3_TITLE, box3_switches, box3_labels, box3_config_vars, box3_label_texts, BOX3_SWITCHES_COUNT); // Добавляем переключатели и метки в box3
+
+        // Добавляем заголовок "Limiters"
+        var limiters_label = new Label(LIMITERS_TITLE);
+        limiters_label.set_halign(Align.CENTER);
+        limiters_label.set_margin_top(FLOW_BOX_MARGIN);
+        limiters_label.set_margin_start(FLOW_BOX_MARGIN);
+        limiters_label.set_margin_end(FLOW_BOX_MARGIN);
+        box3.append(limiters_label);
+
+        // Создаем выпадающий список с двумя пунктами
+        var fps_limit_method_model = new StringList(new string[] { "late", "early" });
+        fps_limit_method = new DropDown(fps_limit_method_model, null);
+
+        // Создаем ползунок от 0 до 240
+        scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 240, 1);
+        scale.set_hexpand(true);
+
+        // Создаем метку для отображения значения ползунка
+        fps_limit_label = new Label("");
+        fps_limit_label.set_halign(Align.END);
+        scale.value_changed.connect(() => {
+            fps_limit_label.label = "%d".printf((int)scale.get_value());
+        });
+
+        // Создаем выпадающий список с четырьмя пунктами
+        var toggle_fps_limit_model = new StringList(new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" });
+        toggle_fps_limit = new DropDown(toggle_fps_limit_model, null);
+
+        // Добавляем все элементы в одну линию
+        var limiters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        limiters_box.set_margin_start(FLOW_BOX_MARGIN);
+        limiters_box.set_margin_end(FLOW_BOX_MARGIN);
+        limiters_box.set_margin_top(FLOW_BOX_MARGIN);
+        limiters_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        limiters_box.append(fps_limit_method);
+        limiters_box.append(scale);
+        limiters_box.append(fps_limit_label);
+        limiters_box.append(toggle_fps_limit);
+
+        box3.append(limiters_box);
 
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
         view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
@@ -284,6 +343,19 @@ public class MangoJuice : Adw.Application {
             }
             return false;
         });
+
+        // Добавляем обработчики для переключателей Info2 и Info3
+        box3_switches[1].notify["active"].connect(() => {
+            if (box3_switches[1].active) {
+                box3_switches[2].active = false;
+            }
+        });
+
+        box3_switches[2].notify["active"].connect(() => {
+            if (box3_switches[2].active) {
+                box3_switches[1].active = false;
+            }
+        });
     }
 
     private void create_switches_and_labels(Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, int count) {
@@ -296,7 +368,7 @@ public class MangoJuice : Adw.Application {
 
         var flow_box = new FlowBox();
         flow_box.set_homogeneous(true);
-        flow_box.set_max_children_per_line(6);
+        flow_box.set_max_children_per_line(7);
         flow_box.set_min_children_per_line(3);
         flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
         flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
@@ -402,7 +474,6 @@ public class MangoJuice : Adw.Application {
 
             data_stream.put_string("################### File Generated by MangoJuice ###################\n");
             data_stream.put_string("legacy_layout=false\n");
-            data_stream.put_string("fps\n");
             
             save_switches_to_file(data_stream, gpu_switches, gpu_config_vars);
             save_switches_to_file(data_stream, cpu_switches, cpu_config_vars);
@@ -412,6 +483,7 @@ public class MangoJuice : Adw.Application {
             save_switches_to_file(data_stream, options_switches, options_config_vars);
             save_switches_to_file(data_stream, battery_switches, battery_config_vars);
             save_switches_to_file(data_stream, other_extra_switches, other_extra_config_vars);
+            save_switches_to_file(data_stream, box3_switches, box3_config_vars); // Сохраняем состояния переключателей для box3
 
             var custom_command = custom_command_entry.text;
             if (custom_command != "") {
@@ -433,6 +505,19 @@ public class MangoJuice : Adw.Application {
             if (custom_logs_path != "") {
                 data_stream.put_string("output_folder=%s\n".printf(custom_logs_path));
             }
+
+            // Сохраняем значения выпадающих списков и слайдера
+            if (fps_limit_method.selected_item != null) {
+                var fps_limit_method_value = (fps_limit_method.selected_item as StringObject).get_string();
+                data_stream.put_string("fps_limit_method=%s\n".printf(fps_limit_method_value));
+            }
+
+            if (toggle_fps_limit.selected_item != null) {
+                var toggle_fps_limit_value = (toggle_fps_limit.selected_item as StringObject).get_string();
+                data_stream.put_string("toggle_fps_limit=%s\n".printf(toggle_fps_limit_value));
+            }
+
+            data_stream.put_string("fps_limit=%d\n".printf((int)scale.get_value()));
 
             data_stream.close();
         } catch (Error e) {
@@ -470,6 +555,7 @@ public class MangoJuice : Adw.Application {
                 load_switch_from_file(line, options_switches, options_config_vars);
                 load_switch_from_file(line, battery_switches, battery_config_vars);
                 load_switch_from_file(line, other_extra_switches, other_extra_config_vars);
+                load_switch_from_file(line, box3_switches, box3_config_vars); // Загружаем состояния переключателей для box3
 
                 if (line.has_prefix("custom_command=")) {
                     var custom_command = line.substring("custom_command=".length);
@@ -490,22 +576,51 @@ public class MangoJuice : Adw.Application {
                 if (line.has_prefix("Custom=Duracion:")) {
                     var value = int.parse(line.substring("Custom=Duracion:".length));
                     duracion_scale.set_value(value);
-                    duracion_value_label.label = "%d".printf(value);
+                    duracion_value_label.label = "%d s".printf(value);
                 }
                 if (line.has_prefix("Custom=Autostart:")) {
                     var value = int.parse(line.substring("Custom=Autostart:".length));
                     autostart_scale.set_value(value);
-                    autostart_value_label.label = "%d".printf(value);
+                    autostart_value_label.label = "%d s".printf(value);
                 }
                 if (line.has_prefix("Custom=Interval:")) {
                     var value = int.parse(line.substring("Custom=Interval:".length));
                     interval_scale.set_value(value);
-                    interval_value_label.label = "%d".printf(value);
+                    interval_value_label.label = "%d ms".printf(value);
                 }
 
                 if (line.has_prefix("custom_logs_path=")) {
                     var custom_logs_path = line.substring("custom_logs_path=".length);
                     custom_logs_path_entry.text = custom_logs_path;
+                }
+
+                // Загрузка значений выпадающих списков и слайдера
+                if (line.has_prefix("fps_limit_method=")) {
+                    var fps_limit_method_value = line.substring("fps_limit_method=".length);
+                    for (uint i = 0; i < fps_limit_method.model.get_n_items(); i++) {
+                        var item = fps_limit_method.model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == fps_limit_method_value) {
+                            fps_limit_method.selected = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (line.has_prefix("toggle_fps_limit=")) {
+                    var toggle_fps_limit_value = line.substring("toggle_fps_limit=".length);
+                    for (uint i = 0; i < toggle_fps_limit.model.get_n_items(); i++) {
+                        var item = toggle_fps_limit.model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == toggle_fps_limit_value) {
+                            toggle_fps_limit.selected = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (line.has_prefix("fps_limit=")) {
+                    var fps_limit = int.parse(line.substring("fps_limit=".length));
+                    scale.set_value(fps_limit);
+                    fps_limit_label.label = "%d".printf(fps_limit);
                 }
             }
         } catch (Error e) {
@@ -615,4 +730,3 @@ public class MangoJuice : Adw.Application {
         return app.run(args);
     }
 }
-           
