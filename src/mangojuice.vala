@@ -117,7 +117,7 @@ public class MangoJuice : Adw.Application {
 
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
-        set_resource_base_path("/data/icons/hicolor/scalable/apps/");
+        set_resource_base_path("/usr/local/share/icons/hicolor/scalable/apps/");
     }
 
     protected override void activate() {

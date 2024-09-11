@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=MangoJuice
+Comment=Gui settings mangohud
+Exec=mangojuice
+Icon=com.radiolamp.mangojuice
+Terminal=false
+Type=Application
+Categories=Utility;Application;
