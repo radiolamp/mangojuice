@@ -1,8 +1,9 @@
-## Alpha version!
+## MangoJuice - Alpha version!
+##### Данная программа стремится стать удобной альтернативой Goverlay, для настройки Mangohud.
 
-###### Данная программа стремится стать удобной альтернативой Goverlay, для настройки Mangohud.
-
-
+<p align="center">
+    <img src="data/images/screen.png" alt="Screenshot"/>
+</p>
 
 ## Сборка из исходного кода
 
