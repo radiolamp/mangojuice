@@ -1,11 +1,44 @@
-Warning!!!!! PreAlpha
+## Alpha version!
 
-Сборка:
-```shell 
+###### Данная программа стремится стать удобной альтернативой Goverlay, для настройки Mangohud.
+
+
+
+## Сборка из исходного кода
+
+#### Зависимости:
+* `gtk4`, version: `>= 4.14`
+* `libadwaita-1`, version: `>= 1.5`
+* `gio-2.0`, version: `>= 2.72`
+* `mangohud`
+
+#### Утилиты для сборки:
+* `meson`
+* `ninja`
+* `cmake`
+* `gcc`
+* `valac`
+
+### Сборка:
+
+#### latest
+> [!NOTE]
+> В данной версии будут недоступны нестабильные функции, находящиеся в разработке.
+```shell
 meson setup build
+```
+
+### Установка:
+```shell
 sudo ninja -C build install
 ```
-Удаление:
+
+### Удаление:
 ```shell
 sudo ninja -C build uninstall
 ```
+
+## Благодарность
+Спасибо [Rirusha](https://github.com/Rirusha). За важные пояснение за Vala и GTK4.
+
+## Внимание это мой первый проэкт на GTK4 + Vala, по этому прошу относится с понимаем.
