@@ -230,6 +230,53 @@ public class MangoJuice : Adw.Application {
 
         box3.append(limiters_box);
 
+        // Добавляем заголовок "VSync"
+        var vsync_label = new Label("VSync");
+        vsync_label.set_halign(Align.CENTER);
+        vsync_label.set_margin_top(FLOW_BOX_MARGIN);
+        vsync_label.set_margin_start(FLOW_BOX_MARGIN);
+        vsync_label.set_margin_end(FLOW_BOX_MARGIN);
+        box3.append(vsync_label);
+
+        // Создаем выпадающий список для "Vulcan"
+        var vulcan_model = new StringList(new string[] { "Off", "On", "Adaptive", "Triple Buffer", "Half Refresh Rate" });
+        var vulcan_dropdown = new DropDown(vulcan_model, null);
+        vulcan_dropdown.set_halign(Align.CENTER);
+        vulcan_dropdown.set_margin_start(FLOW_BOX_MARGIN);
+        vulcan_dropdown.set_margin_end(FLOW_BOX_MARGIN);
+
+        // Создаем выпадающий список для "OpenGL"
+        var opengl_model = new StringList(new string[] { "Off", "On", "Adaptive", "Triple Buffer", "Half Refresh Rate" });
+        var opengl_dropdown = new DropDown(opengl_model, null);
+        opengl_dropdown.set_halign(Align.CENTER);
+        opengl_dropdown.set_margin_start(FLOW_BOX_MARGIN);
+        opengl_dropdown.set_margin_end(FLOW_BOX_MARGIN);
+
+        // Добавляем названия "Vulcan" и "OpenGL" справа от выпадающих списков
+        var vulcan_label = new Label("Vulcan");
+        vulcan_label.set_halign(Align.START);
+        vulcan_label.set_margin_start(FLOW_BOX_MARGIN);
+        vulcan_label.set_margin_end(FLOW_BOX_MARGIN);
+
+        var opengl_label = new Label("OpenGL");
+        opengl_label.set_halign(Align.START);
+        opengl_label.set_margin_start(FLOW_BOX_MARGIN);
+        opengl_label.set_margin_end(FLOW_BOX_MARGIN);
+
+        // Добавляем оба выпадающих списка и их названия в одну линию и центрируем
+        var vsync_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        vsync_box.set_halign(Align.CENTER);
+        vsync_box.set_margin_start(FLOW_BOX_MARGIN);
+        vsync_box.set_margin_end(FLOW_BOX_MARGIN);
+        vsync_box.set_margin_top(FLOW_BOX_MARGIN);
+        vsync_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        vsync_box.append(vulcan_dropdown);
+        vsync_box.append(vulcan_label);
+        vsync_box.append(opengl_dropdown);
+        vsync_box.append(opengl_label);
+
+        box3.append(vsync_box);
+
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
         view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
         view_stack.add_titled(box3, "box3", "Performance").icon_name = "emblem-system-symbolic";
