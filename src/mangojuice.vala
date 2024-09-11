@@ -39,6 +39,8 @@ public class MangoJuice : Adw.Application {
     private DropDown toggle_fps_limit;
     private Scale scale;
     private Label fps_limit_label;
+    private DropDown vulcan_dropdown;
+    private DropDown opengl_dropdown;
 
     private const string GPU_TITLE = "GPU";
     private const string CPU_TITLE = "CPU";
@@ -239,15 +241,15 @@ public class MangoJuice : Adw.Application {
         box3.append(vsync_label);
 
         // Создаем выпадающий список для "Vulcan"
-        var vulcan_model = new StringList(new string[] { "Off", "On", "Adaptive", "Triple Buffer", "Half Refresh Rate" });
-        var vulcan_dropdown = new DropDown(vulcan_model, null);
+        var vulcan_model = new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" });
+        vulcan_dropdown = new DropDown(vulcan_model, null);
         vulcan_dropdown.set_halign(Align.CENTER);
         vulcan_dropdown.set_margin_start(FLOW_BOX_MARGIN);
         vulcan_dropdown.set_margin_end(FLOW_BOX_MARGIN);
 
         // Создаем выпадающий список для "OpenGL"
-        var opengl_model = new StringList(new string[] { "Off", "On", "Adaptive", "Triple Buffer", "Half Refresh Rate" });
-        var opengl_dropdown = new DropDown(opengl_model, null);
+        var opengl_model = new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" });
+        opengl_dropdown = new DropDown(opengl_model, null);
         opengl_dropdown.set_halign(Align.CENTER);
         opengl_dropdown.set_margin_start(FLOW_BOX_MARGIN);
         opengl_dropdown.set_margin_end(FLOW_BOX_MARGIN);
@@ -544,7 +546,7 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
-            data_stream.put_string("log_duracion=%d\n".printf((int)duracion_scale.get_value()));
+            data_stream.put_string("log_duration=%d\n".printf((int)duracion_scale.get_value()));
             data_stream.put_string("autostart_log=%d\n".printf((int)autostart_scale.get_value()));
             data_stream.put_string("log_interval=%d\n".printf((int)interval_scale.get_value()));
 
@@ -565,6 +567,19 @@ public class MangoJuice : Adw.Application {
             }
 
             data_stream.put_string("fps_limit=%d\n".printf((int)scale.get_value()));
+
+            // Сохраняем значения выпадающих списков для Vulkan и OpenGL
+            if (vulcan_dropdown.selected_item != null) {
+                var vulcan_value = (vulcan_dropdown.selected_item as StringObject).get_string();
+                var vulcan_config_value = get_vulcan_config_value(vulcan_value);
+                data_stream.put_string("vsync=%s\n".printf(vulcan_config_value));
+            }
+
+            if (opengl_dropdown.selected_item != null) {
+                var opengl_value = (opengl_dropdown.selected_item as StringObject).get_string();
+                var opengl_config_value = get_opengl_config_value(opengl_value);
+                data_stream.put_string("gl_vsync=%s\n".printf(opengl_config_value));
+            }
 
             data_stream.close();
         } catch (Error e) {
@@ -669,6 +684,31 @@ public class MangoJuice : Adw.Application {
                     scale.set_value(fps_limit);
                     fps_limit_label.label = "%d".printf(fps_limit);
                 }
+
+                // Загрузка значений выпадающих списков для Vulkan и OpenGL
+                if (line.has_prefix("vsync=")) {
+                    var vulcan_config_value = line.substring("vsync=".length);
+                    var vulcan_value = get_vulcan_value_from_config(vulcan_config_value);
+                    for (uint i = 0; i < vulcan_dropdown.model.get_n_items(); i++) {
+                        var item = vulcan_dropdown.model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == vulcan_value) {
+                            vulcan_dropdown.selected = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (line.has_prefix("gl_vsync=")) {
+                    var opengl_config_value = line.substring("gl_vsync=".length);
+                    var opengl_value = get_opengl_value_from_config(opengl_config_value);
+                    for (uint i = 0; i < opengl_dropdown.model.get_n_items(); i++) {
+                        var item = opengl_dropdown.model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == opengl_value) {
+                            opengl_dropdown.selected = i;
+                            break;
+                        }
+                    }
+                }
             }
         } catch (Error e) {
             stderr.printf("Ошибка при чтении файла: %s\n", e.message);
@@ -770,6 +810,70 @@ public class MangoJuice : Adw.Application {
                 stderr.printf("Ошибка при выборе папки: %s\n", e.message);
             }
         });
+    }
+
+    private string get_vulcan_config_value(string vulcan_value) {
+        switch (vulcan_value) {
+            case "Unset":
+                return "0";
+            case "ON":
+                return "3";
+            case "Adaptive":
+                return "0";
+            case "Mailbox":
+                return "2";
+            case "OFF":
+                return "1";
+            default:
+                return "0";
+        }
+    }
+
+    private string get_opengl_config_value(string opengl_value) {
+        switch (opengl_value) {
+            case "Unset":
+                return "-1";
+            case "ON":
+                return "n";
+            case "Adaptive":
+                return "-1";
+            case "Mailbox":
+                return "1";
+            case "OFF":
+                return "0";
+            default:
+                return "-1";
+        }
+    }
+
+    private string get_vulcan_value_from_config(string vulcan_config_value) {
+        switch (vulcan_config_value) {
+            case "0":
+                return "Unset";
+            case "3":
+                return "ON";
+            case "2":
+                return "Mailbox";
+            case "1":
+                return "OFF";
+            default:
+                return "Unset";
+        }
+    }
+
+    private string get_opengl_value_from_config(string opengl_config_value) {
+        switch (opengl_config_value) {
+            case "-1":
+                return "Unset";
+            case "n":
+                return "ON";
+            case "1":
+                return "Mailbox";
+            case "0":
+                return "OFF";
+            default:
+                return "Unset";
+        }
     }
 
     public static int main(string[] args) {
