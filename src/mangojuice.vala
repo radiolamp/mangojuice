@@ -180,7 +180,7 @@ public class MangoJuice : Adw.Application {
         custom_command_entry.placeholder_text = "Raw Custom Cmd";
 
         custom_logs_path_entry = new Entry();
-        custom_logs_path_entry.placeholder_text = "HOME";
+        custom_logs_path_entry.placeholder_text = "Home";
 
         logsPathButton = new Button.with_label("Folder logs"); // Добавляем кнопку
         logsPathButton.clicked.connect(() => {
@@ -599,19 +599,15 @@ public class MangoJuice : Adw.Application {
     }
 
     private void open_folder_chooser_dialog() {
-        var dialog = new Gtk.FileChooserDialog("Select Logs Folder", this.active_window, FileChooserAction.SELECT_FOLDER,
-            "_Cancel", ResponseType.CANCEL,
-            "_Select", ResponseType.ACCEPT);
-
-        dialog.response.connect((response_id) => {
-            if (response_id == ResponseType.ACCEPT) {
-                var folder_path = dialog.get_file().get_path();
-                custom_logs_path_entry.text = folder_path;
+        var dialog = new Gtk.FileDialog();
+        dialog.select_folder.begin(this.active_window, null, (obj, res) => {
+            try {
+                var folder = dialog.select_folder.end(res);
+                custom_logs_path_entry.text = folder.get_path();
+            } catch (Error e) {
+                stderr.printf("Ошибка при выборе папки: %s\n", e.message);
             }
-            dialog.destroy();
         });
-
-        dialog.show();
     }
 
     public static int main(string[] args) {
@@ -619,3 +615,4 @@ public class MangoJuice : Adw.Application {
         return app.run(args);
     }
 }
+           
