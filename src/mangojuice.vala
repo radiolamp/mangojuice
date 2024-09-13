@@ -1,4 +1,4 @@
-using Gtk;
+ using Gtk;
 using GLib;
 using Adw;
 using Gee;
@@ -40,7 +40,7 @@ public class MangoJuice : Adw.Application {
     private Label autostart_value_label;
     private Label interval_value_label;
     private Label fps_limit_label;
-    private StringList logs_key_model; // Объявляем здесь
+    private StringList logs_key_model;
 
     private const string GPU_TITLE = "GPU";
     private const string CPU_TITLE = "CPU";
@@ -190,31 +190,25 @@ public class MangoJuice : Adw.Application {
         limiters_label.set_margin_end(FLOW_BOX_MARGIN);
         box3.append(limiters_label);
 
-        var fps_limit_method_model = new StringList(new string[] { "late", "early" });
-        fps_limit_method = new DropDown(fps_limit_method_model, null);
-
+        fps_limit_method = new DropDown(new StringList(new string[] { "late", "early" }), null);
         scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 240, 1);
-        scale.set_hexpand(true);
-
         fps_limit_label = new Label("");
-        fps_limit_label.set_halign(Align.END);
-        scale.value_changed.connect(() => {
-            fps_limit_label.label = "%d".printf((int)scale.get_value());
-        });
-
-        var toggle_fps_limit_model = new StringList(new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" });
-        toggle_fps_limit = new DropDown(toggle_fps_limit_model, null);
+        scale.value_changed.connect(() => fps_limit_label.label = "%d".printf((int)scale.get_value()));
+        toggle_fps_limit = new DropDown(new StringList(new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }), null);
 
         var limiters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         limiters_box.set_margin_start(FLOW_BOX_MARGIN);
         limiters_box.set_margin_end(FLOW_BOX_MARGIN);
         limiters_box.set_margin_top(FLOW_BOX_MARGIN);
         limiters_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        limiters_box.set_hexpand(true);  // Устанавливаем растягивание по горизонтали
+
+        scale.set_hexpand(true);  // Устанавливаем растягивание по горизонтали для ползунка
+
         limiters_box.append(fps_limit_method);
         limiters_box.append(scale);
         limiters_box.append(fps_limit_label);
         limiters_box.append(toggle_fps_limit);
-
         box3.append(limiters_box);
 
         var vsync_label = new Label("VSync");
@@ -224,17 +218,8 @@ public class MangoJuice : Adw.Application {
         vsync_label.set_margin_end(FLOW_BOX_MARGIN);
         box3.append(vsync_label);
 
-        var vulcan_model = new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" });
-        vulcan_dropdown = new DropDown(vulcan_model, null);
-        vulcan_dropdown.set_halign(Align.CENTER);
-        vulcan_dropdown.set_margin_start(FLOW_BOX_MARGIN);
-        vulcan_dropdown.set_margin_end(FLOW_BOX_MARGIN);
-
-        var opengl_model = new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" });
-        opengl_dropdown = new DropDown(opengl_model, null);
-        opengl_dropdown.set_halign(Align.CENTER);
-        opengl_dropdown.set_margin_start(FLOW_BOX_MARGIN);
-        opengl_dropdown.set_margin_end(FLOW_BOX_MARGIN);
+        vulcan_dropdown = new DropDown(new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
+        opengl_dropdown = new DropDown(new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
 
         var vulcan_label = new Label("Vulcan");
         vulcan_label.set_halign(Align.START);
@@ -256,7 +241,6 @@ public class MangoJuice : Adw.Application {
         vsync_box.append(vulcan_label);
         vsync_box.append(opengl_dropdown);
         vsync_box.append(opengl_label);
-
         box3.append(vsync_box);
 
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
@@ -271,27 +255,9 @@ public class MangoJuice : Adw.Application {
         custom_logs_path_entry.placeholder_text = "Home";
 
         logsPathButton = new Button.with_label("Folder logs");
-        logsPathButton.clicked.connect(() => {
-            open_folder_chooser_dialog();
-        });
+        logsPathButton.clicked.connect(() => open_folder_chooser_dialog());
 
-        var logs_key_strings = new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" };
-        logs_key_model = new StringList(logs_key_strings);
-
-        var logs_key_factory = new SignalListItemFactory();
-        logs_key_factory.setup.connect((item) => {
-            var list_item = item as ListItem;
-            var label = new Label("");
-            list_item.set_child(label);
-        });
-        logs_key_factory.bind.connect((item) => {
-            var list_item = item as ListItem;
-            var label = list_item.get_child() as Label;
-            if (list_item.item != null) {
-                label.label = (list_item.item as StringObject).get_string();
-            }
-        });
-
+        logs_key_model = new StringList(new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" });
         logs_key_combo = new DropDown(logs_key_model, null);
         logs_key_combo.notify["selected-item"].connect(() => {
             if (logs_key_combo.selected_item != null) {
@@ -311,7 +277,6 @@ public class MangoJuice : Adw.Application {
         custom_command_box.set_margin_end(FLOW_BOX_MARGIN);
         custom_command_box.set_margin_top(FLOW_BOX_MARGIN);
         custom_command_box.set_margin_bottom(FLOW_BOX_MARGIN);
-
         custom_command_box.append(custom_command_entry);
         custom_command_box.append(new Label("Logs key"));
         custom_command_box.append(logs_key_combo);
@@ -319,7 +284,6 @@ public class MangoJuice : Adw.Application {
         custom_command_box.append(custom_logs_path_entry);
         custom_command_box.append(logsPathButton);
         custom_command_box.append(resetButton);
-
         box2.append(custom_command_box);
 
         var header_bar = new Adw.HeaderBar();
@@ -328,7 +292,6 @@ public class MangoJuice : Adw.Application {
         saveButton = new Button.with_label("Save");
         saveButton.add_css_class("suggested-action");
         header_bar.pack_end(saveButton);
-
         saveButton.clicked.connect(() => {
             save_states_to_file();
             if (vkcube_was_running) {
@@ -353,13 +316,10 @@ public class MangoJuice : Adw.Application {
         content_box.append(header_bar);
         content_box.append(scrolled_window);
         window.set_content(content_box);
-
         scrolled_window.set_child(view_stack);
 
         window.present();
-
         load_states_from_file();
-
         vkcube_was_running = is_vkcube_running();
 
         window.close_request.connect(() => {
@@ -429,9 +389,7 @@ public class MangoJuice : Adw.Application {
         duracion_scale.set_margin_bottom(FLOW_BOX_MARGIN);
         duracion_value_label = new Label("");
         duracion_value_label.set_halign(Align.END);
-        duracion_scale.value_changed.connect(() => {
-            duracion_value_label.label = "%d s".printf((int)duracion_scale.get_value());
-        });
+        duracion_scale.value_changed.connect(() => duracion_value_label.label = "%d s".printf((int)duracion_scale.get_value()));
 
         autostart_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 30, 1);
         autostart_scale.set_value(0);
@@ -442,9 +400,7 @@ public class MangoJuice : Adw.Application {
         autostart_scale.set_margin_bottom(FLOW_BOX_MARGIN);
         autostart_value_label = new Label("");
         autostart_value_label.set_halign(Align.END);
-        autostart_scale.value_changed.connect(() => {
-            autostart_value_label.label = "%d s".printf((int)autostart_scale.get_value());
-        });
+        autostart_scale.value_changed.connect(() => autostart_value_label.label = "%d s".printf((int)autostart_scale.get_value()));
 
         interval_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 500, 1);
         interval_scale.set_value(0);
@@ -455,16 +411,13 @@ public class MangoJuice : Adw.Application {
         interval_scale.set_margin_bottom(FLOW_BOX_MARGIN);
         interval_value_label = new Label("");
         interval_value_label.set_halign(Align.END);
-        interval_scale.value_changed.connect(() => {
-            interval_value_label.label = "%d ms".printf((int)interval_scale.get_value());
-        });
+        interval_scale.value_changed.connect(() => interval_value_label.label = "%d ms".printf((int)interval_scale.get_value()));
 
         var scales_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         scales_box.set_margin_start(FLOW_BOX_MARGIN);
         scales_box.set_margin_end(FLOW_BOX_MARGIN);
         scales_box.set_margin_top(FLOW_BOX_MARGIN);
         scales_box.set_margin_bottom(FLOW_BOX_MARGIN);
-
         scales_box.append(new Label("Duracion"));
         scales_box.append(duracion_scale);
         scales_box.append(duracion_value_label);
@@ -499,7 +452,6 @@ public class MangoJuice : Adw.Application {
         try {
             var file_stream = file.replace(null, false, FileCreateFlags.NONE);
             var data_stream = new DataOutputStream(file_stream);
-
             data_stream.put_string("################### File Generated by MangoJuice ###################\n");
             data_stream.put_string("legacy_layout=false\n");
             
@@ -597,8 +549,7 @@ public class MangoJuice : Adw.Application {
                 load_switch_from_file(line, options_switches, options_config_vars);
 
                 if (line.has_prefix("custom_command=")) {
-                    var custom_command = line.substring("custom_command=".length);
-                    custom_command_entry.text = custom_command;
+                    custom_command_entry.text = line.substring("custom_command=".length);
                 }
 
                 if (line.has_prefix("toggle_logging=")) {
@@ -613,24 +564,20 @@ public class MangoJuice : Adw.Application {
                 }
 
                 if (line.has_prefix("log_duration=")) {
-                    var value = int.parse(line.substring("log_duration=".length));
-                    duracion_scale.set_value(value);
-                    duracion_value_label.label = "%d s".printf(value);
+                    duracion_scale.set_value(int.parse(line.substring("log_duration=".length)));
+                    duracion_value_label.label = "%d s".printf((int)duracion_scale.get_value());
                 }
                 if (line.has_prefix("autostart_log=")) {
-                    var value = int.parse(line.substring("autostart_log=".length));
-                    autostart_scale.set_value(value);
-                    autostart_value_label.label = "%d s".printf(value);
+                    autostart_scale.set_value(int.parse(line.substring("autostart_log=".length)));
+                    autostart_value_label.label = "%d s".printf((int)autostart_scale.get_value());
                 }
                 if (line.has_prefix("log_interval=")) {
-                    var value = int.parse(line.substring("log_interval=".length));
-                    interval_scale.set_value(value);
-                    interval_value_label.label = "%d ms".printf(value);
+                    interval_scale.set_value(int.parse(line.substring("log_interval=".length)));
+                    interval_value_label.label = "%d ms".printf((int)interval_scale.get_value());
                 }
 
                 if (line.has_prefix("output_folder=")) {
-                    var custom_logs_path = line.substring("output_folder=".length);
-                    custom_logs_path_entry.text = custom_logs_path;
+                    custom_logs_path_entry.text = line.substring("output_folder=".length);
                 }
 
                 if (line.has_prefix("fps_limit_method=")) {
@@ -656,9 +603,8 @@ public class MangoJuice : Adw.Application {
                 }
 
                 if (line.has_prefix("fps_limit=")) {
-                    var fps_limit = int.parse(line.substring("fps_limit=".length));
-                    scale.set_value(fps_limit);
-                    fps_limit_label.label = "%d".printf(fps_limit);
+                    scale.set_value(int.parse(line.substring("fps_limit=".length)));
+                    fps_limit_label.label = "%d".printf((int)scale.get_value());
                 }
 
                 if (line.has_prefix("vsync=")) {
