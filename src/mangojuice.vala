@@ -1,4 +1,4 @@
-using Gtk;
+ using Gtk;
 using GLib;
 using Adw;
 using Gee;
@@ -16,7 +16,6 @@ public class MangoJuice : Adw.Application {
     private Switch[] battery_switches;
     private Switch[] other_extra_switches;
     private Switch[] box3_switches;
-    private Switch[] test_switches;
     private Label[] gpu_labels;
     private Label[] cpu_labels;
     private Label[] other_labels;
@@ -26,7 +25,6 @@ public class MangoJuice : Adw.Application {
     private Label[] battery_labels;
     private Label[] other_extra_labels;
     private Label[] box3_labels;
-    private Label[] test_labels;
     private Entry custom_command_entry;
     private Entry custom_logs_path_entry;
     private DropDown logs_key_combo;
@@ -124,12 +122,6 @@ public class MangoJuice : Adw.Application {
     private string[] box3_label_texts = {
         "FPS", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame"
     };
-    private string[] test_config_vars = {
-        "test1", "test2", "test3", "test4"
-    };
-    private string[] test_label_texts = {
-        "Test 1", "Test 2", "Test 3", "Test 4"
-    };
 
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -138,7 +130,7 @@ public class MangoJuice : Adw.Application {
 
     protected override void activate() {
         var window = new Adw.ApplicationWindow(this);
-        window.set_default_size(970, 600);
+        window.set_default_size(980, 600);
         window.set_title("MangoJuice");
 
         var main_box = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
@@ -166,7 +158,6 @@ public class MangoJuice : Adw.Application {
         battery_switches = new Switch[battery_config_vars.length];
         other_extra_switches = new Switch[other_extra_config_vars.length];
         box3_switches = new Switch[box3_config_vars.length];
-        test_switches = new Switch[test_config_vars.length];
 
         gpu_labels = new Label[gpu_label_texts.length];
         cpu_labels = new Label[cpu_label_texts.length];
@@ -177,7 +168,6 @@ public class MangoJuice : Adw.Application {
         battery_labels = new Label[battery_label_texts.length];
         other_extra_labels = new Label[other_extra_label_texts.length];
         box3_labels = new Label[box3_label_texts.length];
-        test_labels = new Label[test_label_texts.length];
 
         create_switches_and_labels(box1, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts);
         create_switches_and_labels(box1, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts);
@@ -252,27 +242,6 @@ public class MangoJuice : Adw.Application {
         vsync_box.append(opengl_dropdown);
         vsync_box.append(opengl_label);
         box3.append(vsync_box);
-
-        var filters_label = new Label("Filters");
-        filters_label.set_halign(Align.CENTER);
-        filters_label.set_margin_top(FLOW_BOX_MARGIN);
-        filters_label.set_margin_start(FLOW_BOX_MARGIN);
-        filters_label.set_margin_end(FLOW_BOX_MARGIN);
-        box3.append(filters_label);
-
-        create_switches_and_labels(box3, "", test_switches, test_labels, test_config_vars, test_label_texts);
-
-        for (int i = 0; i < test_switches.length; i++) {
-            test_switches[i].notify["active"].connect(() => {
-                if (test_switches[i].active) {
-                    for (int j = 0; j < test_switches.length; j++) {
-                        if (i != j) {
-                            test_switches[j].active = false;
-                        }
-                    }
-                }
-            });
-        }
 
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
         view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
@@ -405,17 +374,6 @@ public class MangoJuice : Adw.Application {
             row_box.append(switches[i]);
             row_box.append(labels[i]);
             flow_box.insert(row_box, -1);
-
-            // Подключаем обработчик событий для каждого Switch
-            switches[i].notify["active"].connect(() => {
-                if (switches[i].active) {
-                    for (int j = 0; j < switches.length; j++) {
-                        if (i != j) {
-                            switches[j].active = false;
-                        }
-                    }
-                }
-            });
         }
 
         parent_box.append(flow_box);
@@ -506,7 +464,6 @@ public class MangoJuice : Adw.Application {
             save_switches_to_file(data_stream, other_extra_switches, other_extra_config_vars);
             save_switches_to_file(data_stream, wine_switches, wine_config_vars);
             save_switches_to_file(data_stream, options_switches, options_config_vars);
-            save_switches_to_file(data_stream, test_switches, test_config_vars);
 
             var custom_command = custom_command_entry.text;
             if (custom_command != "") {
@@ -590,7 +547,6 @@ public class MangoJuice : Adw.Application {
                 load_switch_from_file(line, other_extra_switches, other_extra_config_vars);
                 load_switch_from_file(line, box3_switches, box3_config_vars);
                 load_switch_from_file(line, options_switches, options_config_vars);
-                load_switch_from_file(line, test_switches, test_config_vars);
 
                 if (line.has_prefix("custom_command=")) {
                     custom_command_entry.text = line.substring("custom_command=".length);
