@@ -11,12 +11,12 @@
 ## Сборка из исходного кода
 
 #### Зависимости:
-* `gtk4`, version: `>= 4.14`
-* `libadwaita-1`, version: `>= 1.5`
-* `gio-2.0`, version: `>= 2.72`
-* `mangohud`: Hud
-* `mesa-demos` : OpenGL preview
-* `vulkan-tools` : Vulkan preview
+* `gtk4`
+* `libadwaita-1`
+* `gio-2.0`
+* `mangohud`
+* `mesa-demos`
+* `vulkan-tools`
 
 #### Утилиты для сборки:
 * `meson`
@@ -48,7 +48,7 @@ sudo ninja -C build uninstall
 Спасибо [Rirusha](https://github.com/Rirusha). За важные пояснение за Vala и GTK4.
 
 ## Ссылки на проэкты которыми был вдохновлен.
- - [**`Mangohud`**](https://github.com/flightlessmango/MangoHud)
- - [**`Goverlay`**](https://github.com/benjamimgois/goverlay)
+ - [`Mangohud`](https://github.com/flightlessmango/MangoHud)
+ - [`Goverlay`](https://github.com/benjamimgois/goverlay)
 
 ## Внимание это мой первый проэкт на GTK4 + Vala, по этому прошу относится с понимаем.
