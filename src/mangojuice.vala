@@ -130,7 +130,7 @@ public class MangoJuice : Adw.Application {
 
     protected override void activate() {
         var window = new Adw.ApplicationWindow(this);
-        window.set_default_size(970, 600);
+        window.set_default_size(960, 600);
         window.set_title("MangoJuice");
 
         var main_box = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
