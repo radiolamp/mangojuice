@@ -14,9 +14,9 @@
 * `gtk4`, version: `>= 4.14`
 * `libadwaita-1`, version: `>= 1.5`
 * `gio-2.0`, version: `>= 2.72`
-* `mangohud`- Hud
-* `mesa-demos` - OpenGL preview
-* `vulkan-tools` - Vulkan preview
+* `mangohud`: Hud
+* `mesa-demos` : OpenGL preview
+* `vulkan-tools` : Vulkan preview
 
 #### Утилиты для сборки:
 * `meson`
