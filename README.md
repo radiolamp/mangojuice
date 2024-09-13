@@ -43,7 +43,7 @@ sudo ninja -C build uninstall
 Спасибо [Rirusha](https://github.com/Rirusha). За важные пояснение за Vala и GTK4.
 
 ## Ссылки на проэкты которыми был вдохновлен.
-#####[Mangohud](https://github.com/flightlessmango/MangoHud)
-#####[Goverlay](https://github.com/benjamimgois/goverlay)
+[Mangohud](https://github.com/flightlessmango/MangoHud).
+[Goverlay](https://github.com/benjamimgois/goverlay).
 
 ## Внимание это мой первый проэкт на GTK4 + Vala, по этому прошу относится с понимаем.
