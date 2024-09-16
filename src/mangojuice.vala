@@ -348,11 +348,7 @@ public class MangoJuice : Adw.Application {
         header_bar.pack_end(saveButton);
         saveButton.clicked.connect(() => {
             save_states_to_file();
-            if (vkcube_was_running) {
-                restart_mangohud();
-            } else {
-                warning("vkcube was not running before saving. Restart aborted.");
-            }
+            restart_vkcube();
         });
 
         var testButton = new Button.with_label("Test");
@@ -732,20 +728,12 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private void restart_mangohud() {
+    private void restart_vkcube() {
         try {
-            string[] argv = { "pgrep", "mangohud" };
-            int exit_status;
-            string standard_output;
-            string standard_error;
-            Process.spawn_sync(null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-
-            if (exit_status == 0) {
-                Process.spawn_command_line_sync("pkill vkcube");
-                Process.spawn_command_line_async("mangohud vkcube");
-            }
+            Process.spawn_command_line_sync("pkill vkcube");
+            Process.spawn_command_line_async("mangohud vkcube");
         } catch (Error e) {
-            stderr.printf("Ошибка при перезапуске mangohud: %s\n", e.message);
+            stderr.printf("Ошибка при перезапуске vkcube: %s\n", e.message);
         }
     }
 
