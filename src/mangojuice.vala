@@ -1,4 +1,4 @@
- using Gtk;
+using Gtk;
 using GLib;
 using Adw;
 using Gee;
@@ -269,7 +269,7 @@ public class MangoJuice : Adw.Application {
         resetButton.add_css_class("destructive-action");
         resetButton.clicked.connect(() => {
             delete_mangohub_conf();
-            restart_mangohud();
+            restart_application();
         });
 
         var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -322,8 +322,9 @@ public class MangoJuice : Adw.Application {
         load_states_from_file();
         vkcube_was_running = is_vkcube_running();
 
+        // Добавляем обработчик события закрытия окна
         window.close_request.connect(() => {
-            if (vkcube_was_running) {
+            if (is_vkcube_running()) {
                 try {
                     Process.spawn_command_line_sync("pkill vkcube");
                 } catch (Error e) {
@@ -794,6 +795,18 @@ public class MangoJuice : Adw.Application {
                 return "OFF";
             default:
                 return "Unset";
+        }
+    }
+
+    private void restart_application() {
+        try {
+            // Завершаем текущий экземпляр приложения
+            this.quit();
+
+            // Запускаем новый экземпляр приложения
+            Process.spawn_command_line_async(Environment.get_prgname());
+        } catch (Error e) {
+            stderr.printf("Ошибка при перезапуске приложения: %s\n", e.message);
         }
     }
 
