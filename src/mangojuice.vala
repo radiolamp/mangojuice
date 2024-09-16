@@ -42,6 +42,12 @@ public class MangoJuice : Adw.Application {
     private Label fps_limit_label;
     private StringList logs_key_model;
 
+    private DropDown filter_dropdown;
+    private Scale filter_scale1;
+    private Scale filter_scale2;
+    private Label filter_scale1_label;
+    private Label filter_scale2_label;
+
     private const string GPU_TITLE = "GPU";
     private const string CPU_TITLE = "CPU";
     private const string OTHER_TITLE = "Other";
@@ -52,6 +58,7 @@ public class MangoJuice : Adw.Application {
     private const string OTHER_EXTRA_TITLE = "Other Extras";
     private const string BOX3_TITLE = "Infotmation";
     private const string LIMITERS_TITLE = "Limiters FPS";
+    private const string FILTERS_TITLE = "Filters";
 
     private const int MAIN_BOX_SPACING = 10;
     private const int FLOW_BOX_ROW_SPACING = 10;
@@ -242,6 +249,53 @@ public class MangoJuice : Adw.Application {
         vsync_box.append(opengl_dropdown);
         vsync_box.append(opengl_label);
         box3.append(vsync_box);
+
+        // Добавляем блок "Filters"
+        var filters_label = new Label(FILTERS_TITLE);
+        filters_label.set_halign(Align.CENTER);
+        filters_label.set_margin_top(FLOW_BOX_MARGIN);
+        filters_label.set_margin_start(FLOW_BOX_MARGIN);
+        filters_label.set_margin_end(FLOW_BOX_MARGIN);
+        box3.append(filters_label);
+
+        filter_dropdown = new DropDown(new StringList(new string[] { "none", "bicubic", "trilinear", "retro" }), null);
+        filter_dropdown.set_size_request(100, -1);  // Уменьшаем размер по горизонтали
+        filter_dropdown.set_valign(Align.CENTER);  // Устанавливаем выравнивание по вертикали
+
+        filter_scale1 = new Scale.with_range(Orientation.HORIZONTAL, 0, 16, 1);
+        filter_scale1.set_hexpand(true);
+        filter_scale1.set_margin_start(FLOW_BOX_MARGIN);
+        filter_scale1.set_margin_end(FLOW_BOX_MARGIN);
+        filter_scale1.set_margin_top(FLOW_BOX_MARGIN);
+        filter_scale1.set_margin_bottom(FLOW_BOX_MARGIN);
+        filter_scale1_label = new Label("");
+        filter_scale1_label.set_halign(Align.END);
+        filter_scale1.value_changed.connect(() => filter_scale1_label.label = "%d".printf((int)filter_scale1.get_value()));
+
+        filter_scale2 = new Scale.with_range(Orientation.HORIZONTAL, -16, 16, 1);
+        filter_scale2.set_hexpand(true);
+        filter_scale2.set_margin_start(FLOW_BOX_MARGIN);
+        filter_scale2.set_margin_end(FLOW_BOX_MARGIN);
+        filter_scale2.set_margin_top(FLOW_BOX_MARGIN);
+        filter_scale2.set_margin_bottom(FLOW_BOX_MARGIN);
+        filter_scale2.set_value(0);  // Устанавливаем значение по умолчанию на середину
+        filter_scale2_label = new Label("");
+        filter_scale2_label.set_halign(Align.END);
+        filter_scale2.value_changed.connect(() => filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value()));
+
+        var filters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        filters_box.set_margin_start(FLOW_BOX_MARGIN);
+        filters_box.set_margin_end(FLOW_BOX_MARGIN);
+        filters_box.set_margin_top(FLOW_BOX_MARGIN);
+        filters_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        filters_box.append(filter_dropdown);
+        filters_box.append(new Label("Anisotropic filtering"));
+        filters_box.append(filter_scale1);
+        filters_box.append(filter_scale1_label);
+        filters_box.append(new Label("Mipmap LoD bias"));
+        filters_box.append(filter_scale2);
+        filters_box.append(filter_scale2_label);
+        box3.append(filters_box);
 
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
         view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
@@ -511,6 +565,16 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string("gl_vsync=%s\n".printf(opengl_config_value));
             }
 
+            if (filter_dropdown.selected_item != null) {
+                var filter_value = (filter_dropdown.selected_item as StringObject).get_string();
+                if (filter_value != "none") {
+                    data_stream.put_string("%s\n".printf(filter_value));
+                }
+            }
+
+            data_stream.put_string("af=%d\n".printf((int)filter_scale1.get_value()));
+            data_stream.put_string("picmip=%d\n".printf((int)filter_scale2.get_value()));
+
             data_stream.close();
         } catch (Error e) {
             stderr.printf("Ошибка при записи в файл: %s\n", e.message);
@@ -630,6 +694,27 @@ public class MangoJuice : Adw.Application {
                             break;
                         }
                     }
+                }
+
+                if (line.has_prefix("filter=")) {
+                    var filter_value = line.substring("filter=".length);
+                    for (uint i = 0; i < filter_dropdown.model.get_n_items(); i++) {
+                        var item = filter_dropdown.model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == filter_value) {
+                            filter_dropdown.selected = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (line.has_prefix("filter_scale1=")) {
+                    filter_scale1.set_value(int.parse(line.substring("filter_scale1=".length)));
+                    filter_scale1_label.label = "%d".printf((int)filter_scale1.get_value());
+                }
+
+                if (line.has_prefix("filter_scale2=")) {
+                    filter_scale2.set_value(int.parse(line.substring("filter_scale2=".length)));
+                    filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value());
                 }
             }
         } catch (Error e) {
