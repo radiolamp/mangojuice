@@ -7,6 +7,7 @@ public class MangoJuice : Adw.Application {
     private Button saveButton;
     private Button resetButton;
     private Button logsPathButton;
+    private Button fixPowerButton;
     private Switch[] gpu_switches;
     private Switch[] cpu_switches;
     private Switch[] other_switches;
@@ -306,6 +307,7 @@ public class MangoJuice : Adw.Application {
 
         custom_command_entry = new Entry();
         custom_command_entry.placeholder_text = "Raw Custom Cmd";
+        custom_command_entry.hexpand = true; // Растягиваем поле ввода по горизонтали
 
         custom_logs_path_entry = new Entry();
         custom_logs_path_entry.placeholder_text = "Home";
@@ -328,6 +330,9 @@ public class MangoJuice : Adw.Application {
             restart_application();
         });
 
+        fixPowerButton = new Button.with_label("Fix CPU Power");
+        fixPowerButton.clicked.connect(() => fix_power());
+
         var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         custom_command_box.set_margin_start(FLOW_BOX_MARGIN);
         custom_command_box.set_margin_end(FLOW_BOX_MARGIN);
@@ -339,6 +344,7 @@ public class MangoJuice : Adw.Application {
         custom_command_box.append(new Label(""));
         custom_command_box.append(custom_logs_path_entry);
         custom_command_box.append(logsPathButton);
+        custom_command_box.append(fixPowerButton);
         custom_command_box.append(resetButton);
         box2.append(custom_command_box);
 
@@ -954,6 +960,24 @@ public class MangoJuice : Adw.Application {
             data_stream.close();
         } catch (Error e) {
             stderr.printf("Ошибка при создании файла: %s\n", e.message);
+        }
+    }
+
+    private void fix_power() {
+        try {
+            string[] argv = { "pkexec", "chmod", "404", "/sys/class/powercap/intel-rapl:0/energy_uj" };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync(null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+
+            if (exit_status == 0) {
+                warning("Power permissions fixed.");
+            } else {
+                stderr.printf("Ошибка при выполнении команды: %s\n", standard_error);
+            }
+        } catch (Error e) {
+            stderr.printf("Ошибка при выполнении команды: %s\n", e.message);
         }
     }
 
