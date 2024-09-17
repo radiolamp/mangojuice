@@ -132,6 +132,11 @@ public class MangoJuice : Adw.Application {
     };
 
     private Entry custom_text_entry;
+    private DropDown orientation_dropdown;
+    private Scale borders_scale;
+    private Label borders_value_label;
+    private Scale background_alpha_scale;  // Переименовано из text_background_alpha_scale
+    private Label background_alpha_value_label;  // Переименовано из text_background_alpha_value_label
 
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -416,6 +421,49 @@ public class MangoJuice : Adw.Application {
 
         box4.append(custom_text_entry);
 
+        // Добавляем новые элементы управления в box4
+        orientation_dropdown = new DropDown(new StringList(new string[] { "vertical", "horizontal" }), null);
+        orientation_dropdown.set_margin_start(FLOW_BOX_MARGIN);
+        orientation_dropdown.set_margin_end(FLOW_BOX_MARGIN);
+        orientation_dropdown.set_margin_top(FLOW_BOX_MARGIN);
+        orientation_dropdown.set_margin_bottom(FLOW_BOX_MARGIN);
+
+        borders_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 15, 1);
+        borders_scale.set_hexpand(true);
+        borders_scale.set_margin_start(FLOW_BOX_MARGIN);
+        borders_scale.set_margin_end(FLOW_BOX_MARGIN);
+        borders_scale.set_margin_top(FLOW_BOX_MARGIN);
+        borders_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        borders_value_label = new Label("");
+        borders_value_label.set_halign(Align.END);
+        borders_scale.value_changed.connect(() => borders_value_label.label = "%d".printf((int)borders_scale.get_value()));
+
+        background_alpha_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 9, 1);  // Изменено на диапазон от 0 до 9
+        background_alpha_scale.set_hexpand(true);
+        background_alpha_scale.set_margin_start(FLOW_BOX_MARGIN);
+        background_alpha_scale.set_margin_end(FLOW_BOX_MARGIN);
+        background_alpha_scale.set_margin_top(FLOW_BOX_MARGIN);
+        background_alpha_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        background_alpha_scale.set_value(6);  // Устанавливаем значение по умолчанию на 6
+        background_alpha_value_label = new Label("");
+        background_alpha_value_label.set_halign(Align.END);
+        background_alpha_scale.value_changed.connect(() => background_alpha_value_label.label = "%d".printf((int)background_alpha_scale.get_value()));  // Изменено на целочисленное значение
+
+        var visual_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        visual_box.set_margin_start(FLOW_BOX_MARGIN);
+        visual_box.set_margin_end(FLOW_BOX_MARGIN);
+        visual_box.set_margin_top(FLOW_BOX_MARGIN);
+        visual_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        visual_box.append(new Label("Orientation"));
+        visual_box.append(orientation_dropdown);
+        visual_box.append(new Label("Borders"));
+        visual_box.append(borders_scale);
+        visual_box.append(borders_value_label);
+        visual_box.append(new Label("Alpha"));  // "Background Alpha"
+        visual_box.append(background_alpha_scale);
+        visual_box.append(background_alpha_value_label);
+        box4.append(visual_box);
+
         // Проверяем наличие файла MangoHud.conf и создаем его при необходимости
         var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
         var file = config_dir.get_child("MangoHud.conf");
@@ -603,6 +651,17 @@ public class MangoJuice : Adw.Application {
             data_stream.put_string("af=%d\n".printf((int)filter_scale1.get_value()));
             data_stream.put_string("picmip=%d\n".printf((int)filter_scale2.get_value()));
 
+            // Сохраняем новые элементы управления
+            if (orientation_dropdown.selected_item != null) {
+                var orientation_value = (orientation_dropdown.selected_item as StringObject).get_string();
+                if (orientation_value != "vertical") {
+                    data_stream.put_string("%s\n".printf(orientation_value));
+                }
+            }
+
+            data_stream.put_string("round_corners=%d\n".printf((int)borders_scale.get_value()));
+            data_stream.put_string("background_alpha=0.%d\n".printf((int)background_alpha_scale.get_value()));  // Изменено на целочисленное значение
+
             data_stream.close();
         } catch (Error e) {
             stderr.printf("Ошибка при записи в файл: %s\n", e.message);
@@ -748,6 +807,28 @@ public class MangoJuice : Adw.Application {
                 // Загружаем пользовательский текст
                 if (line.has_prefix("custom_text=")) {
                     custom_text_entry.text = line.substring("custom_text=".length);
+                }
+
+                // Загружаем новые элементы управления
+                if (line.has_prefix("orientation=")) {
+                    var orientation_value = line.substring("orientation=".length);
+                    for (uint i = 0; i < orientation_dropdown.model.get_n_items(); i++) {
+                        var item = orientation_dropdown.model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == orientation_value) {
+                            orientation_dropdown.selected = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (line.has_prefix("borders=")) {
+                    borders_scale.set_value(int.parse(line.substring("borders=".length)));
+                    borders_value_label.label = "%d".printf((int)borders_scale.get_value());
+                }
+
+                if (line.has_prefix("background_alpha=")) {
+                    background_alpha_scale.set_value(int.parse(line.substring("background_alpha=".length)));  // Изменено на целочисленное значение
+                    background_alpha_value_label.label = "%d".printf((int)background_alpha_scale.get_value());  // Изменено на целочисленное значение
                 }
             }
         } catch (Error e) {
@@ -954,9 +1035,12 @@ public class MangoJuice : Adw.Application {
             data_stream.put_string("fps_limit=60\n");
             data_stream.put_string("vsync=0\n");
             data_stream.put_string("gl_vsync=-1\n");
-            data_stream.put_string("filter=none\n");
+            data_stream.put_string("none\n");
             data_stream.put_string("af=0\n");
             data_stream.put_string("picmip=0\n");
+            data_stream.put_string("orientation=horizontal\n");
+            data_stream.put_string("borders=0\n");
+            data_stream.put_string("background_alpha=0.6\n");
             data_stream.close();
         } catch (Error e) {
             stderr.printf("Ошибка при создании файла: %s\n", e.message);
