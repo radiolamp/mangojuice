@@ -7,6 +7,7 @@ public class MangoJuice : Adw.Application {
     private Button saveButton;
     private Button resetButton;
     private Button logsPathButton;
+    private Button intelPowerFixButton;  // Добавляем новую кнопку
     private Switch[] gpu_switches;
     private Switch[] cpu_switches;
     private Switch[] other_switches;
@@ -129,6 +130,8 @@ public class MangoJuice : Adw.Application {
     };
 
     private bool test_button_pressed = false;  // Флаг для отслеживания нажатия кнопки "Test"
+
+    private Entry custom_text_center_entry;  // Добавляем новую строку ввода
 
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -312,6 +315,15 @@ public class MangoJuice : Adw.Application {
         logsPathButton = new Button.with_label("Folder logs");
         logsPathButton.clicked.connect(() => open_folder_chooser_dialog());
 
+        intelPowerFixButton = new Button.with_label("Intel Power Fix");  // Добавляем новую кнопку
+        intelPowerFixButton.clicked.connect(() => {
+            try {
+                Process.spawn_command_line_sync("pkexec chmod 0644 /sys/class/powercap/intel-rapl\\:0/energy_uj");
+            } catch (Error e) {
+                stderr.printf("Ошибка при выполнении команды: %s\n", e.message);
+            }
+        });
+
         logs_key_model = new StringList(new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" });
         logs_key_combo = new DropDown(logs_key_model, null);
         logs_key_combo.notify["selected-item"].connect(() => {
@@ -324,7 +336,7 @@ public class MangoJuice : Adw.Application {
         resetButton.add_css_class("destructive-action");
         resetButton.clicked.connect(() => {
             delete_mangohub_conf();
-            restart_application();
+            close();  // Заменяем restart_application на close
         });
 
         var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -338,6 +350,7 @@ public class MangoJuice : Adw.Application {
         custom_command_box.append(new Label(""));
         custom_command_box.append(custom_logs_path_entry);
         custom_command_box.append(logsPathButton);
+        custom_command_box.append(intelPowerFixButton);  // Добавляем новую кнопку
         custom_command_box.append(resetButton);
         box2.append(custom_command_box);
 
@@ -400,6 +413,26 @@ public class MangoJuice : Adw.Application {
                 box3_switches[1].active = false;
             }
         });
+
+        // Добавляем блок "Customize" в Box4
+        var customize_label = new Label("Customize");
+        customize_label.set_halign(Align.CENTER);
+        customize_label.set_margin_top(FLOW_BOX_MARGIN);
+        customize_label.set_margin_start(FLOW_BOX_MARGIN);
+        customize_label.set_margin_end(FLOW_BOX_MARGIN);
+        box4.append(customize_label);
+
+        custom_text_center_entry = new Entry();
+        custom_text_center_entry.placeholder_text = "Enter custom text";
+        custom_text_center_entry.hexpand = true;
+
+        var customize_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        customize_box.set_margin_start(FLOW_BOX_MARGIN);
+        customize_box.set_margin_end(FLOW_BOX_MARGIN);
+        customize_box.set_margin_top(FLOW_BOX_MARGIN);
+        customize_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        customize_box.append(custom_text_center_entry);
+        box4.append(customize_box);
     }
 
     private void create_switches_and_labels(Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts) {
@@ -576,6 +609,12 @@ public class MangoJuice : Adw.Application {
             data_stream.put_string("af=%d\n".printf((int)filter_scale1.get_value()));
             data_stream.put_string("picmip=%d\n".printf((int)filter_scale2.get_value()));
 
+            // Сохранение пользовательского текста
+            var custom_text_center = custom_text_center_entry.text;
+            if (custom_text_center != "") {
+                data_stream.put_string("custom_text_center=%s\n".printf(custom_text_center));
+            }
+
             data_stream.close();
         } catch (Error e) {
             stderr.printf("Ошибка при записи в файл: %s\n", e.message);
@@ -716,6 +755,11 @@ public class MangoJuice : Adw.Application {
                 if (line.has_prefix("filter_scale2=")) {
                     filter_scale2.set_value(int.parse(line.substring("filter_scale2=".length)));
                     filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value());
+                }
+
+                // Загрузка пользовательского текста
+                if (line.has_prefix("custom_text_center=")) {
+                    custom_text_center_entry.text = line.substring("custom_text_center=".length);
                 }
             }
         } catch (Error e) {
@@ -876,16 +920,8 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private void restart_application() {
-        try {
-            // Завершаем текущий экземпляр приложения
-            this.quit();
-
-            // Запускаем новый экземпляр приложения
-            Process.spawn_command_line_async(Environment.get_prgname());
-        } catch (Error e) {
-            stderr.printf("Ошибка при перезапуске приложения: %s\n", e.message);
-        }
+    private void close() {
+        this.quit();
     }
 
     public static int main(string[] args) {
