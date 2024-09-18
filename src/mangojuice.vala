@@ -7,7 +7,6 @@ public class MangoJuice : Adw.Application {
     private Button saveButton;
     private Button resetButton;
     private Button logsPathButton;
-    private Button fixPowerButton;
     private Switch[] gpu_switches;
     private Switch[] cpu_switches;
     private Switch[] other_switches;
@@ -65,8 +64,6 @@ public class MangoJuice : Adw.Application {
     private const int FLOW_BOX_ROW_SPACING = 10;
     private const int FLOW_BOX_COLUMN_SPACING = 10;
     private const int FLOW_BOX_MARGIN = 10;
-
-    private bool vkcube_was_running = false;
 
     private string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
@@ -131,12 +128,7 @@ public class MangoJuice : Adw.Application {
         "FPS", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame"
     };
 
-    private Entry custom_text_entry;
-    private DropDown orientation_dropdown;
-    private Scale borders_scale;
-    private Label borders_value_label;
-    private Scale background_alpha_scale;  // Переименовано из text_background_alpha_scale
-    private Label background_alpha_value_label;  // Переименовано из text_background_alpha_value_label
+    private bool test_button_pressed = false;  // Флаг для отслеживания нажатия кнопки "Test"
 
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -312,7 +304,7 @@ public class MangoJuice : Adw.Application {
 
         custom_command_entry = new Entry();
         custom_command_entry.placeholder_text = "Raw Custom Cmd";
-        custom_command_entry.hexpand = true; // Растягиваем поле ввода по горизонтали
+        custom_command_entry.hexpand = true;
 
         custom_logs_path_entry = new Entry();
         custom_logs_path_entry.placeholder_text = "Home";
@@ -335,9 +327,6 @@ public class MangoJuice : Adw.Application {
             restart_application();
         });
 
-        fixPowerButton = new Button.with_label("Fix CPU Power");
-        fixPowerButton.clicked.connect(() => fix_power());
-
         var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         custom_command_box.set_margin_start(FLOW_BOX_MARGIN);
         custom_command_box.set_margin_end(FLOW_BOX_MARGIN);
@@ -349,7 +338,6 @@ public class MangoJuice : Adw.Application {
         custom_command_box.append(new Label(""));
         custom_command_box.append(custom_logs_path_entry);
         custom_command_box.append(logsPathButton);
-        custom_command_box.append(fixPowerButton);
         custom_command_box.append(resetButton);
         box2.append(custom_command_box);
 
@@ -361,7 +349,11 @@ public class MangoJuice : Adw.Application {
         header_bar.pack_end(saveButton);
         saveButton.clicked.connect(() => {
             save_states_to_file();
-            restart_vkcube();
+
+            if (test_button_pressed) {  // Проверяем флаг
+                restart_vkcube();
+                test_button_pressed = false;  // Сбрасываем флаг
+            }
         });
 
         var testButton = new Button.with_label("Test");
@@ -369,6 +361,7 @@ public class MangoJuice : Adw.Application {
             try {
                 Process.spawn_command_line_sync("pkill vkcube");
                 Process.spawn_command_line_async("mangohud vkcube");
+                test_button_pressed = true;  // Устанавливаем флаг
             } catch (Error e) {
                 stderr.printf("Ошибка при запуске команды: %s\n", e.message);
             }
@@ -383,7 +376,6 @@ public class MangoJuice : Adw.Application {
 
         window.present();
         load_states_from_file();
-        vkcube_was_running = is_vkcube_running();
 
         // Добавляем обработчик события закрытия окна
         window.close_request.connect(() => {
@@ -408,68 +400,6 @@ public class MangoJuice : Adw.Application {
                 box3_switches[1].active = false;
             }
         });
-
-        // Добавляем поле ввода текста в box4
-        custom_text_entry = new Entry();
-        custom_text_entry.placeholder_text = "You Text";
-        custom_text_entry.hexpand = true; // Устанавливаем растягивание по горизонтали
-        custom_text_entry.set_margin_start(25); // Добавляем отступы по 5 пикселей
-        custom_text_entry.set_margin_end(25);
-        custom_text_entry.set_margin_top(10);
-        custom_text_entry.set_margin_bottom(10);
-        custom_text_entry.changed.connect(() => save_custom_text_to_file());
-
-        box4.append(custom_text_entry);
-
-        // Добавляем новые элементы управления в box4
-        orientation_dropdown = new DropDown(new StringList(new string[] { "vertical", "horizontal" }), null);
-        orientation_dropdown.set_margin_start(FLOW_BOX_MARGIN);
-        orientation_dropdown.set_margin_end(FLOW_BOX_MARGIN);
-        orientation_dropdown.set_margin_top(FLOW_BOX_MARGIN);
-        orientation_dropdown.set_margin_bottom(FLOW_BOX_MARGIN);
-
-        borders_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 15, 1);
-        borders_scale.set_hexpand(true);
-        borders_scale.set_margin_start(FLOW_BOX_MARGIN);
-        borders_scale.set_margin_end(FLOW_BOX_MARGIN);
-        borders_scale.set_margin_top(FLOW_BOX_MARGIN);
-        borders_scale.set_margin_bottom(FLOW_BOX_MARGIN);
-        borders_value_label = new Label("");
-        borders_value_label.set_halign(Align.END);
-        borders_scale.value_changed.connect(() => borders_value_label.label = "%d".printf((int)borders_scale.get_value()));
-
-        background_alpha_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 9, 1);  // Изменено на диапазон от 0 до 9
-        background_alpha_scale.set_hexpand(true);
-        background_alpha_scale.set_margin_start(FLOW_BOX_MARGIN);
-        background_alpha_scale.set_margin_end(FLOW_BOX_MARGIN);
-        background_alpha_scale.set_margin_top(FLOW_BOX_MARGIN);
-        background_alpha_scale.set_margin_bottom(FLOW_BOX_MARGIN);
-        background_alpha_scale.set_value(6);  // Устанавливаем значение по умолчанию на 6
-        background_alpha_value_label = new Label("");
-        background_alpha_value_label.set_halign(Align.END);
-        background_alpha_scale.value_changed.connect(() => background_alpha_value_label.label = "%d".printf((int)background_alpha_scale.get_value()));  // Изменено на целочисленное значение
-
-        var visual_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        visual_box.set_margin_start(FLOW_BOX_MARGIN);
-        visual_box.set_margin_end(FLOW_BOX_MARGIN);
-        visual_box.set_margin_top(FLOW_BOX_MARGIN);
-        visual_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        visual_box.append(new Label("Orientation"));
-        visual_box.append(orientation_dropdown);
-        visual_box.append(new Label("Borders"));
-        visual_box.append(borders_scale);
-        visual_box.append(borders_value_label);
-        visual_box.append(new Label("Alpha"));  // "Background Alpha"
-        visual_box.append(background_alpha_scale);
-        visual_box.append(background_alpha_value_label);
-        box4.append(visual_box);
-
-        // Проверяем наличие файла MangoHud.conf и создаем его при необходимости
-        var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
-        var file = config_dir.get_child("MangoHud.conf");
-        if (!file.query_exists()) {
-            create_default_config_file(file);
-        }
     }
 
     private void create_switches_and_labels(Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts) {
@@ -580,12 +510,7 @@ public class MangoJuice : Adw.Application {
             var data_stream = new DataOutputStream(file_stream);
             data_stream.put_string("################### File Generated by MangoJuice ###################\n");
             data_stream.put_string("legacy_layout=false\n");
-
-            var custom_text = custom_text_entry.text;
-            if (custom_text != "") {
-                data_stream.put_string("custom_text_center=%s\n".printf(custom_text));
-            }
-
+            
             save_switches_to_file(data_stream, box3_switches, box3_config_vars);
             save_switches_to_file(data_stream, gpu_switches, gpu_config_vars);
             save_switches_to_file(data_stream, cpu_switches, cpu_config_vars);
@@ -650,17 +575,6 @@ public class MangoJuice : Adw.Application {
 
             data_stream.put_string("af=%d\n".printf((int)filter_scale1.get_value()));
             data_stream.put_string("picmip=%d\n".printf((int)filter_scale2.get_value()));
-
-            // Сохраняем новые элементы управления
-            if (orientation_dropdown.selected_item != null) {
-                var orientation_value = (orientation_dropdown.selected_item as StringObject).get_string();
-                if (orientation_value != "vertical") {
-                    data_stream.put_string("%s\n".printf(orientation_value));
-                }
-            }
-
-            data_stream.put_string("round_corners=%d\n".printf((int)borders_scale.get_value()));
-            data_stream.put_string("background_alpha=0.%d\n".printf((int)background_alpha_scale.get_value()));  // Изменено на целочисленное значение
 
             data_stream.close();
         } catch (Error e) {
@@ -802,33 +716,6 @@ public class MangoJuice : Adw.Application {
                 if (line.has_prefix("filter_scale2=")) {
                     filter_scale2.set_value(int.parse(line.substring("filter_scale2=".length)));
                     filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value());
-                }
-
-                // Загружаем пользовательский текст
-                if (line.has_prefix("custom_text=")) {
-                    custom_text_entry.text = line.substring("custom_text=".length);
-                }
-
-                // Загружаем новые элементы управления
-                if (line.has_prefix("orientation=")) {
-                    var orientation_value = line.substring("orientation=".length);
-                    for (uint i = 0; i < orientation_dropdown.model.get_n_items(); i++) {
-                        var item = orientation_dropdown.model.get_item(i) as StringObject;
-                        if (item != null && item.get_string() == orientation_value) {
-                            orientation_dropdown.selected = i;
-                            break;
-                        }
-                    }
-                }
-
-                if (line.has_prefix("borders=")) {
-                    borders_scale.set_value(int.parse(line.substring("borders=".length)));
-                    borders_value_label.label = "%d".printf((int)borders_scale.get_value());
-                }
-
-                if (line.has_prefix("background_alpha=")) {
-                    background_alpha_scale.set_value(int.parse(line.substring("background_alpha=".length)));  // Изменено на целочисленное значение
-                    background_alpha_value_label.label = "%d".printf((int)background_alpha_scale.get_value());  // Изменено на целочисленное значение
                 }
             }
         } catch (Error e) {
@@ -998,70 +885,6 @@ public class MangoJuice : Adw.Application {
             Process.spawn_command_line_async(Environment.get_prgname());
         } catch (Error e) {
             stderr.printf("Ошибка при перезапуске приложения: %s\n", e.message);
-        }
-    }
-
-    private void save_custom_text_to_file() {
-        var custom_text = custom_text_entry.text;
-        if (custom_text == "") {
-            return;
-        }
-
-        var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
-        var file = config_dir.get_child("MangoHud.conf");
-
-        try {
-            var file_stream = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
-            file_stream.put_string("custom_text=%s\n".printf(custom_text));
-            file_stream.close();
-        } catch (Error e) {
-            stderr.printf("Ошибка при записи в файл: %s\n", e.message);
-        }
-    }
-
-    private void create_default_config_file(File file) {
-        try {
-            var file_stream = file.create(FileCreateFlags.NONE);
-            var data_stream = new DataOutputStream(file_stream);
-            data_stream.put_string("################### Default Config File Generated by MangoJuice ###################\n");
-            data_stream.put_string("legacy_layout=false\n");
-            data_stream.put_string("toggle_logging=Shift_L+F2\n");
-            data_stream.put_string("log_duration=0\n");
-            data_stream.put_string("autostart_log=0\n");
-            data_stream.put_string("log_interval=0\n");
-            data_stream.put_string("output_folder=~\n");
-            data_stream.put_string("fps_limit_method=late\n");
-            data_stream.put_string("toggle_fps_limit=Shift_L+F1\n");
-            data_stream.put_string("fps_limit=60\n");
-            data_stream.put_string("vsync=0\n");
-            data_stream.put_string("gl_vsync=-1\n");
-            data_stream.put_string("none\n");
-            data_stream.put_string("af=0\n");
-            data_stream.put_string("picmip=0\n");
-            data_stream.put_string("orientation=horizontal\n");
-            data_stream.put_string("borders=0\n");
-            data_stream.put_string("background_alpha=0.6\n");
-            data_stream.close();
-        } catch (Error e) {
-            stderr.printf("Ошибка при создании файла: %s\n", e.message);
-        }
-    }
-
-    private void fix_power() {
-        try {
-            string[] argv = { "pkexec", "chmod", "404", "/sys/class/powercap/intel-rapl:0/energy_uj" };
-            int exit_status;
-            string standard_output;
-            string standard_error;
-            Process.spawn_sync(null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-
-            if (exit_status == 0) {
-                warning("Power permissions fixed.");
-            } else {
-                stderr.printf("Ошибка при выполнении команды: %s\n", standard_error);
-            }
-        } catch (Error e) {
-            stderr.printf("Ошибка при выполнении команды: %s\n", e.message);
         }
     }
 
