@@ -133,6 +133,12 @@ public class MangoJuice : Adw.Application {
 
     private Entry custom_text_center_entry;  // Добавляем новую строку ввода
 
+    private Switch custom_switch;  // Добавляем новый свитч
+    private Scale borders_scale;
+    private Scale alpha_scale;
+    private Label borders_value_label;
+    private Label alpha_value_label;
+
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
         set_resource_base_path("/usr/local/share/icons/hicolor/scalable/apps/");
@@ -253,7 +259,6 @@ public class MangoJuice : Adw.Application {
         vsync_box.append(opengl_label);
         box3.append(vsync_box);
 
-        // Добавляем блок "Filters"
         var filters_label = new Label(FILTERS_TITLE);
         filters_label.set_halign(Align.CENTER);
         filters_label.set_margin_top(FLOW_BOX_MARGIN);
@@ -365,7 +370,6 @@ public class MangoJuice : Adw.Application {
 
             if (test_button_pressed) {  // Проверяем флаг
                 restart_vkcube();
-                test_button_pressed = false;  // Сбрасываем флаг
             }
         });
 
@@ -390,7 +394,6 @@ public class MangoJuice : Adw.Application {
         window.present();
         load_states_from_file();
 
-        // Добавляем обработчик события закрытия окна
         window.close_request.connect(() => {
             if (is_vkcube_running()) {
                 try {
@@ -414,7 +417,6 @@ public class MangoJuice : Adw.Application {
             }
         });
 
-        // Добавляем блок "Customize" в Box4
         var customize_label = new Label("Customize");
         customize_label.set_halign(Align.CENTER);
         customize_label.set_margin_top(FLOW_BOX_MARGIN);
@@ -423,7 +425,7 @@ public class MangoJuice : Adw.Application {
         box4.append(customize_label);
 
         custom_text_center_entry = new Entry();
-        custom_text_center_entry.placeholder_text = "Enter custom text";
+        custom_text_center_entry.placeholder_text = "You text";
         custom_text_center_entry.hexpand = true;
 
         var customize_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -433,6 +435,55 @@ public class MangoJuice : Adw.Application {
         customize_box.set_margin_bottom(FLOW_BOX_MARGIN);
         customize_box.append(custom_text_center_entry);
         box4.append(customize_box);
+
+        var custom_switch_label = new Label("Horizontal Hud");
+        custom_switch_label.set_halign(Align.CENTER);
+        custom_switch_label.set_margin_start(FLOW_BOX_MARGIN);
+        custom_switch_label.set_margin_end(FLOW_BOX_MARGIN);
+
+        custom_switch = new Switch();
+        custom_switch.set_valign(Align.CENTER);
+        custom_switch.set_margin_start(FLOW_BOX_MARGIN);
+        custom_switch.set_margin_end(FLOW_BOX_MARGIN);
+
+        borders_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 15, -1);
+        borders_scale.set_hexpand(true);
+        borders_scale.set_margin_start(FLOW_BOX_MARGIN);
+        borders_scale.set_margin_end(FLOW_BOX_MARGIN);
+        borders_scale.set_margin_top(FLOW_BOX_MARGIN);
+        borders_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        borders_value_label = new Label("");
+        borders_value_label.set_halign(Align.END);
+        borders_scale.value_changed.connect(() => borders_value_label.label = "%d".printf((int)borders_scale.get_value()));
+
+        alpha_scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 100, 1);
+        alpha_scale.set_hexpand(true);
+        alpha_scale.set_margin_start(FLOW_BOX_MARGIN);
+        alpha_scale.set_margin_end(FLOW_BOX_MARGIN);
+        alpha_scale.set_margin_top(FLOW_BOX_MARGIN);
+        alpha_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        alpha_scale.set_value(50);
+        alpha_value_label = new Label("");
+        alpha_value_label.set_halign(Align.END);
+        alpha_scale.value_changed.connect(() => {
+            double value = alpha_scale.get_value();
+            alpha_value_label.label = "%.1f".printf(value / 100.0);
+        });
+
+        var custom_switch_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        custom_switch_box.set_margin_start(FLOW_BOX_MARGIN);
+        custom_switch_box.set_margin_end(FLOW_BOX_MARGIN);
+        custom_switch_box.set_margin_top(FLOW_BOX_MARGIN);
+        custom_switch_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        custom_switch_box.append(custom_switch_label);
+        custom_switch_box.append(custom_switch);
+        custom_switch_box.append(new Label("Borders"));
+        custom_switch_box.append(borders_scale);
+        custom_switch_box.append(borders_value_label);
+        custom_switch_box.append(new Label("Alpha"));
+        custom_switch_box.append(alpha_scale);
+        custom_switch_box.append(alpha_value_label);
+        box4.append(custom_switch_box);
     }
 
     private void create_switches_and_labels(Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts) {
@@ -566,9 +617,15 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
-            data_stream.put_string("log_duration=%d\n".printf((int)duracion_scale.get_value()));
-            data_stream.put_string("autostart_log=%d\n".printf((int)autostart_scale.get_value()));
-            data_stream.put_string("log_interval=%d\n".printf((int)interval_scale.get_value()));
+            if (duracion_scale != null) {
+                data_stream.put_string("log_duration=%d\n".printf((int)duracion_scale.get_value()));
+            }
+            if (autostart_scale != null) {
+                data_stream.put_string("autostart_log=%d\n".printf((int)autostart_scale.get_value()));
+            }
+            if (interval_scale != null) {
+                data_stream.put_string("log_interval=%d\n".printf((int)interval_scale.get_value()));
+            }
 
             var custom_logs_path = custom_logs_path_entry.text;
             if (custom_logs_path != "") {
@@ -585,7 +642,9 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string("toggle_fps_limit=%s\n".printf(toggle_fps_limit_value));
             }
 
-            data_stream.put_string("fps_limit=%d\n".printf((int)scale.get_value()));
+            if (scale != null) {
+                data_stream.put_string("fps_limit=%d\n".printf((int)scale.get_value()));
+            }
 
             if (vulcan_dropdown.selected_item != null) {
                 var vulcan_value = (vulcan_dropdown.selected_item as StringObject).get_string();
@@ -606,13 +665,29 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
-            data_stream.put_string("af=%d\n".printf((int)filter_scale1.get_value()));
-            data_stream.put_string("picmip=%d\n".printf((int)filter_scale2.get_value()));
+            if (filter_scale1 != null) {
+                data_stream.put_string("af=%d\n".printf((int)filter_scale1.get_value()));
+            }
+            if (filter_scale2 != null) {
+                data_stream.put_string("picmip=%d\n".printf((int)filter_scale2.get_value()));
+            }
 
-            // Сохранение пользовательского текста
             var custom_text_center = custom_text_center_entry.text;
             if (custom_text_center != "") {
                 data_stream.put_string("custom_text_center=%s\n".printf(custom_text_center));
+            }
+
+            var custom_switch_state = custom_switch.active ? "" : "#";
+            data_stream.put_string("%shorizontal\n".printf(custom_switch_state));
+            if (borders_scale != null) {
+                data_stream.put_string("round_corners=%d\n".printf((int)borders_scale.get_value()));
+            }
+
+            // Записываем значение background_alpha с заменой запятой на точку
+            if (alpha_scale != null) {
+                double alpha_value = alpha_scale.get_value() / 100.0;
+                string alpha_value_str = "%.1f".printf(alpha_value).replace(",", ".");
+                data_stream.put_string("background_alpha=%s\n".printf(alpha_value_str));
             }
 
             data_stream.close();
@@ -669,16 +744,28 @@ public class MangoJuice : Adw.Application {
                 }
 
                 if (line.has_prefix("log_duration=")) {
-                    duracion_scale.set_value(int.parse(line.substring("log_duration=".length)));
-                    duracion_value_label.label = "%d s".printf((int)duracion_scale.get_value());
+                    if (duracion_scale != null) {
+                        duracion_scale.set_value(int.parse(line.substring("log_duration=".length)));
+                        if (duracion_value_label != null) {
+                            duracion_value_label.label = "%d s".printf((int)duracion_scale.get_value());
+                        }
+                    }
                 }
                 if (line.has_prefix("autostart_log=")) {
-                    autostart_scale.set_value(int.parse(line.substring("autostart_log=".length)));
-                    autostart_value_label.label = "%d s".printf((int)autostart_scale.get_value());
+                    if (autostart_scale != null) {
+                        autostart_scale.set_value(int.parse(line.substring("autostart_log=".length)));
+                        if (autostart_value_label != null) {
+                            autostart_value_label.label = "%d s".printf((int)autostart_scale.get_value());
+                        }
+                    }
                 }
                 if (line.has_prefix("log_interval=")) {
-                    interval_scale.set_value(int.parse(line.substring("log_interval=".length)));
-                    interval_value_label.label = "%d ms".printf((int)interval_scale.get_value());
+                    if (interval_scale != null) {
+                        interval_scale.set_value(int.parse(line.substring("log_interval=".length)));
+                        if (interval_value_label != null) {
+                            interval_value_label.label = "%d ms".printf((int)interval_scale.get_value());
+                        }
+                    }
                 }
 
                 if (line.has_prefix("output_folder=")) {
@@ -708,8 +795,12 @@ public class MangoJuice : Adw.Application {
                 }
 
                 if (line.has_prefix("fps_limit=")) {
-                    scale.set_value(int.parse(line.substring("fps_limit=".length)));
-                    fps_limit_label.label = "%d".printf((int)scale.get_value());
+                    if (scale != null) {
+                        scale.set_value(int.parse(line.substring("fps_limit=".length)));
+                        if (fps_limit_label != null) {
+                            fps_limit_label.label = "%d".printf((int)scale.get_value());
+                        }
+                    }
                 }
 
                 if (line.has_prefix("vsync=")) {
@@ -748,18 +839,48 @@ public class MangoJuice : Adw.Application {
                 }
 
                 if (line.has_prefix("filter_scale1=")) {
-                    filter_scale1.set_value(int.parse(line.substring("filter_scale1=".length)));
-                    filter_scale1_label.label = "%d".printf((int)filter_scale1.get_value());
+                    if (filter_scale1 != null) {
+                        filter_scale1.set_value(int.parse(line.substring("filter_scale1=".length)));
+                        if (filter_scale1_label != null) {
+                            filter_scale1_label.label = "%d".printf((int)filter_scale1.get_value());
+                        }
+                    }
                 }
 
                 if (line.has_prefix("filter_scale2=")) {
-                    filter_scale2.set_value(int.parse(line.substring("filter_scale2=".length)));
-                    filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value());
+                    if (filter_scale2 != null) {
+                        filter_scale2.set_value(int.parse(line.substring("filter_scale2=".length)));
+                        if (filter_scale2_label != null) {
+                            filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value());
+                        }
+                    }
                 }
 
-                // Загрузка пользовательского текста
                 if (line.has_prefix("custom_text_center=")) {
                     custom_text_center_entry.text = line.substring("custom_text_center=".length);
+                }
+
+                if (line.has_prefix("horizontal_hud")) {
+                    custom_switch.active = !line.has_prefix("#");
+                }
+
+                if (line.has_prefix("round_corners=")) {
+                    if (borders_scale != null) {
+                        borders_scale.set_value(int.parse(line.substring("round_corners=".length)));
+                        if (borders_value_label != null) {
+                            borders_value_label.label = "%d".printf((int)borders_scale.get_value());
+                        }
+                    }
+                }
+
+                if (line.has_prefix("background_alpha=")) {
+                    if (alpha_scale != null) {
+                        double alpha_value = double.parse(line.substring("background_alpha=".length));
+                        alpha_scale.set_value(alpha_value * 100);
+                        if (alpha_value_label != null) {
+                            alpha_value_label.label = "%.1f".printf(alpha_value);
+                        }
+                    }
                 }
             }
         } catch (Error e) {
