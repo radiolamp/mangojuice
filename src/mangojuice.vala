@@ -7,7 +7,7 @@ public class MangoJuice : Adw.Application {
     private Button saveButton;
     private Button resetButton;
     private Button logsPathButton;
-    private Button intelPowerFixButton;  // Добавляем новую кнопку
+    private Button intelPowerFixButton;
     private Switch[] gpu_switches;
     private Switch[] cpu_switches;
     private Switch[] other_switches;
@@ -42,13 +42,11 @@ public class MangoJuice : Adw.Application {
     private Label interval_value_label;
     private Label fps_limit_label;
     private StringList logs_key_model;
-
     private DropDown filter_dropdown;
     private Scale filter_scale1;
     private Scale filter_scale2;
     private Label filter_scale1_label;
     private Label filter_scale2_label;
-
     private const string GPU_TITLE = "GPU";
     private const string CPU_TITLE = "CPU";
     private const string OTHER_TITLE = "Other";
@@ -60,12 +58,10 @@ public class MangoJuice : Adw.Application {
     private const string BOX3_TITLE = "Infotmation";
     private const string LIMITERS_TITLE = "Limiters FPS";
     private const string FILTERS_TITLE = "Filters";
-
     private const int MAIN_BOX_SPACING = 10;
     private const int FLOW_BOX_ROW_SPACING = 10;
     private const int FLOW_BOX_COLUMN_SPACING = 10;
     private const int FLOW_BOX_MARGIN = 10;
-
     private string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
@@ -128,12 +124,9 @@ public class MangoJuice : Adw.Application {
     private string[] box3_label_texts = {
         "FPS", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame"
     };
-
-    private bool test_button_pressed = false;  // Флаг для отслеживания нажатия кнопки "Test"
-
-    private Entry custom_text_center_entry;  // Добавляем новую строку ввода
-
-    private Switch custom_switch;  // Добавляем новый свитч
+    private bool test_button_pressed = false;
+    private Entry custom_text_center_entry;
+    private Switch custom_switch;
     private Scale borders_scale;
     private Scale alpha_scale;
     private Label borders_value_label;
@@ -165,199 +158,13 @@ public class MangoJuice : Adw.Application {
         var box3 = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
         var box4 = new Box(Orientation.VERTICAL, MAIN_BOX_SPACING);
 
-        gpu_switches = new Switch[gpu_config_vars.length];
-        cpu_switches = new Switch[cpu_config_vars.length];
-        other_switches = new Switch[other_config_vars.length];
-        system_switches = new Switch[system_config_vars.length];
-        wine_switches = new Switch[wine_config_vars.length];
-        options_switches = new Switch[options_config_vars.length];
-        battery_switches = new Switch[battery_config_vars.length];
-        other_extra_switches = new Switch[other_extra_config_vars.length];
-        box3_switches = new Switch[box3_config_vars.length];
-
-        gpu_labels = new Label[gpu_label_texts.length];
-        cpu_labels = new Label[cpu_label_texts.length];
-        other_labels = new Label[other_label_texts.length];
-        system_labels = new Label[system_label_texts.length];
-        wine_labels = new Label[wine_label_texts.length];
-        options_labels = new Label[options_label_texts.length];
-        battery_labels = new Label[battery_label_texts.length];
-        other_extra_labels = new Label[other_extra_label_texts.length];
-        box3_labels = new Label[box3_label_texts.length];
-
-        create_switches_and_labels(box1, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts);
-        create_switches_and_labels(box1, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts);
-        create_switches_and_labels(box1, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts);
-
-        create_switches_and_labels(box2, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts);
-        create_switches_and_labels(box2, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts);
-        create_switches_and_labels(box2, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts);
-        create_switches_and_labels(box2, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts);
-        create_switches_and_labels(box2, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts);
-
-        create_scales_and_labels(box2);
-
-        create_switches_and_labels(box3, BOX3_TITLE, box3_switches, box3_labels, box3_config_vars, box3_label_texts);
-
-        var limiters_label = new Label(LIMITERS_TITLE);
-        limiters_label.set_halign(Align.CENTER);
-        limiters_label.set_margin_top(FLOW_BOX_MARGIN);
-        limiters_label.set_margin_start(FLOW_BOX_MARGIN);
-        limiters_label.set_margin_end(FLOW_BOX_MARGIN);
-        box3.append(limiters_label);
-
-        fps_limit_method = new DropDown(new StringList(new string[] { "late", "early" }), null);
-        scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 240, 1);
-        fps_limit_label = new Label("");
-        scale.value_changed.connect(() => fps_limit_label.label = "%d".printf((int)scale.get_value()));
-        toggle_fps_limit = new DropDown(new StringList(new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }), null);
-
-        var limiters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        limiters_box.set_margin_start(FLOW_BOX_MARGIN);
-        limiters_box.set_margin_end(FLOW_BOX_MARGIN);
-        limiters_box.set_margin_top(FLOW_BOX_MARGIN);
-        limiters_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        limiters_box.set_hexpand(true);  // Устанавливаем растягивание по горизонтали
-
-        scale.set_hexpand(true);  // Устанавливаем растягивание по горизонтали для ползунка
-
-        limiters_box.append(fps_limit_method);
-        limiters_box.append(scale);
-        limiters_box.append(fps_limit_label);
-        limiters_box.append(toggle_fps_limit);
-        box3.append(limiters_box);
-
-        var vsync_label = new Label("VSync");
-        vsync_label.set_halign(Align.CENTER);
-        vsync_label.set_margin_top(FLOW_BOX_MARGIN);
-        vsync_label.set_margin_start(FLOW_BOX_MARGIN);
-        vsync_label.set_margin_end(FLOW_BOX_MARGIN);
-        box3.append(vsync_label);
-
-        vulcan_dropdown = new DropDown(new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
-        opengl_dropdown = new DropDown(new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
-
-        var vulcan_label = new Label("Vulcan");
-        vulcan_label.set_halign(Align.START);
-        vulcan_label.set_margin_start(FLOW_BOX_MARGIN);
-        vulcan_label.set_margin_end(FLOW_BOX_MARGIN);
-
-        var opengl_label = new Label("OpenGL");
-        opengl_label.set_halign(Align.START);
-        opengl_label.set_margin_start(FLOW_BOX_MARGIN);
-        opengl_label.set_margin_end(FLOW_BOX_MARGIN);
-
-        var vsync_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        vsync_box.set_halign(Align.CENTER);
-        vsync_box.set_margin_start(FLOW_BOX_MARGIN);
-        vsync_box.set_margin_end(FLOW_BOX_MARGIN);
-        vsync_box.set_margin_top(FLOW_BOX_MARGIN);
-        vsync_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        vsync_box.append(vulcan_dropdown);
-        vsync_box.append(vulcan_label);
-        vsync_box.append(opengl_dropdown);
-        vsync_box.append(opengl_label);
-        box3.append(vsync_box);
-
-        var filters_label = new Label(FILTERS_TITLE);
-        filters_label.set_halign(Align.CENTER);
-        filters_label.set_margin_top(FLOW_BOX_MARGIN);
-        filters_label.set_margin_start(FLOW_BOX_MARGIN);
-        filters_label.set_margin_end(FLOW_BOX_MARGIN);
-        box3.append(filters_label);
-
-        filter_dropdown = new DropDown(new StringList(new string[] { "none", "bicubic", "trilinear", "retro" }), null);
-        filter_dropdown.set_size_request(100, -1);  // Уменьшаем размер по горизонтали
-        filter_dropdown.set_valign(Align.CENTER);  // Устанавливаем выравнивание по вертикали
-
-        filter_scale1 = new Scale.with_range(Orientation.HORIZONTAL, 0, 16, 1);
-        filter_scale1.set_hexpand(true);
-        filter_scale1.set_margin_start(FLOW_BOX_MARGIN);
-        filter_scale1.set_margin_end(FLOW_BOX_MARGIN);
-        filter_scale1.set_margin_top(FLOW_BOX_MARGIN);
-        filter_scale1.set_margin_bottom(FLOW_BOX_MARGIN);
-        filter_scale1_label = new Label("");
-        filter_scale1_label.set_halign(Align.END);
-        filter_scale1.value_changed.connect(() => filter_scale1_label.label = "%d".printf((int)filter_scale1.get_value()));
-
-        filter_scale2 = new Scale.with_range(Orientation.HORIZONTAL, -16, 16, 1);
-        filter_scale2.set_hexpand(true);
-        filter_scale2.set_margin_start(FLOW_BOX_MARGIN);
-        filter_scale2.set_margin_end(FLOW_BOX_MARGIN);
-        filter_scale2.set_margin_top(FLOW_BOX_MARGIN);
-        filter_scale2.set_margin_bottom(FLOW_BOX_MARGIN);
-        filter_scale2.set_value(0);  // Устанавливаем значение по умолчанию на середину
-        filter_scale2_label = new Label("");
-        filter_scale2_label.set_halign(Align.END);
-        filter_scale2.value_changed.connect(() => filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value()));
-
-        var filters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        filters_box.set_margin_start(FLOW_BOX_MARGIN);
-        filters_box.set_margin_end(FLOW_BOX_MARGIN);
-        filters_box.set_margin_top(FLOW_BOX_MARGIN);
-        filters_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        filters_box.append(filter_dropdown);
-        filters_box.append(new Label("Anisotropic filtering"));
-        filters_box.append(filter_scale1);
-        filters_box.append(filter_scale1_label);
-        filters_box.append(new Label("Mipmap LoD bias"));
-        filters_box.append(filter_scale2);
-        filters_box.append(filter_scale2_label);
-        box3.append(filters_box);
+        initialize_switches_and_labels(box1, box2, box3, box4);
+        initialize_custom_controls(box2, box4);
 
         view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
         view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
         view_stack.add_titled(box3, "box3", "Performance").icon_name = "emblem-system-symbolic";
         view_stack.add_titled(box4, "box4", "Visual").icon_name = "preferences-desktop-appearance-symbolic";
-
-        custom_command_entry = new Entry();
-        custom_command_entry.placeholder_text = "Raw Custom Cmd";
-        custom_command_entry.hexpand = true;
-
-        custom_logs_path_entry = new Entry();
-        custom_logs_path_entry.placeholder_text = "Home";
-
-        logsPathButton = new Button.with_label("Folder logs");
-        logsPathButton.clicked.connect(() => open_folder_chooser_dialog());
-
-        intelPowerFixButton = new Button.with_label("Intel Power Fix");  // Добавляем новую кнопку
-        intelPowerFixButton.clicked.connect(() => {
-            try {
-                Process.spawn_command_line_sync("pkexec chmod 0644 /sys/class/powercap/intel-rapl\\:0/energy_uj");
-            } catch (Error e) {
-                stderr.printf("Ошибка при выполнении команды: %s\n", e.message);
-            }
-        });
-
-        logs_key_model = new StringList(new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" });
-        logs_key_combo = new DropDown(logs_key_model, null);
-        logs_key_combo.notify["selected-item"].connect(() => {
-            if (logs_key_combo.selected_item != null) {
-                update_logs_key_in_file((logs_key_combo.selected_item as StringObject).get_string());
-            }
-        });
-
-        resetButton = new Button.with_label("Reset Config");
-        resetButton.add_css_class("destructive-action");
-        resetButton.clicked.connect(() => {
-            delete_mangohub_conf();
-            close();  // Заменяем restart_application на close
-        });
-
-        var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        custom_command_box.set_margin_start(FLOW_BOX_MARGIN);
-        custom_command_box.set_margin_end(FLOW_BOX_MARGIN);
-        custom_command_box.set_margin_top(FLOW_BOX_MARGIN);
-        custom_command_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        custom_command_box.append(custom_command_entry);
-        custom_command_box.append(new Label("Logs key"));
-        custom_command_box.append(logs_key_combo);
-        custom_command_box.append(new Label(""));
-        custom_command_box.append(custom_logs_path_entry);
-        custom_command_box.append(logsPathButton);
-        custom_command_box.append(intelPowerFixButton);  // Добавляем новую кнопку
-        custom_command_box.append(resetButton);
-        box2.append(custom_command_box);
 
         var header_bar = new Adw.HeaderBar();
         header_bar.set_title_widget(toolbar_view_switcher);
@@ -367,8 +174,7 @@ public class MangoJuice : Adw.Application {
         header_bar.pack_end(saveButton);
         saveButton.clicked.connect(() => {
             save_states_to_file();
-
-            if (test_button_pressed) {  // Проверяем флаг
+            if (test_button_pressed) {
                 restart_vkcube();
             }
         });
@@ -378,7 +184,7 @@ public class MangoJuice : Adw.Application {
             try {
                 Process.spawn_command_line_sync("pkill vkcube");
                 Process.spawn_command_line_async("mangohud vkcube");
-                test_button_pressed = true;  // Устанавливаем флаг
+                test_button_pressed = true;
             } catch (Error e) {
                 stderr.printf("Ошибка при запуске команды: %s\n", e.message);
             }
@@ -416,6 +222,91 @@ public class MangoJuice : Adw.Application {
                 box3_switches[1].active = false;
             }
         });
+    }
+
+    private void initialize_switches_and_labels(Box box1, Box box2, Box box3, Box box4) {
+        gpu_switches = new Switch[gpu_config_vars.length];
+        cpu_switches = new Switch[cpu_config_vars.length];
+        other_switches = new Switch[other_config_vars.length];
+        system_switches = new Switch[system_config_vars.length];
+        wine_switches = new Switch[wine_config_vars.length];
+        options_switches = new Switch[options_config_vars.length];
+        battery_switches = new Switch[battery_config_vars.length];
+        other_extra_switches = new Switch[other_extra_config_vars.length];
+        box3_switches = new Switch[box3_config_vars.length];
+
+        gpu_labels = new Label[gpu_label_texts.length];
+        cpu_labels = new Label[cpu_label_texts.length];
+        other_labels = new Label[other_label_texts.length];
+        system_labels = new Label[system_label_texts.length];
+        wine_labels = new Label[wine_label_texts.length];
+        options_labels = new Label[options_label_texts.length];
+        battery_labels = new Label[battery_label_texts.length];
+        other_extra_labels = new Label[other_extra_label_texts.length];
+        box3_labels = new Label[box3_label_texts.length];
+
+        create_switches_and_labels(box1, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts);
+        create_switches_and_labels(box1, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts);
+        create_switches_and_labels(box1, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts);
+        create_switches_and_labels(box2, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts);
+        create_switches_and_labels(box2, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts);
+        create_switches_and_labels(box2, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts);
+        create_switches_and_labels(box2, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts);
+        create_switches_and_labels(box2, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts);
+        create_scales_and_labels(box2);
+        create_switches_and_labels(box3, BOX3_TITLE, box3_switches, box3_labels, box3_config_vars, box3_label_texts);
+        create_limiters_and_filters(box3);
+    }
+
+    private void initialize_custom_controls(Box box2, Box box4) {
+        custom_command_entry = new Entry();
+        custom_command_entry.placeholder_text = "Raw Custom Cmd";
+        custom_command_entry.hexpand = true;
+
+        custom_logs_path_entry = new Entry();
+        custom_logs_path_entry.placeholder_text = "Home";
+
+        logsPathButton = new Button.with_label("Folder logs");
+        logsPathButton.clicked.connect(() => open_folder_chooser_dialog());
+
+        intelPowerFixButton = new Button.with_label("Intel Power Fix");
+        intelPowerFixButton.clicked.connect(() => {
+            try {
+                Process.spawn_command_line_sync("pkexec chmod 0644 /sys/class/powercap/intel-rapl\\:0/energy_uj");
+            } catch (Error e) {
+                stderr.printf("Ошибка при выполнении команды: %s\n", e.message);
+            }
+        });
+
+        logs_key_model = new StringList(new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" });
+        logs_key_combo = new DropDown(logs_key_model, null);
+        logs_key_combo.notify["selected-item"].connect(() => {
+            if (logs_key_combo.selected_item != null) {
+                update_logs_key_in_file((logs_key_combo.selected_item as StringObject).get_string());
+            }
+        });
+
+        resetButton = new Button.with_label("Reset Config");
+        resetButton.add_css_class("destructive-action");
+        resetButton.clicked.connect(() => {
+            delete_mangohub_conf();
+            close();
+        });
+
+        var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        custom_command_box.set_margin_start(FLOW_BOX_MARGIN);
+        custom_command_box.set_margin_end(FLOW_BOX_MARGIN);
+        custom_command_box.set_margin_top(FLOW_BOX_MARGIN);
+        custom_command_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        custom_command_box.append(custom_command_entry);
+        custom_command_box.append(new Label("Logs key"));
+        custom_command_box.append(logs_key_combo);
+        custom_command_box.append(new Label(""));
+        custom_command_box.append(custom_logs_path_entry);
+        custom_command_box.append(logsPathButton);
+        custom_command_box.append(intelPowerFixButton);
+        custom_command_box.append(resetButton);
+        box2.append(custom_command_box);
 
         var customize_label = new Label("Customize");
         customize_label.set_halign(Align.CENTER);
@@ -577,6 +468,113 @@ public class MangoJuice : Adw.Application {
         parent_box.append(scales_box);
     }
 
+    private void create_limiters_and_filters(Box box3) {
+        var limiters_label = new Label(LIMITERS_TITLE);
+        limiters_label.set_halign(Align.CENTER);
+        limiters_label.set_margin_top(FLOW_BOX_MARGIN);
+        limiters_label.set_margin_start(FLOW_BOX_MARGIN);
+        limiters_label.set_margin_end(FLOW_BOX_MARGIN);
+        box3.append(limiters_label);
+
+        fps_limit_method = new DropDown(new StringList(new string[] { "late", "early" }), null);
+        scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 240, 1);
+        fps_limit_label = new Label("");
+        scale.value_changed.connect(() => fps_limit_label.label = "%d".printf((int)scale.get_value()));
+        toggle_fps_limit = new DropDown(new StringList(new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }), null);
+
+        var limiters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        limiters_box.set_margin_start(FLOW_BOX_MARGIN);
+        limiters_box.set_margin_end(FLOW_BOX_MARGIN);
+        limiters_box.set_margin_top(FLOW_BOX_MARGIN);
+        limiters_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        limiters_box.set_hexpand(true);
+
+        scale.set_hexpand(true);
+
+        limiters_box.append(fps_limit_method);
+        limiters_box.append(scale);
+        limiters_box.append(fps_limit_label);
+        limiters_box.append(toggle_fps_limit);
+        box3.append(limiters_box);
+
+        var vsync_label = new Label("VSync");
+        vsync_label.set_halign(Align.CENTER);
+        vsync_label.set_margin_top(FLOW_BOX_MARGIN);
+        vsync_label.set_margin_start(FLOW_BOX_MARGIN);
+        vsync_label.set_margin_end(FLOW_BOX_MARGIN);
+        box3.append(vsync_label);
+
+        vulcan_dropdown = new DropDown(new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
+        opengl_dropdown = new DropDown(new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
+
+        var vulcan_label = new Label("Vulcan");
+        vulcan_label.set_halign(Align.START);
+        vulcan_label.set_margin_start(FLOW_BOX_MARGIN);
+        vulcan_label.set_margin_end(FLOW_BOX_MARGIN);
+
+        var opengl_label = new Label("OpenGL");
+        opengl_label.set_halign(Align.START);
+        opengl_label.set_margin_start(FLOW_BOX_MARGIN);
+        opengl_label.set_margin_end(FLOW_BOX_MARGIN);
+
+        var vsync_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        vsync_box.set_halign(Align.CENTER);
+        vsync_box.set_margin_start(FLOW_BOX_MARGIN);
+        vsync_box.set_margin_end(FLOW_BOX_MARGIN);
+        vsync_box.set_margin_top(FLOW_BOX_MARGIN);
+        vsync_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        vsync_box.append(vulcan_dropdown);
+        vsync_box.append(vulcan_label);
+        vsync_box.append(opengl_dropdown);
+        vsync_box.append(opengl_label);
+        box3.append(vsync_box);
+
+        var filters_label = new Label(FILTERS_TITLE);
+        filters_label.set_halign(Align.CENTER);
+        filters_label.set_margin_top(FLOW_BOX_MARGIN);
+        filters_label.set_margin_start(FLOW_BOX_MARGIN);
+        filters_label.set_margin_end(FLOW_BOX_MARGIN);
+        box3.append(filters_label);
+
+        filter_dropdown = new DropDown(new StringList(new string[] { "none", "bicubic", "trilinear", "retro" }), null);
+        filter_dropdown.set_size_request(100, -1);
+        filter_dropdown.set_valign(Align.CENTER);
+
+        filter_scale1 = new Scale.with_range(Orientation.HORIZONTAL, 0, 16, 1);
+        filter_scale1.set_hexpand(true);
+        filter_scale1.set_margin_start(FLOW_BOX_MARGIN);
+        filter_scale1.set_margin_end(FLOW_BOX_MARGIN);
+        filter_scale1.set_margin_top(FLOW_BOX_MARGIN);
+        filter_scale1.set_margin_bottom(FLOW_BOX_MARGIN);
+        filter_scale1_label = new Label("");
+        filter_scale1_label.set_halign(Align.END);
+        filter_scale1.value_changed.connect(() => filter_scale1_label.label = "%d".printf((int)filter_scale1.get_value()));
+
+        filter_scale2 = new Scale.with_range(Orientation.HORIZONTAL, -16, 16, 1);
+        filter_scale2.set_hexpand(true);
+        filter_scale2.set_margin_start(FLOW_BOX_MARGIN);
+        filter_scale2.set_margin_end(FLOW_BOX_MARGIN);
+        filter_scale2.set_margin_top(FLOW_BOX_MARGIN);
+        filter_scale2.set_value(0);
+        filter_scale2_label = new Label("");
+        filter_scale2_label.set_halign(Align.END);
+        filter_scale2.value_changed.connect(() => filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value()));
+
+        var filters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        filters_box.set_margin_start(FLOW_BOX_MARGIN);
+        filters_box.set_margin_end(FLOW_BOX_MARGIN);
+        filters_box.set_margin_top(FLOW_BOX_MARGIN);
+        filters_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        filters_box.append(filter_dropdown);
+        filters_box.append(new Label("Anisotropic filtering"));
+        filters_box.append(filter_scale1);
+        filters_box.append(filter_scale1_label);
+        filters_box.append(new Label("Mipmap LoD bias"));
+        filters_box.append(filter_scale2);
+        filters_box.append(filter_scale2_label);
+        box3.append(filters_box);
+    }
+
     private void save_states_to_file() {
         var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
         if (!config_dir.query_exists()) {
@@ -594,7 +592,12 @@ public class MangoJuice : Adw.Application {
             var data_stream = new DataOutputStream(file_stream);
             data_stream.put_string("################### File Generated by MangoJuice ###################\n");
             data_stream.put_string("legacy_layout=false\n");
-            
+
+            var custom_text_center = custom_text_center_entry.text;
+            if (custom_text_center != "") {
+                data_stream.put_string("custom_text_center=%s\n".printf(custom_text_center));
+            }
+
             save_switches_to_file(data_stream, box3_switches, box3_config_vars);
             save_switches_to_file(data_stream, gpu_switches, gpu_config_vars);
             save_switches_to_file(data_stream, cpu_switches, cpu_config_vars);
@@ -672,18 +675,12 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string("picmip=%d\n".printf((int)filter_scale2.get_value()));
             }
 
-            var custom_text_center = custom_text_center_entry.text;
-            if (custom_text_center != "") {
-                data_stream.put_string("custom_text_center=%s\n".printf(custom_text_center));
-            }
-
             var custom_switch_state = custom_switch.active ? "" : "#";
             data_stream.put_string("%shorizontal\n".printf(custom_switch_state));
             if (borders_scale != null) {
                 data_stream.put_string("round_corners=%d\n".printf((int)borders_scale.get_value()));
             }
 
-            // Записываем значение background_alpha с заменой запятой на точку
             if (alpha_scale != null) {
                 double alpha_value = alpha_scale.get_value() / 100.0;
                 string alpha_value_str = "%.1f".printf(alpha_value).replace(",", ".");
@@ -860,7 +857,7 @@ public class MangoJuice : Adw.Application {
                     custom_text_center_entry.text = line.substring("custom_text_center=".length);
                 }
 
-                if (line.has_prefix("horizontal_hud")) {
+                if (line.has_prefix("horizontal")) {
                     custom_switch.active = !line.has_prefix("#");
                 }
 
