@@ -134,6 +134,7 @@ public class MangoJuice : Adw.Application {
     private DropDown position_dropdown;
     private Scale colums_scale;
     private Label colums_value_label;
+    private DropDown toggle_hud_dropdown; // Добавляем новый выпадающий список
 
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -406,6 +407,19 @@ public class MangoJuice : Adw.Application {
         colums_value_label.set_halign(Align.END);
         colums_scale.value_changed.connect(() => colums_value_label.label = "%d".printf((int)colums_scale.get_value()));
 
+        // Добавляем выпадающий список для toggle_hud
+        var toggle_hud_model = new StringList(new string[] {
+            "Shift_R+F12", "Shift_R+F1", "Shift_R+F2", "Shift_R+F3", "Shift_R+F4"
+        });
+        toggle_hud_dropdown = new DropDown(toggle_hud_model, null);
+        toggle_hud_dropdown.set_size_request(100, -1);
+        toggle_hud_dropdown.set_valign(Align.CENTER);
+        toggle_hud_dropdown.notify["selected-item"].connect(() => {
+            if (toggle_hud_dropdown.selected_item != null) {
+                update_toggle_hud_in_file((toggle_hud_dropdown.selected_item as StringObject).get_string());
+            }
+        });
+
         var position_colums_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         position_colums_box.set_margin_start(FLOW_BOX_MARGIN);
         position_colums_box.set_margin_end(FLOW_BOX_MARGIN);
@@ -416,6 +430,8 @@ public class MangoJuice : Adw.Application {
         position_colums_box.append(new Label("Colums"));
         position_colums_box.append(colums_scale);
         position_colums_box.append(colums_value_label);
+        position_colums_box.append(new Label("Toggle HUD"));
+        position_colums_box.append(toggle_hud_dropdown);
         box4.append(position_colums_box);
     }
 
@@ -735,7 +751,12 @@ public class MangoJuice : Adw.Application {
             }
 
             if (colums_scale != null) {
-                data_stream.put_string("table_colums=%d\n".printf((int)colums_scale.get_value()));
+                data_stream.put_string("table_columns=%d\n".printf((int)colums_scale.get_value()));
+            }
+
+            if (toggle_hud_dropdown.selected_item != null) {
+                var toggle_hud_value = (toggle_hud_dropdown.selected_item as StringObject).get_string();
+                data_stream.put_string("toggle_hud=%s\n".printf(toggle_hud_value));
             }
 
             data_stream.close();
@@ -942,11 +963,22 @@ public class MangoJuice : Adw.Application {
                     }
                 }
 
-                if (line.has_prefix("table_colums=")) {
+                if (line.has_prefix("table_columns=")) {
                     if (colums_scale != null) {
-                        colums_scale.set_value(int.parse(line.substring("table_colums=".length)));
+                        colums_scale.set_value(int.parse(line.substring("table_columns=".length)));
                         if (colums_value_label != null) {
                             colums_value_label.label = "%d".printf((int)colums_scale.get_value());
+                        }
+                    }
+                }
+
+                if (line.has_prefix("toggle_hud=")) {
+                    var toggle_hud_value = line.substring("toggle_hud=".length);
+                    for (uint i = 0; i < toggle_hud_dropdown.model.get_n_items(); i++) {
+                        var item = toggle_hud_dropdown.model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == toggle_hud_value) {
+                            toggle_hud_dropdown.selected = i;
+                            break;
                         }
                     }
                 }
@@ -1047,6 +1079,34 @@ public class MangoJuice : Adw.Application {
             while ((line = file_stream.read_line()) != null) {
                 if (line.has_prefix("position=")) {
                     line = "position=%s".printf(position_value);
+                }
+                lines.add(line);
+            }
+
+            var file_stream_write = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string(l + "\n");
+            }
+            file_stream_write.close();
+        } catch (Error e) {
+            stderr.printf("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_toggle_hud_in_file(string toggle_hud_value) {
+        var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
+        var file = config_dir.get_child("MangoHud.conf");
+        if (!file.query_exists()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string>();
+            var file_stream = new DataInputStream(file.read());
+            string line;
+            while ((line = file_stream.read_line()) != null) {
+                if (line.has_prefix("toggle_hud=")) {
+                    line = "toggle_hud=%s".printf(toggle_hud_value);
                 }
                 lines.add(line);
             }
