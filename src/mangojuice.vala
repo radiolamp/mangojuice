@@ -72,7 +72,7 @@ public class MangoJuice : Adw.Application {
         "cpu_power"
     };
     private string[] other_config_vars = {
-        "ram", "io_stats", "procmem", "swap"
+        "ram", "io_read", "procmem", "swap"
     };
     private string[] system_config_vars = {
         "exec=lsb_release -d | cut -f2", "refresh_rate", "resolution", "exec=echo $XDG_SESSION_TYPE",
@@ -135,6 +135,12 @@ public class MangoJuice : Adw.Application {
     private Scale colums_scale;
     private Label colums_value_label;
     private DropDown toggle_hud_dropdown; // Добавляем новый выпадающий список
+
+    private string[] vulcan_values = { "Unset", "ON", "Adaptive", "Mailbox", "OFF" };
+    private string[] vulcan_config_values = { "0", "3", "0", "2", "1" };
+
+    private string[] opengl_values = { "Unset", "ON", "Adaptive", "Mailbox", "OFF" };
+    private string[] opengl_config_values = { "-1", "n", "-1", "1", "0" };
 
     public MangoJuice() {
         Object(application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -539,8 +545,6 @@ public class MangoJuice : Adw.Application {
         limiters_box.set_margin_end(FLOW_BOX_MARGIN);
         limiters_box.set_margin_top(FLOW_BOX_MARGIN);
         limiters_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        limiters_box.set_hexpand(true);
-
         scale.set_hexpand(true);
 
         limiters_box.append(fps_limit_method);
@@ -556,8 +560,8 @@ public class MangoJuice : Adw.Application {
         vsync_label.set_margin_end(FLOW_BOX_MARGIN);
         box3.append(vsync_label);
 
-        vulcan_dropdown = new DropDown(new Gtk.StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
-        opengl_dropdown = new DropDown(new Gtk.StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
+        vulcan_dropdown = new DropDown(new Gtk.StringList(vulcan_values), null);
+        opengl_dropdown = new DropDown(new Gtk.StringList(opengl_values), null);
 
         var vulcan_label = new Label("Vulcan");
         vulcan_label.set_halign(Align.START);
@@ -752,6 +756,11 @@ public class MangoJuice : Adw.Application {
                 var toggle_hud_value = (toggle_hud_dropdown.selected_item as StringObject)?.get_string() ?? "";
                 data_stream.put_string("toggle_hud=%s\n".printf(toggle_hud_value));
             }
+
+            // Добавляем логику для io_read
+            var io_read_state = other_switches[1].active ? "" : "#";
+            data_stream.put_string("%sio_read\n".printf(io_read_state));
+            data_stream.put_string("%sio_write\n".printf(io_read_state));
 
             data_stream.close();
         } catch (Error e) {
@@ -976,6 +985,14 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
+
+                // Добавляем логику для io_read
+                if (line.has_prefix("io_read") || line.has_prefix("#io_read")) {
+                    other_switches[1].active = !line.has_prefix("#");
+                }
+                if (line.has_prefix("io_write") || line.has_prefix("#io_write")) {
+                    other_switches[1].active = !line.has_prefix("#");
+                }
             }
         } catch (Error e) {
             stderr.printf("Ошибка при чтении файла: %s\n", e.message);
@@ -1128,67 +1145,39 @@ public class MangoJuice : Adw.Application {
     }
 
     private string get_vulcan_config_value(string vulcan_value) {
-        switch (vulcan_value) {
-            case "Unset":
-                return "0";
-            case "ON":
-                return "3";
-            case "Adaptive":
-                return "0";
-            case "Mailbox":
-                return "2";
-            case "OFF":
-                return "1";
-            default:
-                return "0";
+        for (int i = 0; i < vulcan_values.length; i++) {
+            if (vulcan_values[i] == vulcan_value) {
+                return vulcan_config_values[i];
+            }
         }
+        return "0"; // Default value
     }
 
     private string get_opengl_config_value(string opengl_value) {
-        switch (opengl_value) {
-            case "Unset":
-                return "-1";
-            case "ON":
-                return "n";
-            case "Adaptive":
-                return "-1";
-            case "Mailbox":
-                return "1";
-            case "OFF":
-                return "0";
-            default:
-                return "-1";
+        for (int i = 0; i < opengl_values.length; i++) {
+            if (opengl_values[i] == opengl_value) {
+                return opengl_config_values[i];
+            }
         }
+        return "-1"; // Default value
     }
 
     private string get_vulcan_value_from_config(string vulcan_config_value) {
-        switch (vulcan_config_value) {
-            case "0":
-                return "Unset";
-            case "3":
-                return "ON";
-            case "2":
-                return "Mailbox";
-            case "1":
-                return "OFF";
-            default:
-                return "Unset";
+        for (int i = 0; i < vulcan_config_values.length; i++) {
+            if (vulcan_config_values[i] == vulcan_config_value) {
+                return vulcan_values[i];
+            }
         }
+        return "Unset"; // Default value
     }
 
     private string get_opengl_value_from_config(string opengl_config_value) {
-        switch (opengl_config_value) {
-            case "-1":
-                return "Unset";
-            case "n":
-                return "ON";
-            case "1":
-                return "Mailbox";
-            case "0":
-                return "OFF";
-            default:
-                return "Unset";
+        for (int i = 0; i < opengl_config_values.length; i++) {
+            if (opengl_config_values[i] == opengl_config_value) {
+                return opengl_values[i];
+            }
         }
+        return "Unset"; // Default value
     }
 
     private void restart_application() {
