@@ -41,12 +41,12 @@ public class MangoJuice : Adw.Application {
     private Label autostart_value_label;
     private Label interval_value_label;
     private Label fps_limit_label;
-    private StringList logs_key_model;
+    private Gtk.StringList logs_key_model;
     private DropDown filter_dropdown;
-    private Scale filter_scale1;
-    private Scale filter_scale2;
-    private Label filter_scale1_label;
-    private Label filter_scale2_label;
+    private Scale af;
+    private Scale picmip;
+    private Label af_label;
+    private Label picmip_label;
     private const string GPU_TITLE = "GPU";
     private const string CPU_TITLE = "CPU";
     private const string OTHER_TITLE = "Other";
@@ -282,7 +282,7 @@ public class MangoJuice : Adw.Application {
             }
         });
 
-        logs_key_model = new StringList(new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" });
+        logs_key_model = new Gtk.StringList(new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" });
         logs_key_combo = new DropDown(logs_key_model, null);
         logs_key_combo.notify["selected-item"].connect(() => {
             if (logs_key_combo.selected_item != null) {
@@ -381,7 +381,7 @@ public class MangoJuice : Adw.Application {
         box4.append(custom_switch_box);
 
         // Добавляем выпадающий список для позиции
-        var position_model = new StringList(new string[] {
+        var position_model = new Gtk.StringList(new string[] {
             "top-left", "top-center", "top-right",
             "middle-left", "middle-right",
             "bottom-left", "bottom-center", "bottom-right"
@@ -408,7 +408,7 @@ public class MangoJuice : Adw.Application {
         colums_scale.value_changed.connect(() => colums_value_label.label = "%d".printf((int)colums_scale.get_value()));
 
         // Добавляем выпадающий список для toggle_hud
-        var toggle_hud_model = new StringList(new string[] {
+        var toggle_hud_model = new Gtk.StringList(new string[] {
             "Shift_R+F12", "Shift_R+F1", "Shift_R+F2", "Shift_R+F3", "Shift_R+F4"
         });
         toggle_hud_dropdown = new DropDown(toggle_hud_model, null);
@@ -534,11 +534,11 @@ public class MangoJuice : Adw.Application {
         limiters_label.set_margin_end(FLOW_BOX_MARGIN);
         box3.append(limiters_label);
 
-        fps_limit_method = new DropDown(new StringList(new string[] { "late", "early" }), null);
+        fps_limit_method = new DropDown(new Gtk.StringList(new string[] { "late", "early" }), null);
         scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 240, 1);
         fps_limit_label = new Label("");
         scale.value_changed.connect(() => fps_limit_label.label = "%d".printf((int)scale.get_value()));
-        toggle_fps_limit = new DropDown(new StringList(new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }), null);
+        toggle_fps_limit = new DropDown(new Gtk.StringList(new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }), null);
 
         var limiters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         limiters_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -562,8 +562,8 @@ public class MangoJuice : Adw.Application {
         vsync_label.set_margin_end(FLOW_BOX_MARGIN);
         box3.append(vsync_label);
 
-        vulcan_dropdown = new DropDown(new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
-        opengl_dropdown = new DropDown(new StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
+        vulcan_dropdown = new DropDown(new Gtk.StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
+        opengl_dropdown = new DropDown(new Gtk.StringList(new string[] { "Unset", "ON", "Adaptive", "Mailbox", "OFF" }), null);
 
         var vulcan_label = new Label("Vulcan");
         vulcan_label.set_halign(Align.START);
@@ -594,29 +594,29 @@ public class MangoJuice : Adw.Application {
         filters_label.set_margin_end(FLOW_BOX_MARGIN);
         box3.append(filters_label);
 
-        filter_dropdown = new DropDown(new StringList(new string[] { "none", "bicubic", "trilinear", "retro" }), null);
+        filter_dropdown = new DropDown(new Gtk.StringList(new string[] { "none", "bicubic", "trilinear", "retro" }), null);
         filter_dropdown.set_size_request(100, -1);
         filter_dropdown.set_valign(Align.CENTER);
 
-        filter_scale1 = new Scale.with_range(Orientation.HORIZONTAL, 0, 16, 1);
-        filter_scale1.set_hexpand(true);
-        filter_scale1.set_margin_start(FLOW_BOX_MARGIN);
-        filter_scale1.set_margin_end(FLOW_BOX_MARGIN);
-        filter_scale1.set_margin_top(FLOW_BOX_MARGIN);
-        filter_scale1.set_margin_bottom(FLOW_BOX_MARGIN);
-        filter_scale1_label = new Label("");
-        filter_scale1_label.set_halign(Align.END);
-        filter_scale1.value_changed.connect(() => filter_scale1_label.label = "%d".printf((int)filter_scale1.get_value()));
+        af = new Scale.with_range(Orientation.HORIZONTAL, 0, 16, 1);
+        af.set_hexpand(true);
+        af.set_margin_start(FLOW_BOX_MARGIN);
+        af.set_margin_end(FLOW_BOX_MARGIN);
+        af.set_margin_top(FLOW_BOX_MARGIN);
+        af.set_margin_bottom(FLOW_BOX_MARGIN);
+        af_label = new Label("");
+        af_label.set_halign(Align.END);
+        af.value_changed.connect(() => af_label.label = "%d".printf((int)af.get_value()));
 
-        filter_scale2 = new Scale.with_range(Orientation.HORIZONTAL, -16, 16, 1);
-        filter_scale2.set_hexpand(true);
-        filter_scale2.set_margin_start(FLOW_BOX_MARGIN);
-        filter_scale2.set_margin_end(FLOW_BOX_MARGIN);
-        filter_scale2.set_margin_top(FLOW_BOX_MARGIN);
-        filter_scale2.set_value(0);
-        filter_scale2_label = new Label("");
-        filter_scale2_label.set_halign(Align.END);
-        filter_scale2.value_changed.connect(() => filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value()));
+        picmip = new Scale.with_range(Orientation.HORIZONTAL, -16, 16, 1);
+        picmip.set_hexpand(true);
+        picmip.set_margin_start(FLOW_BOX_MARGIN);
+        picmip.set_margin_end(FLOW_BOX_MARGIN);
+        picmip.set_margin_top(FLOW_BOX_MARGIN);
+        picmip.set_value(0);
+        picmip_label = new Label("");
+        picmip_label.set_halign(Align.END);
+        picmip.value_changed.connect(() => picmip_label.label = "%d".printf((int)picmip.get_value()));
 
         var filters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         filters_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -625,11 +625,11 @@ public class MangoJuice : Adw.Application {
         filters_box.set_margin_bottom(FLOW_BOX_MARGIN);
         filters_box.append(filter_dropdown);
         filters_box.append(new Label("Anisotropic filtering"));
-        filters_box.append(filter_scale1);
-        filters_box.append(filter_scale1_label);
+        filters_box.append(af);
+        filters_box.append(af_label);
         filters_box.append(new Label("Mipmap LoD bias"));
-        filters_box.append(filter_scale2);
-        filters_box.append(filter_scale2_label);
+        filters_box.append(picmip);
+        filters_box.append(picmip_label);
         box3.append(filters_box);
     }
 
@@ -726,11 +726,11 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
-            if (filter_scale1 != null) {
-                data_stream.put_string("af=%d\n".printf((int)filter_scale1.get_value()));
+            if (af != null) {
+                data_stream.put_string("af=%d\n".printf((int)af.get_value()));
             }
-            if (filter_scale2 != null) {
-                data_stream.put_string("picmip=%d\n".printf((int)filter_scale2.get_value()));
+            if (picmip != null) {
+                data_stream.put_string("picmip=%d\n".printf((int)picmip.get_value()));
             }
 
             var custom_switch_state = custom_switch.active ? "" : "#";
@@ -907,20 +907,20 @@ public class MangoJuice : Adw.Application {
                     }
                 }
 
-                if (line.has_prefix("filter_scale1=")) {
-                    if (filter_scale1 != null) {
-                        filter_scale1.set_value(int.parse(line.substring("filter_scale1=".length)));
-                        if (filter_scale1_label != null) {
-                            filter_scale1_label.label = "%d".printf((int)filter_scale1.get_value());
+                if (line.has_prefix("af=")) {
+                    if (af != null) {
+                        af.set_value(int.parse(line.substring("af=".length)));
+                        if (af_label != null) {
+                            af_label.label = "%d".printf((int)af.get_value());
                         }
                     }
                 }
 
-                if (line.has_prefix("filter_scale2=")) {
-                    if (filter_scale2 != null) {
-                        filter_scale2.set_value(int.parse(line.substring("filter_scale2=".length)));
-                        if (filter_scale2_label != null) {
-                            filter_scale2_label.label = "%d".printf((int)filter_scale2.get_value());
+                if (line.has_prefix("picmip=")) {
+                    if (picmip != null) {
+                        picmip.set_value(int.parse(line.substring("picmip=".length)));
+                        if (picmip_label != null) {
+                            picmip_label.label = "%d".printf((int)picmip.get_value());
                         }
                     }
                 }
