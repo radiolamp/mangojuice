@@ -293,7 +293,7 @@ public class MangoJuice : Adw.Application {
         resetButton.add_css_class("destructive-action");
         resetButton.clicked.connect(() => {
             delete_mangohub_conf();
-            restart();
+            restart_application();
         });
 
         var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -1137,9 +1137,13 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private void restart() {
+    private void restart_application() {
         this.quit();
-        Process.spawn_command_line_async("com.radiolamp.mangojuice");
+        try {
+            Process.spawn_command_line_async("/usr/local/bin/mangojuice");
+        } catch (Error e) {
+            stderr.printf("Ошибка при перезапуске приложения: %s\n", e.message);
+        }
     }
 
     public static int main(string[] args) {
