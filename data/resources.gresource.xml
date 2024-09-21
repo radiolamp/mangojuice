@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/com/radiolamp/mangojuice">
-    <file>icons/hicolor/scalable/apps/com.radiolamp.mangojuice.svg</file>
+  <gresource prefix="/io/github/radiolamp/mangojuice">
+    <file>icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg</file>
   </gresource>
 </gresources>

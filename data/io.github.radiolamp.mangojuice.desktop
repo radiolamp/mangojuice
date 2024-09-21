@@ -2,7 +2,7 @@
 Name=MangoJuice
 Comment=Gui settings mangohud
 Exec=mangojuice
-Icon=com.radiolamp.mangojuice
+Icon=io.github.radiolamp.mangojuice
 Terminal=false
 Type=Application
 Categories=Utility;Application;

@@ -137,7 +137,7 @@ public class MangoJuice : Adw.Application {
     private DropDown toggle_hud_dropdown; // Добавляем новый выпадающий список
 
     public MangoJuice() {
-        Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
+        Object(application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
         set_resource_base_path("/usr/local/share/icons/hicolor/scalable/apps/");
     }
 
@@ -285,9 +285,7 @@ public class MangoJuice : Adw.Application {
         logs_key_model = new Gtk.StringList(new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" });
         logs_key_combo = new DropDown(logs_key_model, null);
         logs_key_combo.notify["selected-item"].connect(() => {
-            if (logs_key_combo.selected_item != null) {
-                update_logs_key_in_file((logs_key_combo.selected_item as StringObject).get_string());
-            }
+            update_logs_key_in_file((logs_key_combo.selected_item as StringObject)?.get_string() ?? "");
         });
 
         resetButton = new Button.with_label("Reset Config");
@@ -390,9 +388,7 @@ public class MangoJuice : Adw.Application {
         position_dropdown.set_size_request(100, -1);
         position_dropdown.set_valign(Align.CENTER);
         position_dropdown.notify["selected-item"].connect(() => {
-            if (position_dropdown.selected_item != null) {
-                update_position_in_file((position_dropdown.selected_item as StringObject).get_string());
-            }
+            update_position_in_file((position_dropdown.selected_item as StringObject)?.get_string() ?? "");
         });
 
         // Добавляем ползунок для количества столбцов
@@ -415,9 +411,7 @@ public class MangoJuice : Adw.Application {
         toggle_hud_dropdown.set_size_request(100, -1);
         toggle_hud_dropdown.set_valign(Align.CENTER);
         toggle_hud_dropdown.notify["selected-item"].connect(() => {
-            if (toggle_hud_dropdown.selected_item != null) {
-                update_toggle_hud_in_file((toggle_hud_dropdown.selected_item as StringObject).get_string());
-            }
+            update_toggle_hud_in_file((toggle_hud_dropdown.selected_item as StringObject)?.get_string() ?? "");
         });
 
         var position_colums_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -672,7 +666,7 @@ public class MangoJuice : Adw.Application {
             }
 
             if (logs_key_combo.selected_item != null) {
-                var logs_key = (logs_key_combo.selected_item as StringObject).get_string();
+                var logs_key = (logs_key_combo.selected_item as StringObject)?.get_string() ?? "";
                 if (logs_key != "") {
                     data_stream.put_string("toggle_logging=%s\n".printf(logs_key));
                 }
@@ -694,12 +688,12 @@ public class MangoJuice : Adw.Application {
             }
 
             if (fps_limit_method.selected_item != null) {
-                var fps_limit_method_value = (fps_limit_method.selected_item as StringObject).get_string();
+                var fps_limit_method_value = (fps_limit_method.selected_item as StringObject)?.get_string() ?? "";
                 data_stream.put_string("fps_limit_method=%s\n".printf(fps_limit_method_value));
             }
 
             if (toggle_fps_limit.selected_item != null) {
-                var toggle_fps_limit_value = (toggle_fps_limit.selected_item as StringObject).get_string();
+                var toggle_fps_limit_value = (toggle_fps_limit.selected_item as StringObject)?.get_string() ?? "";
                 data_stream.put_string("toggle_fps_limit=%s\n".printf(toggle_fps_limit_value));
             }
 
@@ -708,19 +702,19 @@ public class MangoJuice : Adw.Application {
             }
 
             if (vulcan_dropdown.selected_item != null) {
-                var vulcan_value = (vulcan_dropdown.selected_item as StringObject).get_string();
+                var vulcan_value = (vulcan_dropdown.selected_item as StringObject)?.get_string() ?? "";
                 var vulcan_config_value = get_vulcan_config_value(vulcan_value);
                 data_stream.put_string("vsync=%s\n".printf(vulcan_config_value));
             }
 
             if (opengl_dropdown.selected_item != null) {
-                var opengl_value = (opengl_dropdown.selected_item as StringObject).get_string();
+                var opengl_value = (opengl_dropdown.selected_item as StringObject)?.get_string() ?? "";
                 var opengl_config_value = get_opengl_config_value(opengl_value);
                 data_stream.put_string("gl_vsync=%s\n".printf(opengl_config_value));
             }
 
             if (filter_dropdown.selected_item != null) {
-                var filter_value = (filter_dropdown.selected_item as StringObject).get_string();
+                var filter_value = (filter_dropdown.selected_item as StringObject)?.get_string() ?? "";
                 if (filter_value != "none") {
                     data_stream.put_string("%s\n".printf(filter_value));
                 }
@@ -746,7 +740,7 @@ public class MangoJuice : Adw.Application {
             }
 
             if (position_dropdown.selected_item != null) {
-                var position_value = (position_dropdown.selected_item as StringObject).get_string();
+                var position_value = (position_dropdown.selected_item as StringObject)?.get_string() ?? "";
                 data_stream.put_string("position=%s\n".printf(position_value));
             }
 
@@ -755,7 +749,7 @@ public class MangoJuice : Adw.Application {
             }
 
             if (toggle_hud_dropdown.selected_item != null) {
-                var toggle_hud_value = (toggle_hud_dropdown.selected_item as StringObject).get_string();
+                var toggle_hud_value = (toggle_hud_dropdown.selected_item as StringObject)?.get_string() ?? "";
                 data_stream.put_string("toggle_hud=%s\n".printf(toggle_hud_value));
             }
 

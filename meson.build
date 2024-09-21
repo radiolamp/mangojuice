@@ -29,12 +29,12 @@ executable('mangojuice', sources, resources_compiled, dependencies: dependencies
 
 # Установка значка
 install_data(
-  'data/icons/hicolor/scalable/apps/com.radiolamp.mangojuice.svg',
+  'data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg',
   install_dir: get_option('datadir') / 'icons/hicolor/scalable/apps'
 )
 
 # Установка .desktop файла
-desktop_file = 'data/com.radiolamp.mangojuice.desktop'
+desktop_file = 'data/io.github.radiolamp.mangojuice.desktop'
 install_data(
   desktop_file,
   install_dir: get_option('datadir') / 'applications'
