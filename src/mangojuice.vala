@@ -131,6 +131,9 @@ public class MangoJuice : Adw.Application {
     private Scale alpha_scale;
     private Label borders_value_label;
     private Label alpha_value_label;
+    private DropDown position_dropdown;
+    private Scale colums_scale;
+    private Label colums_value_label;
 
     public MangoJuice() {
         Object(application_id: "com.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -290,7 +293,7 @@ public class MangoJuice : Adw.Application {
         resetButton.add_css_class("destructive-action");
         resetButton.clicked.connect(() => {
             delete_mangohub_conf();
-            close();
+            restart();
         });
 
         var custom_command_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -375,6 +378,45 @@ public class MangoJuice : Adw.Application {
         custom_switch_box.append(alpha_scale);
         custom_switch_box.append(alpha_value_label);
         box4.append(custom_switch_box);
+
+        // Добавляем выпадающий список для позиции
+        var position_model = new StringList(new string[] {
+            "top-left", "top-center", "top-right",
+            "middle-left", "middle-right",
+            "bottom-left", "bottom-center", "bottom-right"
+        });
+        position_dropdown = new DropDown(position_model, null);
+        position_dropdown.set_size_request(100, -1);
+        position_dropdown.set_valign(Align.CENTER);
+        position_dropdown.notify["selected-item"].connect(() => {
+            if (position_dropdown.selected_item != null) {
+                update_position_in_file((position_dropdown.selected_item as StringObject).get_string());
+            }
+        });
+
+        // Добавляем ползунок для количества столбцов
+        colums_scale = new Scale.with_range(Orientation.HORIZONTAL, 1, 6, -1);
+        colums_scale.set_hexpand(true);
+        colums_scale.set_margin_start(FLOW_BOX_MARGIN);
+        colums_scale.set_margin_end(FLOW_BOX_MARGIN);
+        colums_scale.set_margin_top(FLOW_BOX_MARGIN);
+        colums_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        colums_scale.set_value(3);
+        colums_value_label = new Label("");
+        colums_value_label.set_halign(Align.END);
+        colums_scale.value_changed.connect(() => colums_value_label.label = "%d".printf((int)colums_scale.get_value()));
+
+        var position_colums_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        position_colums_box.set_margin_start(FLOW_BOX_MARGIN);
+        position_colums_box.set_margin_end(FLOW_BOX_MARGIN);
+        position_colums_box.set_margin_top(FLOW_BOX_MARGIN);
+        position_colums_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        position_colums_box.append(new Label("Position"));
+        position_colums_box.append(position_dropdown);
+        position_colums_box.append(new Label("Colums"));
+        position_colums_box.append(colums_scale);
+        position_colums_box.append(colums_value_label);
+        box4.append(position_colums_box);
     }
 
     private void create_switches_and_labels(Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts) {
@@ -687,6 +729,15 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string("background_alpha=%s\n".printf(alpha_value_str));
             }
 
+            if (position_dropdown.selected_item != null) {
+                var position_value = (position_dropdown.selected_item as StringObject).get_string();
+                data_stream.put_string("position=%s\n".printf(position_value));
+            }
+
+            if (colums_scale != null) {
+                data_stream.put_string("table_colums=%d\n".printf((int)colums_scale.get_value()));
+            }
+
             data_stream.close();
         } catch (Error e) {
             stderr.printf("Ошибка при записи в файл: %s\n", e.message);
@@ -879,6 +930,26 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
+
+                if (line.has_prefix("position=")) {
+                    var position_value = line.substring("position=".length);
+                    for (uint i = 0; i < position_dropdown.model.get_n_items(); i++) {
+                        var item = position_dropdown.model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == position_value) {
+                            position_dropdown.selected = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (line.has_prefix("table_colums=")) {
+                    if (colums_scale != null) {
+                        colums_scale.set_value(int.parse(line.substring("table_colums=".length)));
+                        if (colums_value_label != null) {
+                            colums_value_label.label = "%d".printf((int)colums_scale.get_value());
+                        }
+                    }
+                }
             }
         } catch (Error e) {
             stderr.printf("Ошибка при чтении файла: %s\n", e.message);
@@ -948,6 +1019,34 @@ public class MangoJuice : Adw.Application {
             while ((line = file_stream.read_line()) != null) {
                 if (line.has_prefix("toggle_logging=")) {
                     line = "toggle_logging=%s".printf(logs_key);
+                }
+                lines.add(line);
+            }
+
+            var file_stream_write = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string(l + "\n");
+            }
+            file_stream_write.close();
+        } catch (Error e) {
+            stderr.printf("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_position_in_file(string position_value) {
+        var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
+        var file = config_dir.get_child("MangoHud.conf");
+        if (!file.query_exists()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string>();
+            var file_stream = new DataInputStream(file.read());
+            string line;
+            while ((line = file_stream.read_line()) != null) {
+                if (line.has_prefix("position=")) {
+                    line = "position=%s".printf(position_value);
                 }
                 lines.add(line);
             }
@@ -1038,8 +1137,9 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private void close() {
+    private void restart() {
         this.quit();
+        Process.spawn_command_line_async("com.radiolamp.mangojuice");
     }
 
     public static int main(string[] args) {
