@@ -137,7 +137,6 @@ public class MangoJuice : Adw.Application {
     private DropDown toggle_hud_dropdown;
     private Scale font_size_scale;
     private Label font_size_value_label;
-    private string font_path;
 
     private string[] vulcan_values = { "Unset", "ON", "Adaptive", "Mailbox", "OFF" };
     private string[] vulcan_config_values = { "0", "3", "0", "2", "1" };
