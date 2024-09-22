@@ -134,7 +134,10 @@ public class MangoJuice : Adw.Application {
     private DropDown position_dropdown;
     private Scale colums_scale;
     private Label colums_value_label;
-    private DropDown toggle_hud_dropdown; // Добавляем новый выпадающий список
+    private DropDown toggle_hud_dropdown;
+    private Scale font_size_scale;
+    private Label font_size_value_label;
+    private string font_path;
 
     private string[] vulcan_values = { "Unset", "ON", "Adaptive", "Mailbox", "OFF" };
     private string[] vulcan_config_values = { "0", "3", "0", "2", "1" };
@@ -184,9 +187,7 @@ public class MangoJuice : Adw.Application {
         header_bar.pack_end(saveButton);
         saveButton.clicked.connect(() => {
             save_states_to_file();
-            if (test_button_pressed) {
-                restart_vkcube();
-            }
+            if (test_button_pressed) restart_vkcube();
         });
 
         var testButton = new Button.with_label("Test");
@@ -222,15 +223,11 @@ public class MangoJuice : Adw.Application {
         });
 
         box3_switches[1].notify["active"].connect(() => {
-            if (box3_switches[1].active) {
-                box3_switches[2].active = false;
-            }
+            if (box3_switches[1].active) box3_switches[2].active = false;
         });
 
         box3_switches[2].notify["active"].connect(() => {
-            if (box3_switches[2].active) {
-                box3_switches[1].active = false;
-            }
+            if (box3_switches[2].active) box3_switches[1].active = false;
         });
     }
 
@@ -384,7 +381,6 @@ public class MangoJuice : Adw.Application {
         custom_switch_box.append(alpha_value_label);
         box4.append(custom_switch_box);
 
-        // Добавляем выпадающий список для позиции
         var position_model = new Gtk.StringList(new string[] {
             "top-left", "top-center", "top-right",
             "middle-left", "middle-right",
@@ -397,7 +393,6 @@ public class MangoJuice : Adw.Application {
             update_position_in_file((position_dropdown.selected_item as StringObject)?.get_string() ?? "");
         });
 
-        // Добавляем ползунок для количества столбцов
         colums_scale = new Scale.with_range(Orientation.HORIZONTAL, 1, 6, -1);
         colums_scale.set_hexpand(true);
         colums_scale.set_margin_start(FLOW_BOX_MARGIN);
@@ -409,7 +404,6 @@ public class MangoJuice : Adw.Application {
         colums_value_label.set_halign(Align.END);
         colums_scale.value_changed.connect(() => colums_value_label.label = "%d".printf((int)colums_scale.get_value()));
 
-        // Добавляем выпадающий список для toggle_hud
         var toggle_hud_model = new Gtk.StringList(new string[] {
             "Shift_R+F12", "Shift_R+F1", "Shift_R+F2", "Shift_R+F3", "Shift_R+F4"
         });
@@ -433,6 +427,37 @@ public class MangoJuice : Adw.Application {
         position_colums_box.append(new Label("Toggle HUD"));
         position_colums_box.append(toggle_hud_dropdown);
         box4.append(position_colums_box);
+
+        var fonts_label = new Label("Fonts");
+        fonts_label.set_halign(Align.CENTER);
+        fonts_label.set_margin_top(FLOW_BOX_MARGIN);
+        fonts_label.set_margin_start(FLOW_BOX_MARGIN);
+        fonts_label.set_margin_end(FLOW_BOX_MARGIN);
+        box4.append(fonts_label);
+
+        font_size_scale = new Scale.with_range(Orientation.HORIZONTAL, 8, 64, 1);
+        font_size_scale.set_hexpand(true);
+        font_size_scale.set_margin_start(FLOW_BOX_MARGIN);
+        font_size_scale.set_margin_end(FLOW_BOX_MARGIN);
+        font_size_scale.set_margin_top(FLOW_BOX_MARGIN);
+        font_size_scale.set_margin_bottom(FLOW_BOX_MARGIN);
+        font_size_scale.set_value(24);
+        font_size_value_label = new Label("");
+        font_size_value_label.set_halign(Align.END);
+        font_size_scale.value_changed.connect(() => {
+            font_size_value_label.label = "%d".printf((int)font_size_scale.get_value());
+            update_font_size_in_file("%d".printf((int)font_size_scale.get_value()));
+        });
+
+        var fonts_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        fonts_box.set_margin_start(FLOW_BOX_MARGIN);
+        fonts_box.set_margin_end(FLOW_BOX_MARGIN);
+        fonts_box.set_margin_top(FLOW_BOX_MARGIN);
+        fonts_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        fonts_box.append(new Label("Size"));
+        fonts_box.append(font_size_scale);
+        fonts_box.append(font_size_value_label);
+        box4.append(fonts_box);
     }
 
     private void create_switches_and_labels(Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts) {
@@ -757,6 +782,10 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string("toggle_hud=%s\n".printf(toggle_hud_value));
             }
 
+            if (font_size_scale != null) {
+                data_stream.put_string("font_size=%d\n".printf((int)font_size_scale.get_value()));
+            }
+
             // Добавляем логику для io_read
             var io_read_state = other_switches[1].active ? "" : "#";
             data_stream.put_string("%sio_read\n".printf(io_read_state));
@@ -986,6 +1015,15 @@ public class MangoJuice : Adw.Application {
                     }
                 }
 
+                if (line.has_prefix("font_size=")) {
+                    if (font_size_scale != null) {
+                        font_size_scale.set_value(int.parse(line.substring("font_size=".length)));
+                        if (font_size_value_label != null) {
+                            font_size_value_label.label = "%d".printf((int)font_size_scale.get_value());
+                        }
+                    }
+                }
+
                 // Добавляем логику для io_read
                 if (line.has_prefix("io_read") || line.has_prefix("#io_read")) {
                     other_switches[1].active = !line.has_prefix("#");
@@ -1118,6 +1156,34 @@ public class MangoJuice : Adw.Application {
             while ((line = file_stream.read_line()) != null) {
                 if (line.has_prefix("toggle_hud=")) {
                     line = "toggle_hud=%s".printf(toggle_hud_value);
+                }
+                lines.add(line);
+            }
+
+            var file_stream_write = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string(l + "\n");
+            }
+            file_stream_write.close();
+        } catch (Error e) {
+            stderr.printf("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_font_size_in_file(string font_size_value) {
+        var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
+        var file = config_dir.get_child("MangoHud.conf");
+        if (!file.query_exists()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string>();
+            var file_stream = new DataInputStream(file.read());
+            string line;
+            while ((line = file_stream.read_line()) != null) {
+                if (line.has_prefix("font_size=")) {
+                    line = "font_size=%s".printf(font_size_value);
                 }
                 lines.add(line);
             }
