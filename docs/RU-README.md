@@ -60,14 +60,13 @@ sudo ninja -C build uninstall
 <br>
 
 <div align="center">
-  <a href="https://boosty.to/radiolamp/donate"_qrcode
-    <img height="200" src="data/assets/boosty_qrcode.png" alt="boosty.to">
+  <a href="https://boosty.to/radiolamp/donate">
+    <img height="200" src="data/assets/boosty_qrcode.png" alt="Boosty">
   </a>
   <a href="https://www.tbank.ru/cf/1J1DvYNesgD">
-  <img height="200" src="data/assets/tbank_qrcodepng" alt="Tinkoff">
+    <img height="200" src="data/assets/tbank_qrcode.png" alt="TBank">
   </a>
 </div>
-
 
 ## Благодарность
 Thank you [Rirusha](https://gitlab.gnome.org/Rirusha). For important clarifications about Vala and GTK4.
