@@ -68,7 +68,7 @@ public class MangoJuice : Adw.Application {
         "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "vulkan_driver"
     };
     private string[] cpu_config_vars = {
-        "cpu_stats", "cpu_load_change", "core_load", "cpu_mhz", "cpu_temp",
+        "cpu_stats", "cpu_load_change", "core_load", "core_bars", "cpu_mhz", "cpu_temp",
         "cpu_power"
     };
     private string[] other_config_vars = {
@@ -99,7 +99,7 @@ public class MangoJuice : Adw.Application {
         "Power", "Voltage", "Throttling", "Throttling GRAPH", "Vulcan Driver"
     };
     private string[] cpu_label_texts = {
-        "CPU Load", "CPU Load Color", "CPU Core Load", "CPU Freq", "CPU Temp",
+        "CPU Load", "CPU Load Color", "CPU Core Load", "CPU Core Bars", "CPU Freq", "CPU Temp",
         "CPU Power"
     };
     private string[] other_label_texts = {
@@ -228,6 +228,32 @@ public class MangoJuice : Adw.Application {
         box3_switches[2].notify["active"].connect(() => {
             if (box3_switches[2].active) box3_switches[1].active = false;
         });
+
+        // Добавляем обработчики событий scroll-event для слайдеров
+        add_scroll_event_handler(duracion_scale);
+        add_scroll_event_handler(autostart_scale);
+        add_scroll_event_handler(interval_scale);
+        add_scroll_event_handler(scale);
+        add_scroll_event_handler(af);
+        add_scroll_event_handler(picmip);
+        add_scroll_event_handler(borders_scale);
+        add_scroll_event_handler(colums_scale);
+        add_scroll_event_handler(font_size_scale);
+    }
+
+    private void add_scroll_event_handler(Scale scale) {
+        var controller = new EventControllerScroll(EventControllerScrollFlags.VERTICAL);
+        controller.scroll.connect((dx, dy) => {
+            double delta = 0;
+            if (dy > 0) {
+                delta = -2; // Прокрутка вниз
+            } else if (dy < 0) {
+                delta = 2; // Прокрутка вверх
+            }
+            scale.set_value(scale.get_value() + delta);
+            return true; // Предотвращаем стандартное поведение прокрутки
+        });
+        scale.add_controller(controller);
     }
 
     private void initialize_switches_and_labels(Box box1, Box box2, Box box3, Box box4) {
@@ -284,7 +310,10 @@ public class MangoJuice : Adw.Application {
             }
         });
 
-        logs_key_model = new Gtk.StringList(new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" });
+        logs_key_model = new Gtk.StringList(null);
+        foreach (var item in new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" }) {
+            logs_key_model.append(item);
+        }
         logs_key_combo = new DropDown(logs_key_model, null);
         logs_key_combo.notify["selected-item"].connect(() => {
             update_logs_key_in_file((logs_key_combo.selected_item as StringObject)?.get_string() ?? "");
@@ -380,11 +409,14 @@ public class MangoJuice : Adw.Application {
         custom_switch_box.append(alpha_value_label);
         box4.append(custom_switch_box);
 
-        var position_model = new Gtk.StringList(new string[] {
+        var position_model = new Gtk.StringList(null);
+        foreach (var item in new string[] {
             "top-left", "top-center", "top-right",
             "middle-left", "middle-right",
             "bottom-left", "bottom-center", "bottom-right"
-        });
+        }) {
+            position_model.append(item);
+        }
         position_dropdown = new DropDown(position_model, null);
         position_dropdown.set_size_request(100, -1);
         position_dropdown.set_valign(Align.CENTER);
@@ -403,9 +435,12 @@ public class MangoJuice : Adw.Application {
         colums_value_label.set_halign(Align.END);
         colums_scale.value_changed.connect(() => colums_value_label.label = "%d".printf((int)colums_scale.get_value()));
 
-        var toggle_hud_model = new Gtk.StringList(new string[] {
+        var toggle_hud_model = new Gtk.StringList(null);
+        foreach (var item in new string[] {
             "Shift_R+F12", "Shift_R+F1", "Shift_R+F2", "Shift_R+F3", "Shift_R+F4"
-        });
+        }) {
+            toggle_hud_model.append(item);
+        }
         toggle_hud_dropdown = new DropDown(toggle_hud_model, null);
         toggle_hud_dropdown.set_size_request(100, -1);
         toggle_hud_dropdown.set_valign(Align.CENTER);
@@ -558,11 +593,21 @@ public class MangoJuice : Adw.Application {
         limiters_label.set_margin_end(FLOW_BOX_MARGIN);
         box3.append(limiters_label);
 
-        fps_limit_method = new DropDown(new Gtk.StringList(new string[] { "late", "early" }), null);
+        var fps_limit_method_model = new Gtk.StringList(null);
+        foreach (var item in new string[] { "late", "early" }) {
+            fps_limit_method_model.append(item);
+        }
+        fps_limit_method = new DropDown(fps_limit_method_model, null);
+
         scale = new Scale.with_range(Orientation.HORIZONTAL, 0, 240, 1);
         fps_limit_label = new Label("");
         scale.value_changed.connect(() => fps_limit_label.label = "%d".printf((int)scale.get_value()));
-        toggle_fps_limit = new DropDown(new Gtk.StringList(new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }), null);
+
+        var toggle_fps_limit_model = new Gtk.StringList(null);
+        foreach (var item in new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }) {
+            toggle_fps_limit_model.append(item);
+        }
+        toggle_fps_limit = new DropDown(toggle_fps_limit_model, null);
 
         var limiters_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         limiters_box.set_margin_start(FLOW_BOX_MARGIN);
@@ -584,8 +629,17 @@ public class MangoJuice : Adw.Application {
         vsync_label.set_margin_end(FLOW_BOX_MARGIN);
         box3.append(vsync_label);
 
-        vulcan_dropdown = new DropDown(new Gtk.StringList(vulcan_values), null);
-        opengl_dropdown = new DropDown(new Gtk.StringList(opengl_values), null);
+        var vulcan_model = new Gtk.StringList(null);
+        foreach (var item in vulcan_values) {
+            vulcan_model.append(item);
+        }
+        vulcan_dropdown = new DropDown(vulcan_model, null);
+
+        var opengl_model = new Gtk.StringList(null);
+        foreach (var item in opengl_values) {
+            opengl_model.append(item);
+        }
+        opengl_dropdown = new DropDown(opengl_model, null);
 
         var vulcan_label = new Label("Vulcan");
         vulcan_label.set_halign(Align.START);
@@ -616,7 +670,11 @@ public class MangoJuice : Adw.Application {
         filters_label.set_margin_end(FLOW_BOX_MARGIN);
         box3.append(filters_label);
 
-        filter_dropdown = new DropDown(new Gtk.StringList(new string[] { "none", "bicubic", "trilinear", "retro" }), null);
+        var filter_model = new Gtk.StringList(null);
+        foreach (var item in new string[] { "none", "bicubic", "trilinear", "retro" }) {
+            filter_model.append(item);
+        }
+        filter_dropdown = new DropDown(filter_model, null);
         filter_dropdown.set_size_request(100, -1);
         filter_dropdown.set_valign(Align.CENTER);
 

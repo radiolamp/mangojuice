@@ -1,6 +1,6 @@
 project('mangojuice', 'vala',
-  version: '0.5.0',
-  default_options: ['warning_level=2'])
+  version: '0.6.0',
+  default_options: ['warning_level=0'])
 
 # Зависимости
 dependencies = [
