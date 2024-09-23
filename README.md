@@ -1,7 +1,5 @@
 
-## MangoJuice
-[![En](https://img.shields.io/badge/en-gray)](README.md)
-[![Ru](https://img.shields.io/badge/ru-green)](docs/README-ru.md)
+## MangoJuice [![En](https://img.shields.io/badge/en-gray)](README.md) [![Ru](https://img.shields.io/badge/ru-green)](docs/README-ru.md)
 
 ### This program will be a convenient alternative to Goverlay for setting up Mangohud.
 
