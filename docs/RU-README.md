@@ -1,10 +1,7 @@
-README language: \
+## MangoJuice
 [![En](https://img.shields.io/badge/en-gray)](README.md)
 [![Ru](https://img.shields.io/badge/ru-green)](docs/README-ru.md)
-
-
-## MangoJuice
-##### Данная программа стремится стать удобной альтернативой Goverlay, для настройки Mangohud.
+### Данная программа стремится стать удобной альтернативой Goverlay, для настройки Mangohud.
 
 <p align="center">
     <img src="data/images/screen.png" alt="Screenshot"/>
