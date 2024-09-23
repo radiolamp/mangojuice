@@ -1,10 +1,9 @@
-README language: \
-[![En](https://img.shields.io/badge/en-green)](README.md)
-[![Ru](https://img.shields.io/badge/ru-gray)](docs/RU-README.md)
-
 
 ## MangoJuice
-##### This program will be a convenient alternative to Goverlay for setting up Mangohud.
+[![En](https://img.shields.io/badge/en-gray)](README.md)
+[![Ru](https://img.shields.io/badge/ru-green)](docs/README-ru.md)
+
+### This program will be a convenient alternative to Goverlay for setting up Mangohud.
 
 <p align="center">
     <img src="data/images/screen.png" alt="Screenshot"/>
