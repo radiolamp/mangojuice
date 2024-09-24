@@ -137,6 +137,7 @@ public class MangoJuice : Adw.Application {
     private DropDown toggle_hud_dropdown;
     private Scale font_size_scale;
     private Label font_size_value_label;
+    private DropDown font_dropdown;
 
     private string[] vulcan_values = { "Unset", "ON", "Adaptive", "Mailbox", "OFF" };
     private string[] vulcan_config_values = { "0", "3", "0", "2", "1" };
@@ -483,15 +484,73 @@ public class MangoJuice : Adw.Application {
             update_font_size_in_file("%d".printf((int)font_size_scale.get_value()));
         });
 
+        initialize_font_dropdown(box4);
+
         var fonts_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         fonts_box.set_margin_start(FLOW_BOX_MARGIN);
         fonts_box.set_margin_end(FLOW_BOX_MARGIN);
         fonts_box.set_margin_top(FLOW_BOX_MARGIN);
         fonts_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        fonts_box.append(new Label("Font"));
+        fonts_box.append(font_dropdown);
         fonts_box.append(new Label("Size"));
         fonts_box.append(font_size_scale);
         fonts_box.append(font_size_value_label);
         box4.append(fonts_box);
+    }
+
+    private void initialize_font_dropdown(Box box4) {
+        var font_model = new Gtk.StringList(null);
+        font_model.append(""); // Добавляем пустое значение по умолчанию
+
+        var fonts = new Gee.ArrayList<string>();
+
+        // Добавляем шрифты из /usr/share/fonts
+        fonts.add_all(find_fonts("/usr/share/fonts"));
+
+        // Добавляем шрифты из ~/.local/share/fonts и создаем папку, если она не существует
+        var local_fonts_dir = File.new_for_path(Environment.get_home_dir()).get_child(".local/share/fonts");
+        if (!local_fonts_dir.query_exists()) {
+            try {
+                local_fonts_dir.make_directory_with_parents();
+            } catch (Error e) {
+                stderr.printf("Ошибка при создании директории: %s\n", e.message);
+            }
+        }
+        fonts.add_all(find_fonts(local_fonts_dir.get_path()));
+
+        foreach (var font in fonts) {
+            font_model.append(font); // Добавляем полный путь к шрифту
+        }
+
+        font_dropdown = new DropDown(font_model, null);
+        font_dropdown.set_size_request(100, -1);
+        font_dropdown.set_valign(Align.CENTER);
+        font_dropdown.notify["selected-item"].connect(() => {
+            update_font_file_in_file((font_dropdown.selected_item as StringObject)?.get_string() ?? "");
+        });
+    }
+
+    private Gee.List<string> find_fonts(string directory) {
+        var fonts = new Gee.ArrayList<string>();
+        var dir = File.new_for_path(directory);
+
+        try {
+            var enumerator = dir.enumerate_children(FileAttribute.STANDARD_NAME, 0);
+            FileInfo file_info;
+            while ((file_info = enumerator.next_file()) != null) {
+                var file = dir.get_child(file_info.get_name());
+                if (file_info.get_file_type() == FileType.DIRECTORY) {
+                    fonts.add_all(find_fonts(file.get_path()));
+                } else if (file_info.get_name().has_suffix(".ttf")) {
+                    fonts.add(file.get_path()); // Сохраняем полный путь к шрифту
+                }
+            }
+        } catch (Error e) {
+            stderr.printf("Ошибка при поиске шрифтов: %s\n", e.message);
+        }
+
+        return fonts;
     }
 
     private void create_switches_and_labels(Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts) {
@@ -843,6 +902,13 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string("font_size=%d\n".printf((int)font_size_scale.get_value()));
             }
 
+            if (font_dropdown.selected_item != null) {
+                var font_file = (font_dropdown.selected_item as StringObject)?.get_string() ?? "";
+                if (font_file != "") {
+                    data_stream.put_string("font_file=%s\n".printf(font_file));
+                }
+            }
+
             // Добавляем логику для io_read
             var io_read_state = other_switches[1].active ? "" : "#";
             data_stream.put_string("%sio_read\n".printf(io_read_state));
@@ -1081,6 +1147,17 @@ public class MangoJuice : Adw.Application {
                     }
                 }
 
+                if (line.has_prefix("font_file=")) {
+                    var font_file = line.substring("font_file=".length);
+                    for (uint i = 0; i < font_dropdown.model.get_n_items(); i++) {
+                        var item = font_dropdown.model.get_item(i) as StringObject;
+                        if (item != null && item.get_string() == font_file) {
+                            font_dropdown.selected = i;
+                            break;
+                        }
+                    }
+                }
+
                 // Добавляем логику для io_read
                 if (line.has_prefix("io_read") || line.has_prefix("#io_read")) {
                     other_switches[1].active = !line.has_prefix("#");
@@ -1241,6 +1318,34 @@ public class MangoJuice : Adw.Application {
             while ((line = file_stream.read_line()) != null) {
                 if (line.has_prefix("font_size=")) {
                     line = "font_size=%s".printf(font_size_value);
+                }
+                lines.add(line);
+            }
+
+            var file_stream_write = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string(l + "\n");
+            }
+            file_stream_write.close();
+        } catch (Error e) {
+            stderr.printf("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_font_file_in_file(string font_file_value) {
+        var config_dir = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud");
+        var file = config_dir.get_child("MangoHud.conf");
+        if (!file.query_exists()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string>();
+            var file_stream = new DataInputStream(file.read());
+            string line;
+            while ((line = file_stream.read_line()) != null) {
+                if (line.has_prefix("font_file=")) {
+                    line = "font_file=%s".printf(font_file_value);
                 }
                 lines.add(line);
             }

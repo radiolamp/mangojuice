@@ -6,6 +6,10 @@
   <img src="/data/images/screen.png" alt="Preview"/>
 </div>
 
+Metrics | Extras | Performance | Visual
+:------------------:|:-----------------:|:-----------------:|:---------------------:
+![screenie1](/data/images/screen.png) | ![screenie2](/data/images/screen2.png) | ![screenie3](/data/images/screen3.png) | ![screenie4](/data/images/screen4.png) 
+
 ## Находится в репозиториях:
 [![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)
 

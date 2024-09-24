@@ -1,11 +1,15 @@
 
-## MangoJuice   [![En](https://img.shields.io/badge/en-gray)](README.md) [![Ru](https://img.shields.io/badge/ru-green)](docs/README-ru.md)
+## MangoJuice   [![En](https://img.shields.io/badge/en-green)](README.md) [![Ru](https://img.shields.io/badge/ru-gray)](docs/README-ru.md)
 
 ### This program will be a convenient alternative to Goverlay for setting up Mangohud.
 
 <p align="center">
     <img src="data/images/screen.png" alt="Screenshot"/>
 </p>
+
+Metrics | Extras | Performance | Visual
+:------------------:|:-----------------:|:-----------------:|:---------------------:
+![screenie1](data/images/screen.png) | ![screenie2](data/images/screen2.png) | ![screenie3](data/images/screen3.png) | ![screenie4](data/images/screen4.png) 
 
 ## Repositories:
 [![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)
@@ -46,7 +50,7 @@ sudo ninja -C build install
 sudo ninja -C build uninstall
 ```
 
-## Support
+## Support:
 
 You can support in several ways:
 - Create an issue with a problem or a suggestion for improvement
@@ -65,10 +69,10 @@ You can support in several ways:
 </div>
 
 
-## Gratitude
+## Gratitude:
 Thank you [Rirusha](https://gitlab.gnome.org/Rirusha). For important clarifications about Vala and GTK4.
 
-### Projects that have become muses.
+### Projects that have become muses:
  - [`Mangohud`](https://github.com/flightlessmango/MangoHud)
  - [`Goverlay`](https://github.com/benjamimgois/goverlay)
 
