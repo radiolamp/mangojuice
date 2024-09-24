@@ -1,4 +1,4 @@
-## MangoJuice   [![En](https://img.shields.io/badge/en-gray)](README.md) [![Ru](https://img.shields.io/badge/ru-green)](docs/README-ru.md)
+## MangoJuice   [![En](https://img.shields.io/badge/en-gray)](/README.md) [![Ru](https://img.shields.io/badge/ru-green)](/docs/README-ru.md)
 
 ### Данная программа стремится стать удобной альтернативой Goverlay, для настройки Mangohud.
 
@@ -57,10 +57,10 @@ sudo ninja -C build uninstall
 
 <div align="center">
   <a href="https://boosty.to/radiolamp/donate">
-    <img height="200" src="data/assets/boosty_qrcode.png" alt="Boosty">
+    <img height="200" src="/data/assets/boosty_qrcode.png" alt="Boosty">
   </a>
   <a href="https://www.tbank.ru/cf/1J1DvYNesgD">
-    <img height="200" src="data/assets/tbank_qrcode.png" alt="TBank">
+    <img height="200" src="/data/assets/tbank_qrcode.png" alt="TBank">
   </a>
 </div>
 
