@@ -7,9 +7,10 @@
     <img src="data/images/screen.png" alt="Screenshot"/>
 </p>
 
-Metrics | Extras | Performance | Visual
-:------------------:|:-----------------:|:-----------------:|:---------------------:
-![screenie1](data/images/screen.png) | ![screenie2](data/images/screen2.png) | ![screenie3](data/images/screen3.png) | ![screenie4](data/images/screen4.png) 
+
+Page 1 | Page 2 | Page 3 | Page 4
+:-:|:-:|:-:|:-:
+![screen](data/images/screen.png) | ![screen2](data/images/screen2.png) | ![screen3](data/images/screen3.png) | ![screen4](data/images/screen4.png) 
 
 ## Repositories:
 [![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)

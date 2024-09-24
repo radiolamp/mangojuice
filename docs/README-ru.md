@@ -6,8 +6,8 @@
   <img src="/data/images/screen.png" alt="Preview"/>
 </div>
 
-Metrics | Extras | Performance | Visual
-:------------------:|:-----------------:|:-----------------:|:---------------------:
+Вкладка 1 | Вкладка 2 | Вкладка 3 | Вкладка 4
+:-:|:-:|:-:|:-:
 ![screenie1](/data/images/screen.png) | ![screenie2](/data/images/screen2.png) | ![screenie3](/data/images/screen3.png) | ![screenie4](/data/images/screen4.png) 
 
 ## Находится в репозиториях:
