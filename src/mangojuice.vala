@@ -1306,7 +1306,7 @@ public class MangoJuice : Adw.Application {
     private void restart_application() {
         this.quit();
         try {
-            Process.spawn_command_line_async("/usr/local/bin/mangojuice");
+            Process.spawn_command_line_async("/usr/bin/mangojuice");
         } catch (Error e) {
             stderr.printf("Ошибка при перезапуске приложения: %s\n", e.message);
         }
