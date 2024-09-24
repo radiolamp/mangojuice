@@ -8,7 +8,7 @@
 </p>
 
 Metrics | Extras | Performance | Visual
-:------------------:|:------------------:|:------------------:|:------------------:
+:------------------:|:-----------------:|:-----------------:|:---------------------:
 ![screenie1](data/images/screen.png) | ![screenie2](data/images/screen2.png) | ![screenie3](data/images/screen3.png) | ![screenie4](data/images/screen4.png) 
 
 ## Repositories:
