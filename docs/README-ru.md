@@ -3,7 +3,7 @@
 ### Данная программа стремится стать удобной альтернативой Goverlay, для настройки Mangohud.
 
 <p align="center">
-    <img src="data/images/screen.png" alt="Screenshot"/>
+    <img src="data/images/screen.png" alt="Preview"/>
 </p>
 
 ## Находится в репозиториях:
