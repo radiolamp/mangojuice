@@ -2,9 +2,9 @@
 
 ### Данная программа стремится стать удобной альтернативой Goverlay, для настройки Mangohud.
 
-<p align="center">
-    <img src="data/images/screen.png" alt="Preview"/>
-</p>
+<div align="center">
+  <img src="data/images/screen.png" alt="Preview"/>
+</div>
 
 ## Находится в репозиториях:
 [![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)
