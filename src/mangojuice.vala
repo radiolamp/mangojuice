@@ -230,7 +230,6 @@ public class MangoJuice : Adw.Application {
             if (box3_switches[2].active) box3_switches[1].active = false;
         });
 
-        // Добавляем обработчики событий scroll-event для слайдеров
         add_scroll_event_handler(duracion_scale);
         add_scroll_event_handler(autostart_scale);
         add_scroll_event_handler(interval_scale);
@@ -505,10 +504,8 @@ public class MangoJuice : Adw.Application {
 
         var fonts = new Gee.ArrayList<string>();
 
-        // Добавляем шрифты из /usr/share/fonts
         fonts.add_all(find_fonts("/usr/share/fonts"));
 
-        // Добавляем шрифты из ~/.local/share/fonts и создаем папку, если она не существует
         var local_fonts_dir = File.new_for_path(Environment.get_home_dir()).get_child(".local/share/fonts");
         if (!local_fonts_dir.query_exists()) {
             try {
@@ -909,7 +906,6 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
-            // Добавляем логику для io_read
             var io_read_state = other_switches[1].active ? "" : "#";
             data_stream.put_string("%sio_read\n".printf(io_read_state));
             data_stream.put_string("%sio_write\n".printf(io_read_state));
@@ -1158,7 +1154,6 @@ public class MangoJuice : Adw.Application {
                     }
                 }
 
-                // Добавляем логику для io_read
                 if (line.has_prefix("io_read") || line.has_prefix("#io_read")) {
                     other_switches[1].active = !line.has_prefix("#");
                 }
