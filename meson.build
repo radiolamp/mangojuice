@@ -1,5 +1,5 @@
 project('mangojuice', 'vala',
-  version: '0.6.1',
+  version: '0.6.2',
   default_options: ['warning_level=0'])
 
 # Зависимости
@@ -14,7 +14,7 @@ dependencies = [
 sources = files('src/mangojuice.vala')
 
 # Ресурсы
-resources_xml = 'data/resources.gresource.xml'
+resources_xml = 'resources.gresource.xml'
 gnome = import('gnome')
 resources_compiled = gnome.compile_resources(
   'mangojuice-resources',
@@ -33,7 +33,7 @@ install_data(
 )
 
 # Установка .desktop файла
-desktop_file = 'data/io.github.radiolamp.mangojuice.desktop'
+desktop_file = 'io.github.radiolamp.mangojuice.desktop'
 install_data(
   desktop_file,
   install_dir: get_option('datadir') / 'applications'

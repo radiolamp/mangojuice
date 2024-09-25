@@ -31,8 +31,7 @@ modules:
         path: io.github.radiolamp.mangojuice.metainfo.xml
       - type: file
         path: icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg
-      - type: file
-      
+
   - name: gtk4
     buildsystem: simple
     build-commands:
@@ -46,4 +45,3 @@ modules:
         path: io.github.radiolamp.mangojuice.metainfo.xml
       - type: file
         path: icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg
-      - type: file
