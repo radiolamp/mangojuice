@@ -29,8 +29,12 @@ executable('mangojuice', sources, resources_compiled, dependencies: dependencies
 
 # Установка значка
 install_data(
+  'data/assets/icons/io.github.radiolamp.mangojuice-metrics.svg',
+  'data/assets/icons/io.github.radiolamp.mangojuice-extras.svg',
+  'data/assets/icons/io.github.radiolamp.mangojuice-performance.svg',
+  'data/assets/icons/io.github.radiolamp.mangojuice-visual.svg',
   'data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg',
-  install_dir: get_option('datadir') / 'icons/hicolor/scalable/apps'
+  install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps')
 )
 
 # Установка .desktop файла

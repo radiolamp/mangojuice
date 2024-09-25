@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=MangoJuice
-Comment=Gui settings mangohud
+Comment=A convenient alternative to GOverlay for configuring MangoHud
 Exec=mangojuice
 Icon=io.github.radiolamp.mangojuice
 Terminal=false

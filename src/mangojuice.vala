@@ -174,10 +174,10 @@ public class MangoJuice : Adw.Application {
         initialize_switches_and_labels(box1, box2, box3, box4);
         initialize_custom_controls(box2, box4);
 
-        view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
-        view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
-        view_stack.add_titled(box3, "box3", "Performance").icon_name = "emblem-system-symbolic";
-        view_stack.add_titled(box4, "box4", "Visual").icon_name = "preferences-desktop-appearance-symbolic";
+        view_stack.add_titled(box1, "box1", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics";
+        view_stack.add_titled(box2, "box2", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras";
+        view_stack.add_titled(box3, "box3", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance";
+        view_stack.add_titled(box4, "box4", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual";
 
         var header_bar = new Adw.HeaderBar();
         header_bar.set_title_widget(toolbar_view_switcher);
@@ -1407,14 +1407,19 @@ public class MangoJuice : Adw.Application {
         }
         return "Unset"; // Default value
     }
-
+    
     private void restart_application() {
-        this.quit();
+    this.quit();
+    string mangojuice_path = Environment.find_program_in_path("mangojuice");
+    if (mangojuice_path != null) {
         try {
-            Process.spawn_command_line_async("/usr/bin/mangojuice");
+            Process.spawn_command_line_async(mangojuice_path);
         } catch (Error e) {
             stderr.printf("Ошибка при перезапуске приложения: %s\n", e.message);
         }
+        } else {
+            stderr.printf("Исполняемый файл mangojuice не найден в PATH.\n");
+    }
     }
 
     public static int main(string[] args) {
