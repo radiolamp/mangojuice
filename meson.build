@@ -1,5 +1,5 @@
 project('mangojuice', 'vala',
-  version: '0.6.1',
+  version: '0.6.0',
   default_options: ['warning_level=0'])
 
 # Зависимости
@@ -14,7 +14,7 @@ dependencies = [
 sources = files('src/mangojuice.vala')
 
 # Ресурсы
-resources_xml = 'resources.gresource.xml'
+resources_xml = 'data/resources.gresource.xml'
 gnome = import('gnome')
 resources_compiled = gnome.compile_resources(
   'mangojuice-resources',
@@ -29,11 +29,12 @@ executable('mangojuice', sources, resources_compiled, dependencies: dependencies
 
 # Установка значка
 install_data(
-  install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps')
+  'data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg',
+  install_dir: get_option('datadir') / 'icons/hicolor/scalable/apps'
 )
 
 # Установка .desktop файла
-desktop_file = 'io.github.radiolamp.mangojuice.desktop'
+desktop_file = 'data/io.github.radiolamp.mangojuice.desktop'
 install_data(
   desktop_file,
   install_dir: get_option('datadir') / 'applications'
