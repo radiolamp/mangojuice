@@ -174,10 +174,10 @@ public class MangoJuice : Adw.Application {
         initialize_switches_and_labels(box1, box2, box3, box4);
         initialize_custom_controls(box2, box4);
 
-        view_stack.add_titled(box1, "box1", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics";
-        view_stack.add_titled(box2, "box2", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras";
-        view_stack.add_titled(box3, "box3", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance";
-        view_stack.add_titled(box4, "box4", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual";
+        view_stack.add_titled(box1, "box1", "Metrics").icon_name = "view-continuous-symbolic";
+        view_stack.add_titled(box2, "box2", "Extras").icon_name = "application-x-addon-symbolic";
+        view_stack.add_titled(box3, "box3", "Performance").icon_name = "emblem-system-symbolic";
+        view_stack.add_titled(box4, "box4", "Visual").icon_name = "preferences-desktop-appearance-symbolic";
 
         var header_bar = new Adw.HeaderBar();
         header_bar.set_title_widget(toolbar_view_switcher);
@@ -230,6 +230,7 @@ public class MangoJuice : Adw.Application {
             if (box3_switches[2].active) box3_switches[1].active = false;
         });
 
+        // Добавляем обработчики событий scroll-event для слайдеров
         add_scroll_event_handler(duracion_scale);
         add_scroll_event_handler(autostart_scale);
         add_scroll_event_handler(interval_scale);
@@ -504,8 +505,10 @@ public class MangoJuice : Adw.Application {
 
         var fonts = new Gee.ArrayList<string>();
 
+        // Добавляем шрифты из /usr/share/fonts
         fonts.add_all(find_fonts("/usr/share/fonts"));
 
+        // Добавляем шрифты из ~/.local/share/fonts и создаем папку, если она не существует
         var local_fonts_dir = File.new_for_path(Environment.get_home_dir()).get_child(".local/share/fonts");
         if (!local_fonts_dir.query_exists()) {
             try {
@@ -906,6 +909,7 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
+            // Добавляем логику для io_read
             var io_read_state = other_switches[1].active ? "" : "#";
             data_stream.put_string("%sio_read\n".printf(io_read_state));
             data_stream.put_string("%sio_write\n".printf(io_read_state));
@@ -1154,6 +1158,7 @@ public class MangoJuice : Adw.Application {
                     }
                 }
 
+                // Добавляем логику для io_read
                 if (line.has_prefix("io_read") || line.has_prefix("#io_read")) {
                     other_switches[1].active = !line.has_prefix("#");
                 }
