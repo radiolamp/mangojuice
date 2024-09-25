@@ -1,5 +1,5 @@
 project('mangojuice', 'vala',
-  version: '0.6.0',
+  version: '0.6.1',
   default_options: ['warning_level=0'])
 
 # Зависимости

@@ -1,0 +1,80 @@
+# data/io.github.radiolamp.mangojuice.yml
+
+app-id: io.github.radiolamp.mangojuice
+runtime: org.gnome.Platform
+runtime-version: '47'
+sdk: org.gnome.Sdk
+command: mangojuice
+
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  - --filesystem=home
+  - --filesystem=xdg-config/MangoHud:create
+
+modules:
+  - name: mangojuice
+    buildsystem: meson
+    config-opts:
+      - '-Dprefix=/app'
+    sources:
+      - type: git
+        url: https://github.com/radiolamp/mangojuice.git
+        tag: 0.6.1
+      - type: copy-file
+        path: data/io.github.radiolamp.mangojuice.desktop
+        dest: io.github.radiolamp.mangojuice.desktop
+      - type: copy-file
+        path: data/io.github.radiolamp.mangojuice.metainfo.xml
+        dest: io.github.radiolamp.mangojuice.metainfo.xml
+      - type: copy-file
+        path: data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg
+        dest: io.github.radiolamp.mangojuice.svg
+      - type: copy-file
+        path: data/assets/icons/io.github.radiolamp.mangojuice-metrics.svg
+        dest: io.github.radiolamp.mangojuice-metrics.svg
+      - type: copy-file
+        path: data/assets/icons/io.github.radiolamp.mangojuice-extras.svg
+        dest: io.github.radiolamp.mangojuice-extras.svg
+      - type: copy-file
+        path: data/assets/icons/io.github.radiolamp.mangojuice-performance.svg
+        dest: io.github.radiolamp.mangojuice-performance.svg
+      - type: copy-file
+        path: data/assets/icons/io.github.radiolamp.mangojuice-visual.svg
+        dest: io.github.radiolamp.mangojuice-visual.svg
+
+  - name: gtk4
+    buildsystem: simple
+    build-commands:
+      - 'install -Dm644 io.github.radiolamp.mangojuice.desktop /app/share/applications/io.github.radiolamp.mangojuice.desktop'
+      - 'install -Dm644 io.github.radiolamp.mangojuice.metainfo.xml /app/share/metainfo/io.github.radiolamp.mangojuice.metainfo.xml'
+      - 'install -Dm644 io.github.radiolamp.mangojuice.svg /app/share/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg'
+      - 'install -Dm644 io.github.radiolamp.mangojuice-metrics.svg /app/share/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice-metrics.svg'
+      - 'install -Dm644 io.github.radiolamp.mangojuice-extras.svg /app/share/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice-extras.svg'
+      - 'install -Dm644 io.github.radiolamp.mangojuice-performance.svg /app/share/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice-performance.svg'
+      - 'install -Dm644 io.github.radiolamp.mangojuice-visual.svg /app/share/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice-visual.svg'
+    sources:
+      - type: copy-file
+        path: data/io.github.radiolamp.mangojuice.desktop
+        dest: io.github.radiolamp.mangojuice.desktop
+      - type: copy-file
+        path: data/io.github.radiolamp.mangojuice.metainfo.xml
+        dest: io.github.radiolamp.mangojuice.metainfo.xml
+      - type: copy-file
+        path: data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg
+        dest: io.github.radiolamp.mangojuice.svg
+      - type: copy-file
+        path: data/assets/icons/io.github.radiolamp.mangojuice-metrics.svg
+        dest: io.github.radiolamp.mangojuice-metrics.svg
+      - type: copy-file
+        path: data/assets/icons/io.github.radiolamp.mangojuice-extras.svg
+        dest: io.github.radiolamp.mangojuice-extras.svg
+      - type: copy-file
+        path: data/assets/icons/io.github.radiolamp.mangojuice-performance.svg
+        dest: io.github.radiolamp.mangojuice-performance.svg
+      - type: copy-file
+        path: data/assets/icons/io.github.radiolamp.mangojuice-visual.svg
+        dest: io.github.radiolamp.mangojuice-visual.svg
