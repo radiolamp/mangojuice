@@ -1,5 +1,5 @@
 project('mangojuice', 'vala',
-  version: '0.6.0',
+  version: '0.6.2',
   default_options: ['warning_level=0'])
 
 # Зависимости
@@ -29,8 +29,12 @@ executable('mangojuice', sources, resources_compiled, dependencies: dependencies
 
 # Установка значка
 install_data(
+  'data/assets/icons/io.github.radiolamp.mangojuice-metrics-symbolic.svg',
+  'data/assets/icons/io.github.radiolamp.mangojuice-extras-symbolic.svg',
+  'data/assets/icons/io.github.radiolamp.mangojuice-performance-symbolic.svg',
+  'data/assets/icons/io.github.radiolamp.mangojuice-visual-symbolic.svg',
   'data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg',
-  install_dir: get_option('datadir') / 'icons/hicolor/scalable/apps'
+  install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps')
 )
 
 # Установка .desktop файла

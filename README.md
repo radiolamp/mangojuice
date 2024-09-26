@@ -76,6 +76,5 @@ Thank you [Rirusha](https://gitlab.gnome.org/Rirusha). For important clarificati
 ### Projects that have become muses:
  - [`Mangohud`](https://github.com/flightlessmango/MangoHud)
  - [`Goverlay`](https://github.com/benjamimgois/goverlay)
- - [`Colloid`](https://github.com/vinceliuice/Colloid-icon-theme/) 
 
 ### Attention, this is my first project on GTK4 + Vala, so please treat with understanding.
