@@ -1,0 +1,15 @@
+id: io.github.radiolamp.mangojuice
+runtime: org.gnome.Platform
+runtime-version: "47"
+sdk: org.gnome.Sdk
+command: mangojuice
+finish-args:
+  - --socket=x11
+  - --socket=wayland
+  - --filesystem=~/.config/mangohud:ro
+modules:
+  - name: Meson
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: ../

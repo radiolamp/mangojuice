@@ -1,3 +1,5 @@
 /build
 Ссылка на MangoHud.conf
 /.flatpak-builder
+flatpak/build
+flatpak/.flatpak-builder
