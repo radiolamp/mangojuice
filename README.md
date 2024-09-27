@@ -15,6 +15,10 @@ Page 1 | Page 2 | Page 3 | Page 4
 ## Repositories:
 [![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)
 
+and also in the repository:
+
+- [`Opensuse`](https://software.opensuse.org/package/mangojuice)
+
 ## Building the source code
 
 #### Dependencies:
@@ -76,5 +80,6 @@ Thank you [Rirusha](https://gitlab.gnome.org/Rirusha). For important clarificati
 ### Projects that have become muses:
  - [`Mangohud`](https://github.com/flightlessmango/MangoHud)
  - [`Goverlay`](https://github.com/benjamimgois/goverlay)
+ - [`Colloid`](https://github.com/vinceliuice/Colloid-icon-theme/)
 
 ### Attention, this is my first project on GTK4 + Vala, so please treat with understanding.

@@ -74,5 +74,6 @@ Thank you [Rirusha](https://gitlab.gnome.org/Rirusha). For important clarificati
 ### Ссылки на проэкты которыми был вдохновлен.
  - [`Mangohud`](https://github.com/flightlessmango/MangoHud)
  - [`Goverlay`](https://github.com/benjamimgois/goverlay)
+ - [`Colloid`](https://github.com/vinceliuice/Colloid-icon-theme/)
 
 ### Внимание это мой первый проэкт на GTK4 + Vala, по этому прошу относится с понимаем.
