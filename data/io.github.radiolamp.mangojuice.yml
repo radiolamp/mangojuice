@@ -7,12 +7,14 @@ sdk: org.gnome.Sdk
 command: mangojuice
 
 finish-args:
+  - --share=network
   - --share=ipc
   - --socket=x11
   - --socket=wayland
   - --device=dri
+  - --filesystem=home
   - --filesystem=xdg-config/MangoHud:create
-
+  - --filesystem=host
 
 modules:
   - name: mangojuice
