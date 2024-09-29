@@ -7,24 +7,20 @@ sdk: org.gnome.Sdk
 command: mangojuice
 
 finish-args:
-  - --share=network
   - --share=ipc
   - --socket=x11
   - --socket=wayland
   - --device=dri
-  - --filesystem=home
   - --filesystem=xdg-config/MangoHud:create
-  - --filesystem=host
+
 
 modules:
   - name: mangojuice
     buildsystem: meson
-    config-opts:
-      - '--prefix=/app'
     sources:
       - type: git
         url: https://github.com/radiolamp/mangojuice.git
-        tag: 0.6.1
+        tag: 0.6.2
       - type: file
         path: io.github.radiolamp.mangojuice.desktop
       - type: file

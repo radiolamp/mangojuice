@@ -49,6 +49,11 @@ sudo ninja -C build install
 sudo ninja -C build uninstall
 ```
 
+## Начальная поддержка Flatpak:
+```shell
+flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.yml
+```
+
 ## Поддержка
 
 Вы можете оказать поддержку несколькими способами:
