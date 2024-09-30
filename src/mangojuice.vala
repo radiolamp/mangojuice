@@ -249,6 +249,10 @@ public class MangoJuice : Adw.Application {
         
         toolbar_view_switcher.add_css_class("viewswitcher");
 
+        // Проверка доступности vkcube и скрытие кнопки "Test" при необходимости
+        if (!is_vkcube_available()) {
+            testButton.set_visible(false);
+        }
     }
 
     private void add_scroll_event_handler(Scale scale) {
@@ -1388,6 +1392,21 @@ public class MangoJuice : Adw.Application {
             }
         } else {
             stderr.printf("Исполняемый файл mangojuice не найден в PATH.\n");
+        }
+    }
+
+    private bool is_vkcube_available() {
+        try {
+            string[] argv = { "which", "vkcube" };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync(null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+
+            return exit_status == 0;
+        } catch (Error e) {
+            stderr.printf("Ошибка при проверке доступности vkcube: %s\n", e.message);
+            return false;
         }
     }
 
