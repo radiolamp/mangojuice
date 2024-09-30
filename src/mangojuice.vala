@@ -249,7 +249,6 @@ public class MangoJuice : Adw.Application {
         
         toolbar_view_switcher.add_css_class("viewswitcher");
 
-        // Проверка доступности vkcube и скрытие кнопки "Test" при необходимости
         if (!is_vkcube_available()) {
             testButton.set_visible(false);
         }
@@ -260,12 +259,12 @@ public class MangoJuice : Adw.Application {
         controller.scroll.connect((dx, dy) => {
             double delta = 0;
             if (dy > 0) {
-                delta = -2; // Прокрутка вниз
+                delta = -2;
             } else if (dy < 0) {
-                delta = 2; // Прокрутка вверх
+                delta = 2;
             }
             scale.set_value(scale.get_value() + delta);
-            return true; // Предотвращаем стандартное поведение прокрутки
+            return true;
         });
         scale.add_controller(controller);
     }
@@ -302,6 +301,13 @@ public class MangoJuice : Adw.Application {
         create_scales_and_labels(box2);
         create_switches_and_labels(box3, BOX3_TITLE, box3_switches, box3_labels, box3_config_vars, box3_label_texts);
         create_limiters_and_filters(box3);
+
+        // Добавляем обработчик для включения CPU Core Load при включении CPU Core Bars
+        cpu_switches[3].notify["active"].connect(() => {
+            if (cpu_switches[3].active) {
+                cpu_switches[2].active = true;
+            }
+        });
     }
 
     private void initialize_custom_controls(Box box2, Box box4) {
@@ -435,7 +441,7 @@ public class MangoJuice : Adw.Application {
         colums_scale.value_changed.connect(() => colums_value_label.label = "%d".printf((int)colums_scale.get_value()));
 
         toggle_hud_entry = new Entry(); 
-        toggle_hud_entry.placeholder_text = "Shift_R+F12"; // По умолчанию
+        toggle_hud_entry.placeholder_text = "Shift_R+F12";
         toggle_hud_entry.set_size_request(20, -1); 
         toggle_hud_entry.set_margin_top(FLOW_BOX_MARGIN);
         toggle_hud_entry.set_margin_bottom(FLOW_BOX_MARGIN);
@@ -454,7 +460,7 @@ public class MangoJuice : Adw.Application {
         position_colums_box.append(colums_scale);
         position_colums_box.append(colums_value_label);
         position_colums_box.append(new Label("Toggle HUD"));
-        position_colums_box.append(toggle_hud_entry); // Добавляем Entry
+        position_colums_box.append(toggle_hud_entry);
         box4.append(position_colums_box);
 
         var fonts_label = new Label("Fonts");
@@ -491,7 +497,7 @@ public class MangoJuice : Adw.Application {
 
     private void initialize_font_dropdown(Box box4) {
         var font_model = new Gtk.StringList(null);
-        font_model.append("Default"); // Добавляем значение по умолчанию
+        font_model.append("Default");
 
         var fonts = new Gee.ArrayList<string>();
 
@@ -508,7 +514,7 @@ public class MangoJuice : Adw.Application {
         fonts.add_all(find_fonts(local_fonts_dir.get_path()));
 
         foreach (var font in fonts) {
-            font_model.append(font); // Добавляем полный путь к шрифту
+            font_model.append(font);
         }
 
         font_dropdown = new DropDown(font_model, null);
@@ -531,7 +537,7 @@ public class MangoJuice : Adw.Application {
                 if (file_info.get_file_type() == FileType.DIRECTORY) {
                     fonts.add_all(find_fonts(file.get_path()));
                 } else if (file_info.get_name().has_suffix(".ttf")) {
-                    fonts.add(file.get_path()); // Сохраняем полный путь к шрифту
+                    fonts.add(file.get_path());
                 }
             }
         } catch (Error e) {
@@ -874,7 +880,7 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string("table_columns=%d\n".printf((int)colums_scale.get_value()));
             }
 
-            if (toggle_hud_entry != null) { // Используем toggle_hud_entry
+            if (toggle_hud_entry != null) {
                 var toggle_hud_value = toggle_hud_entry.text;
                 data_stream.put_string("toggle_hud=%s\n".printf(toggle_hud_value));
             }
@@ -885,7 +891,7 @@ public class MangoJuice : Adw.Application {
 
             if (font_dropdown.selected_item != null) {
                 var font_file = (font_dropdown.selected_item as StringObject)?.get_string() ?? "";
-                if (font_file != "Default") { // Проверка на значение по умолчанию
+                if (font_file != "Default") {
                     data_stream.put_string("font_file=%s\n".printf(font_file));
                 }
             }
@@ -1109,7 +1115,7 @@ public class MangoJuice : Adw.Application {
 
                 if (line.has_prefix("toggle_hud=")) {
                     var toggle_hud_value = line.substring("toggle_hud=".length);
-                    toggle_hud_entry.text = toggle_hud_value; // Устанавливаем значение в Entry
+                    toggle_hud_entry.text = toggle_hud_value;
                 }
 
                 if (line.has_prefix("font_size=")) {
