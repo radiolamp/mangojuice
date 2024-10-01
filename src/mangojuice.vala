@@ -301,13 +301,68 @@ public class MangoJuice : Adw.Application {
         create_scales_and_labels(box2);
         create_switches_and_labels(box3, BOX3_TITLE, box3_switches, box3_labels, box3_config_vars, box3_label_texts);
         create_limiters_and_filters(box3);
-
-        // Добавляем обработчик для включения CPU Core Load при включении CPU Core Bars
+        
         cpu_switches[3].notify["active"].connect(() => {
             if (cpu_switches[3].active) {
                 cpu_switches[2].active = true;
             }
         });
+        
+        cpu_switches[3].notify["active"].connect(() => {
+            if (!cpu_switches[3].active) {
+                cpu_switches[2].active = false;
+            }
+        });
+        
+        box3_switches[5].notify["active"].connect(() => {
+            if (box3_switches[5].active) {
+                box3_switches[4].active = true;
+            }
+        });
+        
+        box3_switches[5].notify["active"].connect(() => {
+            if (!box3_switches[5].active) {
+                box3_switches[4].active = false;
+            }
+        });
+        
+        for (int i = 0; i < gpu_switches.length; i++) {
+            gpu_switches[i].notify["active"].connect(() => {
+                update_gpu_stats_state();
+            });
+        }
+
+        for (int i = 1; i < cpu_switches.length; i++) {
+            cpu_switches[i].notify["active"].connect(() => {
+                update_cpu_stats_state();
+            });
+        }
+    }
+
+    private void update_gpu_stats_state() {
+        bool any_gpu_switch_active = false;
+
+        for (int i = 1; i < gpu_switches.length; i++) {
+            if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name") {
+                any_gpu_switch_active = true;
+                break;
+            }
+        }
+
+        gpu_switches[0].active = any_gpu_switch_active; 
+    }
+
+    private void update_cpu_stats_state() {
+        bool any_cpu_switch_active = false;
+
+        for (int i = 1; i < cpu_switches.length; i++) {
+            if (cpu_switches[i].active && cpu_config_vars[i] != "core_load" && cpu_config_vars[i] != "core_bars") {
+                any_cpu_switch_active = true;
+                break;
+            }
+        }
+
+        cpu_switches[0].active = any_cpu_switch_active; 
     }
 
     private void initialize_custom_controls(Box box2, Box box4) {
@@ -1386,7 +1441,7 @@ public class MangoJuice : Adw.Application {
         }
         return "Unset"; // Default value
     }
-    
+
     private void restart_application() {
         this.quit();
         string mangojuice_path = Environment.find_program_in_path("mangojuice");
