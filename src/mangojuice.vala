@@ -1062,6 +1062,7 @@ public class MangoJuice : Adw.Application {
                 var font_file = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
                 if (font_file != "Default") {
                     data_stream.put_string ("font_file=%s\n".printf (font_file));
+                    data_stream.put_string ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b\n");
                 }
             }
 
@@ -1533,11 +1534,20 @@ public class MangoJuice : Adw.Application {
             var lines = new ArrayList<string> ();
             var file_stream = new DataInputStream (file.read ());
             string line;
+            bool glyph_ranges_added = false;
             while ( (line = file_stream.read_line ()) != null) {
                 if (line.has_prefix ("font_file=")) {
                     line = "font_file=%s".printf (font_file_value);
                 }
+                if (line.has_prefix ("font_glyph_ranges=")) {
+                    glyph_ranges_added = true;
+                }
                 lines.add (line);
+            }
+
+            // Добавляем строку font_glyph_ranges, если выбран шрифт, отличный от Default
+            if (font_file_value != "Default" && !glyph_ranges_added) {
+                lines.add ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b");
             }
 
             var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
