@@ -16,7 +16,7 @@ public class MangoJuice : Adw.Application {
     private Switch[] options_switches;
     private Switch[] battery_switches;
     private Switch[] other_extra_switches;
-    private Switch[] box3_switches;
+    private Switch[] inform_switches;
     private Label[] gpu_labels;
     private Label[] cpu_labels;
     private Label[] other_labels;
@@ -25,7 +25,7 @@ public class MangoJuice : Adw.Application {
     private Label[] options_labels;
     private Label[] battery_labels;
     private Label[] other_extra_labels;
-    private Label[] box3_labels;
+    private Label[] inform_labels;
     private Entry custom_command_entry;
     private Entry custom_logs_path_entry;
     private DropDown logs_key_combo;
@@ -54,8 +54,8 @@ public class MangoJuice : Adw.Application {
     private const string WINE_TITLE = "Wine";
     private const string OPTIONS_TITLE = "Options";
     private const string BATTERY_TITLE = "Battery";
-    private const string OTHER_EXTRA_TITLE = "Other Extras";
-    private const string BOX3_TITLE = "Infotmation";
+    private const string OTHER_EXTRA_TITLE = "Other";
+    private const string INFORM_TITLE = "Information";
     private const string LIMITERS_TITLE = "Limiters FPS";
     private const string FILTERS_TITLE = "Filters";
     private const int MAIN_BOX_SPACING = 10;
@@ -87,7 +87,7 @@ public class MangoJuice : Adw.Application {
     private string[] other_extra_config_vars = {
         "media_player", "network", "full", "log_versioning", "upload_logs"
     };
-    private string[] box3_config_vars = {
+    private string[] inform_config_vars = {
         "fps", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count"
     };
     private string[] options_config_vars = {
@@ -121,7 +121,7 @@ public class MangoJuice : Adw.Application {
     private string[] other_extra_label_texts = {
         "Media", "Network", "Full ON", "Log Versioning", "Upload Results"
     };
-    private string[] box3_label_texts = {
+    private string[] inform_label_texts = {
         "FPS", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame"
     };
     private bool test_button_pressed = false;
@@ -145,6 +145,11 @@ public class MangoJuice : Adw.Application {
     private string[] opengl_values = { "Unset", "ON", "Adaptive", "Mailbox", "OFF" };
     private string[] opengl_config_values = { "-1", "n", "-1", "1", "0" };
 
+    private Entry gpu_text_entry;
+    private ColorDialogButton gpu_color_button;
+    private Entry cpu_text_entry;
+    private ColorDialogButton cpu_color_button;
+
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
         set_resource_base_path ("/usr/local/share/icons/hicolor/scalable/apps/");
@@ -166,18 +171,18 @@ public class MangoJuice : Adw.Application {
         var toolbar_view_switcher = new ViewSwitcher ();
         toolbar_view_switcher.stack = view_stack;
 
-        var box1 = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
-        var box2 = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
-        var box3 = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
-        var box4 = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
+        var metrics_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
+        var extras_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
+        var performance_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
+        var visual_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
 
-        initialize_switches_and_labels (box1, box2, box3, box4);
-        initialize_custom_controls (box2, box4);
+        initialize_switches_and_labels (metrics_box, extras_box, performance_box, visual_box);
+        initialize_custom_controls (extras_box, visual_box);
 
-        view_stack.add_titled (box1, "box1", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
-        view_stack.add_titled (box2, "box2", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
-        view_stack.add_titled (box3, "box3", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
-        view_stack.add_titled (box4, "box4", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
+        view_stack.add_titled (metrics_box, "metrics_box", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
+        view_stack.add_titled (extras_box, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
+        view_stack.add_titled (performance_box, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
+        view_stack.add_titled (visual_box, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
@@ -211,6 +216,14 @@ public class MangoJuice : Adw.Application {
         window.present ();
         load_states_from_file ();
 
+        var gpu_color = Gdk.RGBA ();
+        gpu_color.parse ("#2e9762");
+        gpu_color_button.set_rgba (gpu_color);
+
+        var cpu_color = Gdk.RGBA ();
+        cpu_color.parse ("#2e97cb");
+        cpu_color_button.set_rgba (cpu_color);
+
         window.close_request.connect ( () => {
             if (is_vkcube_running ()) {
                 try {
@@ -222,12 +235,12 @@ public class MangoJuice : Adw.Application {
             return false;
         });
 
-        box3_switches[1].notify["active"].connect ( () => {
-            if (box3_switches[1].active) box3_switches[2].active = false;
+        inform_switches[1].notify["active"].connect ( () => {
+            if (inform_switches[1].active) inform_switches[2].active = false;
         });
 
-        box3_switches[2].notify["active"].connect ( () => {
-            if (box3_switches[2].active) box3_switches[1].active = false;
+        inform_switches[2].notify["active"].connect ( () => {
+            if (inform_switches[2].active) inform_switches[1].active = false;
         });
 
         add_scroll_event_handler (duracion_scale);
@@ -251,11 +264,13 @@ public class MangoJuice : Adw.Application {
         """);
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
-        Gtk.StyleContext.add_provider_for_display (Gdk.Display.get_default (), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        var style_manager = Adw.StyleManager.get_default ();
+        style_manager.set_color_scheme (Adw.ColorScheme.DEFAULT);
 
         if (!is_vkcube_available ()) {
             test_button.set_visible (false);
         }
+
     }
 
     private void add_scroll_event_handler (Scale scale) {
@@ -273,7 +288,7 @@ public class MangoJuice : Adw.Application {
         scale.add_controller (controller);
     }
 
-    private void initialize_switches_and_labels (Box box1, Box box2, Box box3, Box box4) {
+    private void initialize_switches_and_labels (Box metrics_box, Box extras_box, Box performance_box, Box visual_box) {
         gpu_switches = new Switch[gpu_config_vars.length];
         cpu_switches = new Switch[cpu_config_vars.length];
         other_switches = new Switch[other_config_vars.length];
@@ -282,7 +297,7 @@ public class MangoJuice : Adw.Application {
         options_switches = new Switch[options_config_vars.length];
         battery_switches = new Switch[battery_config_vars.length];
         other_extra_switches = new Switch[other_extra_config_vars.length];
-        box3_switches = new Switch[box3_config_vars.length];
+        inform_switches = new Switch[inform_config_vars.length];
 
         gpu_labels = new Label[gpu_label_texts.length];
         cpu_labels = new Label[cpu_label_texts.length];
@@ -292,19 +307,19 @@ public class MangoJuice : Adw.Application {
         options_labels = new Label[options_label_texts.length];
         battery_labels = new Label[battery_label_texts.length];
         other_extra_labels = new Label[other_extra_label_texts.length];
-        box3_labels = new Label[box3_label_texts.length];
+        inform_labels = new Label[inform_label_texts.length];
 
-        create_switches_and_labels (box1, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts);
-        create_switches_and_labels (box1, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts);
-        create_switches_and_labels (box1, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts);
-        create_switches_and_labels (box2, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts);
-        create_switches_and_labels (box2, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts);
-        create_switches_and_labels (box2, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts);
-        create_switches_and_labels (box2, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts);
-        create_switches_and_labels (box2, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts);
-        create_scales_and_labels (box2);
-        create_switches_and_labels (box3, BOX3_TITLE, box3_switches, box3_labels, box3_config_vars, box3_label_texts);
-        create_limiters_and_filters (box3);
+        create_switches_and_labels (metrics_box, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts);
+        create_switches_and_labels (metrics_box, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts);
+        create_switches_and_labels (metrics_box, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts);
+        create_switches_and_labels (extras_box, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts);
+        create_switches_and_labels (extras_box, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts);
+        create_switches_and_labels (extras_box, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts);
+        create_switches_and_labels (extras_box, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts);
+        create_switches_and_labels (extras_box, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts);
+        create_scales_and_labels (extras_box);
+        create_switches_and_labels (performance_box, INFORM_TITLE, inform_switches, inform_labels, inform_config_vars, inform_label_texts);
+        create_limiters_and_filters (performance_box);
 
         cpu_switches[3].notify["active"].connect ( () => {
             if (cpu_switches[3].active) {
@@ -318,15 +333,15 @@ public class MangoJuice : Adw.Application {
             }
         });
 
-        box3_switches[5].notify["active"].connect ( () => {
-            if (box3_switches[5].active) {
-                box3_switches[4].active = true;
+        inform_switches[5].notify["active"].connect ( () => {
+            if (inform_switches[5].active) {
+                inform_switches[4].active = true;
             }
         });
 
-        box3_switches[5].notify["active"].connect ( () => {
-            if (!box3_switches[5].active) {
-                box3_switches[4].active = false;
+        inform_switches[5].notify["active"].connect ( () => {
+            if (!inform_switches[5].active) {
+                inform_switches[4].active = false;
             }
         });
 
@@ -369,7 +384,7 @@ public class MangoJuice : Adw.Application {
         cpu_switches[0].active = any_cpu_switch_active;
     }
 
-    private void initialize_custom_controls (Box box2, Box box4) {
+    private void initialize_custom_controls (Box extras_box, Box visual_box) {
         custom_command_entry = new Entry ();
         custom_command_entry.placeholder_text = "Raw Custom Cmd";
         custom_command_entry.hexpand = true;
@@ -418,15 +433,19 @@ public class MangoJuice : Adw.Application {
         custom_command_box.append (logs_path_button);
         custom_command_box.append (intel_power_fix_button);
         custom_command_box.append (reset_button);
-        box2.append (custom_command_box);
+        extras_box.append (custom_command_box);
 
         var customize_label = new Label ("Customize");
         customize_label.set_halign (Align.CENTER);
         customize_label.set_margin_top (FLOW_BOX_MARGIN);
         customize_label.set_margin_start (FLOW_BOX_MARGIN);
         customize_label.set_margin_end (FLOW_BOX_MARGIN);
-        customize_label.add_css_class ("bold-label");
-        box4.append (customize_label);
+        var customize_font_description = new Pango.FontDescription ();
+        customize_font_description.set_weight (Pango.Weight.BOLD);
+        var customize_attr_list = new Pango.AttrList ();
+        customize_attr_list.insert (new Pango.AttrFontDesc (customize_font_description));
+        customize_label.set_attributes (customize_attr_list);
+        visual_box.append (customize_label);
 
         custom_text_center_entry = new Entry ();
         custom_text_center_entry.placeholder_text = "You text";
@@ -438,11 +457,10 @@ public class MangoJuice : Adw.Application {
         customize_box.set_margin_top (FLOW_BOX_MARGIN);
         customize_box.set_margin_bottom (FLOW_BOX_MARGIN);
         customize_box.append (custom_text_center_entry);
-        box4.append (customize_box);
+        visual_box.append (customize_box);
 
         var custom_switch_label = new Label ("Horizontal Hud");
         custom_switch_label.set_halign (Align.CENTER);
-        custom_switch_label.add_css_class ("bold-label");
 
         custom_switch = new Switch ();
         custom_switch.set_valign (Align.CENTER);
@@ -477,7 +495,7 @@ public class MangoJuice : Adw.Application {
         custom_switch_box.append (new Label ("Alpha"));
         custom_switch_box.append (alpha_scale);
         custom_switch_box.append (alpha_value_label);
-        box4.append (custom_switch_box);
+        visual_box.append (custom_switch_box);
 
         var position_model = new Gtk.StringList (null);
         foreach (var item in new string[] {
@@ -522,15 +540,19 @@ public class MangoJuice : Adw.Application {
         position_colums_box.append (colums_value_label);
         position_colums_box.append (new Label ("Toggle HUD"));
         position_colums_box.append (toggle_hud_entry);
-        box4.append (position_colums_box);
+        visual_box.append (position_colums_box);
 
-        var fonts_label = new Label ("Fonts");
+        var fonts_label = new Label ("Font");
         fonts_label.set_halign (Align.CENTER);
         fonts_label.set_margin_top (FLOW_BOX_MARGIN);
         fonts_label.set_margin_start (FLOW_BOX_MARGIN);
         fonts_label.set_margin_end (FLOW_BOX_MARGIN);
-        fonts_label.add_css_class ("bold-label");
-        box4.append (fonts_label);
+        var fonts_font_description = new Pango.FontDescription ();
+        fonts_font_description.set_weight (Pango.Weight.BOLD);
+        var fonts_attr_list = new Pango.AttrList ();
+        fonts_attr_list.insert (new Pango.AttrFontDesc (fonts_font_description));
+        fonts_label.set_attributes (fonts_attr_list);
+        visual_box.append (fonts_label);
 
         font_size_scale = new Scale.with_range (Orientation.HORIZONTAL, 8, 64, 1);
         font_size_scale.set_hexpand (true);
@@ -542,7 +564,7 @@ public class MangoJuice : Adw.Application {
             update_font_size_in_file ("%d".printf ( (int)font_size_scale.get_value ()));
         });
 
-        initialize_font_dropdown (box4);
+        initialize_font_dropdown (visual_box);
 
         var fonts_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         fonts_box.set_margin_start (FLOW_BOX_MARGIN);
@@ -554,18 +576,60 @@ public class MangoJuice : Adw.Application {
         fonts_box.append (new Label ("Size"));
         fonts_box.append (font_size_scale);
         fonts_box.append (font_size_value_label);
-        box4.append (fonts_box);
+        visual_box.append (fonts_box);
 
         var color_label = new Label ("Color");
         color_label.set_halign (Align.CENTER);
         color_label.set_margin_top (FLOW_BOX_MARGIN);
         color_label.set_margin_start (FLOW_BOX_MARGIN);
         color_label.set_margin_end (FLOW_BOX_MARGIN);
-        color_label.add_css_class ("bold-label");
-        box4.append (color_label);
+        var color_font_description = new Pango.FontDescription ();
+        color_font_description.set_weight (Pango.Weight.BOLD);
+        var color_attr_list = new Pango.AttrList ();
+        color_attr_list.insert (new Pango.AttrFontDesc (color_font_description));
+        color_label.set_attributes (color_attr_list);
+        visual_box.append (color_label);
+
+        gpu_text_entry = new Entry ();
+        gpu_text_entry.placeholder_text = "GPU custom name";
+        gpu_text_entry.hexpand = true;
+        gpu_text_entry.changed.connect ( () => {
+            update_gpu_text_in_file (gpu_text_entry.text);
+        });
+
+        var color_dialog = new ColorDialog ();
+        gpu_color_button = new ColorDialogButton (color_dialog);
+        gpu_color_button.notify["rgba"].connect ( () => {
+            var rgba = gpu_color_button.get_rgba ().copy ();
+            update_gpu_color_in_file (rgba_to_hex (rgba));
+        });
+
+        cpu_text_entry = new Entry ();
+        cpu_text_entry.placeholder_text = "CPU custom name";
+        cpu_text_entry.hexpand = true;
+        cpu_text_entry.changed.connect ( () => {
+            update_cpu_text_in_file (cpu_text_entry.text);
+        });
+
+        cpu_color_button = new ColorDialogButton (color_dialog);
+        cpu_color_button.notify["rgba"].connect ( () => {
+            var rgba = cpu_color_button.get_rgba ().copy ();
+            update_cpu_color_in_file (rgba_to_hex (rgba));
+        });
+
+        var color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        color_box.set_margin_start (FLOW_BOX_MARGIN);
+        color_box.set_margin_end (FLOW_BOX_MARGIN);
+        color_box.set_margin_top (FLOW_BOX_MARGIN);
+        color_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        color_box.append (gpu_text_entry);
+        color_box.append (gpu_color_button);
+        color_box.append (cpu_text_entry);
+        color_box.append (cpu_color_button);
+        visual_box.append (color_box);
     }
 
-    private void initialize_font_dropdown (Box box4) {
+    private void initialize_font_dropdown (Box visual_box) {
         var font_model = new Gtk.StringList (null);
         font_model.append ("Default");
 
@@ -623,7 +687,13 @@ public class MangoJuice : Adw.Application {
         label.set_margin_top (FLOW_BOX_MARGIN);
         label.set_margin_start (FLOW_BOX_MARGIN);
         label.set_margin_end (FLOW_BOX_MARGIN);
-        label.add_css_class ("bold-label");
+
+        var font_description = new Pango.FontDescription ();
+        font_description.set_weight (Pango.Weight.BOLD);
+        var attr_list = new Pango.AttrList ();
+        attr_list.insert (new Pango.AttrFontDesc (font_description));
+        label.set_attributes (attr_list);
+
         parent_box.append (label);
 
         var flow_box = new FlowBox ();
@@ -705,19 +775,31 @@ public class MangoJuice : Adw.Application {
         logging_label.set_margin_top (FLOW_BOX_MARGIN);
         logging_label.set_margin_start (FLOW_BOX_MARGIN);
         logging_label.set_margin_end (FLOW_BOX_MARGIN);
-        logging_label.add_css_class ("bold-label");
+
+        var font_description = new Pango.FontDescription ();
+        font_description.set_weight (Pango.Weight.BOLD);
+        var attr_list = new Pango.AttrList ();
+        attr_list.insert (new Pango.AttrFontDesc (font_description));
+        logging_label.set_attributes (attr_list);
+
         parent_box.append (logging_label);
         parent_box.append (scales_box);
     }
 
-    private void create_limiters_and_filters (Box box3) {
+    private void create_limiters_and_filters (Box performance_box) {
         var limiters_label = new Label (LIMITERS_TITLE);
         limiters_label.set_halign (Align.CENTER);
         limiters_label.set_margin_top (FLOW_BOX_MARGIN);
         limiters_label.set_margin_start (FLOW_BOX_MARGIN);
         limiters_label.set_margin_end (FLOW_BOX_MARGIN);
-        limiters_label.add_css_class ("bold-label");
-        box3.append (limiters_label);
+
+        var font_description = new Pango.FontDescription ();
+        font_description.set_weight (Pango.Weight.BOLD);
+        var attr_list = new Pango.AttrList ();
+        attr_list.insert (new Pango.AttrFontDesc (font_description));
+        limiters_label.set_attributes (attr_list);
+
+        performance_box.append (limiters_label);
 
         var fps_limit_method_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "late", "early" }) {
@@ -746,15 +828,21 @@ public class MangoJuice : Adw.Application {
         limiters_box.append (scale);
         limiters_box.append (fps_limit_label);
         limiters_box.append (toggle_fps_limit);
-        box3.append (limiters_box);
+        performance_box.append (limiters_box);
 
         var vsync_label = new Label ("VSync");
         vsync_label.set_halign (Align.CENTER);
         vsync_label.set_margin_top (FLOW_BOX_MARGIN);
         vsync_label.set_margin_start (FLOW_BOX_MARGIN);
         vsync_label.set_margin_end (FLOW_BOX_MARGIN);
-        vsync_label.add_css_class ("bold-label");
-        box3.append (vsync_label);
+
+        font_description = new Pango.FontDescription ();
+        font_description.set_weight (Pango.Weight.BOLD);
+        attr_list = new Pango.AttrList ();
+        attr_list.insert (new Pango.AttrFontDesc (font_description));
+        vsync_label.set_attributes (attr_list);
+
+        performance_box.append (vsync_label);
 
         var vulcan_model = new Gtk.StringList (null);
         foreach (var item in vulcan_values) {
@@ -788,15 +876,21 @@ public class MangoJuice : Adw.Application {
         vsync_box.append (vulcan_label);
         vsync_box.append (opengl_dropdown);
         vsync_box.append (opengl_label);
-        box3.append (vsync_box);
+        performance_box.append (vsync_box);
 
         var filters_label = new Label (FILTERS_TITLE);
         filters_label.set_halign (Align.CENTER);
         filters_label.set_margin_top (FLOW_BOX_MARGIN);
         filters_label.set_margin_start (FLOW_BOX_MARGIN);
         filters_label.set_margin_end (FLOW_BOX_MARGIN);
-        filters_label.add_css_class ("bold-label");
-        box3.append (filters_label);
+
+        font_description = new Pango.FontDescription ();
+        font_description.set_weight (Pango.Weight.BOLD);
+        attr_list = new Pango.AttrList ();
+        attr_list.insert (new Pango.AttrFontDesc (font_description));
+        filters_label.set_attributes (attr_list);
+
+        performance_box.append (filters_label);
 
         var filter_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "none", "bicubic", "trilinear", "retro" }) {
@@ -831,7 +925,7 @@ public class MangoJuice : Adw.Application {
         filters_box.append (new Label ("Mipmap LoD bias"));
         filters_box.append (picmip);
         filters_box.append (picmip_label);
-        box3.append (filters_box);
+        performance_box.append (filters_box);
     }
 
     private void save_states_to_file () {
@@ -857,7 +951,7 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string ("custom_text_center=%s\n".printf (custom_text_center));
             }
 
-            save_switches_to_file (data_stream, box3_switches, box3_config_vars);
+            save_switches_to_file (data_stream, inform_switches, inform_config_vars);
             save_switches_to_file (data_stream, gpu_switches, gpu_config_vars);
             save_switches_to_file (data_stream, cpu_switches, cpu_config_vars);
             save_switches_to_file (data_stream, other_switches, other_config_vars);
@@ -975,6 +1069,26 @@ public class MangoJuice : Adw.Application {
             data_stream.put_string ("%sio_read\n".printf (io_read_state));
             data_stream.put_string ("%sio_write\n".printf (io_read_state));
 
+            var gpu_text = gpu_text_entry.text;
+            if (gpu_text != "") {
+                data_stream.put_string ("gpu_text=%s\n".printf (gpu_text));
+            }
+
+            var gpu_color = rgba_to_hex (gpu_color_button.get_rgba ());
+            if (gpu_color != "") {
+                data_stream.put_string ("gpu_color=%s\n".printf (gpu_color));
+            }
+
+            var cpu_text = cpu_text_entry.text;
+            if (cpu_text != "") {
+                data_stream.put_string ("cpu_text=%s\n".printf (cpu_text));
+            }
+
+            var cpu_color = rgba_to_hex (cpu_color_button.get_rgba ());
+            if (cpu_color != "") {
+                data_stream.put_string ("cpu_color=%s\n".printf (cpu_color));
+            }
+
             data_stream.close ();
         } catch (Error e) {
             stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
@@ -1010,7 +1124,7 @@ public class MangoJuice : Adw.Application {
                 load_switch_from_file (line, wine_switches, wine_config_vars);
                 load_switch_from_file (line, battery_switches, battery_config_vars);
                 load_switch_from_file (line, other_extra_switches, other_extra_config_vars);
-                load_switch_from_file (line, box3_switches, box3_config_vars);
+                load_switch_from_file (line, inform_switches, inform_config_vars);
                 load_switch_from_file (line, options_switches, options_config_vars);
 
                 if (line.has_prefix ("custom_command=")) {
@@ -1218,6 +1332,28 @@ public class MangoJuice : Adw.Application {
                 }
                 if (line.has_prefix ("io_write") || line.has_prefix ("#io_write")) {
                     other_switches[1].active = !line.has_prefix ("#");
+                }
+
+                if (line.has_prefix ("gpu_text=")) {
+                    gpu_text_entry.text = line.substring ("gpu_text=".length);
+                }
+
+                if (line.has_prefix ("gpu_color=")) {
+                    var gpu_color = line.substring ("gpu_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + gpu_color);
+                    gpu_color_button.set_rgba (rgba);
+                }
+
+                if (line.has_prefix ("cpu_text=")) {
+                    cpu_text_entry.text = line.substring ("cpu_text=".length);
+                }
+
+                if (line.has_prefix ("cpu_color=")) {
+                    var cpu_color = line.substring ("cpu_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + cpu_color);
+                    cpu_color_button.set_rgba (rgba);
                 }
             }
         } catch (Error e) {
@@ -1432,7 +1568,7 @@ public class MangoJuice : Adw.Application {
                 return vulcan_config_values[i];
             }
         }
-        return "0"; // Default value
+        return "0";
     }
 
     private string get_opengl_config_value (string opengl_value) {
@@ -1441,7 +1577,7 @@ public class MangoJuice : Adw.Application {
                 return opengl_config_values[i];
             }
         }
-        return "-1"; // Default value
+        return "-1";
     }
 
     private string get_vulcan_value_from_config (string vulcan_config_value) {
@@ -1450,7 +1586,7 @@ public class MangoJuice : Adw.Application {
                 return vulcan_values[i];
             }
         }
-        return "Unset"; // Default value
+        return "Unset";
     }
 
     private string get_opengl_value_from_config (string opengl_config_value) {
@@ -1459,7 +1595,7 @@ public class MangoJuice : Adw.Application {
                 return opengl_values[i];
             }
         }
-        return "Unset"; // Default value
+        return "Unset";
     }
 
     private void restart_application () {
@@ -1493,6 +1629,122 @@ public class MangoJuice : Adw.Application {
             stderr.printf ("Ошибка при проверке доступности vkcube: %s\n", e.message);
             return false;
         }
+    }
+
+    private void update_gpu_text_in_file (string gpu_text) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("gpu_text=")) {
+                    line = "gpu_text=%s".printf (gpu_text);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_gpu_color_in_file (string gpu_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("gpu_color=")) {
+                    line = "gpu_color=%s".printf (gpu_color);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_cpu_text_in_file (string cpu_text) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("cpu_text=")) {
+                    line = "cpu_text=%s".printf (cpu_text);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_cpu_color_in_file (string cpu_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("cpu_color=")) {
+                    line = "cpu_color=%s".printf (cpu_color);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private string rgba_to_hex (Gdk.RGBA rgba) {
+        return "%02x%02x%02x".printf ((int) (rgba.red * 255), (int) (rgba.green * 255), (int) (rgba.blue * 255));
     }
 
     public static int main (string[] args) {

@@ -1,8 +1,7 @@
 project('mangojuice', 'vala',
-  version: '0.6.2',
+  version: '0.7.0',
   default_options: ['warning_level=0'])
 
-# Зависимости
 dependencies = [
   dependency('glib-2.0'),
   dependency('gtk4'),
@@ -10,10 +9,11 @@ dependencies = [
   dependency('gee-0.8')  
 ]
 
-# Исходные файлы
+# on Relise
+#add_project_arguments('-Wno-discarded-qualifiers', language: 'c')
+
 sources = files('src/mangojuice.vala')
 
-# Ресурсы
 resources_xml = 'data/resources.gresource.xml'
 gnome = import('gnome')
 resources_compiled = gnome.compile_resources(
@@ -23,11 +23,9 @@ resources_compiled = gnome.compile_resources(
   gresource_bundle: true
 )
 
-# Сборка исполняемого файла
 executable('mangojuice', sources, resources_compiled, dependencies: dependencies,
   install: true)
 
-# Установка значка
 install_data(
   'data/assets/icons/io.github.radiolamp.mangojuice-metrics-symbolic.svg',
   'data/assets/icons/io.github.radiolamp.mangojuice-extras-symbolic.svg',
@@ -37,7 +35,6 @@ install_data(
   install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps')
 )
 
-# Установка .desktop файла
 desktop_file = 'data/io.github.radiolamp.mangojuice.desktop'
 install_data(
   desktop_file,
