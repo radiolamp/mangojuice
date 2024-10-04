@@ -88,7 +88,7 @@ public class MangoJuice : Adw.Application {
         "media_player", "network", "full", "log_versioning", "upload_logs"
     };
     private string[] inform_config_vars = {
-        "fps", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count"
+        "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count"
     };
     private string[] options_config_vars = {
         "version", "gamemode", "vkbasalt", "fcat", "fsr", "hdr"
@@ -122,7 +122,7 @@ public class MangoJuice : Adw.Application {
         "Media", "Network", "Full ON", "Log Versioning", "Upload Results"
     };
     private string[] inform_label_texts = {
-        "FPS", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame"
+        "FPS", "FPS Color", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame"
     };
     private bool test_button_pressed = false;
     private Entry custom_text_center_entry;
@@ -817,6 +817,10 @@ public class MangoJuice : Adw.Application {
         }
         toggle_fps_limit = new DropDown (toggle_fps_limit_model, null);
 
+        var fps_color_switch = new Switch ();
+        var fps_color_label = new Label ("FPS Color");
+        fps_color_label.set_halign (Align.START);
+
         var limiters_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         limiters_box.set_margin_start (FLOW_BOX_MARGIN);
         limiters_box.set_margin_end (FLOW_BOX_MARGIN);
@@ -828,6 +832,8 @@ public class MangoJuice : Adw.Application {
         limiters_box.append (scale);
         limiters_box.append (fps_limit_label);
         limiters_box.append (toggle_fps_limit);
+        limiters_box.append (fps_color_switch);
+        limiters_box.append (fps_color_label);
         performance_box.append (limiters_box);
 
         var vsync_label = new Label ("VSync");
@@ -1088,6 +1094,10 @@ public class MangoJuice : Adw.Application {
             var cpu_color = rgba_to_hex (cpu_color_button.get_rgba ());
             if (cpu_color != "") {
                 data_stream.put_string ("cpu_color=%s\n".printf (cpu_color));
+            }
+
+            if (inform_switches[7].active) {
+                data_stream.put_string ("fps_color_change\n");
             }
 
             data_stream.close ();
@@ -1355,6 +1365,10 @@ public class MangoJuice : Adw.Application {
                     var rgba = Gdk.RGBA ();
                     rgba.parse ("#" + cpu_color);
                     cpu_color_button.set_rgba (rgba);
+                }
+
+                if (line.has_prefix ("fps_color_change")) {
+                    inform_switches[7].active = true;
                 }
             }
         } catch (Error e) {
