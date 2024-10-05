@@ -150,6 +150,9 @@ public class MangoJuice : Adw.Application {
     private Entry cpu_text_entry;
     private ColorDialogButton cpu_color_button;
 
+    private Gee.ArrayList<Box> box_pool = new Gee.ArrayList<Box> ();
+    private Gee.ArrayList<Label> label_pool = new Gee.ArrayList<Label> ();
+
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
         set_resource_base_path ("/usr/local/share/icons/hicolor/scalable/apps/");
@@ -596,7 +599,6 @@ public class MangoJuice : Adw.Application {
         gpu_text_entry.changed.connect ( () => {
             update_gpu_text_in_file (gpu_text_entry.text);
         });
-
         var color_dialog = new ColorDialog ();
         gpu_color_button = new ColorDialogButton (color_dialog);
         gpu_color_button.notify["rgba"].connect ( () => {
@@ -709,9 +711,10 @@ public class MangoJuice : Adw.Application {
         flow_box.set_selection_mode (SelectionMode.NONE);
 
         for (int i = 0; i < config_vars.length; i++) {
-            var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+            var row_box = get_box ();
             switches[i] = new Switch ();
-            labels[i] = new Label (label_texts[i]);
+            labels[i] = get_label ();
+            labels[i].label = label_texts[i];
             labels[i].set_halign (Align.START);
             row_box.append (switches[i]);
             row_box.append (labels[i]);
@@ -719,6 +722,22 @@ public class MangoJuice : Adw.Application {
         }
 
         parent_box.append (flow_box);
+    }
+
+    private Box get_box () {
+        if (box_pool.size > 0) {
+            return box_pool.remove_at (box_pool.size - 1);
+        } else {
+            return new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        }
+    }
+
+    private Label get_label () {
+        if (label_pool.size > 0) {
+            return label_pool.remove_at (label_pool.size - 1);
+        } else {
+            return new Label ("");
+        }
     }
 
     private void create_scales_and_labels (Box parent_box) {
@@ -1559,7 +1578,6 @@ public class MangoJuice : Adw.Application {
                 lines.add (line);
             }
 
-            // Добавляем строку font_glyph_ranges, если выбран шрифт, отличный от Default
             if (font_file_value != "Default" && !glyph_ranges_added) {
                 lines.add ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b");
             }
