@@ -836,10 +836,6 @@ public class MangoJuice : Adw.Application {
         }
         toggle_fps_limit = new DropDown (toggle_fps_limit_model, null);
 
-        var fps_color_switch = new Switch ();
-        var fps_color_label = new Label ("FPS Color");
-        fps_color_label.set_halign (Align.START);
-
         var limiters_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         limiters_box.set_margin_start (FLOW_BOX_MARGIN);
         limiters_box.set_margin_end (FLOW_BOX_MARGIN);
@@ -851,8 +847,6 @@ public class MangoJuice : Adw.Application {
         limiters_box.append (scale);
         limiters_box.append (fps_limit_label);
         limiters_box.append (toggle_fps_limit);
-        limiters_box.append (fps_color_switch);
-        limiters_box.append (fps_color_label);
         performance_box.append (limiters_box);
 
         var vsync_label = new Label ("VSync");
