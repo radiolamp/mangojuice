@@ -94,13 +94,13 @@ public class MangoJuice : Adw.Application {
         "version", "gamemode", "vkbasalt", "fcat", "fsr", "hdr"
     };
     private string[] gpu_label_texts = {
-        "GPU Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
-        "GPU Temp", "Memory Temp", "Juntion", "Fans", "Model",
+        "Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
+        "Temp", "Memory Temp", "Juntion", "Fans", "Model",
         "Power", "Voltage", "Throttling", "Throttling GRAPH", "Vulcan Driver"
     };
     private string[] cpu_label_texts = {
-        "CPU Load", "CPU Load Color", "CPU Core Load", "CPU Core Bars", "CPU Freq", "CPU Temp",
-        "CPU Power"
+        "Load", "Load Color", "Core Load", "Core Bars", "Core Freq", "Temp",
+        "Power"
     };
     private string[] other_label_texts = {
         "RAM", "Disk IO", "Procces", "Swap"
@@ -152,6 +152,24 @@ public class MangoJuice : Adw.Application {
 
     private Gee.ArrayList<Box> box_pool = new Gee.ArrayList<Box> ();
     private Gee.ArrayList<Label> label_pool = new Gee.ArrayList<Label> ();
+
+    private Entry fps_value_entry_1;
+    private Entry fps_value_entry_2;
+    private ColorDialogButton fps_color_button_1;
+    private ColorDialogButton fps_color_button_2;
+    private ColorDialogButton fps_color_button_3;
+
+    private Entry gpu_load_value_entry_1;
+    private Entry gpu_load_value_entry_2;
+    private ColorDialogButton gpu_load_color_button_1;
+    private ColorDialogButton gpu_load_color_button_2;
+    private ColorDialogButton gpu_load_color_button_3;
+
+    private Entry cpu_load_value_entry_1;
+    private Entry cpu_load_value_entry_2;
+    private ColorDialogButton cpu_load_color_button_1;
+    private ColorDialogButton cpu_load_color_button_2;
+    private ColorDialogButton cpu_load_color_button_3;
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -219,14 +237,6 @@ public class MangoJuice : Adw.Application {
         window.present ();
         load_states_from_file ();
 
-        var gpu_color = Gdk.RGBA ();
-        gpu_color.parse ("#2e9762");
-        gpu_color_button.set_rgba (gpu_color);
-
-        var cpu_color = Gdk.RGBA ();
-        cpu_color.parse ("#2e97cb");
-        cpu_color_button.set_rgba (cpu_color);
-
         window.close_request.connect ( () => {
             if (is_vkcube_running ()) {
                 try {
@@ -238,12 +248,35 @@ public class MangoJuice : Adw.Application {
             return false;
         });
 
-        inform_switches[1].notify["active"].connect ( () => {
-            if (inform_switches[1].active) inform_switches[2].active = false;
+        inform_switches[2].notify["active"].connect ( () => {
+            if (inform_switches[2].active) inform_switches[3].active = false;
         });
 
-        inform_switches[2].notify["active"].connect ( () => {
-            if (inform_switches[2].active) inform_switches[1].active = false;
+        inform_switches[3].notify["active"].connect ( () => {
+            if (inform_switches[3].active) inform_switches[2].active = false;
+        });
+
+        inform_switches[1].notify["active"].connect ( () => {
+            if (inform_switches[1].active) {
+                inform_switches[0].active = true;
+            }
+        });
+
+        inform_switches[0].notify["active"].connect ( () => {
+            if (!inform_switches[0].active) {
+                inform_switches[1].active = false;
+            }
+        });
+
+        cpu_switches[3].notify["active"].connect ( () => {
+            if (cpu_switches[3].active) {
+                cpu_switches[2].active = true;
+            }
+        });
+        cpu_switches[3].notify["active"].connect ( () => {
+            if (!cpu_switches[3].active) {
+                cpu_switches[2].active = false;
+            }
         });
 
         add_scroll_event_handler (duracion_scale);
@@ -324,29 +357,6 @@ public class MangoJuice : Adw.Application {
         create_switches_and_labels (performance_box, INFORM_TITLE, inform_switches, inform_labels, inform_config_vars, inform_label_texts);
         create_limiters_and_filters (performance_box);
 
-        cpu_switches[3].notify["active"].connect ( () => {
-            if (cpu_switches[3].active) {
-                cpu_switches[2].active = true;
-            }
-        });
-
-        cpu_switches[3].notify["active"].connect ( () => {
-            if (!cpu_switches[3].active) {
-                cpu_switches[2].active = false;
-            }
-        });
-
-        inform_switches[5].notify["active"].connect ( () => {
-            if (inform_switches[5].active) {
-                inform_switches[4].active = true;
-            }
-        });
-
-        inform_switches[5].notify["active"].connect ( () => {
-            if (!inform_switches[5].active) {
-                inform_switches[4].active = false;
-            }
-        });
 
         for (int i = 1; i < gpu_switches.length; i++) {
             gpu_switches[i].notify["active"].connect ( () => {
@@ -389,7 +399,7 @@ public class MangoJuice : Adw.Application {
 
     private void initialize_custom_controls (Box extras_box, Box visual_box) {
         custom_command_entry = new Entry ();
-        custom_command_entry.placeholder_text = "Raw Custom Cmd";
+        custom_command_entry.placeholder_text = "Mangohud variable";
         custom_command_entry.hexpand = true;
 
         custom_logs_path_entry = new Entry ();
@@ -523,7 +533,8 @@ public class MangoJuice : Adw.Application {
         colums_scale.value_changed.connect ( () => colums_value_label.label = "%d".printf ( (int)colums_scale.get_value ()));
 
         toggle_hud_entry = new Entry ();
-        toggle_hud_entry.placeholder_text = "Shift_R+F12";
+        toggle_hud_entry.placeholder_text = "Key";
+        toggle_hud_entry.text = "Shift_R+F12";
         toggle_hud_entry.set_size_request (20, -1);
         toggle_hud_entry.set_margin_top (FLOW_BOX_MARGIN);
         toggle_hud_entry.set_margin_bottom (FLOW_BOX_MARGIN);
@@ -599,6 +610,7 @@ public class MangoJuice : Adw.Application {
         gpu_text_entry.changed.connect ( () => {
             update_gpu_text_in_file (gpu_text_entry.text);
         });
+
         var color_dialog = new ColorDialog ();
         gpu_color_button = new ColorDialogButton (color_dialog);
         gpu_color_button.notify["rgba"].connect ( () => {
@@ -629,6 +641,159 @@ public class MangoJuice : Adw.Application {
         color_box.append (cpu_text_entry);
         color_box.append (cpu_color_button);
         visual_box.append (color_box);
+
+        fps_value_entry_1 = new Entry ();
+        fps_value_entry_1.placeholder_text = "Medium";
+        fps_value_entry_1.text = "30";
+        fps_value_entry_1.hexpand = true;
+        fps_value_entry_1.changed.connect ( () => {
+            update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
+        });
+
+        fps_value_entry_2 = new Entry ();
+        fps_value_entry_2.placeholder_text = "High";
+        fps_value_entry_2.text = "60";
+        fps_value_entry_2.hexpand = true;
+        fps_value_entry_2.changed.connect ( () => {
+            update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
+        });
+
+        var fps_clarge_label = new Label ("Charge FPS");
+        fps_clarge_label.set_halign (Align.START);
+
+        var color_dialog_fps = new ColorDialog ();
+        fps_color_button_1 = new ColorDialogButton (color_dialog_fps);
+        fps_color_button_1.notify["rgba"].connect ( () => {
+            var rgba = fps_color_button_1.get_rgba ().copy ();
+            update_fps_color_in_file (rgba_to_hex (rgba), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (fps_color_button_3.get_rgba ()));
+        });
+
+        fps_color_button_2 = new ColorDialogButton (color_dialog_fps);
+        fps_color_button_2.notify["rgba"].connect ( () => {
+            var rgba = fps_color_button_2.get_rgba ().copy ();
+            update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (fps_color_button_3.get_rgba ()));
+        });
+
+        fps_color_button_3 = new ColorDialogButton (color_dialog_fps);
+        fps_color_button_3.notify["rgba"].connect ( () => {
+            var rgba = fps_color_button_3.get_rgba ().copy ();
+            update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+        });
+
+        var fps_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        fps_color_box.set_margin_start (FLOW_BOX_MARGIN);
+        fps_color_box.set_margin_end (FLOW_BOX_MARGIN);
+        fps_color_box.set_margin_top (FLOW_BOX_MARGIN);
+        fps_color_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        fps_color_box.append (fps_clarge_label);
+        fps_color_box.append (fps_value_entry_1);
+        fps_color_box.append (fps_value_entry_2);
+        fps_color_box.append (fps_color_button_1);
+        fps_color_box.append (fps_color_button_2);
+        fps_color_box.append (fps_color_button_3);
+        visual_box.append (fps_color_box);
+
+        gpu_load_value_entry_1 = new Entry ();
+        gpu_load_value_entry_1.placeholder_text = "Medium";
+        gpu_load_value_entry_1.text = "60";
+        gpu_load_value_entry_1.hexpand = true;
+        gpu_load_value_entry_1.changed.connect ( () => {
+            update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
+        });
+
+        gpu_load_value_entry_2 = new Entry ();
+        gpu_load_value_entry_2.placeholder_text = "High";
+        gpu_load_value_entry_2.text = "90";
+        gpu_load_value_entry_2.hexpand = true;
+        gpu_load_value_entry_2.changed.connect ( () => {
+            update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
+        });
+
+        var gpu_load_clarge_label = new Label ("GPU Load   ");
+        gpu_load_clarge_label.set_halign (Align.START);
+
+        var color_dialog_gpu_load = new ColorDialog ();
+        gpu_load_color_button_1 = new ColorDialogButton (color_dialog_gpu_load);
+        gpu_load_color_button_1.notify["rgba"].connect ( () => {
+            var rgba = gpu_load_color_button_1.get_rgba ().copy ();
+            update_gpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
+        });
+
+        gpu_load_color_button_2 = new ColorDialogButton (color_dialog_gpu_load);
+        gpu_load_color_button_2.notify["rgba"].connect ( () => {
+            var rgba = gpu_load_color_button_2.get_rgba ().copy ();
+            update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
+        });
+
+        gpu_load_color_button_3 = new ColorDialogButton (color_dialog_gpu_load);
+        gpu_load_color_button_3.notify["rgba"].connect ( () => {
+            var rgba = gpu_load_color_button_3.get_rgba ().copy ();
+            update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+        });
+
+        var gpu_load_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        gpu_load_color_box.set_margin_start (FLOW_BOX_MARGIN);
+        gpu_load_color_box.set_margin_end (FLOW_BOX_MARGIN);
+        gpu_load_color_box.set_margin_top (FLOW_BOX_MARGIN);
+        gpu_load_color_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        gpu_load_color_box.append (gpu_load_clarge_label);
+        gpu_load_color_box.append (gpu_load_value_entry_1);
+        gpu_load_color_box.append (gpu_load_value_entry_2);
+        gpu_load_color_box.append (gpu_load_color_button_1);
+        gpu_load_color_box.append (gpu_load_color_button_2);
+        gpu_load_color_box.append (gpu_load_color_button_3);
+        visual_box.append (gpu_load_color_box);
+
+        cpu_load_value_entry_1 = new Entry ();
+        cpu_load_value_entry_1.placeholder_text = "Medium";
+        cpu_load_value_entry_1.text = "60";
+        cpu_load_value_entry_1.hexpand = true;
+        cpu_load_value_entry_1.changed.connect ( () => {
+            update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
+        });
+
+        cpu_load_value_entry_2 = new Entry ();
+        cpu_load_value_entry_2.placeholder_text = "High";
+        cpu_load_value_entry_2.text = "90";
+        cpu_load_value_entry_2.hexpand = true;
+        cpu_load_value_entry_2.changed.connect ( () => {
+            update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
+        });
+
+        var cpu_load_clarge_label = new Label ("CPU Load   ");
+        cpu_load_clarge_label.set_halign (Align.START);
+
+        var color_dialog_cpu_load = new ColorDialog ();
+        cpu_load_color_button_1 = new ColorDialogButton (color_dialog_cpu_load);
+        cpu_load_color_button_1.notify["rgba"].connect ( () => {
+            var rgba = cpu_load_color_button_1.get_rgba ().copy ();
+            update_cpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
+        });
+
+        cpu_load_color_button_2 = new ColorDialogButton (color_dialog_cpu_load);
+        cpu_load_color_button_2.notify["rgba"].connect ( () => {
+            var rgba = cpu_load_color_button_2.get_rgba ().copy ();
+            update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
+        });
+
+        cpu_load_color_button_3 = new ColorDialogButton (color_dialog_cpu_load);
+        cpu_load_color_button_3.notify["rgba"].connect ( () => {
+            var rgba = cpu_load_color_button_3.get_rgba ().copy ();
+            update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+        });
+
+        var cpu_load_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        cpu_load_color_box.set_margin_start (FLOW_BOX_MARGIN);
+        cpu_load_color_box.set_margin_end (FLOW_BOX_MARGIN);
+        cpu_load_color_box.set_margin_top (FLOW_BOX_MARGIN);
+        cpu_load_color_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        cpu_load_color_box.append (cpu_load_clarge_label);
+        cpu_load_color_box.append (cpu_load_value_entry_1);
+        cpu_load_color_box.append (cpu_load_value_entry_2);
+        cpu_load_color_box.append (cpu_load_color_button_1);
+        cpu_load_color_box.append (cpu_load_color_button_2);
+        cpu_load_color_box.append (cpu_load_color_button_3);
+        visual_box.append (cpu_load_color_box);
     }
 
     private void initialize_font_dropdown (Box visual_box) {
@@ -1113,6 +1278,45 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string ("fps_color_change\n");
             }
 
+            var fps_value_1 = fps_value_entry_1.text;
+            var fps_value_2 = fps_value_entry_2.text;
+            if (fps_value_1 != "" && fps_value_2 != "") {
+                data_stream.put_string ("fps_value=%s,%s\n".printf (fps_value_1, fps_value_2));
+            }
+
+            var fps_color_1 = rgba_to_hex (fps_color_button_1.get_rgba ());
+            var fps_color_2 = rgba_to_hex (fps_color_button_2.get_rgba ());
+            var fps_color_3 = rgba_to_hex (fps_color_button_3.get_rgba ());
+            if (fps_color_1 != "" && fps_color_2 != "" && fps_color_3 != "") {
+                data_stream.put_string ("fps_color=%s,%s,%s\n".printf (fps_color_1, fps_color_2, fps_color_3));
+            }
+
+            var gpu_load_value_1 = gpu_load_value_entry_1.text;
+            var gpu_load_value_2 = gpu_load_value_entry_2.text;
+            if (gpu_load_value_1 != "" && gpu_load_value_2 != "") {
+                data_stream.put_string ("gpu_load_value=%s,%s\n".printf (gpu_load_value_1, gpu_load_value_2));
+            }
+
+            var gpu_load_color_1 = rgba_to_hex (gpu_load_color_button_1.get_rgba ());
+            var gpu_load_color_2 = rgba_to_hex (gpu_load_color_button_2.get_rgba ());
+            var gpu_load_color_3 = rgba_to_hex (gpu_load_color_button_3.get_rgba ());
+            if (gpu_load_color_1 != "" && gpu_load_color_2 != "" && gpu_load_color_3 != "") {
+                data_stream.put_string ("gpu_load_color=%s,%s,%s\n".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3));
+            }
+
+            var cpu_load_value_1 = cpu_load_value_entry_1.text;
+            var cpu_load_value_2 = cpu_load_value_entry_2.text;
+            if (cpu_load_value_1 != "" && cpu_load_value_2 != "") {
+                data_stream.put_string ("cpu_load_value=%s,%s\n".printf (cpu_load_value_1, cpu_load_value_2));
+            }
+
+            var cpu_load_color_1 = rgba_to_hex (cpu_load_color_button_1.get_rgba ());
+            var cpu_load_color_2 = rgba_to_hex (cpu_load_color_button_2.get_rgba ());
+            var cpu_load_color_3 = rgba_to_hex (cpu_load_color_button_3.get_rgba ());
+            if (cpu_load_color_1 != "" && cpu_load_color_2 != "" && cpu_load_color_3 != "") {
+                data_stream.put_string ("cpu_load_color=%s,%s,%s\n".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3));
+            }
+
             data_stream.close ();
         } catch (Error e) {
             stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
@@ -1382,6 +1586,82 @@ public class MangoJuice : Adw.Application {
 
                 if (line.has_prefix ("fps_color_change")) {
                     inform_switches[7].active = true;
+                }
+
+                if (line.has_prefix ("fps_value=")) {
+                    var fps_values = line.substring ("fps_value=".length).split (",");
+                    if (fps_values.length == 2) {
+                        fps_value_entry_1.text = fps_values[0];
+                        fps_value_entry_2.text = fps_values[1];
+                    }
+                }
+
+                if (line.has_prefix ("fps_color=")) {
+                    var fps_colors = line.substring ("fps_color=".length).split (",");
+                    if (fps_colors.length == 3) {
+                        var rgba_1 = Gdk.RGBA ();
+                        rgba_1.parse ("#" + fps_colors[0]);
+                        fps_color_button_1.set_rgba (rgba_1);
+
+                        var rgba_2 = Gdk.RGBA ();
+                        rgba_2.parse ("#" + fps_colors[1]);
+                        fps_color_button_2.set_rgba (rgba_2);
+
+                        var rgba_3 = Gdk.RGBA ();
+                        rgba_3.parse ("#" + fps_colors[2]);
+                        fps_color_button_3.set_rgba (rgba_3);
+                    }
+                }
+
+                if (line.has_prefix ("gpu_load_value=")) {
+                    var gpu_load_values = line.substring ("gpu_load_value=".length).split (",");
+                    if (gpu_load_values.length == 2) {
+                        gpu_load_value_entry_1.text = gpu_load_values[0];
+                        gpu_load_value_entry_2.text = gpu_load_values[1];
+                    }
+                }
+
+                if (line.has_prefix ("gpu_load_color=")) {
+                    var gpu_load_colors = line.substring ("gpu_load_color=".length).split (",");
+                    if (gpu_load_colors.length == 3) {
+                        var rgba_1 = Gdk.RGBA ();
+                        rgba_1.parse ("#" + gpu_load_colors[0]);
+                        gpu_load_color_button_1.set_rgba (rgba_1);
+
+                        var rgba_2 = Gdk.RGBA ();
+                        rgba_2.parse ("#" + gpu_load_colors[1]);
+                        gpu_load_color_button_2.set_rgba (rgba_2);
+
+                        var rgba_3 = Gdk.RGBA ();
+                        rgba_3.parse ("#" + gpu_load_colors[2]);
+                        gpu_load_color_button_3.set_rgba (rgba_3);
+                    }
+                }
+
+                if (line.has_prefix ("cpu_load_value=")) {
+                    var cpu_load_values = line.substring ("cpu_load_value=".length).split (",");
+                    if (cpu_load_values.length == 2) {
+                        cpu_load_value_entry_1.text = cpu_load_values[0];
+                        cpu_load_value_entry_2.text = cpu_load_values[1];
+                    }
+                }
+
+                if (line.has_prefix ("cpu_load_color=")) {
+                    var cpu_load_colors = line.substring ("cpu_load_color=".length).split (",");
+                    if (cpu_load_colors.length == 3) {
+                        var rgba_1 = Gdk.RGBA ();
+                        rgba_1.parse ("#" + cpu_load_colors[0]);
+                        cpu_load_color_button_1.set_rgba (rgba_1);
+
+                        var rgba_2 = Gdk.RGBA ();
+                        rgba_2.parse ("#" + cpu_load_colors[1]);
+                        cpu_load_color_button_2.set_rgba (rgba_2);
+
+                        var rgba_3 = Gdk.RGBA ();
+                        rgba_3.parse ("#" + cpu_load_colors[2]);
+                        cpu_load_color_button_3.set_rgba (rgba_3);
+                        
+                    }
                 }
             }
         } catch (Error e) {
@@ -1765,6 +2045,174 @@ public class MangoJuice : Adw.Application {
             while ( (line = file_stream.read_line ()) != null) {
                 if (line.has_prefix ("cpu_color=")) {
                     line = "cpu_color=%s".printf (cpu_color);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_fps_value_in_file (string fps_value_1, string fps_value_2) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("fps_value=")) {
+                    line = "fps_value=%s,%s".printf (fps_value_1, fps_value_2);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_fps_color_in_file (string fps_color_1, string fps_color_2, string fps_color_3) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("fps_color=")) {
+                    line = "fps_color=%s,%s,%s".printf (fps_color_1, fps_color_2, fps_color_3);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_gpu_load_value_in_file (string gpu_load_value_1, string gpu_load_value_2) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("gpu_load_value=")) {
+                    line = "gpu_load_value=%s,%s".printf (gpu_load_value_1, gpu_load_value_2);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_gpu_load_color_in_file (string gpu_load_color_1, string gpu_load_color_2, string gpu_load_color_3) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("gpu_load_color=")) {
+                    line = "gpu_load_color=%s,%s,%s".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_cpu_load_value_in_file (string cpu_load_value_1, string cpu_load_value_2) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("cpu_load_value=")) {
+                    line = "cpu_load_value=%s,%s".printf (cpu_load_value_1, cpu_load_value_2);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+        }
+    }
+
+    private void update_cpu_load_color_in_file (string cpu_load_color_1, string cpu_load_color_2, string cpu_load_color_3) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("cpu_load_color=")) {
+                    line = "cpu_load_color=%s,%s,%s".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3);
                 }
                 lines.add (line);
             }
