@@ -1660,7 +1660,6 @@ public class MangoJuice : Adw.Application {
                         var rgba_3 = Gdk.RGBA ();
                         rgba_3.parse ("#" + cpu_load_colors[2]);
                         cpu_load_color_button_3.set_rgba (rgba_3);
-                        
                     }
                 }
             }
