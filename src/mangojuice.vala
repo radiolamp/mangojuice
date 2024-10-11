@@ -223,7 +223,7 @@ public class MangoJuice : Adw.Application {
                 Process.spawn_command_line_async ("mangohud vkcube");
                 test_button_pressed = true;
             } catch (Error e) {
-                stderr.printf ("Ошибка при запуске команды: %s\n", e.message);
+                stderr.printf ("Error when running the command: %s\n", e.message);
             }
         });
         header_bar.pack_start (test_button);
@@ -242,7 +242,7 @@ public class MangoJuice : Adw.Application {
                 try {
                     Process.spawn_command_line_sync ("pkill vkcube");
                 } catch (Error e) {
-                    stderr.printf ("Ошибка при закрытии vkcube: %s\n", e.message);
+                    stderr.printf ("Error closing vkcube: %s\n", e.message);
                 }
             }
             return false;
@@ -413,7 +413,7 @@ public class MangoJuice : Adw.Application {
             try {
                 Process.spawn_command_line_sync ("pkexec chmod 0644 /sys/class/powercap/intel-rapl\\:0/energy_uj");
             } catch (Error e) {
-                stderr.printf ("Ошибка при выполнении команды: %s\n", e.message);
+                stderr.printf ("Error when executing the command: %s\n", e.message);
             }
         });
 
@@ -604,6 +604,25 @@ public class MangoJuice : Adw.Application {
         color_label.set_attributes (color_attr_list);
         visual_box.append (color_label);
 
+        var color_dialog = new ColorDialog ();
+        gpu_color_button = new ColorDialogButton (color_dialog);
+        var default_gpu_color = Gdk.RGBA ();
+        default_gpu_color.parse ("#00FF00"); // Зеленый цвет по умолчанию для GPU
+        gpu_color_button.set_rgba (default_gpu_color);
+        gpu_color_button.notify["rgba"].connect ( () => {
+            var rgba = gpu_color_button.get_rgba ().copy ();
+            update_gpu_color_in_file (rgba_to_hex (rgba));
+        });
+
+        cpu_color_button = new ColorDialogButton (color_dialog);
+        var default_cpu_color = Gdk.RGBA ();
+        default_cpu_color.parse ("#0000FF"); // Синий цвет по умолчанию для CPU
+        cpu_color_button.set_rgba (default_cpu_color);
+        cpu_color_button.notify["rgba"].connect ( () => {
+            var rgba = cpu_color_button.get_rgba ().copy ();
+            update_cpu_color_in_file (rgba_to_hex (rgba));
+        });
+
         gpu_text_entry = new Entry ();
         gpu_text_entry.placeholder_text = "GPU custom name";
         gpu_text_entry.hexpand = true;
@@ -611,24 +630,11 @@ public class MangoJuice : Adw.Application {
             update_gpu_text_in_file (gpu_text_entry.text);
         });
 
-        var color_dialog = new ColorDialog ();
-        gpu_color_button = new ColorDialogButton (color_dialog);
-        gpu_color_button.notify["rgba"].connect ( () => {
-            var rgba = gpu_color_button.get_rgba ().copy ();
-            update_gpu_color_in_file (rgba_to_hex (rgba));
-        });
-
         cpu_text_entry = new Entry ();
         cpu_text_entry.placeholder_text = "CPU custom name";
         cpu_text_entry.hexpand = true;
         cpu_text_entry.changed.connect ( () => {
             update_cpu_text_in_file (cpu_text_entry.text);
-        });
-
-        cpu_color_button = new ColorDialogButton (color_dialog);
-        cpu_color_button.notify["rgba"].connect ( () => {
-            var rgba = cpu_color_button.get_rgba ().copy ();
-            update_cpu_color_in_file (rgba_to_hex (rgba));
         });
 
         var color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -663,18 +669,27 @@ public class MangoJuice : Adw.Application {
 
         var color_dialog_fps = new ColorDialog ();
         fps_color_button_1 = new ColorDialogButton (color_dialog_fps);
+        var default_fps_color_1 = Gdk.RGBA ();
+        default_fps_color_1.parse ("#FF0000"); // Красный цвет по умолчанию для fps_color_button_1
+        fps_color_button_1.set_rgba (default_fps_color_1);
         fps_color_button_1.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_1.get_rgba ().copy ();
             update_fps_color_in_file (rgba_to_hex (rgba), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (fps_color_button_3.get_rgba ()));
         });
 
         fps_color_button_2 = new ColorDialogButton (color_dialog_fps);
+        var default_fps_color_2 = Gdk.RGBA ();
+        default_fps_color_2.parse ("#FFFF00"); // Желтый цвет по умолчанию для fps_color_button_2
+        fps_color_button_2.set_rgba (default_fps_color_2);
         fps_color_button_2.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_2.get_rgba ().copy ();
             update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (fps_color_button_3.get_rgba ()));
         });
 
         fps_color_button_3 = new ColorDialogButton (color_dialog_fps);
+        var default_fps_color_3 = Gdk.RGBA ();
+        default_fps_color_3.parse ("#00FF00"); // Зеленый цвет по умолчанию для fps_color_button_3
+        fps_color_button_3.set_rgba (default_fps_color_3);
         fps_color_button_3.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_3.get_rgba ().copy ();
             update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (rgba));
@@ -709,23 +724,32 @@ public class MangoJuice : Adw.Application {
             update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
         });
 
-        var gpu_load_clarge_label = new Label ("GPU Load   ");
+        var gpu_load_clarge_label = new Label ("GPU Load %");
         gpu_load_clarge_label.set_halign (Align.START);
 
         var color_dialog_gpu_load = new ColorDialog ();
         gpu_load_color_button_1 = new ColorDialogButton (color_dialog_gpu_load);
+        var default_gpu_load_color_1 = Gdk.RGBA ();
+        default_gpu_load_color_1.parse ("#F5F5DC"); // Цвет по умолчанию для gpu_load_color_button_1
+        gpu_load_color_button_1.set_rgba (default_gpu_load_color_1);
         gpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_1.get_rgba ().copy ();
             update_gpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
         });
 
         gpu_load_color_button_2 = new ColorDialogButton (color_dialog_gpu_load);
+        var default_gpu_load_color_2 = Gdk.RGBA ();
+        default_gpu_load_color_2.parse ("#CC7722"); // Цвет по умолчанию для gpu_load_color_button_2
+        gpu_load_color_button_2.set_rgba (default_gpu_load_color_2);
         gpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_2.get_rgba ().copy ();
             update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
         });
 
         gpu_load_color_button_3 = new ColorDialogButton (color_dialog_gpu_load);
+        var default_gpu_load_color_3 = Gdk.RGBA ();
+        default_gpu_load_color_3.parse ("#FF0000"); // Цвет по умолчанию для gpu_load_color_button_3
+        gpu_load_color_button_3.set_rgba (default_gpu_load_color_3);
         gpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_3.get_rgba ().copy ();
             update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
@@ -760,23 +784,32 @@ public class MangoJuice : Adw.Application {
             update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
         });
 
-        var cpu_load_clarge_label = new Label ("CPU Load   ");
+        var cpu_load_clarge_label = new Label ("CPU Load %");
         cpu_load_clarge_label.set_halign (Align.START);
 
         var color_dialog_cpu_load = new ColorDialog ();
         cpu_load_color_button_1 = new ColorDialogButton (color_dialog_cpu_load);
+        var default_cpu_load_color_1 = Gdk.RGBA ();
+        default_cpu_load_color_1.parse ("#F5F5DC"); // Цвет по умолчанию для cpu_load_color_button_1
+        cpu_load_color_button_1.set_rgba (default_cpu_load_color_1);
         cpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_1.get_rgba ().copy ();
             update_cpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
         });
 
         cpu_load_color_button_2 = new ColorDialogButton (color_dialog_cpu_load);
+        var default_cpu_load_color_2 = Gdk.RGBA ();
+        default_cpu_load_color_2.parse ("#CC7722"); // Цвет по умолчанию для cpu_load_color_button_2
+        cpu_load_color_button_2.set_rgba (default_cpu_load_color_2);
         cpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_2.get_rgba ().copy ();
             update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
         });
 
         cpu_load_color_button_3 = new ColorDialogButton (color_dialog_cpu_load);
+        var default_cpu_load_color_3 = Gdk.RGBA ();
+        default_cpu_load_color_3.parse ("#FF0000"); // Цвет по умолчанию для cpu_load_color_button_3
+        cpu_load_color_button_3.set_rgba (default_cpu_load_color_3);
         cpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_3.get_rgba ().copy ();
             update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
@@ -809,7 +842,7 @@ public class MangoJuice : Adw.Application {
             try {
                 local_fonts_dir.make_directory_with_parents ();
             } catch (Error e) {
-                stderr.printf ("Ошибка при создании директории: %s\n", e.message);
+                stderr.printf ("Error creating the directory: %s\n", e.message);
             }
         }
         fonts.add_all (find_fonts (local_fonts_dir.get_path ()));
@@ -842,7 +875,7 @@ public class MangoJuice : Adw.Application {
                 }
             }
         } catch (Error e) {
-            stderr.printf ("Ошибка при поиске шрифтов: %s\n", e.message);
+            stderr.printf ("Error when searching for fonts: %s\n", e.message);
         }
 
         return fonts;
@@ -907,7 +940,7 @@ public class MangoJuice : Adw.Application {
 
     private void create_scales_and_labels (Box parent_box) {
         duracion_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 200, 1);
-        duracion_scale.set_value (0);
+        duracion_scale.set_value (30);
         duracion_scale.set_hexpand (true);
         duracion_scale.set_margin_start (FLOW_BOX_MARGIN);
         duracion_scale.set_margin_end (FLOW_BOX_MARGIN);
@@ -929,7 +962,7 @@ public class MangoJuice : Adw.Application {
         autostart_scale.value_changed.connect ( () => autostart_value_label.label = "%d s".printf ( (int)autostart_scale.get_value ()));
 
         interval_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 500, 1);
-        interval_scale.set_value (0);
+        interval_scale.set_value (100);
         interval_scale.set_hexpand (true);
         interval_scale.set_margin_start (FLOW_BOX_MARGIN);
         interval_scale.set_margin_end (FLOW_BOX_MARGIN);
@@ -1114,19 +1147,14 @@ public class MangoJuice : Adw.Application {
 
     private void save_states_to_file () {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        if (!config_dir.query_exists ()) {
-            try {
-                config_dir.make_directory_with_parents ();
-            } catch (Error e) {
-                stderr.printf ("Ошибка при создании директории: %s\n", e.message);
-                return;
-            }
-        }
-
         var file = config_dir.get_child ("MangoHud.conf");
+
         try {
-            var file_stream = file.replace (null, false, FileCreateFlags.NONE);
-            var data_stream = new DataOutputStream (file_stream);
+            if (!config_dir.query_exists ()) {
+                config_dir.make_directory_with_parents ();
+            }
+
+            var data_stream = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
             data_stream.put_string ("################### File Generated by MangoJuice ###################\n");
             data_stream.put_string ("legacy_layout=false\n");
 
@@ -1212,8 +1240,10 @@ public class MangoJuice : Adw.Application {
                 data_stream.put_string ("picmip=%d\n".printf ( (int)picmip.get_value ()));
             }
 
-            var custom_switch_state = custom_switch.active ? "" : "#";
-            data_stream.put_string ("%shorizontal\n".printf (custom_switch_state));
+            if (custom_switch.active) {
+                data_stream.put_string ("horizontal\n");
+            }
+
             if (borders_scale != null) {
                 data_stream.put_string ("round_corners=%d\n".printf ( (int)borders_scale.get_value ()));
             }
@@ -1250,86 +1280,103 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
-            var io_read_state = other_switches[1].active ? "" : "#";
-            data_stream.put_string ("%sio_read\n".printf (io_read_state));
-            data_stream.put_string ("%sio_write\n".printf (io_read_state));
-
-            var gpu_text = gpu_text_entry.text;
-            if (gpu_text != "") {
-                data_stream.put_string ("gpu_text=%s\n".printf (gpu_text));
+            if (gpu_text_entry != null) {
+                var gpu_text = gpu_text_entry.text;
+                if (gpu_text != "") {
+                    data_stream.put_string ("gpu_text=%s\n".printf (gpu_text));
+                }
             }
 
-            var gpu_color = rgba_to_hex (gpu_color_button.get_rgba ());
-            if (gpu_color != "") {
-                data_stream.put_string ("gpu_color=%s\n".printf (gpu_color));
+            if (gpu_color_button != null) {
+                var gpu_color = rgba_to_hex (gpu_color_button.get_rgba ());
+                if (gpu_color != "") {
+                    data_stream.put_string ("gpu_color=%s\n".printf (gpu_color));
+                }
             }
 
-            var cpu_text = cpu_text_entry.text;
-            if (cpu_text != "") {
-                data_stream.put_string ("cpu_text=%s\n".printf (cpu_text));
+            if (cpu_text_entry != null) {
+                var cpu_text = cpu_text_entry.text;
+                if (cpu_text != "") {
+                    data_stream.put_string ("cpu_text=%s\n".printf (cpu_text));
+                }
             }
 
-            var cpu_color = rgba_to_hex (cpu_color_button.get_rgba ());
-            if (cpu_color != "") {
-                data_stream.put_string ("cpu_color=%s\n".printf (cpu_color));
+            if (cpu_color_button != null) {
+                var cpu_color = rgba_to_hex (cpu_color_button.get_rgba ());
+                if (cpu_color != "") {
+                    data_stream.put_string ("cpu_color=%s\n".printf (cpu_color));
+                }
             }
 
             if (inform_switches[7].active) {
                 data_stream.put_string ("fps_color_change\n");
             }
 
-            var fps_value_1 = fps_value_entry_1.text;
-            var fps_value_2 = fps_value_entry_2.text;
-            if (fps_value_1 != "" && fps_value_2 != "") {
-                data_stream.put_string ("fps_value=%s,%s\n".printf (fps_value_1, fps_value_2));
+            if (fps_value_entry_1 != null && fps_value_entry_2 != null) {
+                var fps_value_1 = fps_value_entry_1.text;
+                var fps_value_2 = fps_value_entry_2.text;
+                if (fps_value_1 != "" && fps_value_2 != "") {
+                    data_stream.put_string ("fps_value=%s,%s\n".printf (fps_value_1, fps_value_2));
+                }
             }
 
-            var fps_color_1 = rgba_to_hex (fps_color_button_1.get_rgba ());
-            var fps_color_2 = rgba_to_hex (fps_color_button_2.get_rgba ());
-            var fps_color_3 = rgba_to_hex (fps_color_button_3.get_rgba ());
-            if (fps_color_1 != "" && fps_color_2 != "" && fps_color_3 != "") {
-                data_stream.put_string ("fps_color=%s,%s,%s\n".printf (fps_color_1, fps_color_2, fps_color_3));
+            if (fps_color_button_1 != null && fps_color_button_2 != null && fps_color_button_3 != null) {
+                var fps_color_1 = rgba_to_hex (fps_color_button_1.get_rgba ());
+                var fps_color_2 = rgba_to_hex (fps_color_button_2.get_rgba ());
+                var fps_color_3 = rgba_to_hex (fps_color_button_3.get_rgba ());
+                if (fps_color_1 != "" && fps_color_2 != "" && fps_color_3 != "") {
+                    data_stream.put_string ("fps_color=%s,%s,%s\n".printf (fps_color_1, fps_color_2, fps_color_3));
+                }
             }
 
-            var gpu_load_value_1 = gpu_load_value_entry_1.text;
-            var gpu_load_value_2 = gpu_load_value_entry_2.text;
-            if (gpu_load_value_1 != "" && gpu_load_value_2 != "") {
-                data_stream.put_string ("gpu_load_value=%s,%s\n".printf (gpu_load_value_1, gpu_load_value_2));
+            if (gpu_load_value_entry_1 != null && gpu_load_value_entry_2 != null) {
+                var gpu_load_value_1 = gpu_load_value_entry_1.text;
+                var gpu_load_value_2 = gpu_load_value_entry_2.text;
+                if (gpu_load_value_1 != "" && gpu_load_value_2 != "") {
+                    data_stream.put_string ("gpu_load_value=%s,%s\n".printf (gpu_load_value_1, gpu_load_value_2));
+                }
             }
 
-            var gpu_load_color_1 = rgba_to_hex (gpu_load_color_button_1.get_rgba ());
-            var gpu_load_color_2 = rgba_to_hex (gpu_load_color_button_2.get_rgba ());
-            var gpu_load_color_3 = rgba_to_hex (gpu_load_color_button_3.get_rgba ());
-            if (gpu_load_color_1 != "" && gpu_load_color_2 != "" && gpu_load_color_3 != "") {
-                data_stream.put_string ("gpu_load_color=%s,%s,%s\n".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3));
+            if (gpu_load_color_button_1 != null && gpu_load_color_button_2 != null && gpu_load_color_button_3 != null) {
+                var gpu_load_color_1 = rgba_to_hex (gpu_load_color_button_1.get_rgba ());
+                var gpu_load_color_2 = rgba_to_hex (gpu_load_color_button_2.get_rgba ());
+                var gpu_load_color_3 = rgba_to_hex (gpu_load_color_button_3.get_rgba ());
+                if (gpu_load_color_1 != "" && gpu_load_color_2 != "" && gpu_load_color_3 != "") {
+                    data_stream.put_string ("gpu_load_color=%s,%s,%s\n".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3));
+                }
             }
 
-            var cpu_load_value_1 = cpu_load_value_entry_1.text;
-            var cpu_load_value_2 = cpu_load_value_entry_2.text;
-            if (cpu_load_value_1 != "" && cpu_load_value_2 != "") {
-                data_stream.put_string ("cpu_load_value=%s,%s\n".printf (cpu_load_value_1, cpu_load_value_2));
+            if (cpu_load_value_entry_1 != null && cpu_load_value_entry_2 != null) {
+                var cpu_load_value_1 = cpu_load_value_entry_1.text;
+                var cpu_load_value_2 = cpu_load_value_entry_2.text;
+                if (cpu_load_value_1 != "" && cpu_load_value_2 != "") {
+                    data_stream.put_string ("cpu_load_value=%s,%s\n".printf (cpu_load_value_1, cpu_load_value_2));
+                }
             }
 
-            var cpu_load_color_1 = rgba_to_hex (cpu_load_color_button_1.get_rgba ());
-            var cpu_load_color_2 = rgba_to_hex (cpu_load_color_button_2.get_rgba ());
-            var cpu_load_color_3 = rgba_to_hex (cpu_load_color_button_3.get_rgba ());
-            if (cpu_load_color_1 != "" && cpu_load_color_2 != "" && cpu_load_color_3 != "") {
-                data_stream.put_string ("cpu_load_color=%s,%s,%s\n".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3));
+            if (cpu_load_color_button_1 != null && cpu_load_color_button_2 != null && cpu_load_color_button_3 != null) {
+                var cpu_load_color_1 = rgba_to_hex (cpu_load_color_button_1.get_rgba ());
+                var cpu_load_color_2 = rgba_to_hex (cpu_load_color_button_2.get_rgba ());
+                var cpu_load_color_3 = rgba_to_hex (cpu_load_color_button_3.get_rgba ());
+                if (cpu_load_color_1 != "" && cpu_load_color_2 != "" && cpu_load_color_3 != "") {
+                    data_stream.put_string ("cpu_load_color=%s,%s,%s\n".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3));
+                }
             }
 
             data_stream.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
     private void save_switches_to_file (DataOutputStream data_stream, Switch[] switches, string[] config_vars) {
         for (int i = 0; i < switches.length; i++) {
-            var state = switches[i].active ? "" : "#";
-            try {
-                data_stream.put_string ("%s%s\n".printf (state, config_vars[i]));
-            } catch (Error e) {
-                stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            if (switches[i].active) {
+                try {
+                    data_stream.put_string ("%s\n".printf (config_vars[i]));
+                } catch (Error e) {
+                    stderr.printf ("Error writing to the file: %s\n", e.message);
+                }
             }
         }
     }
@@ -1488,7 +1535,7 @@ public class MangoJuice : Adw.Application {
                 }
 
                 if (line.has_prefix ("horizontal")) {
-                    custom_switch.active = !line.has_prefix ("#");
+                    custom_switch.active = true;
                 }
 
                 if (line.has_prefix ("round_corners=")) {
@@ -1553,13 +1600,6 @@ public class MangoJuice : Adw.Application {
                             break;
                         }
                     }
-                }
-
-                if (line.has_prefix ("io_read") || line.has_prefix ("#io_read")) {
-                    other_switches[1].active = !line.has_prefix ("#");
-                }
-                if (line.has_prefix ("io_write") || line.has_prefix ("#io_write")) {
-                    other_switches[1].active = !line.has_prefix ("#");
                 }
 
                 if (line.has_prefix ("gpu_text=")) {
@@ -1664,15 +1704,13 @@ public class MangoJuice : Adw.Application {
                 }
             }
         } catch (Error e) {
-            stderr.printf ("Ошибка при чтении файла: %s\n", e.message);
+            stderr.printf ("Error reading the file: %s\n", e.message);
         }
     }
 
     private void load_switch_from_file (string line, Switch[] switches, string[] config_vars) {
         for (int i = 0; i < config_vars.length; i++) {
-            if (line.has_prefix ("#%s".printf (config_vars[i]))) {
-                switches[i].active = false;
-            } else if (line.has_prefix ("%s".printf (config_vars[i]))) {
+            if (line.has_prefix ("%s".printf (config_vars[i]))) {
                 switches[i].active = true;
             }
         }
@@ -1683,7 +1721,7 @@ public class MangoJuice : Adw.Application {
             Process.spawn_command_line_sync ("pkill vkcube");
             Process.spawn_command_line_async ("mangohud vkcube");
         } catch (Error e) {
-            stderr.printf ("Ошибка при перезапуске vkcube: %s\n", e.message);
+            stderr.printf ("Error when restarting vkcube: %s\n", e.message);
         }
     }
 
@@ -1697,7 +1735,7 @@ public class MangoJuice : Adw.Application {
 
             return exit_status == 0;
         } catch (Error e) {
-            stderr.printf ("Ошибка при проверке запущенных процессов: %s\n", e.message);
+            stderr.printf ("Error checking running processes: %s\n", e.message);
             return false;
         }
     }
@@ -1710,7 +1748,7 @@ public class MangoJuice : Adw.Application {
                 file.delete ();
                 warning ("MangoHud.conf file deleted.");
             } catch (Error e) {
-                stderr.printf ("Ошибка при удалении файла: %s\n", e.message);
+                stderr.printf ("Error deleting a file: %s\n", e.message);
             }
         } else {
             warning ("MangoHud.conf file does not exist.");
@@ -1741,7 +1779,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -1769,7 +1807,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -1797,7 +1835,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -1825,7 +1863,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -1861,7 +1899,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -1872,7 +1910,7 @@ public class MangoJuice : Adw.Application {
                 var folder = dialog.select_folder.end (res);
                 custom_logs_path_entry.text = folder.get_path ();
             } catch (Error e) {
-                stderr.printf ("Ошибка при выборе папки: %s\n", e.message);
+                stderr.printf ("Error when selecting a folder: %s\n", e.message);
             }
         });
     }
@@ -1920,10 +1958,10 @@ public class MangoJuice : Adw.Application {
             try {
                 Process.spawn_command_line_async (mangojuice_path);
             } catch (Error e) {
-                stderr.printf ("Ошибка при перезапуске приложения: %s\n", e.message);
+                stderr.printf ("Error when restarting the application: %s\n", e.message);
             }
         } else {
-            stderr.printf ("Исполняемый файл mangojuice не найден в PATH.\n");
+            stderr.printf ("The mangojuice executable was not found in the PATH.\n");
         }
     }
 
@@ -1941,7 +1979,7 @@ public class MangoJuice : Adw.Application {
 
             return exit_status == 0;
         } catch (Error e) {
-            stderr.printf ("Ошибка при проверке доступности vkcube: %s\n", e.message);
+            stderr.printf ("Error checking vkcube availability: %s\n", e.message);
             return false;
         }
     }
@@ -1970,7 +2008,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -1998,7 +2036,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -2026,7 +2064,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -2054,7 +2092,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -2082,7 +2120,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -2110,7 +2148,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -2138,7 +2176,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -2166,7 +2204,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -2194,7 +2232,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
@@ -2222,7 +2260,7 @@ public class MangoJuice : Adw.Application {
             }
             file_stream_write.close ();
         } catch (Error e) {
-            stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
+            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
