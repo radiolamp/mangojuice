@@ -10,7 +10,7 @@
 
 Page 1 | Page 2 | Page 3 | Page 4
 :-:|:-:|:-:|:-:
-![screen](data/images/screen.png) | ![screen2](data/images/screen2.png) | ![screen3](data/images/screen3.png) | ![screen4](data/images/screen4.png) 
+![screen](data/images/screen1.png) | ![screen2](data/images/screen2.png) | ![screen3](data/images/screen3.png) | ![screen4](data/images/screen4.png) 
 
 ## Repositories:
 [![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)

@@ -8,7 +8,7 @@
 
 Вкладка 1 | Вкладка 2 | Вкладка 3 | Вкладка 4
 :-:|:-:|:-:|:-:
-![screenie1](/data/images/screen.png) | ![screenie2](/data/images/screen2.png) | ![screenie3](/data/images/screen3.png) | ![screenie4](/data/images/screen4.png) 
+![screenie1](/data/images/screen1.png) | ![screenie2](/data/images/screen2.png) | ![screenie3](/data/images/screen3.png) | ![screenie4](/data/images/screen4.png) 
 
 ## Находится в репозиториях:
 [![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)
