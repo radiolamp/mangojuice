@@ -4,7 +4,7 @@
 ### This program will be a convenient alternative to Goverlay for setting up Mangohud.
 
 <p align="center">
-    <img src="data/images/screen.png" alt="Screenshot"/>
+    <img src="data/images/screen1.png" alt="Screenshot"/>
 </p>
 
 
