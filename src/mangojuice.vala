@@ -72,7 +72,7 @@ public class MangoJuice : Adw.Application {
         "cpu_power"
     };
     private string[] other_config_vars = {
-        "ram", "io_read", "procmem", "swap"
+        "ram", "io_read \n io_write", "procmem", "swap"
     };
     private string[] system_config_vars = {
         "exec=lsb_release -d | cut -f2", "refresh_rate", "resolution", "exec=echo $XDG_SESSION_TYPE",
@@ -607,7 +607,7 @@ public class MangoJuice : Adw.Application {
         var color_dialog = new ColorDialog ();
         gpu_color_button = new ColorDialogButton (color_dialog);
         var default_gpu_color = Gdk.RGBA ();
-        default_gpu_color.parse ("#00FF00"); // Зеленый цвет по умолчанию для GPU
+        default_gpu_color.parse ("#2e9762"); // Зеленый цвет по умолчанию для GPU
         gpu_color_button.set_rgba (default_gpu_color);
         gpu_color_button.notify["rgba"].connect ( () => {
             var rgba = gpu_color_button.get_rgba ().copy ();
@@ -616,7 +616,7 @@ public class MangoJuice : Adw.Application {
 
         cpu_color_button = new ColorDialogButton (color_dialog);
         var default_cpu_color = Gdk.RGBA ();
-        default_cpu_color.parse ("#0000FF"); // Синий цвет по умолчанию для CPU
+        default_cpu_color.parse ("#2e97cb"); // Синий цвет по умолчанию для CPU
         cpu_color_button.set_rgba (default_cpu_color);
         cpu_color_button.notify["rgba"].connect ( () => {
             var rgba = cpu_color_button.get_rgba ().copy ();
@@ -670,7 +670,7 @@ public class MangoJuice : Adw.Application {
         var color_dialog_fps = new ColorDialog ();
         fps_color_button_1 = new ColorDialogButton (color_dialog_fps);
         var default_fps_color_1 = Gdk.RGBA ();
-        default_fps_color_1.parse ("#FF0000"); // Красный цвет по умолчанию для fps_color_button_1
+        default_fps_color_1.parse ("#cc0000"); // Красный цвет по умолчанию для fps_color_button_1
         fps_color_button_1.set_rgba (default_fps_color_1);
         fps_color_button_1.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_1.get_rgba ().copy ();
@@ -679,7 +679,7 @@ public class MangoJuice : Adw.Application {
 
         fps_color_button_2 = new ColorDialogButton (color_dialog_fps);
         var default_fps_color_2 = Gdk.RGBA ();
-        default_fps_color_2.parse ("#FFFF00"); // Желтый цвет по умолчанию для fps_color_button_2
+        default_fps_color_2.parse ("#ffaa7f"); // Желтый цвет по умолчанию для fps_color_button_2
         fps_color_button_2.set_rgba (default_fps_color_2);
         fps_color_button_2.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_2.get_rgba ().copy ();
@@ -688,7 +688,7 @@ public class MangoJuice : Adw.Application {
 
         fps_color_button_3 = new ColorDialogButton (color_dialog_fps);
         var default_fps_color_3 = Gdk.RGBA ();
-        default_fps_color_3.parse ("#00FF00"); // Зеленый цвет по умолчанию для fps_color_button_3
+        default_fps_color_3.parse ("#92e79a"); // Зеленый цвет по умолчанию для fps_color_button_3
         fps_color_button_3.set_rgba (default_fps_color_3);
         fps_color_button_3.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_3.get_rgba ().copy ();
@@ -730,7 +730,7 @@ public class MangoJuice : Adw.Application {
         var color_dialog_gpu_load = new ColorDialog ();
         gpu_load_color_button_1 = new ColorDialogButton (color_dialog_gpu_load);
         var default_gpu_load_color_1 = Gdk.RGBA ();
-        default_gpu_load_color_1.parse ("#F5F5DC"); // Цвет по умолчанию для gpu_load_color_button_1
+        default_gpu_load_color_1.parse ("#92e79a"); // Цвет по умолчанию для gpu_load_color_button_1
         gpu_load_color_button_1.set_rgba (default_gpu_load_color_1);
         gpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_1.get_rgba ().copy ();
@@ -739,7 +739,7 @@ public class MangoJuice : Adw.Application {
 
         gpu_load_color_button_2 = new ColorDialogButton (color_dialog_gpu_load);
         var default_gpu_load_color_2 = Gdk.RGBA ();
-        default_gpu_load_color_2.parse ("#CC7722"); // Цвет по умолчанию для gpu_load_color_button_2
+        default_gpu_load_color_2.parse ("#ffaa7f"); // Цвет по умолчанию для gpu_load_color_button_2
         gpu_load_color_button_2.set_rgba (default_gpu_load_color_2);
         gpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_2.get_rgba ().copy ();
@@ -748,7 +748,7 @@ public class MangoJuice : Adw.Application {
 
         gpu_load_color_button_3 = new ColorDialogButton (color_dialog_gpu_load);
         var default_gpu_load_color_3 = Gdk.RGBA ();
-        default_gpu_load_color_3.parse ("#FF0000"); // Цвет по умолчанию для gpu_load_color_button_3
+        default_gpu_load_color_3.parse ("#cc0000"); // Цвет по умолчанию для gpu_load_color_button_3
         gpu_load_color_button_3.set_rgba (default_gpu_load_color_3);
         gpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_3.get_rgba ().copy ();
@@ -790,7 +790,7 @@ public class MangoJuice : Adw.Application {
         var color_dialog_cpu_load = new ColorDialog ();
         cpu_load_color_button_1 = new ColorDialogButton (color_dialog_cpu_load);
         var default_cpu_load_color_1 = Gdk.RGBA ();
-        default_cpu_load_color_1.parse ("#F5F5DC"); // Цвет по умолчанию для cpu_load_color_button_1
+        default_cpu_load_color_1.parse ("#92e79a"); // Цвет по умолчанию для cpu_load_color_button_1
         cpu_load_color_button_1.set_rgba (default_cpu_load_color_1);
         cpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_1.get_rgba ().copy ();
@@ -799,7 +799,7 @@ public class MangoJuice : Adw.Application {
 
         cpu_load_color_button_2 = new ColorDialogButton (color_dialog_cpu_load);
         var default_cpu_load_color_2 = Gdk.RGBA ();
-        default_cpu_load_color_2.parse ("#CC7722"); // Цвет по умолчанию для cpu_load_color_button_2
+        default_cpu_load_color_2.parse ("#ffaa7f"); // Цвет по умолчанию для cpu_load_color_button_2
         cpu_load_color_button_2.set_rgba (default_cpu_load_color_2);
         cpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_2.get_rgba ().copy ();
@@ -808,7 +808,7 @@ public class MangoJuice : Adw.Application {
 
         cpu_load_color_button_3 = new ColorDialogButton (color_dialog_cpu_load);
         var default_cpu_load_color_3 = Gdk.RGBA ();
-        default_cpu_load_color_3.parse ("#FF0000"); // Цвет по умолчанию для cpu_load_color_button_3
+        default_cpu_load_color_3.parse ("#cc0000"); // Цвет по умолчанию для cpu_load_color_button_3
         cpu_load_color_button_3.set_rgba (default_cpu_load_color_3);
         cpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_3.get_rgba ().copy ();
@@ -1373,7 +1373,13 @@ public class MangoJuice : Adw.Application {
         for (int i = 0; i < switches.length; i++) {
             if (switches[i].active) {
                 try {
-                    data_stream.put_string ("%s\n".printf (config_vars[i]));
+                    string config_var = config_vars[i];
+                    if (config_var == "io_read \n io_write") {
+                        data_stream.put_string ("io_read\n");
+                        data_stream.put_string ("io_write\n");
+                    } else {
+                        data_stream.put_string ("%s\n".printf (config_var));
+                    }
                 } catch (Error e) {
                     stderr.printf ("Error writing to the file: %s\n", e.message);
                 }
@@ -1710,7 +1716,12 @@ public class MangoJuice : Adw.Application {
 
     private void load_switch_from_file (string line, Switch[] switches, string[] config_vars) {
         for (int i = 0; i < config_vars.length; i++) {
-            if (line.has_prefix ("%s".printf (config_vars[i]))) {
+            string config_var = config_vars[i];
+            if (config_var == "io_read \n io_write") {
+                if (line == "io_read" || line == "io_write") {
+                    switches[i].active = true;
+                }
+            } else if (line == config_var) {
                 switches[i].active = true;
             }
         }
