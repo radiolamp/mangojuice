@@ -171,6 +171,14 @@ public class MangoJuice : Adw.Application {
     private ColorDialogButton cpu_load_color_button_2;
     private ColorDialogButton cpu_load_color_button_3;
 
+    private ColorDialogButton background_color_button;
+    private ColorDialogButton frametime_color_button;
+    private ColorDialogButton vram_color_button;
+    private ColorDialogButton ram_color_button;
+    private ColorDialogButton wine_color_button;
+    private ColorDialogButton engine_color_button;
+    private ColorDialogButton text_color_button;
+
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
         set_resource_base_path ("/usr/local/share/icons/hicolor/scalable/apps/");
@@ -595,6 +603,7 @@ public class MangoJuice : Adw.Application {
         var color_label = new Label ("Color");
         color_label.set_halign (Align.CENTER);
         color_label.set_margin_top (FLOW_BOX_MARGIN);
+        color_label.set_margin_bottom (FLOW_BOX_MARGIN);
         color_label.set_margin_start (FLOW_BOX_MARGIN);
         color_label.set_margin_end (FLOW_BOX_MARGIN);
         var color_font_description = new Pango.FontDescription ();
@@ -603,6 +612,18 @@ public class MangoJuice : Adw.Application {
         color_attr_list.insert (new Pango.AttrFontDesc (color_font_description));
         color_label.set_attributes (color_attr_list);
         visual_box.append (color_label);
+
+        var color_flow_box = new FlowBox ();
+        color_flow_box.set_homogeneous (true);
+        color_flow_box.set_max_children_per_line (7);
+        color_flow_box.set_min_children_per_line (3);
+        color_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        color_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
+        color_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        color_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        color_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        color_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        color_flow_box.set_selection_mode (SelectionMode.NONE);
 
         var color_dialog = new ColorDialog ();
         gpu_color_button = new ColorDialogButton (color_dialog);
@@ -827,6 +848,129 @@ public class MangoJuice : Adw.Application {
         cpu_load_color_box.append (cpu_load_color_button_2);
         cpu_load_color_box.append (cpu_load_color_button_3);
         visual_box.append (cpu_load_color_box);
+
+        background_color_button = new ColorDialogButton (color_dialog);
+        var default_background_color = Gdk.RGBA ();
+        default_background_color.parse ("#F6F5F4");
+        background_color_button.set_rgba (default_background_color);
+        background_color_button.notify["rgba"].connect ( () => {
+            var rgba = background_color_button.get_rgba ().copy ();
+            update_background_color_in_file (rgba_to_hex (rgba));
+        });
+    
+        frametime_color_button = new ColorDialogButton (color_dialog);
+        var default_frametime_color = Gdk.RGBA ();
+        default_frametime_color.parse ("#B5835A");
+        frametime_color_button.set_rgba (default_frametime_color);
+        frametime_color_button.notify["rgba"].connect ( () => {
+            var rgba = frametime_color_button.get_rgba ().copy ();
+            update_frametime_color_in_file (rgba_to_hex (rgba));
+        });
+
+        vram_color_button = new ColorDialogButton (color_dialog);
+        var default_vram_color = Gdk.RGBA ();
+        default_vram_color.parse ("#F5C211");
+        vram_color_button.set_rgba (default_vram_color);
+        vram_color_button.notify["rgba"].connect ( () => {
+            var rgba = vram_color_button.get_rgba ().copy ();
+            update_vram_color_in_file (rgba_to_hex (rgba));
+        });
+    
+    
+        ram_color_button = new ColorDialogButton (color_dialog);
+        var default_ram_color = Gdk.RGBA ();
+        default_ram_color.parse ("#F5C211");
+        ram_color_button.set_rgba (default_ram_color);
+        ram_color_button.notify["rgba"].connect ( () => {
+            var rgba = ram_color_button.get_rgba ().copy ();
+            update_ram_color_in_file (rgba_to_hex (rgba));
+        });
+    
+        wine_color_button = new ColorDialogButton (color_dialog);
+        var default_wine_color = Gdk.RGBA ();
+        default_wine_color.parse ("#F9F06B");
+        wine_color_button.set_rgba (default_wine_color);
+        wine_color_button.notify["rgba"].connect ( () => {
+            var rgba = wine_color_button.get_rgba ().copy ();
+            update_wine_color_in_file (rgba_to_hex (rgba));
+        });
+    
+        engine_color_button = new ColorDialogButton (color_dialog);
+        var default_engine_color = Gdk.RGBA ();
+        default_engine_color.parse ("#FFA348");
+        engine_color_button.set_rgba (default_engine_color);
+        engine_color_button.notify["rgba"].connect ( () => {
+            var rgba = engine_color_button.get_rgba ().copy ();
+            update_engine_color_in_file (rgba_to_hex (rgba));
+        });
+
+        text_color_button = new ColorDialogButton (color_dialog);
+        var default_text_color = Gdk.RGBA ();
+        default_text_color.parse ("#FFFFFF");
+        text_color_button.set_rgba (default_text_color);
+        text_color_button.notify["rgba"].connect ( () => {
+            var rgba = text_color_button.get_rgba ().copy ();
+            update_text_color_in_file (rgba_to_hex (rgba));
+        });
+
+        var background_color_label = new Label ("Background");
+        background_color_label.set_halign (Align.START);
+        background_color_label.hexpand = true;
+        var background_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        background_color_box.append (background_color_button);
+        background_color_box.append (background_color_label);
+        color_flow_box.insert (background_color_box, -1);
+
+        var frametime_color_label = new Label ("Frametime");
+        frametime_color_label.set_halign (Align.START);
+        frametime_color_label.hexpand = true;
+        var frametime_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        frametime_color_box.append (frametime_color_button);
+        frametime_color_box.append (frametime_color_label);
+        color_flow_box.insert (frametime_color_box, -1);
+
+        var vram_color_label = new Label ("VRAM");
+        vram_color_label.set_halign (Align.START);
+        vram_color_label.hexpand = true;
+        var vram_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        vram_color_box.append (vram_color_button);
+        vram_color_box.append (vram_color_label);
+        color_flow_box.insert (vram_color_box, -1);
+
+        var ram_color_label = new Label ("RAM");
+        ram_color_label.set_halign (Align.START);
+        ram_color_label.hexpand = true;
+        var ram_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        ram_color_box.append (ram_color_button);
+        ram_color_box.append (ram_color_label);
+        color_flow_box.insert (ram_color_box, -1);
+
+        var wine_color_label = new Label ("Wine");
+        wine_color_label.set_halign (Align.START);
+        wine_color_label.hexpand = true;
+        var wine_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        wine_color_box.append (wine_color_button);
+        wine_color_box.append (wine_color_label);
+        color_flow_box.insert (wine_color_box, -1);
+
+        var engine_color_label = new Label ("Engine");
+        engine_color_label.set_halign (Align.START);
+        engine_color_label.hexpand = true;
+        var engine_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        engine_color_box.append (engine_color_button);
+        engine_color_box.append (engine_color_label);
+        color_flow_box.insert (engine_color_box, -1);
+
+        var text_color_label = new Label ("Text");
+        text_color_label.set_halign (Align.START);
+        text_color_label.hexpand = true;
+        var text_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        text_color_box.append (text_color_button);
+        text_color_box.append (text_color_label);
+        color_flow_box.insert (text_color_box, -1);
+
+        visual_box.append (color_flow_box);
+
     }
 
     private void initialize_font_dropdown (Box visual_box) {
@@ -902,8 +1046,8 @@ public class MangoJuice : Adw.Application {
         flow_box.set_min_children_per_line (3);
         flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
-        flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        //flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        //flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_margin_top (FLOW_BOX_MARGIN);
         flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
@@ -1363,6 +1507,55 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
+            if (background_color_button != null) {
+                var background_color = rgba_to_hex (background_color_button.get_rgba ());
+                if (background_color != "") {
+                    data_stream.put_string ("background_color=%s\n".printf (background_color));
+                }
+            }
+        
+            if (frametime_color_button != null) {
+                var frametime_color = rgba_to_hex (frametime_color_button.get_rgba ());
+                if (frametime_color != "") {
+                    data_stream.put_string ("frametime_color=%s\n".printf (frametime_color));
+                }
+            }
+        
+            if (vram_color_button != null) {
+                var vram_color = rgba_to_hex (vram_color_button.get_rgba ());
+                if (vram_color != "") {
+                    data_stream.put_string ("vram_color=%s\n".printf (vram_color));
+                }
+            }
+        
+            if (ram_color_button != null) {
+                var ram_color = rgba_to_hex (ram_color_button.get_rgba ());
+                if (ram_color != "") {
+                    data_stream.put_string ("ram_color=%s\n".printf (ram_color));
+                }
+            }
+        
+            if (wine_color_button != null) {
+                var wine_color = rgba_to_hex (wine_color_button.get_rgba ());
+                if (wine_color != "") {
+                    data_stream.put_string ("wine_color=%s\n".printf (wine_color));
+                }
+            }
+        
+            if (engine_color_button != null) {
+                var engine_color = rgba_to_hex (engine_color_button.get_rgba ());
+                if (engine_color != "") {
+                    data_stream.put_string ("engine_color=%s\n".printf (engine_color));
+                }
+            }
+        
+            if (text_color_button != null) {
+                var text_color = rgba_to_hex (text_color_button.get_rgba ());
+                if (text_color != "") {
+                    data_stream.put_string ("text_color=%s\n".printf (text_color));
+                }
+            }        
+
             data_stream.close ();
         } catch (Error e) {
             stderr.printf ("Error writing to the file: %s\n", e.message);
@@ -1708,6 +1901,56 @@ public class MangoJuice : Adw.Application {
                         cpu_load_color_button_3.set_rgba (rgba_3);
                     }
                 }
+
+                if (line.has_prefix ("background_color=")) {
+                    var background_color = line.substring ("background_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + background_color);
+                    background_color_button.set_rgba (rgba);
+                }
+            
+                if (line.has_prefix ("frametime_color=")) {
+                    var frametime_color = line.substring ("frametime_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + frametime_color);
+                    frametime_color_button.set_rgba (rgba);
+                }
+            
+                if (line.has_prefix ("vram_color=")) {
+                    var vram_color = line.substring ("vram_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + vram_color);
+                    vram_color_button.set_rgba (rgba);
+                }
+            
+                if (line.has_prefix ("ram_color=")) {
+                    var ram_color = line.substring ("ram_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + ram_color);
+                    ram_color_button.set_rgba (rgba);
+                }
+            
+                if (line.has_prefix ("wine_color=")) {
+                    var wine_color = line.substring ("wine_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + wine_color);
+                    wine_color_button.set_rgba (rgba);
+                }
+            
+                if (line.has_prefix ("engine_color=")) {
+                    var engine_color = line.substring ("engine_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + engine_color);
+                    engine_color_button.set_rgba (rgba);
+                }
+            
+                if (line.has_prefix ("text_color=")) {
+                    var text_color = line.substring ("text_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + text_color);
+                    text_color_button.set_rgba (rgba);
+                }
+
             }
         } catch (Error e) {
             stderr.printf ("Error reading the file: %s\n", e.message);
@@ -2261,6 +2504,202 @@ public class MangoJuice : Adw.Application {
             while ( (line = file_stream.read_line ()) != null) {
                 if (line.has_prefix ("cpu_load_color=")) {
                     line = "cpu_load_color=%s,%s,%s".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+
+    private void update_background_color_in_file (string background_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+    
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("background_color=")) {
+                    line = "background_color=%s".printf (background_color);
+                }
+                lines.add (line);
+            }
+    
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+    
+    private void update_frametime_color_in_file (string frametime_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+    
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("frametime_color=")) {
+                    line = "frametime_color=%s".printf (frametime_color);
+                }
+                lines.add (line);
+            }
+    
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+    
+    private void update_vram_color_in_file (string vram_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+    
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("vram_color=")) {
+                    line = "vram_color=%s".printf (vram_color);
+                }
+                lines.add (line);
+            }
+    
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+    
+    private void update_ram_color_in_file (string ram_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+    
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("ram_color=")) {
+                    line = "ram_color=%s".printf (ram_color);
+                }
+                lines.add (line);
+            }
+    
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+    
+    private void update_wine_color_in_file (string wine_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("wine_color=")) {
+                    line = "wine_color=%s".printf (wine_color);
+                }
+                lines.add (line);
+            }
+    
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+
+    private void update_engine_color_in_file (string engine_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("engine_color=")) {
+                    line = "engine_color=%s".printf (engine_color);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+
+    private void update_text_color_in_file (string text_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("text_color=")) {
+                    line = "text_color=%s".printf (text_color);
                 }
                 lines.add (line);
             }
