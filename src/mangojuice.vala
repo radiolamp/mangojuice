@@ -276,6 +276,17 @@ public class MangoJuice : Adw.Application {
             }
         });
 
+        inform_switches[6].notify["active"].connect ( () => {
+            if (inform_switches[6].active) {
+                inform_switches[5].active = true;
+            }
+        });
+        inform_switches[5].notify["active"].connect ( () => {
+            if (!inform_switches[5].active) {
+                inform_switches[6].active = false;
+            }
+        });
+
         cpu_switches[3].notify["active"].connect ( () => {
             if (cpu_switches[3].active) {
                 cpu_switches[2].active = true;
@@ -382,7 +393,7 @@ public class MangoJuice : Adw.Application {
     private void update_gpu_stats_state () {
         bool any_gpu_switch_active = false;
 
-        for (int i = 1; i < gpu_switches.length; i++) {
+        for (int i = 0; i < gpu_switches.length; i++) {
             if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name") {
                 any_gpu_switch_active = true;
                 break;
@@ -395,7 +406,7 @@ public class MangoJuice : Adw.Application {
     private void update_cpu_stats_state () {
         bool any_cpu_switch_active = false;
 
-        for (int i = 1; i < cpu_switches.length; i++) {
+        for (int i = 0; i < cpu_switches.length; i++) {
             if (cpu_switches[i].active && cpu_config_vars[i] != "core_load" && cpu_config_vars[i] != "core_bars") {
                 any_cpu_switch_active = true;
                 break;
