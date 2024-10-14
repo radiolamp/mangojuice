@@ -851,7 +851,7 @@ public class MangoJuice : Adw.Application {
 
         background_color_button = new ColorDialogButton (color_dialog);
         var default_background_color = Gdk.RGBA ();
-        default_background_color.parse ("#F6F5F4");
+        default_background_color.parse ("#000000");
         background_color_button.set_rgba (default_background_color);
         background_color_button.notify["rgba"].connect ( () => {
             var rgba = background_color_button.get_rgba ().copy ();
@@ -860,7 +860,7 @@ public class MangoJuice : Adw.Application {
     
         frametime_color_button = new ColorDialogButton (color_dialog);
         var default_frametime_color = Gdk.RGBA ();
-        default_frametime_color.parse ("#B5835A");
+        default_frametime_color.parse ("#00ff00");
         frametime_color_button.set_rgba (default_frametime_color);
         frametime_color_button.notify["rgba"].connect ( () => {
             var rgba = frametime_color_button.get_rgba ().copy ();
@@ -869,7 +869,7 @@ public class MangoJuice : Adw.Application {
 
         vram_color_button = new ColorDialogButton (color_dialog);
         var default_vram_color = Gdk.RGBA ();
-        default_vram_color.parse ("#F5C211");
+        default_vram_color.parse ("#ad64c1");
         vram_color_button.set_rgba (default_vram_color);
         vram_color_button.notify["rgba"].connect ( () => {
             var rgba = vram_color_button.get_rgba ().copy ();
@@ -879,7 +879,7 @@ public class MangoJuice : Adw.Application {
     
         ram_color_button = new ColorDialogButton (color_dialog);
         var default_ram_color = Gdk.RGBA ();
-        default_ram_color.parse ("#F5C211");
+        default_ram_color.parse ("#c26693");
         ram_color_button.set_rgba (default_ram_color);
         ram_color_button.notify["rgba"].connect ( () => {
             var rgba = ram_color_button.get_rgba ().copy ();
@@ -888,7 +888,7 @@ public class MangoJuice : Adw.Application {
     
         wine_color_button = new ColorDialogButton (color_dialog);
         var default_wine_color = Gdk.RGBA ();
-        default_wine_color.parse ("#F9F06B");
+        default_wine_color.parse ("#eb5b5b");
         wine_color_button.set_rgba (default_wine_color);
         wine_color_button.notify["rgba"].connect ( () => {
             var rgba = wine_color_button.get_rgba ().copy ();
@@ -897,7 +897,7 @@ public class MangoJuice : Adw.Application {
     
         engine_color_button = new ColorDialogButton (color_dialog);
         var default_engine_color = Gdk.RGBA ();
-        default_engine_color.parse ("#FFA348");
+        default_engine_color.parse ("#eb5b5b");
         engine_color_button.set_rgba (default_engine_color);
         engine_color_button.notify["rgba"].connect ( () => {
             var rgba = engine_color_button.get_rgba ().copy ();
