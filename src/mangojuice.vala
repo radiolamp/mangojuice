@@ -627,7 +627,7 @@ public class MangoJuice : Adw.Application {
 
         var color_dialog = new ColorDialog ();
         gpu_color_button = new ColorDialogButton (color_dialog);
-        var default_gpu_color = Gdk.RGBA ()
+        var default_gpu_color = Gdk.RGBA ();
         default_gpu_color.parse ("#2e9762");
         gpu_color_button.set_rgba (default_gpu_color);
         gpu_color_button.notify["rgba"].connect ( () => {
@@ -636,7 +636,7 @@ public class MangoJuice : Adw.Application {
         });
 
         cpu_color_button = new ColorDialogButton (color_dialog);
-        var default_cpu_color = Gdk.RGBA ()
+        var default_cpu_color = Gdk.RGBA ();
         default_cpu_color.parse ("#2e97cb");
         cpu_color_button.set_rgba (default_cpu_color);
         cpu_color_button.notify["rgba"].connect ( () => {
