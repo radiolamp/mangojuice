@@ -627,8 +627,8 @@ public class MangoJuice : Adw.Application {
 
         var color_dialog = new ColorDialog ();
         gpu_color_button = new ColorDialogButton (color_dialog);
-        var default_gpu_color = Gdk.RGBA ();
-        default_gpu_color.parse ("#2e9762"); // Зеленый цвет по умолчанию для GPU
+        var default_gpu_color = Gdk.RGBA ()
+        default_gpu_color.parse ("#2e9762");
         gpu_color_button.set_rgba (default_gpu_color);
         gpu_color_button.notify["rgba"].connect ( () => {
             var rgba = gpu_color_button.get_rgba ().copy ();
@@ -636,8 +636,8 @@ public class MangoJuice : Adw.Application {
         });
 
         cpu_color_button = new ColorDialogButton (color_dialog);
-        var default_cpu_color = Gdk.RGBA ();
-        default_cpu_color.parse ("#2e97cb"); // Синий цвет по умолчанию для CPU
+        var default_cpu_color = Gdk.RGBA ()
+        default_cpu_color.parse ("#2e97cb");
         cpu_color_button.set_rgba (default_cpu_color);
         cpu_color_button.notify["rgba"].connect ( () => {
             var rgba = cpu_color_button.get_rgba ().copy ();
@@ -691,7 +691,7 @@ public class MangoJuice : Adw.Application {
         var color_dialog_fps = new ColorDialog ();
         fps_color_button_1 = new ColorDialogButton (color_dialog_fps);
         var default_fps_color_1 = Gdk.RGBA ();
-        default_fps_color_1.parse ("#cc0000"); // Красный цвет по умолчанию для fps_color_button_1
+        default_fps_color_1.parse ("#cc0000");
         fps_color_button_1.set_rgba (default_fps_color_1);
         fps_color_button_1.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_1.get_rgba ().copy ();
@@ -700,7 +700,7 @@ public class MangoJuice : Adw.Application {
 
         fps_color_button_2 = new ColorDialogButton (color_dialog_fps);
         var default_fps_color_2 = Gdk.RGBA ();
-        default_fps_color_2.parse ("#ffaa7f"); // Желтый цвет по умолчанию для fps_color_button_2
+        default_fps_color_2.parse ("#ffaa7f");
         fps_color_button_2.set_rgba (default_fps_color_2);
         fps_color_button_2.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_2.get_rgba ().copy ();
@@ -709,7 +709,7 @@ public class MangoJuice : Adw.Application {
 
         fps_color_button_3 = new ColorDialogButton (color_dialog_fps);
         var default_fps_color_3 = Gdk.RGBA ();
-        default_fps_color_3.parse ("#92e79a"); // Зеленый цвет по умолчанию для fps_color_button_3
+        default_fps_color_3.parse ("#92e79a");
         fps_color_button_3.set_rgba (default_fps_color_3);
         fps_color_button_3.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_3.get_rgba ().copy ();
@@ -751,7 +751,7 @@ public class MangoJuice : Adw.Application {
         var color_dialog_gpu_load = new ColorDialog ();
         gpu_load_color_button_1 = new ColorDialogButton (color_dialog_gpu_load);
         var default_gpu_load_color_1 = Gdk.RGBA ();
-        default_gpu_load_color_1.parse ("#92e79a"); // Цвет по умолчанию для gpu_load_color_button_1
+        default_gpu_load_color_1.parse ("#92e79a");
         gpu_load_color_button_1.set_rgba (default_gpu_load_color_1);
         gpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_1.get_rgba ().copy ();
@@ -760,7 +760,7 @@ public class MangoJuice : Adw.Application {
 
         gpu_load_color_button_2 = new ColorDialogButton (color_dialog_gpu_load);
         var default_gpu_load_color_2 = Gdk.RGBA ();
-        default_gpu_load_color_2.parse ("#ffaa7f"); // Цвет по умолчанию для gpu_load_color_button_2
+        default_gpu_load_color_2.parse ("#ffaa7f");
         gpu_load_color_button_2.set_rgba (default_gpu_load_color_2);
         gpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_2.get_rgba ().copy ();
@@ -769,7 +769,7 @@ public class MangoJuice : Adw.Application {
 
         gpu_load_color_button_3 = new ColorDialogButton (color_dialog_gpu_load);
         var default_gpu_load_color_3 = Gdk.RGBA ();
-        default_gpu_load_color_3.parse ("#cc0000"); // Цвет по умолчанию для gpu_load_color_button_3
+        default_gpu_load_color_3.parse ("#cc0000");
         gpu_load_color_button_3.set_rgba (default_gpu_load_color_3);
         gpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_3.get_rgba ().copy ();
@@ -811,7 +811,7 @@ public class MangoJuice : Adw.Application {
         var color_dialog_cpu_load = new ColorDialog ();
         cpu_load_color_button_1 = new ColorDialogButton (color_dialog_cpu_load);
         var default_cpu_load_color_1 = Gdk.RGBA ();
-        default_cpu_load_color_1.parse ("#92e79a"); // Цвет по умолчанию для cpu_load_color_button_1
+        default_cpu_load_color_1.parse ("#92e79a");
         cpu_load_color_button_1.set_rgba (default_cpu_load_color_1);
         cpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_1.get_rgba ().copy ();
@@ -820,7 +820,7 @@ public class MangoJuice : Adw.Application {
 
         cpu_load_color_button_2 = new ColorDialogButton (color_dialog_cpu_load);
         var default_cpu_load_color_2 = Gdk.RGBA ();
-        default_cpu_load_color_2.parse ("#ffaa7f"); // Цвет по умолчанию для cpu_load_color_button_2
+        default_cpu_load_color_2.parse ("#ffaa7f");
         cpu_load_color_button_2.set_rgba (default_cpu_load_color_2);
         cpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_2.get_rgba ().copy ();
@@ -829,7 +829,7 @@ public class MangoJuice : Adw.Application {
 
         cpu_load_color_button_3 = new ColorDialogButton (color_dialog_cpu_load);
         var default_cpu_load_color_3 = Gdk.RGBA ();
-        default_cpu_load_color_3.parse ("#cc0000"); // Цвет по умолчанию для cpu_load_color_button_3
+        default_cpu_load_color_3.parse ("#cc0000");
         cpu_load_color_button_3.set_rgba (default_cpu_load_color_3);
         cpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_3.get_rgba ().copy ();
@@ -1046,8 +1046,6 @@ public class MangoJuice : Adw.Application {
         flow_box.set_min_children_per_line (3);
         flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
-        //flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        //flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_margin_top (FLOW_BOX_MARGIN);
         flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
