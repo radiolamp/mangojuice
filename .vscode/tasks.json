@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build and run",
+            "type": "shell",
+            "command": "rm -rf ./build/ && meson setup build --buildtype=debug && ninja -C build && ./build/mangojuice",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
