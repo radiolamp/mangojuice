@@ -91,7 +91,7 @@ public class MangoJuice : Adw.Application {
         "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count"
     };
     private string[] options_config_vars = {
-        "version", "gamemode", "vkbasalt", "fcat", "fsr", "hdr"
+        "version", "gamemode", "vkbasalt", "fcat", "fsr", "hdr", "no_display"
     };
     private string[] gpu_label_texts = {
         "Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
@@ -113,7 +113,7 @@ public class MangoJuice : Adw.Application {
         "Version", "Engine Ver", "Short names"
     };
     private string[] options_label_texts = {
-        "Hud Version", "Gamemode", "VKbasalt", "Fcat", "FSR*", "HDR*"
+        "Hud Version", "Gamemode", "VKbasalt", "Fcat", "FSR*", "HDR*", "Hide HUD"
     };
     private string[] battery_label_texts = {
         "Percentage", "Wattage", "Time remain", "Device"
