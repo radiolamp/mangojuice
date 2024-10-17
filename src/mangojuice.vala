@@ -1058,6 +1058,8 @@ public class MangoJuice : Adw.Application {
         flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
         flow_box.set_margin_top (FLOW_BOX_MARGIN);
         flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
 
         for (int i = 0; i < config_vars.length; i++) {
