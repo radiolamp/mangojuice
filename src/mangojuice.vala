@@ -236,6 +236,14 @@ public class MangoJuice : Adw.Application {
         });
         header_bar.pack_start (test_button);
 
+        var menu_button = new MenuButton ();
+        var menu_model = new GLib.Menu ();
+        var about_item = new GLib.MenuItem ("About", "app.about");
+        menu_model.append_item (about_item);
+        menu_button.set_menu_model (menu_model);
+        menu_button.set_icon_name ("open-menu-symbolic"); 
+        header_bar.pack_end (menu_button);
+
         var content_box = new Box (Orientation.VERTICAL, 0);
         content_box.append (header_bar);
         content_box.append (scrolled_window);
@@ -325,6 +333,10 @@ public class MangoJuice : Adw.Application {
         if (!is_vkcube_available ()) {
             test_button.set_visible (false);
         }
+
+        var about_action = new SimpleAction ("about", null);
+        about_action.activate.connect (on_about_button_clicked);
+        this.add_action (about_action);
 
     }
 
@@ -2722,6 +2734,19 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf ("Error writing to the file: %s\n", e.message);
         }
+    }
+
+    private void on_about_button_clicked () {
+        var about_dialog = new Gtk.AboutDialog ();
+        about_dialog.set_transient_for (this.active_window);
+        about_dialog.set_modal (true);
+        about_dialog.set_program_name ("MangoJuice");
+        about_dialog.set_version ("0.7.2");
+        about_dialog.set_license_type (Gtk.License.GPL_3_0);
+        about_dialog.set_website ("https://github.com/radiolamp/mangojuice");
+        about_dialog.set_website_label ("MangoHud на GitHub");
+        about_dialog.set_logo_icon_name ("io.github.radiolamp.mangojuice");
+        about_dialog.present (); // Исправлено: используем present вместо show
     }
 
     private string rgba_to_hex (Gdk.RGBA rgba) {
