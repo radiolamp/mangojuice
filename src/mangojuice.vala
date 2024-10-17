@@ -880,7 +880,7 @@ public class MangoJuice : Adw.Application {
             var rgba = background_color_button.get_rgba ().copy ();
             update_background_color_in_file (rgba_to_hex (rgba));
         });
-    
+
         frametime_color_button = new ColorDialogButton (color_dialog);
         var default_frametime_color = Gdk.RGBA ();
         default_frametime_color.parse ("#00ff00");
@@ -1930,7 +1930,7 @@ public class MangoJuice : Adw.Application {
                     rgba.parse ("#" + background_color);
                     background_color_button.set_rgba (rgba);
                 }
-            
+
                 if (line.has_prefix ("frametime_color=")) {
                     var frametime_color = line.substring ("frametime_color=".length);
                     var rgba = Gdk.RGBA ();
