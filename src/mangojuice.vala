@@ -2773,3 +2773,4 @@ public class MangoJuice : Adw.Application {
         return app.run (args);
     }
 }
+
