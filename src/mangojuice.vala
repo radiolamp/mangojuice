@@ -1489,10 +1489,6 @@ public class MangoJuice : Adw.Application {
                 }
             }
 
-            if (inform_switches[7].active) {
-                data_stream.put_string ("fps_color_change\n");
-            }
-
             if (fps_value_entry_1 != null && fps_value_entry_2 != null) {
                 var fps_value_1 = fps_value_entry_1.text;
                 var fps_value_2 = fps_value_entry_2.text;
@@ -1858,10 +1854,6 @@ public class MangoJuice : Adw.Application {
                     var rgba = Gdk.RGBA ();
                     rgba.parse ("#" + cpu_color);
                     cpu_color_button.set_rgba (rgba);
-                }
-
-                if (line.has_prefix ("fps_color_change")) {
-                    inform_switches[7].active = true;
                 }
 
                 if (line.has_prefix ("fps_value=")) {
@@ -2761,7 +2753,7 @@ public class MangoJuice : Adw.Application {
         about_dialog.set_website ("https://github.com/radiolamp/mangojuice");
         about_dialog.set_website_label ("MangoHud на GitHub");
         about_dialog.set_logo_icon_name ("io.github.radiolamp.mangojuice");
-        about_dialog.present (); // Исправлено: используем present вместо show
+        about_dialog.present ();
     }
 
     private string rgba_to_hex (Gdk.RGBA rgba) {
