@@ -192,10 +192,6 @@ public class MangoJuice : Adw.Application {
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
 
-        var scrolled_window = new ScrolledWindow ();
-        scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
-        scrolled_window.set_vexpand (true);
-
         var view_stack = new ViewStack ();
         var toolbar_view_switcher = new ViewSwitcher ();
         toolbar_view_switcher.stack = view_stack;
@@ -208,10 +204,30 @@ public class MangoJuice : Adw.Application {
         initialize_switches_and_labels (metrics_box, extras_box, performance_box, visual_box);
         initialize_custom_controls (extras_box, visual_box);
 
-        view_stack.add_titled (metrics_box, "metrics_box", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
-        view_stack.add_titled (extras_box, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
-        view_stack.add_titled (performance_box, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
-        view_stack.add_titled (visual_box, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
+        var metrics_scrolled_window = new ScrolledWindow ();
+        metrics_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+        metrics_scrolled_window.set_vexpand (true);
+        metrics_scrolled_window.set_child (metrics_box);
+
+        var extras_scrolled_window = new ScrolledWindow ();
+        extras_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+        extras_scrolled_window.set_vexpand (true);
+        extras_scrolled_window.set_child (extras_box);
+
+        var performance_scrolled_window = new ScrolledWindow ();
+        performance_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+        performance_scrolled_window.set_vexpand (true);
+        performance_scrolled_window.set_child (performance_box);
+
+        var visual_scrolled_window = new ScrolledWindow ();
+        visual_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+        visual_scrolled_window.set_vexpand (true);
+        visual_scrolled_window.set_child (visual_box);
+
+        view_stack.add_titled (metrics_scrolled_window, "metrics_box", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
+        view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
+        view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
+        view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
@@ -246,9 +262,8 @@ public class MangoJuice : Adw.Application {
 
         var content_box = new Box (Orientation.VERTICAL, 0);
         content_box.append (header_bar);
-        content_box.append (scrolled_window);
+        content_box.append (view_stack);
         window.set_content (content_box);
-        scrolled_window.set_child (view_stack);
 
         window.present ();
         load_states_from_file ();
