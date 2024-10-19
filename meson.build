@@ -1,5 +1,5 @@
 project('mangojuice', 'vala',
-  version: '0.7.0',
+  version: '0.7.5',
   default_options: ['warning_level=0'])
 
 dependencies = [
@@ -12,7 +12,11 @@ dependencies = [
 # on Relise
 add_project_arguments('-Wno-discarded-qualifiers', language: 'c')
 
-sources = files('src/mangojuice.vala')
+sources = files(
+  'src/save_states.vala',
+  'src/about_dialog.vala',
+  'src/mangojuice.vala'
+  )
 
 resources_xml = 'data/resources.gresource.xml'
 gnome = import('gnome')
