@@ -72,7 +72,7 @@ public class MangoJuice : Adw.Application {
         "cpu_power"
     };
     public string[] other_config_vars = {
-        "ram", "io_read \n io_write", "procmem", "swap"
+        "ram", "io_read \n io_write", "procmem", "swap", "fan"
     };
     public string[] system_config_vars = {
         "refresh_rate", "resolution", "exec=echo $XDG_SESSION_TYPE",
@@ -103,7 +103,7 @@ public class MangoJuice : Adw.Application {
         "Power"
     };
     public string[] other_label_texts = {
-        "RAM", "Disk IO", "Procces", "Swap"
+        "RAM", "Disk IO", "Procces", "Swap", "Fan SteamDeck"
     };
     public string[] system_label_texts = {
         "Refresh rate*", "Resolution", "Session", "Time", "Arch"
