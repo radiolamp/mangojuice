@@ -91,7 +91,7 @@ public class MangoJuice : Adw.Application {
         "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "present_mode"
     };
     public string[] options_config_vars = {
-        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "no_display"
+        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "no_display"
     };
     public string[] gpu_label_texts = {
         "Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
@@ -112,7 +112,7 @@ public class MangoJuice : Adw.Application {
         "Version", "Engine Ver", "Short names", "Winesync"
     };
     public string[] options_label_texts = {
-        "Hud Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR*", "HDR*", "Hide HUD"
+        "HUD Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR*", "HDR*", "Compact HUD", "Hide HUD"
     };
     public string[] battery_label_texts = {
         "Percentage", "Wattage", "Time remain", "Device"
@@ -177,6 +177,8 @@ public class MangoJuice : Adw.Application {
     public ColorDialogButton wine_color_button;
     public ColorDialogButton engine_color_button;
     public ColorDialogButton text_color_button;
+    public ColorDialogButton media_player_color_button;
+    public ColorDialogButton network_color_button;
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -652,7 +654,7 @@ public class MangoJuice : Adw.Application {
 
         var color_flow_box = new FlowBox ();
         color_flow_box.set_homogeneous (true);
-        color_flow_box.set_max_children_per_line (7);
+        color_flow_box.set_max_children_per_line (9);
         color_flow_box.set_min_children_per_line (3);
         color_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         color_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
@@ -949,6 +951,24 @@ public class MangoJuice : Adw.Application {
             update_text_color_in_file (rgba_to_hex (rgba));
         });
 
+        media_player_color_button = new ColorDialogButton (color_dialog);
+        var default_media_player_color = Gdk.RGBA ();
+        default_media_player_color.parse ("#FFFFFF");
+        media_player_color_button.set_rgba (default_media_player_color);
+        media_player_color_button.notify["rgba"].connect ( () => {
+            var rgba = media_player_color_button.get_rgba ().copy ();
+            update_media_player_color_in_file (rgba_to_hex (rgba));
+        });
+
+        network_color_button = new ColorDialogButton (color_dialog);
+        var default_network_color = Gdk.RGBA ();
+        default_network_color.parse ("#e07b85");
+        network_color_button.set_rgba (default_network_color);
+        network_color_button.notify["rgba"].connect ( () => {
+            var rgba = network_color_button.get_rgba ().copy ();
+            update_network_color_in_file (rgba_to_hex (rgba));
+        });
+
         var background_color_label = new Label ("Background");
         background_color_label.set_halign (Align.START);
         background_color_label.hexpand = true;
@@ -996,6 +1016,22 @@ public class MangoJuice : Adw.Application {
         engine_color_box.append (engine_color_button);
         engine_color_box.append (engine_color_label);
         color_flow_box.insert (engine_color_box, -1);
+
+        var media_player_color_label = new Label ("Media");
+        media_player_color_label.set_halign (Align.START);
+        media_player_color_label.hexpand = true;
+        var media_player_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        media_player_color_box.append (media_player_color_button);
+        media_player_color_box.append (media_player_color_label);
+        color_flow_box.insert (media_player_color_box, -1);
+
+        var network_color_label = new Label ("Network");
+        network_color_label.set_halign (Align.START);
+        network_color_label.hexpand = true;
+        var network_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        network_color_box.append (network_color_button);
+        network_color_box.append (network_color_label);
+        color_flow_box.insert (network_color_box, -1);
 
         var text_color_label = new Label ("Text");
         text_color_label.set_halign (Align.START);
@@ -1690,6 +1726,20 @@ public class MangoJuice : Adw.Application {
                     var rgba = Gdk.RGBA ();
                     rgba.parse ("#" + text_color);
                     text_color_button.set_rgba (rgba);
+                }
+
+                if (line.has_prefix ("media_player_color=")) {
+                    var media_player_color = line.substring ("media_player_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + media_player_color);
+                    media_player_color_button.set_rgba (rgba);
+                }
+
+                if (line.has_prefix ("network_color=")) {
+                    var network_color = line.substring ("network_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + network_color);
+                    network_color_button.set_rgba (rgba);
                 }
 
             }
@@ -2441,6 +2491,62 @@ public class MangoJuice : Adw.Application {
             while ( (line = file_stream.read_line ()) != null) {
                 if (line.has_prefix ("text_color=")) {
                     line = "text_color=%s".printf (text_color);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+
+    public void update_media_player_color_in_file (string media_player_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("media_player_color=")) {
+                    line = "media_player_color=%s".printf (media_player_color);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+
+    public void update_network_color_in_file (string network_color) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("network_color=")) {
+                    line = "network_color=%s".printf (network_color);
                 }
                 lines.add (line);
             }
