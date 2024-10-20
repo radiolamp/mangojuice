@@ -65,7 +65,7 @@ public class MangoJuice : Adw.Application {
     public string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
-        "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "vulkan_driver"
+        "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "engine_version"
     };
     public string[] cpu_config_vars = {
         "cpu_stats", "cpu_load_change", "core_load", "core_bars", "cpu_mhz", "cpu_temp",
@@ -91,7 +91,7 @@ public class MangoJuice : Adw.Application {
         "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "present_mode"
     };
     public string[] options_config_vars = {
-        "version", "gamemode", "vkbasalt", "fcat", "fsr", "hdr", "no_display"
+        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "no_display"
     };
     public string[] gpu_label_texts = {
         "Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
@@ -112,7 +112,7 @@ public class MangoJuice : Adw.Application {
         "Version", "Engine Ver", "Short names", "Winesync"
     };
     public string[] options_label_texts = {
-        "Hud Version", "Gamemode", "VKbasalt", "Fcat", "FSR*", "HDR*", "Hide HUD"
+        "Hud Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR*", "HDR*", "Hide HUD"
     };
     public string[] battery_label_texts = {
         "Percentage", "Wattage", "Time remain", "Device"

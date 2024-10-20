@@ -78,7 +78,7 @@ public class SaveStates {
             int[] other_order = {0, 1, 2, 3}; // порядка сохранения
             save_switches_to_file (data_stream, mango_juice.other_switches, mango_juice.other_config_vars, other_order);
 
-            int[] options_order = {1, 2, 3, 4, 5, 6, 0}; // порядка сохранения
+            int[] options_order = {1, 2, 3, 4, 5, 6, 7, 0}; // порядка сохранения
             save_switches_to_file (data_stream, mango_juice.options_switches, mango_juice.options_config_vars, options_order);
 
             int[] system_order = {3, 0, 1, 2, 4}; // порядка сохранения
