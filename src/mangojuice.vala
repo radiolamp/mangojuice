@@ -138,11 +138,11 @@ public class MangoJuice : Adw.Application {
     public Label font_size_value_label;
     public DropDown font_dropdown;
 
-    public string[] vulcan_values = { "Unset", "ON", "Adaptive", "Mailbox", "OFF" };
-    public string[] vulcan_config_values = { "0", "3", "0", "2", "1" };
+    public string[] vulcan_values = { "Adaptive", "OFF", "ON", "Mailbox" };
+    public string[] vulcan_config_values = { "0", "1", "3", "2" };
 
-    public string[] opengl_values = { "Unset", "ON", "Adaptive", "Mailbox", "OFF" };
-    public string[] opengl_config_values = { "-1", "n", "-1", "1", "0" };
+    public string[] opengl_values = { "Adaptive", "OFF", "ON", "Mailbox" };
+    public string[] opengl_config_values = { "-1", "0", "1", "n" };
 
     public Entry gpu_text_entry;
     public ColorDialogButton gpu_color_button;
@@ -1289,7 +1289,7 @@ public class MangoJuice : Adw.Application {
         }
         opengl_dropdown = new DropDown (opengl_model, null);
 
-        var vulcan_label = new Label ("Vulcan");
+        var vulcan_label = new Label ("Vulkan");
         vulcan_label.set_halign (Align.START);
         vulcan_label.set_margin_start (FLOW_BOX_MARGIN);
         vulcan_label.set_margin_end (FLOW_BOX_MARGIN);
