@@ -25,20 +25,6 @@ public class SaveStates {
             }
 
             var order_map = new HashMap<string, ArrayList<int>> ();
-            //var inform_start = new ArrayList<int> ();
-            //inform_start.add (0);
-            //inform_start.add (1);
-            //inform_start.add (2);
-            //order_map.set ("inform_start", inform_start);
-//
-            //var inform_end = new ArrayList<int> ();
-            //inform_end.add (8);
-            //inform_end.add (3);
-            //inform_end.add (4);
-            //inform_end.add (5);
-            //inform_end.add (6);
-            //inform_end.add (7);
-            //order_map.set ("inform_end", inform_end);
 
             var inform_start = new ArrayList<int> ();
             for (int i = 0; i < 4; i++) {
@@ -53,46 +39,66 @@ public class SaveStates {
             }
             order_map.set ("inform_end", inform_end);
 
-           // var options_start = new ArrayList<int> ();
-           // for (int i = 1; i < 6; i++) {
-           //     options_start.add (i);
-           // }
-           // order_map.set ("options_start", options_start);
-//
-           // var options_end = new ArrayList<int> ();
-           // options_end.add (0);
-           // order_map.set ("options_end", options_end);
-//
-           // var options_map = new HashMap<string, ArrayList<int>> ();
-           // options_map.set ("options_start", options_start);
-           // options_map.set ("options_end", options_end);
+            var gpu_start = new ArrayList<int> ();
+            gpu_start.add (0);
+            gpu_start.add (1);
+            gpu_start.add (2);
+            gpu_start.add (3);
+            gpu_start.add (4);
+            gpu_start.add (5);
+            gpu_start.add (6);
+            gpu_start.add (7);
+            gpu_start.add (8);
+            gpu_start.add (10);
+            gpu_start.add (11);
+            gpu_start.add (12);
+            gpu_start.add (13);
+            order_map.set ("gpu_start", gpu_start);
+
+            var gpu_end = new ArrayList<int> ();
+            gpu_end.add (9);
+            gpu_end.add (14);
+            order_map.set ("gpu_end", gpu_end);
+
+            var system_start = new ArrayList<int> ();
+            system_start.add (0);
+            system_start.add (1);
+            system_start.add (2);
+            system_start.add (4);
+            order_map.set ("system_start", system_start);
+
+            var system_end = new ArrayList<int> ();
+            system_end.add (3);
+            order_map.set ("system_end", system_end);
 
             save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_start").to_array ());
 
-            int[] gpu_order = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}; // порядка сохранения
-            save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, gpu_order);
+            save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
 
-            int[] cpu_order = {0, 1, 2, 3, 4, 5, 6}; // порядка сохранения
+            int[] cpu_order = {0, 1, 2, 3, 4, 5, 6};
             save_switches_to_file (data_stream, mango_juice.cpu_switches, mango_juice.cpu_config_vars, cpu_order);
 
-            int[] other_order = {0, 1, 2, 3, 4}; // порядка сохранения
+            int[] other_order = {0, 1, 2, 3, 4};
             save_switches_to_file (data_stream, mango_juice.other_switches, mango_juice.other_config_vars, other_order);
 
-            int[] options_order = {1, 2, 3, 4, 5, 6, 7, 8, 0}; // порядка сохранения
+            save_switches_to_file (data_stream, mango_juice.system_switches, mango_juice.system_config_vars, (int[]) order_map.get ("system_end").to_array ());
+
+            int[] options_order = {0 ,1, 2, 3, 4, 5, 6, 7, 8};
             save_switches_to_file (data_stream, mango_juice.options_switches, mango_juice.options_config_vars, options_order);
 
-            int[] system_order = {3, 0, 1, 2, 4}; // порядка сохранения
-            save_switches_to_file (data_stream, mango_juice.system_switches, mango_juice.system_config_vars, system_order);
+            save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_end").to_array ());
+
+            save_switches_to_file (data_stream, mango_juice.system_switches, mango_juice.system_config_vars, (int[]) order_map.get ("system_start").to_array ());
 
             save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_end").to_array ());
 
-            int[] battery_order = {0, 1, 2, 3}; // порядка сохранения
+            int[] battery_order = {0, 1, 2, 3};
             save_switches_to_file (data_stream, mango_juice.battery_switches, mango_juice.battery_config_vars, battery_order);
 
-            int[] other_extra_order = {1, 2, 0, 3, 4}; // порядка сохранения
+            int[] other_extra_order = {1, 2, 0, 3, 4};
             save_switches_to_file (data_stream, mango_juice.other_extra_switches, mango_juice.other_extra_config_vars, other_extra_order);
 
-            int[] wine_order = {0, 1, 2, 3}; // порядка сохранения
+            int[] wine_order = {0, 1, 2, 3};
             save_switches_to_file (data_stream, mango_juice.wine_switches, mango_juice.wine_config_vars, wine_order);
 
             var custom_command = mango_juice.custom_command_entry.text;
