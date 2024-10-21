@@ -107,13 +107,13 @@ public class SaveStates {
                 }
             }
 
-            if (mango_juice.duracion_scale != null) {
+            if (mango_juice.duracion_scale != null && (int)mango_juice.duracion_scale.get_value() != 0) {
                 data_stream.put_string ("log_duration=%d\n".printf ( (int)mango_juice.duracion_scale.get_value ()));
             }
-            if (mango_juice.autostart_scale != null) {
+            if (mango_juice.autostart_scale != null && (int)mango_juice.autostart_scale.get_value() != 0) {
                 data_stream.put_string ("autostart_log=%d\n".printf ( (int)mango_juice.autostart_scale.get_value ()));
             }
-            if (mango_juice.interval_scale != null) {
+            if (mango_juice.interval_scale != null && (int)mango_juice.interval_scale.get_value() != 0) {
                 data_stream.put_string ("log_interval=%d\n".printf ( (int)mango_juice.interval_scale.get_value ()));
             }
 
@@ -132,7 +132,7 @@ public class SaveStates {
                 data_stream.put_string ("toggle_fps_limit=%s\n".printf (toggle_fps_limit_value));
             }
 
-            if (mango_juice.scale != null) {
+            if (mango_juice.scale != null && (int)mango_juice.scale.get_value() != 0) {
                 data_stream.put_string ("fps_limit=%d\n".printf ( (int)mango_juice.scale.get_value ()));
             }
 
@@ -155,10 +155,10 @@ public class SaveStates {
                 }
             }
 
-            if (mango_juice.af != null) {
+            if (mango_juice.af != null && (int)mango_juice.af.get_value () != 0) {
                 data_stream.put_string ("af=%d\n".printf ( (int)mango_juice.af.get_value ()));
             }
-            if (mango_juice.picmip != null) {
+            if (mango_juice.picmip != null && (int)mango_juice.picmip.get_value() != 0) {
                 data_stream.put_string ("picmip=%d\n".printf ( (int)mango_juice.picmip.get_value ()));
             }
 
