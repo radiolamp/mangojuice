@@ -100,25 +100,25 @@ public class MangoJuice : Adw.Application {
     };
     public string[] cpu_label_texts = {
         "Load", "Load Color", "Core Load", "Core Bars", "Core Freq", "Temp",
-        "Power"
+        "Power                       "
     };
     public string[] other_label_texts = {
-        "RAM", "Disk IO", "Procces", "Swap", "Fan SteamDeck"
+        "RAM", "Disk IO", "Procces", "Swap", "Fan SteamDeck    "
     };
     public string[] system_label_texts = {
-        "Refresh rate*", "Resolution", "Session", "Time", "Arch"
+        "Refresh rate*", "Resolution", "Session", "Time", "Arch                      "
     };
     public string[] wine_label_texts = {
-        "Version", "Engine Ver", "Short names", "Winesync"
+        "Version", "Engine Ver", "Short names", "Winesync           "
     };
     public string[] options_label_texts = {
-        "HUD Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR*", "HDR*", "Compact HUD", "Hide HUD"
+        "HUD Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR*", "HDR*", "Compact HUD", "Hide HUD           "
     };
     public string[] battery_label_texts = {
-        "Percentage", "Wattage", "Time remain", "Device"
+        "Percentage", "Wattage", "Time remain", "Device                 "
     };
     public string[] other_extra_label_texts = {
-        "Media", "Network", "Full ON", "Log Versioning", "Upload Results"
+        "Media", "Network", "Full ON", "Log Versioning", "Upload Results "
     };
     public string[] inform_label_texts = {
         "FPS", "FPS Color", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame", "VPS"
