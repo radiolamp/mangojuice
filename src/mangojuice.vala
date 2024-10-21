@@ -358,17 +358,35 @@ public class MangoJuice : Adw.Application {
 
     public void add_scroll_event_handler (Scale scale) {
         var controller = new EventControllerScroll (EventControllerScrollFlags.VERTICAL);
-        controller.scroll.connect ( (dx, dy) => {
-            double delta = 0;
-            if (dy > 0) {
-                delta = -1;
-            } else if (dy < 0) {
-                delta = 1;
-            }
-            scale.set_value (scale.get_value () + delta);
-            return true;
+        var motion_controller = new EventControllerMotion ();
+        uint timeout_id = 0;
+
+        motion_controller.enter.connect ( () => {
+            timeout_id = Timeout.add (500, () => {
+                controller.scroll.disconnect (ignore_scroll);
+                timeout_id = 0;
+                return false;
+            });
         });
+
+        motion_controller.leave.connect ( () => {
+            if (timeout_id != 0) {
+                Source.remove (timeout_id);
+                timeout_id = 0;
+            }
+            controller.scroll.connect (ignore_scroll);
+        });
+
+        controller.scroll.connect (ignore_scroll);
+
         scale.add_controller (controller);
+        scale.add_controller (motion_controller);
+
+        scale.set_increments (1, 1);
+    }
+
+    private bool ignore_scroll (double dx, double dy) {
+        return true;
     }
 
     public void initialize_switches_and_labels (Box metrics_box, Box extras_box, Box performance_box, Box visual_box) {

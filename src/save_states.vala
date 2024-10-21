@@ -71,8 +71,6 @@ public class SaveStates {
             system_end.add (3);
             order_map.set ("system_end", system_end);
 
-            save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_start").to_array ());
-
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
 
             int[] cpu_order = {0, 1, 2, 3, 4, 5, 6};
@@ -80,6 +78,8 @@ public class SaveStates {
 
             int[] other_order = {0, 1, 2, 3, 4};
             save_switches_to_file (data_stream, mango_juice.other_switches, mango_juice.other_config_vars, other_order);
+
+            save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_start").to_array ());
 
             save_switches_to_file (data_stream, mango_juice.system_switches, mango_juice.system_config_vars, (int[]) order_map.get ("system_end").to_array ());
 
