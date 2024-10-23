@@ -225,10 +225,10 @@ public class MangoJuice : Adw.Application {
         visual_scrolled_window.set_vexpand (true);
         visual_scrolled_window.set_child (visual_box);
 
-        view_stack.add_titled (metrics_scrolled_window, "metrics_box", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
-        view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
-        view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
-        view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
+        view_stack.add_titled (metrics_scrolled_window, "metrics_box", "Metrics").icon_name = "view-continuous-symbolic";
+        view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "application-x-addon-symbolic";
+        view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "system-run-symbolic";
+        view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "preferences-desktop-wallpaper-symbolic";
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
