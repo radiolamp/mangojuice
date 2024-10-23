@@ -182,7 +182,6 @@ public class MangoJuice : Adw.Application {
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
-        set_resource_base_path ("/usr/local/share/icons/hicolor/scalable/apps/");
     }
 
     protected override void activate () {
@@ -331,16 +330,6 @@ public class MangoJuice : Adw.Application {
         add_scroll_event_handler (borders_scale);
         add_scroll_event_handler (colums_scale);
         add_scroll_event_handler (font_size_scale);
-
-        var css_provider = new Gtk.CssProvider ();
-        css_provider.load_from_string ("""
-            .viewswitcher .viewswitcher-icon {
-                color: @theme_fg_color;
-            }
-            .bold-label {
-                font-weight: bold;
-            }
-        """);
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
         var style_manager = Adw.StyleManager.get_default ();
@@ -1117,16 +1106,10 @@ public class MangoJuice : Adw.Application {
 
     public void create_switches_and_labels (Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts) {
         var label = new Label (title);
-        label.set_halign (Align.CENTER);
+        label.add_css_class ("bold-label");
         label.set_margin_top (FLOW_BOX_MARGIN);
         label.set_margin_start (FLOW_BOX_MARGIN);
         label.set_margin_end (FLOW_BOX_MARGIN);
-
-        var font_description = new Pango.FontDescription ();
-        font_description.set_weight (Pango.Weight.BOLD);
-        var attr_list = new Pango.AttrList ();
-        attr_list.insert (new Pango.AttrFontDesc (font_description));
-        label.set_attributes (attr_list);
 
         parent_box.append (label);
 
