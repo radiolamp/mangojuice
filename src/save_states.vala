@@ -141,10 +141,10 @@ public class SaveStates {
                 data_stream.put_string ("fps_limit=%d\n".printf ( (int)mango_juice.scale.get_value ()));
             }
 
-            if (mango_juice.vulcan_dropdown.selected_item != null) {
-                var vulcan_value = (mango_juice.vulcan_dropdown.selected_item as StringObject)?.get_string () ?? "";
-                var vulcan_config_value = mango_juice.get_vulcan_config_value (vulcan_value);
-                data_stream.put_string ("vsync=%s\n".printf (vulcan_config_value));
+            if (mango_juice.vulkan_dropdown.selected_item != null) {
+                var vulkan_value = (mango_juice.vulkan_dropdown.selected_item as StringObject)?.get_string () ?? "";
+                var vulkan_config_value = mango_juice.get_vulkan_config_value (vulkan_value);
+                data_stream.put_string ("vsync=%s\n".printf (vulkan_config_value));
             }
 
             if (mango_juice.opengl_dropdown.selected_item != null) {

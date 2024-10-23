@@ -30,7 +30,7 @@ public class MangoJuice : Adw.Application {
     public DropDown logs_key_combo;
     public DropDown fps_limit_method;
     public DropDown toggle_fps_limit;
-    public DropDown vulcan_dropdown;
+    public DropDown vulkan_dropdown;
     public DropDown opengl_dropdown;
     public Scale duracion_scale;
     public Scale autostart_scale;
@@ -95,7 +95,7 @@ public class MangoJuice : Adw.Application {
     public string[] gpu_label_texts = {
         "Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
         "Temp", "Memory Temp", "Juntion", "Fans", "Model",
-        "Power", "Voltage", "Throttling", "Throttling GRAPH", "Vulcan Driver"
+        "Power", "Voltage", "Throttling", "Throttling GRAPH", "Vulkan Driver"
     };
     public string[] cpu_label_texts = {
         "Load", "Load Color", "Core Load", "Core Bars", "Core Freq", "Temp",
@@ -137,8 +137,8 @@ public class MangoJuice : Adw.Application {
     public Label font_size_value_label;
     public DropDown font_dropdown;
 
-    public string[] vulcan_values = { "Adaptive", "OFF", "ON", "Mailbox" };
-    public string[] vulcan_config_values = { "0", "1", "3", "2" };
+    public string[] vulkan_values = { "Adaptive", "OFF", "ON", "Mailbox" };
+    public string[] vulkan_config_values = { "0", "1", "3", "2" };
 
     public string[] opengl_values = { "Adaptive", "OFF", "ON", "Mailbox" };
     public string[] opengl_config_values = { "-1", "0", "1", "n" };
@@ -1294,11 +1294,11 @@ public class MangoJuice : Adw.Application {
 
         performance_box.append (vsync_label);
 
-        var vulcan_model = new Gtk.StringList (null);
-        foreach (var item in vulcan_values) {
-            vulcan_model.append (item);
+        var vulkan_model = new Gtk.StringList (null);
+        foreach (var item in vulkan_values) {
+            vulkan_model.append (item);
         }
-        vulcan_dropdown = new DropDown (vulcan_model, null);
+        vulkan_dropdown = new DropDown (vulkan_model, null);
 
         var opengl_model = new Gtk.StringList (null);
         foreach (var item in opengl_values) {
@@ -1306,10 +1306,10 @@ public class MangoJuice : Adw.Application {
         }
         opengl_dropdown = new DropDown (opengl_model, null);
 
-        var vulcan_label = new Label ("Vulkan");
-        vulcan_label.set_halign (Align.START);
-        vulcan_label.set_margin_start (FLOW_BOX_MARGIN);
-        vulcan_label.set_margin_end (FLOW_BOX_MARGIN);
+        var vulkan_label = new Label ("Vulkan");
+        vulkan_label.set_halign (Align.START);
+        vulkan_label.set_margin_start (FLOW_BOX_MARGIN);
+        vulkan_label.set_margin_end (FLOW_BOX_MARGIN);
 
         var opengl_label = new Label ("OpenGL");
         opengl_label.set_halign (Align.START);
@@ -1322,8 +1322,8 @@ public class MangoJuice : Adw.Application {
         vsync_box.set_margin_end (FLOW_BOX_MARGIN);
         vsync_box.set_margin_top (FLOW_BOX_MARGIN);
         vsync_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        vsync_box.append (vulcan_dropdown);
-        vsync_box.append (vulcan_label);
+        vsync_box.append (vulkan_dropdown);
+        vsync_box.append (vulkan_label);
         vsync_box.append (opengl_dropdown);
         vsync_box.append (opengl_label);
         performance_box.append (vsync_box);
@@ -1475,12 +1475,12 @@ public class MangoJuice : Adw.Application {
                 }
 
                 if (line.has_prefix ("vsync=")) {
-                    var vulcan_config_value = line.substring ("vsync=".length);
-                    var vulcan_value = get_vulcan_value_from_config (vulcan_config_value);
-                    for (uint i = 0; i < vulcan_dropdown.model.get_n_items (); i++) {
-                        var item = vulcan_dropdown.model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == vulcan_value) {
-                            vulcan_dropdown.selected = i;
+                    var vulkan_config_value = line.substring ("vsync=".length);
+                    var vulkan_value = get_vulkan_value_from_config (vulkan_config_value);
+                    for (uint i = 0; i < vulkan_dropdown.model.get_n_items (); i++) {
+                        var item = vulkan_dropdown.model.get_item (i) as StringObject;
+                        if (item != null && item.get_string () == vulkan_value) {
+                            vulkan_dropdown.selected = i;
                             break;
                         }
                     }
@@ -1977,10 +1977,10 @@ public class MangoJuice : Adw.Application {
         });
     }
 
-    public string get_vulcan_config_value (string vulcan_value) {
-        for (int i = 0; i < vulcan_values.length; i++) {
-            if (vulcan_values[i] == vulcan_value) {
-                return vulcan_config_values[i];
+    public string get_vulkan_config_value (string vulkan_value) {
+        for (int i = 0; i < vulkan_values.length; i++) {
+            if (vulkan_values[i] == vulkan_value) {
+                return vulkan_config_values[i];
             }
         }
         return "0";
@@ -1995,10 +1995,10 @@ public class MangoJuice : Adw.Application {
         return "-1";
     }
 
-    public string get_vulcan_value_from_config (string vulcan_config_value) {
-        for (int i = 0; i < vulcan_config_values.length; i++) {
-            if (vulcan_config_values[i] == vulcan_config_value) {
-                return vulcan_values[i];
+    public string get_vulkan_value_from_config (string vulkan_config_value) {
+        for (int i = 0; i < vulkan_config_values.length; i++) {
+            if (vulkan_config_values[i] == vulkan_config_value) {
+                return vulkan_values[i];
             }
         }
         return "Unset";
