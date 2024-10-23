@@ -1,5 +1,4 @@
 using Gtk;
-using GLib;
 using Adw;
 using Gee;
 
