@@ -424,27 +424,6 @@ public class MangoJuice : Adw.Application {
             });
         }
 
-        for (int i = 1; i < cpu_switches.length; i++) {
-            cpu_switches[i].notify["active"].connect ( () => {
-                update_cpu_stats_state ();
-                SaveStates.save_states_to_file (this);
-            });
-        }
-
-        for (int i = 1; i < gpu_switches.length; i++) {
-            gpu_switches[i].notify["active"].connect ( () => {
-                update_gpu_stats_state ();
-                SaveStates.save_states_to_file (this);
-            });
-        }
-
-        for (int i = 1; i < cpu_switches.length; i++) {
-            cpu_switches[i].notify["active"].connect ( () => {
-                update_cpu_stats_state ();
-                SaveStates.save_states_to_file (this);
-            });
-        }
-
         for (int i = 0; i < other_switches.length; i++) {
             other_switches[i].notify["active"].connect ( () => {
                 SaveStates.save_states_to_file (this);
