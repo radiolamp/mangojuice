@@ -471,7 +471,7 @@ public class MangoJuice : Adw.Application {
         bool any_gpu_switch_active = false;
 
         for (int i = 0; i < gpu_switches.length; i++) {
-            if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name") {
+            if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name"&& gpu_config_vars[i] != "engine_version") {
                 any_gpu_switch_active = true;
                 break;
             }
