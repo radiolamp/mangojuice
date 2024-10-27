@@ -450,56 +450,12 @@ public class MangoJuice : Adw.Application {
         for (int i = 1; i < gpu_switches.length; i++) {
             gpu_switches[i].notify["active"].connect ( () => {
                 update_gpu_stats_state ();
-                SaveStates.save_states_to_file (this);
             });
         }
 
         for (int i = 1; i < cpu_switches.length; i++) {
             cpu_switches[i].notify["active"].connect ( () => {
                 update_cpu_stats_state ();
-                SaveStates.save_states_to_file (this);
-            });
-        }
-
-        for (int i = 0; i < other_switches.length; i++) {
-            other_switches[i].notify["active"].connect ( () => {
-                SaveStates.save_states_to_file (this);
-            });
-        }
-    
-        for (int i = 0; i < system_switches.length; i++) {
-            system_switches[i].notify["active"].connect ( () => {
-                SaveStates.save_states_to_file (this);
-            });
-        }
-
-        for (int i = 0; i < wine_switches.length; i++) {
-            wine_switches[i].notify["active"].connect ( () => {
-                SaveStates.save_states_to_file (this);
-            });
-        }
-
-        for (int i = 0; i < options_switches.length; i++) {
-            options_switches[i].notify["active"].connect ( () => {
-                SaveStates.save_states_to_file (this);
-            });
-        }
-
-        for (int i = 0; i < battery_switches.length; i++) {
-            battery_switches[i].notify["active"].connect ( () => {
-                SaveStates.save_states_to_file (this);
-            });
-        }
-
-        for (int i = 0; i < other_extra_switches.length; i++) {
-            other_extra_switches[i].notify["active"].connect ( () => {
-                SaveStates.save_states_to_file (this);
-            });
-        }
-
-        for (int i = 0; i < inform_switches.length; i++) {
-            inform_switches[i].notify["active"].connect ( () => {
-                SaveStates.save_states_to_file (this);
             });
         }
     }
