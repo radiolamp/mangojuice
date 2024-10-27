@@ -254,20 +254,30 @@ public class MangoJuice : Adw.Application {
         header_bar.pack_end (save_button);
         save_button.clicked.connect ( () => {
             SaveStates.save_states_to_file (this);
-            if (test_button_pressed) restart_vkcube ();
+            if (test_button_pressed) {
+                if (is_vkcube_available ()) {
+                    restart_vkcube ();
+                } else if (is_glxgears_available ()) {
+                    restart_glxgears ();
+                }
+            }
         });
 
         var test_button = new Button.with_label ("Test");
-        test_button.clicked.connect ( () => {
+        test_button.clicked.connect (() => {
             try {
-                Process.spawn_command_line_sync ("pkill vkcube");
-                Process.spawn_command_line_async ("mangohud vkcube");
+                if (is_vkcube_available ()) {
+                    Process.spawn_command_line_sync ("pkill vkcube");
+                    Process.spawn_command_line_async ("mangohud vkcube");
+                } else if (is_glxgears_available ()) {
+                    Process.spawn_command_line_sync ("pkill glxgears");
+                    Process.spawn_command_line_async ("mangohud glxgears");
+                }
                 test_button_pressed = true;
             } catch (Error e) {
                 stderr.printf ("Error when running the command: %s\n", e.message);
             }
         });
-        header_bar.pack_start (test_button);
 
         var menu_button = new MenuButton ();
         var menu_model = new GLib.Menu ();
@@ -285,12 +295,19 @@ public class MangoJuice : Adw.Application {
         window.present ();
         load_states_from_file ();
 
-        window.close_request.connect ( () => {
+        window.close_request.connect (() => {
             if (is_vkcube_running ()) {
                 try {
                     Process.spawn_command_line_sync ("pkill vkcube");
                 } catch (Error e) {
                     stderr.printf ("Error closing vkcube: %s\n", e.message);
+                }
+            }
+            if (is_glxgears_running ()) {
+                try {
+                    Process.spawn_command_line_sync ("pkill glxgears");
+                } catch (Error e) {
+                    stderr.printf ("Error closing glxgears: %s\n", e.message);
                 }
             }
             return false;
@@ -352,9 +369,11 @@ public class MangoJuice : Adw.Application {
         var style_manager = Adw.StyleManager.get_default ();
         style_manager.set_color_scheme (Adw.ColorScheme.DEFAULT);
 
-        if (!is_vkcube_available ()) {
+        if (!is_vkcube_available () && !is_glxgears_available ()) {
             test_button.set_visible (false);
         }
+
+        header_bar.pack_start (test_button);
 
         var about_action = new SimpleAction ("about", null);
         about_action.activate.connect (on_about_button_clicked);
@@ -1831,9 +1850,33 @@ public class MangoJuice : Adw.Application {
         }
     }
 
+    public void restart_glxgears () {
+        try {
+            Process.spawn_command_line_sync ("pkill glxgears");
+            Process.spawn_command_line_async ("mangohud glxgears");
+        } catch (Error e) {
+            stderr.printf ("Error when restarting glxgears: %s\n", e.message);
+        }
+    }
+
     public bool is_vkcube_running () {
         try {
             string[] argv = { "pgrep", "vkcube" };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+
+            return exit_status == 0;
+        } catch (Error e) {
+            stderr.printf ("Error checking running processes: %s\n", e.message);
+            return false;
+        }
+    }
+
+    public bool is_glxgears_running () {
+        try {
+            string[] argv = { "pgrep", "glxgears" };
             int exit_status;
             string standard_output;
             string standard_error;
@@ -2078,14 +2121,29 @@ public class MangoJuice : Adw.Application {
             string standard_output;
             string standard_error;
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-
             if (exit_status != 0) {
                 stderr.printf ("vkcube not found. If you want a test button, install vulkan-tools.\n");
             }
-
             return exit_status == 0;
         } catch (Error e) {
             stderr.printf ("Error checking vkcube availability: %s\n", e.message);
+            return false;
+        }
+    }
+
+    public bool is_glxgears_available () {
+        try {
+            string[] argv = { "which", "glxgears" };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+            if (exit_status != 0) {
+                stderr.printf ("glxgears not found. If you want a test button, install mesa-utils.\n");
+            }
+            return exit_status == 0;
+        } catch (Error e) {
+            stderr.printf ("Error checking glxgears availability: %s\n", e.message);
             return false;
         }
     }
