@@ -188,6 +188,24 @@ public class MangoJuice : Adw.Application {
         window.set_default_size (955, 600);
         window.set_title ("MangoJuice");
 
+        //var save_action = new SimpleAction ("save", null);
+        //save_action.activate.connect (() => {
+        //    SaveStates.save_states_to_file (this);
+        //});
+        //window.add_action (save_action);
+
+        //var quit_action = new SimpleAction ("quit", null);
+        //quit_action.activate.connect (() => {
+        //    this.quit ();
+        //});
+        //window.add_action (quit_action);
+
+        //string[] save_accels = { "<primary>s" };
+        //string[] quit_accels = { "<primary>q" };
+        //this.set_accels_for_action ("win.save", save_accels);
+        //this.set_accels_for_action ("win.quit", quit_accels);
+
+
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
 
@@ -471,7 +489,7 @@ public class MangoJuice : Adw.Application {
         bool any_gpu_switch_active = false;
 
         for (int i = 0; i < gpu_switches.length; i++) {
-            if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name"&& gpu_config_vars[i] != "engine_version") {
+            if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name" && gpu_config_vars[i] != "engine_version") {
                 any_gpu_switch_active = true;
                 break;
             }
