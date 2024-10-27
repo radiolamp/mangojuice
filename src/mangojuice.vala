@@ -1150,8 +1150,6 @@ public class MangoJuice : Adw.Application {
 
         var flow_box = new FlowBox ();
         flow_box.set_homogeneous (true);
-        flow_box.set_max_children_per_line (5);
-        flow_box.set_min_children_per_line (3);
         flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
         flow_box.set_margin_top (FLOW_BOX_MARGIN);
