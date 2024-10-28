@@ -35,17 +35,18 @@ public class MangoJuice : Adw.Application {
     public Scale duracion_scale;
     public Scale autostart_scale;
     public Scale interval_scale;
-    public Scale scale;
     public Label duracion_value_label;
     public Label autostart_value_label;
     public Label interval_value_label;
-    public Label fps_limit_label;
     public Gtk.StringList logs_key_model;
     public DropDown filter_dropdown;
     public Scale af;
     public Scale picmip;
     public Label af_label;
     public Label picmip_label;
+    public Entry fps_limit_entry_1;
+    public Entry fps_limit_entry_2;
+    public Entry fps_limit_entry_3;
     public const string GPU_TITLE = "GPU";
     public const string CPU_TITLE = "CPU";
     public const string OTHER_TITLE = "Other";
@@ -205,7 +206,6 @@ public class MangoJuice : Adw.Application {
         this.set_accels_for_action ("win.save", save_accels);
         this.set_accels_for_action ("win.quit", quit_accels);
 
-
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
 
@@ -358,7 +358,6 @@ public class MangoJuice : Adw.Application {
         add_scroll_event_handler (duracion_scale);
         add_scroll_event_handler (autostart_scale);
         add_scroll_event_handler (interval_scale);
-        add_scroll_event_handler (scale);
         add_scroll_event_handler (af);
         add_scroll_event_handler (picmip);
         add_scroll_event_handler (borders_scale);
@@ -1274,9 +1273,26 @@ public class MangoJuice : Adw.Application {
         }
         fps_limit_method = new DropDown (fps_limit_method_model, null);
 
-        scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 240, 1);
-        fps_limit_label = new Label ("");
-        scale.value_changed.connect ( () => fps_limit_label.label = "%d".printf ( (int)scale.get_value ()));
+        fps_limit_entry_1 = new Entry ();
+        fps_limit_entry_1.placeholder_text = "Limit 1";
+        fps_limit_entry_1.hexpand = true;
+        fps_limit_entry_1.changed.connect ( () => {
+            update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+        });
+
+        fps_limit_entry_2 = new Entry ();
+        fps_limit_entry_2.placeholder_text = "Limit 2";
+        fps_limit_entry_2.hexpand = true;
+        fps_limit_entry_2.changed.connect ( () => {
+            update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+        });
+
+        fps_limit_entry_3 = new Entry ();
+        fps_limit_entry_3.placeholder_text = "Limit 3";
+        fps_limit_entry_3.hexpand = true;
+        fps_limit_entry_3.changed.connect ( () => {
+            update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+        });
 
         var toggle_fps_limit_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }) {
@@ -1289,11 +1305,10 @@ public class MangoJuice : Adw.Application {
         limiters_box.set_margin_end (FLOW_BOX_MARGIN);
         limiters_box.set_margin_top (FLOW_BOX_MARGIN);
         limiters_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        scale.set_hexpand (true);
-
         limiters_box.append (fps_limit_method);
-        limiters_box.append (scale);
-        limiters_box.append (fps_limit_label);
+        limiters_box.append (fps_limit_entry_1);
+        limiters_box.append (fps_limit_entry_2);
+        limiters_box.append (fps_limit_entry_3);
         limiters_box.append (toggle_fps_limit);
         performance_box.append (limiters_box);
 
@@ -1483,11 +1498,11 @@ public class MangoJuice : Adw.Application {
                 }
 
                 if (line.has_prefix ("fps_limit=")) {
-                    if (scale != null) {
-                        scale.set_value (int.parse (line.substring ("fps_limit=".length)));
-                        if (fps_limit_label != null) {
-                            fps_limit_label.label = "%d".printf ( (int)scale.get_value ());
-                        }
+                    var fps_limits = line.substring ("fps_limit=".length).split (",");
+                    if (fps_limits.length == 3) {
+                        fps_limit_entry_1.text = fps_limits[0];
+                        fps_limit_entry_2.text = fps_limits[1];
+                        fps_limit_entry_3.text = fps_limits[2];
                     }
                 }
 
@@ -2620,6 +2635,34 @@ public class MangoJuice : Adw.Application {
             while ( (line = file_stream.read_line ()) != null) {
                 if (line.has_prefix ("network_color=")) {
                     line = "network_color=%s".printf (network_color);
+                }
+                lines.add (line);
+            }
+
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+
+    public void update_fps_limit_in_file (string fps_limit_1, string fps_limit_2, string fps_limit_3) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("fps_limit=")) {
+                    line = "fps_limit=%s,%s,%s".printf (fps_limit_1, fps_limit_2, fps_limit_3);
                 }
                 lines.add (line);
             }

@@ -118,7 +118,7 @@ public class SaveStates {
             if (mango_juice.autostart_scale != null && (int)mango_juice.autostart_scale.get_value() != 0) {
                 data_stream.put_string ("autostart_log=%d\n".printf ( (int)mango_juice.autostart_scale.get_value ()));
             }
-            if (mango_juice.interval_scale != null && (int)mango_juice.interval_scale.get_value() != 0) {
+            if (mango_juice.interval_scale != null && (int)mango_juice.interval_scale.get_value () != 0) {
                 data_stream.put_string ("log_interval=%d\n".printf ( (int)mango_juice.interval_scale.get_value ()));
             }
 
@@ -137,8 +137,11 @@ public class SaveStates {
                 data_stream.put_string ("toggle_fps_limit=%s\n".printf (toggle_fps_limit_value));
             }
 
-            if (mango_juice.scale != null && (int)mango_juice.scale.get_value() != 0) {
-                data_stream.put_string ("fps_limit=%d\n".printf ( (int)mango_juice.scale.get_value ()));
+            var fps_limit_1 = mango_juice.fps_limit_entry_1.text;
+            var fps_limit_2 = mango_juice.fps_limit_entry_2.text;
+            var fps_limit_3 = mango_juice.fps_limit_entry_3.text;
+            if (fps_limit_1 != "" || fps_limit_2 != "" || fps_limit_3 != "") {
+                data_stream.put_string ("fps_limit=%s,%s,%s\n".printf (fps_limit_1, fps_limit_2, fps_limit_3));
             }
 
             if (mango_juice.vulkan_dropdown.selected_item != null) {
