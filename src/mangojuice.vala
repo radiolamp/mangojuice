@@ -457,6 +457,31 @@ public class MangoJuice : Adw.Application {
                 update_cpu_stats_state ();
             });
         }
+
+        for (int i = 1; i < other_switches.length; i++) {
+            other_switches[i].notify["active"].connect (() => {
+                update_other_stats_state ();
+            });
+        }
+    }
+
+    public void update_other_stats_state () {
+        bool any_other_switch_active = false;
+    
+        for (int i = 0; i < other_switches.length; i++) {
+            if (other_switches[i].active) {
+                any_other_switch_active = true;
+                break;
+            }
+        }
+    
+        for (int i = 0; i < other_switches.length; i++) {
+            other_switches[i].notify["active"].connect (() => {
+                SaveStates.save_states_to_file (this);
+            });
+        }
+    
+        other_switches[0].active = any_other_switch_active;
     }
 
     public void update_gpu_stats_state () {
@@ -469,6 +494,11 @@ public class MangoJuice : Adw.Application {
             }
         }
 
+        for (int i = 0; i < gpu_switches.length; i++) {
+            gpu_switches[i].notify["active"].connect ( () => {
+                SaveStates.save_states_to_file (this);
+            });
+        }
         gpu_switches[0].active = any_gpu_switch_active;
     }
 
@@ -480,6 +510,12 @@ public class MangoJuice : Adw.Application {
                 any_cpu_switch_active = true;
                 break;
             }
+        }
+
+        for (int i = 0; i < cpu_switches.length; i++) {
+            cpu_switches[i].notify["active"].connect ( () => {
+                SaveStates.save_states_to_file (this);
+            });
         }
 
         cpu_switches[0].active = any_cpu_switch_active;
@@ -1089,11 +1125,10 @@ public class MangoJuice : Adw.Application {
     public void initialize_font_dropdown (Box visual_box) {
         var font_model = new Gtk.StringList (null);
         font_model.append ("Default");
-
+    
         var fonts = new Gee.ArrayList<string> ();
-
         fonts.add_all (find_fonts ("/usr/share/fonts"));
-
+    
         var local_fonts_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".local/share/fonts");
         if (!local_fonts_dir.query_exists ()) {
             try {
@@ -1103,17 +1138,29 @@ public class MangoJuice : Adw.Application {
             }
         }
         fonts.add_all (find_fonts (local_fonts_dir.get_path ()));
-
+    
         foreach (var font in fonts) {
-            font_model.append (font);
+            var font_name = Path.get_basename (font);
+            font_model.append (font_name);
         }
-
+    
         font_dropdown = new DropDown (font_model, null);
         font_dropdown.set_size_request (100, -1);
         font_dropdown.set_valign (Align.CENTER);
         font_dropdown.notify["selected-item"].connect ( () => {
-            update_font_file_in_file ( (font_dropdown.selected_item as StringObject)?.get_string () ?? "");
+            var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
+            var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
+            update_font_file_in_file (selected_font_path);
         });
+    }
+
+    public string find_font_path_by_name (string font_name, Gee.List<string> fonts) {
+        foreach (var font_path in fonts) {
+            if (Path.get_basename (font_path) == font_name) {
+                return font_path;
+            }
+        }
+        return "";
     }
 
     public Gee.List<string> find_fonts (string directory) {
@@ -1416,7 +1463,7 @@ public class MangoJuice : Adw.Application {
         if (!file.query_exists ()) {
             return;
         }
-
+    
         try {
             var file_stream = new DataInputStream (file.read ());
             string line;
@@ -1430,11 +1477,11 @@ public class MangoJuice : Adw.Application {
                 load_switch_from_file (line, other_extra_switches, other_extra_config_vars);
                 load_switch_from_file (line, inform_switches, inform_config_vars);
                 load_switch_from_file (line, options_switches, options_config_vars);
-
+    
                 if (line.has_prefix ("custom_command=")) {
                     custom_command_entry.text = line.substring ("custom_command=".length);
                 }
-
+    
                 if (line.has_prefix ("toggle_logging=")) {
                     var logs_key = line.substring ("toggle_logging=".length);
                     for (uint i = 0; i < logs_key_model.get_n_items (); i++) {
@@ -1445,7 +1492,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-
+    
                 if (line.has_prefix ("log_duration=")) {
                     if (duracion_scale != null) {
                         duracion_scale.set_value (int.parse (line.substring ("log_duration=".length)));
@@ -1470,11 +1517,11 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-
+    
                 if (line.has_prefix ("output_folder=")) {
                     custom_logs_path_entry.text = line.substring ("output_folder=".length);
                 }
-
+    
                 if (line.has_prefix ("fps_limit_method=")) {
                     var fps_limit_method_value = line.substring ("fps_limit_method=".length);
                     for (uint i = 0; i < fps_limit_method.model.get_n_items (); i++) {
@@ -1485,7 +1532,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-
+    
                 if (line.has_prefix ("toggle_fps_limit=")) {
                     var toggle_fps_limit_value = line.substring ("toggle_fps_limit=".length);
                     for (uint i = 0; i < toggle_fps_limit.model.get_n_items (); i++) {
@@ -1496,7 +1543,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-
+    
                 if (line.has_prefix ("fps_limit=")) {
                     var fps_limits = line.substring ("fps_limit=".length).split (",");
                     if (fps_limits.length == 3) {
@@ -1505,7 +1552,7 @@ public class MangoJuice : Adw.Application {
                         fps_limit_entry_3.text = fps_limits[2];
                     }
                 }
-
+    
                 if (line.has_prefix ("vsync=")) {
                     var vulkan_config_value = line.substring ("vsync=".length);
                     var vulkan_value = get_vulkan_value_from_config (vulkan_config_value);
@@ -1517,7 +1564,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-
+    
                 if (line.has_prefix ("gl_vsync=")) {
                     var opengl_config_value = line.substring ("gl_vsync=".length);
                     var opengl_value = get_opengl_value_from_config (opengl_config_value);
@@ -1529,7 +1576,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-
+    
                 if (line.has_prefix ("filter=")) {
                     var filter_value = line.substring ("filter=".length);
                     for (uint i = 0; i < filter_dropdown.model.get_n_items (); i++) {
@@ -1622,9 +1669,10 @@ public class MangoJuice : Adw.Application {
 
                 if (line.has_prefix ("font_file=")) {
                     var font_file = line.substring ("font_file=".length);
+                    var font_name = Path.get_basename (font_file);
                     for (uint i = 0; i < font_dropdown.model.get_n_items (); i++) {
                         var item = font_dropdown.model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == font_file) {
+                        if (item != null && item.get_string () == font_name) {
                             font_dropdown.selected = i;
                             break;
                         }
@@ -1996,19 +2044,11 @@ public class MangoJuice : Adw.Application {
             var lines = new ArrayList<string> ();
             var file_stream = new DataInputStream (file.read ());
             string line;
-            bool glyph_ranges_added = false;
             while ( (line = file_stream.read_line ()) != null) {
                 if (line.has_prefix ("font_file=")) {
                     line = "font_file=%s".printf (font_file_value);
                 }
-                if (line.has_prefix ("font_glyph_ranges=")) {
-                    glyph_ranges_added = true;
-                }
                 lines.add (line);
-            }
-
-            if (font_file_value != "Default" && !glyph_ranges_added) {
-                lines.add ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b");
             }
 
             var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));

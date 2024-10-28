@@ -112,7 +112,7 @@ public class SaveStates {
                 }
             }
 
-            if (mango_juice.duracion_scale != null && (int)mango_juice.duracion_scale.get_value() != 0) {
+            if (mango_juice.duracion_scale != null && (int)mango_juice.duracion_scale.get_value () != 0) {
                 data_stream.put_string ("log_duration=%d\n".printf ( (int)mango_juice.duracion_scale.get_value ()));
             }
             if (mango_juice.autostart_scale != null && (int)mango_juice.autostart_scale.get_value() != 0) {
@@ -166,7 +166,7 @@ public class SaveStates {
             if (mango_juice.af != null && (int)mango_juice.af.get_value () != 0) {
                 data_stream.put_string ("af=%d\n".printf ( (int)mango_juice.af.get_value ()));
             }
-            if (mango_juice.picmip != null && (int)mango_juice.picmip.get_value() != 0) {
+            if (mango_juice.picmip != null && (int)mango_juice.picmip.get_value () != 0) {
                 data_stream.put_string ("picmip=%d\n".printf ( (int)mango_juice.picmip.get_value ()));
             }
 
@@ -203,10 +203,13 @@ public class SaveStates {
             }
 
             if (mango_juice.font_dropdown.selected_item != null) {
-                var font_file = (mango_juice.font_dropdown.selected_item as StringObject)?.get_string () ?? "";
-                if (font_file != "Default") {
-                    data_stream.put_string ("font_file=%s\n".printf (font_file));
-                    data_stream.put_string ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b\n");
+                var font_name = (mango_juice.font_dropdown.selected_item as StringObject)?.get_string () ?? "";
+                if (font_name != "Default") {
+                    var font_path = mango_juice.find_font_path_by_name (font_name, mango_juice.find_fonts ("/usr/share/fonts"));
+                    if (font_path != "") {
+                        data_stream.put_string ("font_file=%s\n".printf (font_path));
+                        data_stream.put_string ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b\n");
+                    }
                 }
             }
 
@@ -377,4 +380,3 @@ public class SaveStates {
         }
     }
 }
-
