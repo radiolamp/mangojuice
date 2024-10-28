@@ -81,7 +81,7 @@ public class MangoJuice : Adw.Application {
         "wine", "engine", "engine_short_names", "winesync"
     };
     public string[] battery_config_vars = {
-        "battery", "battery_watt", "battery_time", "device_battery"
+        "battery", "battery_watt", "battery_time", "device_battery_icon", "device_battery=gamepad,mouse"
     };
     public string[] other_extra_config_vars = {
         "media_player", "network", "full", "log_versioning", "upload_logs"
@@ -90,7 +90,7 @@ public class MangoJuice : Adw.Application {
         "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "present_mode"
     };
     public string[] options_config_vars = {
-        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "no_display"
+        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display"
     };
     public string[] gpu_label_texts = {
         "Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
@@ -111,10 +111,10 @@ public class MangoJuice : Adw.Application {
         "Version", "Engine Ver", "Short names", "Winesync           "
     };
     public string[] options_label_texts = {
-        "HUD Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR*", "HDR*", "Compact HUD", "Hide HUD           "
+        "HUD Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR*", "HDR*", "Compact HUD", "Compact API", "Hide HUD           "
     };
     public string[] battery_label_texts = {
-        "Percentage", "Wattage", "Time remain", "Device                 "
+        "Percentage", "Wattage", "Time remain", "Battery icon", "Device                 "
     };
     public string[] other_extra_label_texts = {
         "Media", "Network", "Full ON", "Log Versioning", "Upload Results "
@@ -188,22 +188,22 @@ public class MangoJuice : Adw.Application {
         window.set_default_size (955, 600);
         window.set_title ("MangoJuice");
 
-        //var save_action = new SimpleAction ("save", null);
-        //save_action.activate.connect (() => {
-        //    SaveStates.save_states_to_file (this);
-        //});
-        //window.add_action (save_action);
+        var save_action = new SimpleAction ("save", null);
+        save_action.activate.connect (() => {
+            SaveStates.save_states_to_file (this);
+        });
+        window.add_action (save_action);
 
-        //var quit_action = new SimpleAction ("quit", null);
-        //quit_action.activate.connect (() => {
-        //    this.quit ();
-        //});
-        //window.add_action (quit_action);
+        var quit_action = new SimpleAction ("quit", null);
+        quit_action.activate.connect (() => {
+            this.quit ();
+        });
+        window.add_action (quit_action);
 
-        //string[] save_accels = { "<primary>s" };
-        //string[] quit_accels = { "<primary>q" };
-        //this.set_accels_for_action ("win.save", save_accels);
-        //this.set_accels_for_action ("win.quit", quit_accels);
+        string[] save_accels = { "<primary>s" };
+        string[] quit_accels = { "<primary>q" };
+        this.set_accels_for_action ("win.save", save_accels);
+        this.set_accels_for_action ("win.quit", quit_accels);
 
 
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
