@@ -539,20 +539,22 @@ public class MangoJuice : Adw.Application {
             restart_application ();
         });
 
-        var custom_command_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        custom_command_box.set_margin_start (FLOW_BOX_MARGIN);
-        custom_command_box.set_margin_end (FLOW_BOX_MARGIN);
-        custom_command_box.set_margin_top (FLOW_BOX_MARGIN);
-        custom_command_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        custom_command_box.append (custom_command_entry);
-        custom_command_box.append (new Label ("Logs key"));
-        custom_command_box.append (logs_key_combo);
-        custom_command_box.append (new Label (""));
-        custom_command_box.append (custom_logs_path_entry);
-        custom_command_box.append (logs_path_button);
-        custom_command_box.append (intel_power_fix_button);
-        custom_command_box.append (reset_button);
-        extras_box.append (custom_command_box);
+        var custom_command_flow_box = new FlowBox ();
+        custom_command_flow_box.set_max_children_per_line (7);
+        custom_command_flow_box.set_min_children_per_line (2);
+        custom_command_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        custom_command_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        custom_command_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        custom_command_flow_box.set_selection_mode (SelectionMode.NONE);
+
+        custom_command_flow_box.insert (custom_command_entry, -1);
+        custom_command_flow_box.insert (new Label ("Logs key"), -1);
+        custom_command_flow_box.insert (logs_key_combo, -1);
+        custom_command_flow_box.insert (custom_logs_path_entry, -1);
+        custom_command_flow_box.insert (logs_path_button, -1);
+        custom_command_flow_box.insert (intel_power_fix_button, -1);
+        custom_command_flow_box.insert (reset_button, -1);
+        extras_box.append (custom_command_flow_box);
 
         var customize_label = new Label ("Customize");
         customize_label.set_halign (Align.CENTER);
@@ -1178,6 +1180,7 @@ public class MangoJuice : Adw.Application {
 
         var flow_box = new FlowBox ();
         flow_box.set_homogeneous (true);
+        flow_box.set_min_children_per_line (3);
         flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
         flow_box.set_margin_top (FLOW_BOX_MARGIN);
