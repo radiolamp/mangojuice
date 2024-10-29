@@ -201,10 +201,10 @@ public class MangoJuice : Adw.Application {
         });
         window.add_action (quit_action);
 
-        string[] save_accels = { "<primary>s" };
-        string[] quit_accels = { "<primary>q" };
-        this.set_accels_for_action ("win.save", save_accels);
-        this.set_accels_for_action ("win.quit", quit_accels);
+       // string[] save_accels = { "<primary>s" };
+       // string[] quit_accels = { "<primary>q" };
+       // this.set_accels_for_action ("win.save", save_accels);
+       // this.set_accels_for_action ("win.quit", quit_accels);
 
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);

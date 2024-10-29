@@ -19,7 +19,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/radiolamp/mangojuice.git
-        tag: 0.7.5
+        tag: 0.7.7
         commit: 67bff08be6af73d2c1fe4dcf3c70684321a04ba9
 
   - name: vulkan-tools
