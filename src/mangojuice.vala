@@ -294,6 +294,7 @@ public class MangoJuice : Adw.Application {
 
         window.present ();
         load_states_from_file ();
+        SaveStates.save_states_to_file (this);
 
         window.close_request.connect (() => {
             if (is_vkcube_running ()) {
@@ -445,6 +446,15 @@ public class MangoJuice : Adw.Application {
         create_scales_and_labels (extras_box);
         create_switches_and_labels (performance_box, INFORM_TITLE, inform_switches, inform_labels, inform_config_vars, inform_label_texts);
         create_limiters_and_filters (performance_box);
+        add_switch_handler (gpu_switches);
+        add_switch_handler (cpu_switches);
+        add_switch_handler (other_switches);
+        add_switch_handler (system_switches);
+        add_switch_handler (wine_switches);
+        add_switch_handler (options_switches);
+        add_switch_handler (battery_switches);
+        add_switch_handler (other_extra_switches);
+        add_switch_handler (inform_switches);
 
         for (int i = 1; i < gpu_switches.length; i++) {
             gpu_switches[i].notify["active"].connect ( () => {
@@ -455,6 +465,14 @@ public class MangoJuice : Adw.Application {
         for (int i = 1; i < cpu_switches.length; i++) {
             cpu_switches[i].notify["active"].connect ( () => {
                 update_cpu_stats_state ();
+            });
+        }
+    }
+
+    public void add_switch_handler (Switch[] switches) {
+        for (int i = 0; i < switches.length; i++) {
+            switches[i].notify["active"].connect (() => {
+                SaveStates.save_states_to_file (this);
             });
         }
     }
