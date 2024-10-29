@@ -457,31 +457,6 @@ public class MangoJuice : Adw.Application {
                 update_cpu_stats_state ();
             });
         }
-
-        for (int i = 1; i < other_switches.length; i++) {
-            other_switches[i].notify["active"].connect (() => {
-                update_other_stats_state ();
-            });
-        }
-    }
-
-    public void update_other_stats_state () {
-        bool any_other_switch_active = false;
-    
-        for (int i = 0; i < other_switches.length; i++) {
-            if (other_switches[i].active) {
-                any_other_switch_active = true;
-                break;
-            }
-        }
-    
-        for (int i = 0; i < other_switches.length; i++) {
-            other_switches[i].notify["active"].connect (() => {
-                SaveStates.save_states_to_file (this);
-            });
-        }
-    
-        other_switches[0].active = any_other_switch_active;
     }
 
     public void update_gpu_stats_state () {
@@ -494,11 +469,6 @@ public class MangoJuice : Adw.Application {
             }
         }
 
-        for (int i = 0; i < gpu_switches.length; i++) {
-            gpu_switches[i].notify["active"].connect ( () => {
-                SaveStates.save_states_to_file (this);
-            });
-        }
         gpu_switches[0].active = any_gpu_switch_active;
     }
 
@@ -510,12 +480,6 @@ public class MangoJuice : Adw.Application {
                 any_cpu_switch_active = true;
                 break;
             }
-        }
-
-        for (int i = 0; i < cpu_switches.length; i++) {
-            cpu_switches[i].notify["active"].connect ( () => {
-                SaveStates.save_states_to_file (this);
-            });
         }
 
         cpu_switches[0].active = any_cpu_switch_active;
