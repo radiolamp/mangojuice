@@ -514,6 +514,7 @@ public class MangoJuice : Adw.Application {
 
         custom_logs_path_entry = new Entry ();
         custom_logs_path_entry.placeholder_text = "Home";
+        custom_logs_path_entry.hexpand = true;
 
         logs_path_button = new Button.with_label ("Folder logs");
         logs_path_button.clicked.connect ( () => open_folder_chooser_dialog ());
@@ -544,20 +545,25 @@ public class MangoJuice : Adw.Application {
         });
 
         var custom_command_flow_box = new FlowBox ();
-        custom_command_flow_box.set_max_children_per_line (7);
-        custom_command_flow_box.set_min_children_per_line (2);
+        custom_command_flow_box.set_max_children_per_line (2);
         custom_command_flow_box.set_margin_start (FLOW_BOX_MARGIN);
         custom_command_flow_box.set_margin_end (FLOW_BOX_MARGIN);
         custom_command_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         custom_command_flow_box.set_selection_mode (SelectionMode.NONE);
 
-        custom_command_flow_box.insert (custom_command_entry, -1);
-        custom_command_flow_box.insert (new Label ("Logs key"), -1);
-        custom_command_flow_box.insert (logs_key_combo, -1);
-        custom_command_flow_box.insert (custom_logs_path_entry, -1);
-        custom_command_flow_box.insert (logs_path_button, -1);
-        custom_command_flow_box.insert (intel_power_fix_button, -1);
-        custom_command_flow_box.insert (reset_button, -1);
+        var pair1 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        pair1.append (custom_command_entry);
+        pair1.append (new Label ("Logs key"));
+        pair1.append (logs_key_combo);
+        custom_command_flow_box.insert (pair1, -1);
+
+        var pair2 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        pair2.append (custom_logs_path_entry);
+        pair2.append (logs_path_button);
+        pair2.append (intel_power_fix_button);
+        pair2.append (reset_button);
+        custom_command_flow_box.insert (pair2, -1);
+
         extras_box.append (custom_command_flow_box);
 
         var customize_label = new Label ("Customize");
@@ -590,6 +596,9 @@ public class MangoJuice : Adw.Application {
         custom_switch = new Switch ();
         custom_switch.set_valign (Align.CENTER);
         custom_switch.set_margin_end (FLOW_BOX_MARGIN);
+        custom_switch.notify["active"].connect (() => {
+            SaveStates.save_states_to_file (this);
+        });
 
         borders_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 15, -1);
         borders_scale.set_hexpand (true);
@@ -720,7 +729,7 @@ public class MangoJuice : Adw.Application {
         var color_flow_box = new FlowBox ();
         color_flow_box.set_homogeneous (true);
         color_flow_box.set_max_children_per_line (9);
-        color_flow_box.set_min_children_per_line (3);
+        //color_flow_box.set_min_children_per_line (3);
         color_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         color_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
         color_flow_box.set_margin_start (FLOW_BOX_MARGIN);
