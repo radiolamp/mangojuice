@@ -182,6 +182,46 @@ public class MangoJuice : Adw.Application {
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
+        var quit_action = new SimpleAction ("quit", null);
+        quit_action.activate.connect (() => {
+            if (is_vkcube_running ()) {
+                try {
+                    Process.spawn_command_line_sync ("pkill vkcube");
+                } catch (Error e) {
+                    stderr.printf ("Error closing vkcube: %s\n", e.message);
+                }
+            }
+            if (is_glxgears_running ()) {
+                try {
+                    Process.spawn_command_line_sync ("pkill glxgears");
+                } catch (Error e) {
+                    stderr.printf ("Error closing glxgears: %s\n", e.message);
+                }
+            }
+            this.quit ();
+        });
+        this.add_action (quit_action);
+
+        const string[] QUIT_ACCELS = { "<Ctrl>Q" };
+        this.set_accels_for_action ("app.quit", QUIT_ACCELS);
+        
+        var test_action_new = new SimpleAction ("test_new", null);
+        test_action_new.activate.connect (() => {
+            try {
+                if (is_vkcube_available ()) {
+                    Process.spawn_command_line_sync ("pkill vkcube");
+                    Process.spawn_command_line_async ("mangohud vkcube");
+                } else if (is_glxgears_available ()) {
+                    Process.spawn_command_line_sync ("pkill glxgears");
+                    Process.spawn_command_line_async ("mangohud glxgears");
+                }
+                test_button_pressed = true;
+            } catch (Error e) {
+                stderr.printf ("Error when running the command: %s\n", e.message);
+            }
+        });
+        this.add_action (test_action_new);
+        //this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
     }
 
     protected override void activate () {
@@ -192,7 +232,7 @@ public class MangoJuice : Adw.Application {
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => SaveStates.save_states_to_file (this));
         window.add_action (save_action);
-        
+
         const string[] SAVE_ACCELS = { "<primary>s" };
         this.set_accels_for_action ("win.save", SAVE_ACCELS);
 
@@ -268,6 +308,23 @@ public class MangoJuice : Adw.Application {
                 stderr.printf ("Error when running the command: %s\n", e.message);
             }
         });
+
+        var test_action = new SimpleAction ("test", null);
+        test_action.activate.connect (() => {
+            try {
+                if (is_vkcube_available ()) {
+                    Process.spawn_command_line_sync ("pkill vkcube");
+                    Process.spawn_command_line_async ("mangohud vkcube");
+                } else if (is_glxgears_available ()) {
+                    Process.spawn_command_line_sync ("pkill glxgears");
+                    Process.spawn_command_line_async ("mangohud glxgears");
+                }
+                test_button_pressed = true;
+            } catch (Error e) {
+                stderr.printf ("Error when running the command: %s\n", e.message);
+            }
+        });
+        this.add_action (test_action);
 
         var menu_button = new MenuButton ();
         var menu_model = new GLib.Menu ();
