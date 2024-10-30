@@ -591,10 +591,11 @@ public class MangoJuice : Adw.Application {
         visual_box.append (customize_box);
 
         var custom_switch_label = new Label ("Horizontal Hud");
-        custom_switch_label.set_halign (Align.CENTER);
+        custom_switch_label.set_halign (Align.START);
+        custom_switch_label.set_hexpand (true);
 
         custom_switch = new Switch ();
-        custom_switch.set_valign (Align.CENTER);
+        custom_switch.set_valign (Align.START);
         custom_switch.set_margin_end (FLOW_BOX_MARGIN);
         custom_switch.notify["active"].connect (() => {
             SaveStates.save_states_to_file (this);
@@ -602,12 +603,14 @@ public class MangoJuice : Adw.Application {
 
         borders_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 15, -1);
         borders_scale.set_hexpand (true);
+        borders_scale.set_size_request (250, -1);
         borders_value_label = new Label ("");
         borders_value_label.set_halign (Align.END);
         borders_scale.value_changed.connect ( () => borders_value_label.label = "%d".printf ( (int)borders_scale.get_value ()));
 
         alpha_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 100, 1);
         alpha_scale.set_hexpand (true);
+        alpha_scale.set_size_request (250, -1);
         alpha_scale.set_value (50);
         alpha_value_label = new Label ("");
         alpha_value_label.set_halign (Align.END);
@@ -616,20 +619,35 @@ public class MangoJuice : Adw.Application {
             alpha_value_label.label = "%.1f".printf (value / 100.0);
         });
 
-        var custom_switch_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        custom_switch_box.set_margin_start (FLOW_BOX_MARGIN);
-        custom_switch_box.set_margin_end (FLOW_BOX_MARGIN);
-        custom_switch_box.set_margin_top (FLOW_BOX_MARGIN);
-        custom_switch_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        custom_switch_box.append (custom_switch_label);
-        custom_switch_box.append (custom_switch);
-        custom_switch_box.append (new Label ("Borders"));
-        custom_switch_box.append (borders_scale);
-        custom_switch_box.append (borders_value_label);
-        custom_switch_box.append (new Label ("Alpha"));
-        custom_switch_box.append (alpha_scale);
-        custom_switch_box.append (alpha_value_label);
-        visual_box.append (custom_switch_box);
+        var custom_switch_flow_box = new FlowBox ();
+        custom_switch_flow_box.set_max_children_per_line (3);
+        custom_switch_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        //custom_switch_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
+        custom_switch_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        custom_switch_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        custom_switch_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        custom_switch_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        custom_switch_flow_box.set_selection_mode (SelectionMode.NONE);
+        
+        var custom_switch_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        custom_switch_pair.append (custom_switch_label);
+        custom_switch_pair.append (custom_switch);
+        custom_switch_pair.set_size_request (50, -1);
+        custom_switch_flow_box.insert (custom_switch_pair, -1);
+
+        var borders_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        borders_pair.append (new Label ("Borders"));
+        borders_pair.append (borders_scale);
+        borders_pair.append (borders_value_label);
+        custom_switch_flow_box.insert (borders_pair, -1);
+
+        var alpha_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        alpha_pair.append (new Label ("Alpha"));
+        alpha_pair.append (alpha_scale);
+        alpha_pair.append (alpha_value_label);
+        custom_switch_flow_box.insert (alpha_pair, -1);
+
+        visual_box.append (custom_switch_flow_box);
 
         var position_model = new Gtk.StringList (null);
         foreach (var item in new string[] {
@@ -729,7 +747,7 @@ public class MangoJuice : Adw.Application {
         var color_flow_box = new FlowBox ();
         color_flow_box.set_homogeneous (true);
         color_flow_box.set_max_children_per_line (9);
-        //color_flow_box.set_min_children_per_line (3);
+        color_flow_box.set_min_children_per_line (2);
         color_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         color_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
         color_flow_box.set_margin_start (FLOW_BOX_MARGIN);
@@ -1193,7 +1211,7 @@ public class MangoJuice : Adw.Application {
 
         var flow_box = new FlowBox ();
         flow_box.set_homogeneous (true);
-        flow_box.set_min_children_per_line (3);
+        //flow_box.set_min_children_per_line (3);
         flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
         flow_box.set_margin_top (FLOW_BOX_MARGIN);
@@ -1233,54 +1251,6 @@ public class MangoJuice : Adw.Application {
     }
 
     public void create_scales_and_labels (Box parent_box) {
-        duracion_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 200, 1);
-        duracion_scale.set_value (30);
-        duracion_scale.set_hexpand (true);
-        duracion_scale.set_margin_start (FLOW_BOX_MARGIN);
-        duracion_scale.set_margin_end (FLOW_BOX_MARGIN);
-        duracion_scale.set_margin_top (FLOW_BOX_MARGIN);
-        duracion_scale.set_margin_bottom (FLOW_BOX_MARGIN);
-        duracion_value_label = new Label ("");
-        duracion_value_label.set_halign (Align.END);
-        duracion_scale.value_changed.connect ( () => duracion_value_label.label = "%d s".printf ( (int)duracion_scale.get_value ()));
-
-        autostart_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 30, 1);
-        autostart_scale.set_value (0);
-        autostart_scale.set_hexpand (true);
-        autostart_scale.set_margin_start (FLOW_BOX_MARGIN);
-        autostart_scale.set_margin_end (FLOW_BOX_MARGIN);
-        autostart_scale.set_margin_top (FLOW_BOX_MARGIN);
-        autostart_scale.set_margin_bottom (FLOW_BOX_MARGIN);
-        autostart_value_label = new Label ("");
-        autostart_value_label.set_halign (Align.END);
-        autostart_scale.value_changed.connect ( () => autostart_value_label.label = "%d s".printf ( (int)autostart_scale.get_value ()));
-
-        interval_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 500, 1);
-        interval_scale.set_value (100);
-        interval_scale.set_hexpand (true);
-        interval_scale.set_margin_start (FLOW_BOX_MARGIN);
-        interval_scale.set_margin_end (FLOW_BOX_MARGIN);
-        interval_scale.set_margin_top (FLOW_BOX_MARGIN);
-        interval_scale.set_margin_bottom (FLOW_BOX_MARGIN);
-        interval_value_label = new Label ("");
-        interval_value_label.set_halign (Align.END);
-        interval_scale.value_changed.connect ( () => interval_value_label.label = "%d ms".printf ( (int)interval_scale.get_value ()));
-
-        var scales_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        scales_box.set_margin_start (FLOW_BOX_MARGIN);
-        scales_box.set_margin_end (FLOW_BOX_MARGIN);
-        scales_box.set_margin_top (FLOW_BOX_MARGIN);
-        scales_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        scales_box.append (new Label ("Duracion"));
-        scales_box.append (duracion_scale);
-        scales_box.append (duracion_value_label);
-        scales_box.append (new Label ("Autostart"));
-        scales_box.append (autostart_scale);
-        scales_box.append (autostart_value_label);
-        scales_box.append (new Label ("Interval"));
-        scales_box.append (interval_scale);
-        scales_box.append (interval_value_label);
-
         var logging_label = new Label ("Logging");
         logging_label.set_valign (Align.CENTER);
         logging_label.set_margin_top (FLOW_BOX_MARGIN);
@@ -1294,7 +1264,58 @@ public class MangoJuice : Adw.Application {
         logging_label.set_attributes (attr_list);
 
         parent_box.append (logging_label);
-        parent_box.append (scales_box);
+
+        var scales_flow_box = new FlowBox ();
+        scales_flow_box.set_homogeneous (true);
+        scales_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        scales_flow_box.set_max_children_per_line (3);
+        scales_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        scales_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        scales_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        scales_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        scales_flow_box.set_selection_mode (SelectionMode.NONE);
+
+        duracion_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 200, 1);
+        duracion_scale.set_value (30);
+        duracion_scale.set_size_request (150, -1);
+        duracion_scale.set_hexpand (true);
+        duracion_value_label = new Label ("");
+        duracion_value_label.set_halign (Align.END);
+        duracion_scale.value_changed.connect (() => duracion_value_label.label = "%d s".printf ((int)duracion_scale.get_value ()));
+
+        autostart_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 30, 1);
+        autostart_scale.set_value (0);
+        autostart_scale.set_hexpand (true);
+        autostart_value_label = new Label ("");
+        autostart_value_label.set_halign (Align.END);
+        autostart_scale.value_changed.connect (() => autostart_value_label.label = "%d s".printf ((int)autostart_scale.get_value ()));
+
+        interval_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 500, 1);
+        interval_scale.set_value (100);
+        interval_scale.set_hexpand (true);
+        interval_value_label = new Label ("");
+        interval_value_label.set_halign (Align.END);
+        interval_scale.value_changed.connect (() => interval_value_label.label = "%d ms".printf ((int)interval_scale.get_value ()));
+
+        var pair1 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        pair1.append (new Label ("Duracion"));
+        pair1.append (duracion_scale);
+        pair1.append (duracion_value_label);
+        scales_flow_box.insert (pair1, -1);
+
+        var pair2 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        pair2.append (new Label ("Autostart"));
+        pair2.append (autostart_scale);
+        pair2.append (autostart_value_label);
+        scales_flow_box.insert (pair2, -1);
+
+        var pair3 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        pair3.append (new Label ("Interval"));
+        pair3.append (interval_scale);
+        pair3.append (interval_value_label);
+        scales_flow_box.insert (pair3, -1);
+
+        parent_box.append (scales_flow_box);
     }
 
     public void create_limiters_and_filters (Box performance_box) {
@@ -1425,34 +1446,52 @@ public class MangoJuice : Adw.Application {
         }
         filter_dropdown = new DropDown (filter_model, null);
         filter_dropdown.set_size_request (100, -1);
-        filter_dropdown.set_valign (Align.CENTER);
+        filter_dropdown.set_valign (Align.START);
+        filter_dropdown.set_hexpand (true);
 
         af = new Scale.with_range (Orientation.HORIZONTAL, 0, 16, 1);
         af.set_hexpand (true);
+        af.set_size_request (200, -1);
         af_label = new Label ("");
         af_label.set_halign (Align.END);
-        af.value_changed.connect ( () => af_label.label = "%d".printf ( (int)af.get_value ()));
+        af.value_changed.connect (() => af_label.label = "%d".printf ((int)af.get_value ()));
 
         picmip = new Scale.with_range (Orientation.HORIZONTAL, -16, 16, 1);
         picmip.set_hexpand (true);
+        picmip.set_size_request (200, -1);
         picmip.set_value (0);
         picmip_label = new Label ("");
         picmip_label.set_halign (Align.END);
-        picmip.value_changed.connect ( () => picmip_label.label = "%d".printf ( (int)picmip.get_value ()));
+        picmip.value_changed.connect (() => picmip_label.label = "%d".printf ((int)picmip.get_value ()));
 
-        var filters_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        filters_box.set_margin_start (FLOW_BOX_MARGIN);
-        filters_box.set_margin_end (FLOW_BOX_MARGIN);
-        filters_box.set_margin_top (FLOW_BOX_MARGIN);
-        filters_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        filters_box.append (filter_dropdown);
-        filters_box.append (new Label ("Anisotropic filtering"));
-        filters_box.append (af);
-        filters_box.append (af_label);
-        filters_box.append (new Label ("Mipmap LoD bias"));
-        filters_box.append (picmip);
-        filters_box.append (picmip_label);
-        performance_box.append (filters_box);
+        var filters_flow_box = new FlowBox ();
+        //filters_flow_box.set_homogeneous (true);
+        filters_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        filters_flow_box.set_max_children_per_line (3);
+        filters_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        filters_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        filters_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        filters_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        filters_flow_box.set_selection_mode (SelectionMode.NONE);
+
+        var filter_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        filter_pair.append (new Label ("Filter"));
+        filter_pair.append (filter_dropdown);
+        filters_flow_box.insert (filter_pair, -1);
+
+        var af_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        af_pair.append (new Label ("Anisotropic filtering"));
+        af_pair.append (af);
+        af_pair.append (af_label);
+        filters_flow_box.insert (af_pair, -1);
+
+        var picmip_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        picmip_pair.append (new Label ("Mipmap LoD bias"));
+        picmip_pair.append (picmip);
+        picmip_pair.append (picmip_label);
+        filters_flow_box.insert (picmip_pair, -1);
+
+        performance_box.append (filters_flow_box);
     }
 
     public void load_states_from_file () {
