@@ -190,21 +190,25 @@ public class MangoJuice : Adw.Application {
         window.set_title ("MangoJuice");
 
         var save_action = new SimpleAction ("save", null);
-        save_action.activate.connect (() => {
-            SaveStates.save_states_to_file (this);
-        });
+        save_action.activate.connect (() => SaveStates.save_states_to_file (this));
         window.add_action (save_action);
+        
+        const string[] SAVE_ACCELS = { "<primary>s" };
+        this.set_accels_for_action ("win.save", SAVE_ACCELS);
 
         var quit_action = new SimpleAction ("quit", null);
         quit_action.activate.connect (() => {
+            try {
+                Process.spawn_command_line_sync ("pkill vkcube");
+            } catch (Error e) {
+                stderr.printf ("Error when running the command: %s\n", e.message);
+            }
             this.quit ();
         });
         window.add_action (quit_action);
 
-       // string[] save_accels = { "<primary>s" };
-       // string[] quit_accels = { "<primary>q" };
-       // this.set_accels_for_action ("win.save", save_accels);
-       // this.set_accels_for_action ("win.quit", quit_accels);
+        const string[] QUIT_ACCELS = { "<primary>q" };
+        this.set_accels_for_action ("win.quit", QUIT_ACCELS);
 
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
@@ -284,7 +288,7 @@ public class MangoJuice : Adw.Application {
         var about_item = new GLib.MenuItem ("About", "app.about");
         menu_model.append_item (about_item);
         menu_button.set_menu_model (menu_model);
-        menu_button.set_icon_name ("open-menu-symbolic"); 
+        menu_button.set_icon_name ("open-menu-symbolic");
         header_bar.pack_end (menu_button);
 
         var content_box = new Box (Orientation.VERTICAL, 0);
@@ -1109,10 +1113,10 @@ public class MangoJuice : Adw.Application {
     public void initialize_font_dropdown (Box visual_box) {
         var font_model = new Gtk.StringList (null);
         font_model.append ("Default");
-    
+
         var fonts = new Gee.ArrayList<string> ();
         fonts.add_all (find_fonts ("/usr/share/fonts"));
-    
+
         var local_fonts_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".local/share/fonts");
         if (!local_fonts_dir.query_exists ()) {
             try {
@@ -1122,12 +1126,12 @@ public class MangoJuice : Adw.Application {
             }
         }
         fonts.add_all (find_fonts (local_fonts_dir.get_path ()));
-    
+
         foreach (var font in fonts) {
             var font_name = Path.get_basename (font);
             font_model.append (font_name);
         }
-    
+
         font_dropdown = new DropDown (font_model, null);
         font_dropdown.set_size_request (100, -1);
         font_dropdown.set_valign (Align.CENTER);
@@ -1448,7 +1452,7 @@ public class MangoJuice : Adw.Application {
         if (!file.query_exists ()) {
             return;
         }
-    
+
         try {
             var file_stream = new DataInputStream (file.read ());
             string line;
@@ -1462,11 +1466,11 @@ public class MangoJuice : Adw.Application {
                 load_switch_from_file (line, other_extra_switches, other_extra_config_vars);
                 load_switch_from_file (line, inform_switches, inform_config_vars);
                 load_switch_from_file (line, options_switches, options_config_vars);
-    
+
                 if (line.has_prefix ("custom_command=")) {
                     custom_command_entry.text = line.substring ("custom_command=".length);
                 }
-    
+
                 if (line.has_prefix ("toggle_logging=")) {
                     var logs_key = line.substring ("toggle_logging=".length);
                     for (uint i = 0; i < logs_key_model.get_n_items (); i++) {
@@ -1477,7 +1481,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-    
+
                 if (line.has_prefix ("log_duration=")) {
                     if (duracion_scale != null) {
                         duracion_scale.set_value (int.parse (line.substring ("log_duration=".length)));
@@ -1502,11 +1506,11 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-    
+
                 if (line.has_prefix ("output_folder=")) {
                     custom_logs_path_entry.text = line.substring ("output_folder=".length);
                 }
-    
+
                 if (line.has_prefix ("fps_limit_method=")) {
                     var fps_limit_method_value = line.substring ("fps_limit_method=".length);
                     for (uint i = 0; i < fps_limit_method.model.get_n_items (); i++) {
@@ -1517,7 +1521,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-    
+
                 if (line.has_prefix ("toggle_fps_limit=")) {
                     var toggle_fps_limit_value = line.substring ("toggle_fps_limit=".length);
                     for (uint i = 0; i < toggle_fps_limit.model.get_n_items (); i++) {
@@ -1528,7 +1532,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-    
+
                 if (line.has_prefix ("fps_limit=")) {
                     var fps_limits = line.substring ("fps_limit=".length).split (",");
                     if (fps_limits.length == 3) {
@@ -1537,7 +1541,7 @@ public class MangoJuice : Adw.Application {
                         fps_limit_entry_3.text = fps_limits[2];
                     }
                 }
-    
+
                 if (line.has_prefix ("vsync=")) {
                     var vulkan_config_value = line.substring ("vsync=".length);
                     var vulkan_value = get_vulkan_value_from_config (vulkan_config_value);
@@ -1549,7 +1553,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-    
+
                 if (line.has_prefix ("gl_vsync=")) {
                     var opengl_config_value = line.substring ("gl_vsync=".length);
                     var opengl_value = get_opengl_value_from_config (opengl_config_value);
@@ -1561,7 +1565,7 @@ public class MangoJuice : Adw.Application {
                         }
                     }
                 }
-    
+
                 if (line.has_prefix ("filter=")) {
                     var filter_value = line.substring ("filter=".length);
                     for (uint i = 0; i < filter_dropdown.model.get_n_items (); i++) {
