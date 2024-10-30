@@ -196,20 +196,6 @@ public class MangoJuice : Adw.Application {
         const string[] SAVE_ACCELS = { "<primary>s" };
         this.set_accels_for_action ("win.save", SAVE_ACCELS);
 
-        var quit_action = new SimpleAction ("quit", null);
-        quit_action.activate.connect (() => {
-            try {
-                Process.spawn_command_line_sync ("pkill vkcube");
-            } catch (Error e) {
-                stderr.printf ("Error when running the command: %s\n", e.message);
-            }
-            this.quit ();
-        });
-        window.add_action (quit_action);
-
-        const string[] QUIT_ACCELS = { "<primary>q" };
-        this.set_accels_for_action ("win.quit", QUIT_ACCELS);
-
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
 
@@ -613,7 +599,6 @@ public class MangoJuice : Adw.Application {
         alpha_scale.set_size_request (250, -1);
         alpha_scale.set_value (50);
         alpha_value_label = new Label ("");
-        alpha_value_label.set_halign (Align.END);
         alpha_scale.value_changed.connect ( () => {
             double value = alpha_scale.get_value ();
             alpha_value_label.label = "%.1f".printf (value / 100.0);
@@ -621,8 +606,6 @@ public class MangoJuice : Adw.Application {
 
         var custom_switch_flow_box = new FlowBox ();
         custom_switch_flow_box.set_max_children_per_line (3);
-        custom_switch_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
-        //custom_switch_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
         custom_switch_flow_box.set_margin_start (FLOW_BOX_MARGIN);
         custom_switch_flow_box.set_margin_end (FLOW_BOX_MARGIN);
         custom_switch_flow_box.set_margin_top (FLOW_BOX_MARGIN);
@@ -660,6 +643,7 @@ public class MangoJuice : Adw.Application {
         position_dropdown = new DropDown (position_model, null);
         position_dropdown.set_size_request (100, -1);
         position_dropdown.set_valign (Align.CENTER);
+        position_dropdown.set_hexpand (true);
         position_dropdown.notify["selected-item"].connect ( () => {
             update_position_in_file ( (position_dropdown.selected_item as StringObject)?.get_string () ?? "");
         });
@@ -667,13 +651,15 @@ public class MangoJuice : Adw.Application {
         colums_scale = new Scale.with_range (Orientation.HORIZONTAL, 1, 6, -1);
         colums_scale.set_hexpand (true);
         colums_scale.set_value (3);
+        colums_scale.set_size_request (350, -1);
         colums_value_label = new Label ("");
-        colums_value_label.set_halign (Align.END);
+        colums_value_label.set_halign (Align.CENTER);
         colums_scale.value_changed.connect ( () => colums_value_label.label = "%d".printf ( (int)colums_scale.get_value ()));
 
         toggle_hud_entry = new Entry ();
         toggle_hud_entry.placeholder_text = "Key";
         toggle_hud_entry.text = "Shift_R+F12";
+        toggle_hud_entry.set_hexpand (true);
         toggle_hud_entry.set_size_request (20, -1);
         toggle_hud_entry.set_margin_top (FLOW_BOX_MARGIN);
         toggle_hud_entry.set_margin_bottom (FLOW_BOX_MARGIN);
@@ -681,19 +667,33 @@ public class MangoJuice : Adw.Application {
             update_toggle_hud_in_file (toggle_hud_entry.text);
         });
 
-        var position_colums_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        position_colums_box.set_margin_start (FLOW_BOX_MARGIN);
-        position_colums_box.set_margin_end (FLOW_BOX_MARGIN);
-        position_colums_box.set_margin_top (FLOW_BOX_MARGIN);
-        position_colums_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        position_colums_box.append (new Label ("Position"));
-        position_colums_box.append (position_dropdown);
-        position_colums_box.append (new Label ("Colums"));
-        position_colums_box.append (colums_scale);
-        position_colums_box.append (colums_value_label);
-        position_colums_box.append (new Label ("Toggle HUD"));
-        position_colums_box.append (toggle_hud_entry);
-        visual_box.append (position_colums_box);
+        var position_colums_flow_box = new FlowBox ();
+        position_colums_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        position_colums_flow_box.set_max_children_per_line (3);
+        position_colums_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        position_colums_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        position_colums_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        position_colums_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        position_colums_flow_box.set_selection_mode (SelectionMode.NONE);
+        
+        var position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        position_pair.append (new Label ("Position"));
+        position_pair.append (position_dropdown);
+        position_colums_flow_box.insert (position_pair, -1);
+
+        var colums_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        colums_pair.append (new Label ("Colums"));
+        colums_pair.append (colums_scale);
+        colums_pair.append (colums_value_label);
+        position_colums_flow_box.insert (colums_pair, -1);
+
+        var toggle_hud_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        toggle_hud_pair.append (new Label ("Toggle HUD"));
+        toggle_hud_pair.set_hexpand (true);
+        toggle_hud_pair.append (toggle_hud_entry);
+        position_colums_flow_box.insert (toggle_hud_pair, -1);
+
+        visual_box.append (position_colums_flow_box);
 
         var fonts_label = new Label ("Font");
         fonts_label.set_halign (Align.CENTER);
@@ -710,6 +710,7 @@ public class MangoJuice : Adw.Application {
         font_size_scale = new Scale.with_range (Orientation.HORIZONTAL, 8, 64, 1);
         font_size_scale.set_hexpand (true);
         font_size_scale.set_value (24);
+        font_size_scale.set_size_request (400, -1);
         font_size_value_label = new Label ("");
         font_size_value_label.set_halign (Align.END);
         font_size_scale.value_changed.connect ( () => {
@@ -719,17 +720,28 @@ public class MangoJuice : Adw.Application {
 
         initialize_font_dropdown (visual_box);
 
-        var fonts_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        fonts_box.set_margin_start (FLOW_BOX_MARGIN);
-        fonts_box.set_margin_end (FLOW_BOX_MARGIN);
-        fonts_box.set_margin_top (FLOW_BOX_MARGIN);
-        fonts_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        fonts_box.append (new Label ("Font"));
-        fonts_box.append (font_dropdown);
-        fonts_box.append (new Label ("Size"));
-        fonts_box.append (font_size_scale);
-        fonts_box.append (font_size_value_label);
-        visual_box.append (fonts_box);
+        var fonts_flow_box = new FlowBox ();
+        fonts_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        fonts_flow_box.set_hexpand (true);
+        fonts_flow_box.set_max_children_per_line (2);
+        fonts_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        fonts_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        fonts_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        fonts_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        fonts_flow_box.set_selection_mode (SelectionMode.NONE);
+
+        var font_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        font_pair.append (new Label ("Font"));
+        font_pair.append (font_dropdown);
+        fonts_flow_box.insert (font_pair, -1);
+ 
+        var size_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        size_pair.append (new Label ("Size"));
+        size_pair.append (font_size_scale);
+        size_pair.append (font_size_value_label);
+        fonts_flow_box.insert (size_pair, -1);
+
+        visual_box.append (fonts_flow_box);
 
         var color_label = new Label ("Color");
         color_label.set_halign (Align.CENTER);
@@ -1162,6 +1174,7 @@ public class MangoJuice : Adw.Application {
         font_dropdown = new DropDown (font_model, null);
         font_dropdown.set_size_request (100, -1);
         font_dropdown.set_valign (Align.CENTER);
+        font_dropdown.set_hexpand (true);
         font_dropdown.notify["selected-item"].connect ( () => {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
             var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
@@ -1211,7 +1224,6 @@ public class MangoJuice : Adw.Application {
 
         var flow_box = new FlowBox ();
         flow_box.set_homogeneous (true);
-        //flow_box.set_min_children_per_line (3);
         flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
         flow_box.set_margin_top (FLOW_BOX_MARGIN);
@@ -1465,7 +1477,6 @@ public class MangoJuice : Adw.Application {
         picmip.value_changed.connect (() => picmip_label.label = "%d".printf ((int)picmip.get_value ()));
 
         var filters_flow_box = new FlowBox ();
-        //filters_flow_box.set_homogeneous (true);
         filters_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         filters_flow_box.set_max_children_per_line (3);
         filters_flow_box.set_margin_start (FLOW_BOX_MARGIN);
