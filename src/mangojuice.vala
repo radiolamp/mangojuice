@@ -420,16 +420,13 @@ public class MangoJuice : Adw.Application {
             }
         });
 
-        add_scroll_event_handler (duracion_scale);
-        add_scroll_event_handler (autostart_scale);
-        add_scroll_event_handler (interval_scale);
-        add_scroll_event_handler (af);
-        add_scroll_event_handler (picmip);
-        add_scroll_event_handler (borders_scale);
-        add_scroll_event_handler (colums_scale);
-        add_scroll_event_handler (font_size_scale);
-        add_scroll_event_handler (offset_x_scale);
-        add_scroll_event_handler (offset_y_scale);
+        var scales = new Scale[] {
+            duracion_scale, autostart_scale, interval_scale, af, picmip, borders_scale, colums_scale, font_size_scale,
+            offset_x_scale, offset_y_scale };
+    
+        foreach (var scale in scales) {
+            add_scroll_event_handler (scale);
+        }
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
         var style_manager = Adw.StyleManager.get_default ();
