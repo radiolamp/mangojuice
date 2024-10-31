@@ -53,6 +53,9 @@ sudo ninja -C build uninstall
 ```shell
 flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.yml
 ```
+## Горячие клавиши:
+- 'Ctrl + Q' - Выйти
+- 'Ctrl + S' - Сохранить
 
 ## Поддержка
 

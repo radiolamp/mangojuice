@@ -60,6 +60,10 @@ sudo ninja -C build uninstall
 flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.yml
 ```
 
+## Hotkey:
+- 'Ctrl + Q' - exit
+- 'Ctrl + S' - save
+
 ## Support:
 
 You can support in several ways:
