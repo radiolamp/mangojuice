@@ -57,7 +57,7 @@ sudo ninja -C build uninstall
 
 ## Initial Flatpak support:
 ```shell
-flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.yml
+flatpak-builder --user --install build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml
 ```
 
 ## Hotkey:
