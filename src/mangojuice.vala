@@ -184,6 +184,8 @@ public class MangoJuice : Adw.Application {
     public Scale offset_y_scale;
     public Label offset_x_value_label;
     public Label offset_y_value_label;   
+    public Scale fps_sampling_period_scale;
+    public Label fps_sampling_period_value_label;
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -206,9 +208,7 @@ public class MangoJuice : Adw.Application {
             this.quit ();
         });
         this.add_action (quit_action);
-
-        const string[] QUIT_ACCELS = { "<Ctrl>Q" };
-        this.set_accels_for_action ("app.quit", QUIT_ACCELS);
+        this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
 
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (() => {
@@ -226,7 +226,7 @@ public class MangoJuice : Adw.Application {
             }
         });
         this.add_action (test_action_new);
-        //this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
+        this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
     }
 
     protected override void activate () {
@@ -1619,6 +1619,48 @@ public class MangoJuice : Adw.Application {
         filters_flow_box.insert (picmip_pair, -1);
 
         performance_box.append (filters_flow_box);
+
+        var fps_sampling_period_label = new Label ("Other");
+        fps_sampling_period_label.set_halign (Align.CENTER);
+        fps_sampling_period_label.set_margin_top (FLOW_BOX_MARGIN);
+        fps_sampling_period_label.set_margin_start (FLOW_BOX_MARGIN);
+        fps_sampling_period_label.set_margin_end (FLOW_BOX_MARGIN);
+    
+        var fps_sampling_period_font_description = new Pango.FontDescription ();
+        fps_sampling_period_font_description.set_weight (Pango.Weight.BOLD);
+        var fps_sampling_period_attr_list = new Pango.AttrList ();
+        fps_sampling_period_attr_list.insert (new Pango.AttrFontDesc (fps_sampling_period_font_description));
+        fps_sampling_period_label.set_attributes (fps_sampling_period_attr_list);
+    
+        performance_box.append (fps_sampling_period_label);
+    
+        fps_sampling_period_scale = new Scale.with_range (Orientation.HORIZONTAL, 250, 2000, 1);
+        fps_sampling_period_scale.set_hexpand (true);
+        fps_sampling_period_scale.set_size_request (200, -1);
+        fps_sampling_period_scale.set_value (500);
+        fps_sampling_period_value_label = new Label ("");
+        fps_sampling_period_value_label.set_halign (Align.END);
+        fps_sampling_period_scale.value_changed.connect (() => {
+            fps_sampling_period_value_label.label = "%d ms".printf ((int)fps_sampling_period_scale.get_value ());
+            update_fps_sampling_period_in_file ("%d".printf ((int)fps_sampling_period_scale.get_value ()));
+        });
+    
+        var fps_sampling_period_flow_box = new FlowBox ();
+        fps_sampling_period_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        fps_sampling_period_flow_box.set_max_children_per_line (1);
+        fps_sampling_period_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        fps_sampling_period_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        fps_sampling_period_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        fps_sampling_period_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        fps_sampling_period_flow_box.set_selection_mode (SelectionMode.NONE);
+    
+        var fps_sampling_period_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        fps_sampling_period_pair.append (new Label ("FPS Sampling"));
+        fps_sampling_period_pair.append (fps_sampling_period_scale);
+        fps_sampling_period_pair.append (fps_sampling_period_value_label);
+        fps_sampling_period_flow_box.insert (fps_sampling_period_pair, -1);
+    
+        performance_box.append (fps_sampling_period_flow_box);
     }
 
     public void load_states_from_file () {
@@ -2017,6 +2059,15 @@ public class MangoJuice : Adw.Application {
                         offset_y_scale.set_value (int.parse (line.substring ("offset_y=".length)));
                         if (offset_y_value_label != null) {
                             offset_y_value_label.label = "%d".printf ((int)offset_y_scale.get_value ());
+                        }
+                    }
+                }
+
+                if (line.has_prefix ("fps_sampling_period=")) {
+                    if (fps_sampling_period_scale != null) {
+                        fps_sampling_period_scale.set_value (int.parse (line.substring ("fps_sampling_period=".length)));
+                        if (fps_sampling_period_value_label != null) {
+                            fps_sampling_period_value_label.label = "%d ms".printf ((int)fps_sampling_period_scale.get_value ());
                         }
                     }
                 }
@@ -2941,6 +2992,34 @@ public class MangoJuice : Adw.Application {
             while ((line = file_stream.read_line ()) != null) {
                 if (line.has_prefix ("offset_y=")) {
                     line = "offset_y=%s".printf (offset_y_value);
+                }
+                lines.add (line);
+            }
+    
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+
+    public void update_fps_sampling_period_in_file (string fps_sampling_period_value) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+    
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ((line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("fps_sampling_period=")) {
+                    line = "fps_sampling_period=%s".printf (fps_sampling_period_value);
                 }
                 lines.add (line);
             }

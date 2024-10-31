@@ -221,6 +221,10 @@ public class SaveStates {
                 }
             }
 
+            if (mango_juice.fps_sampling_period_scale != null) {
+                data_stream.put_string ("fps_sampling_period=%d\n".printf ((int)mango_juice.fps_sampling_period_scale.get_value ()));
+            }
+
             if (mango_juice.gpu_text_entry != null) {
                 var gpu_text = mango_juice.gpu_text_entry.text;
                 if (gpu_text != "") {
