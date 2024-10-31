@@ -326,8 +326,20 @@ public class MangoJuice : Adw.Application {
         });
         this.add_action (test_action);
 
+        var save_as_action = new SimpleAction ("save_as", null);
+        save_as_action.activate.connect (on_save_as_button_clicked);
+        this.add_action (save_as_action);
+
+        var restore_config_action = new SimpleAction ("restore_config", null);
+        restore_config_action.activate.connect (on_restore_config_button_clicked);
+        this.add_action (restore_config_action);
+
         var menu_button = new MenuButton ();
         var menu_model = new GLib.Menu ();
+        var save_as_item = new GLib.MenuItem ("Save As", "app.save_as");
+        menu_model.append_item (save_as_item);
+        var restore_config_item = new GLib.MenuItem ("Restore", "app.restore_config");
+        menu_model.append_item (restore_config_item);
         var about_item = new GLib.MenuItem ("About", "app.about");
         menu_model.append_item (about_item);
         menu_button.set_menu_model (menu_model);
@@ -2820,6 +2832,80 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf ("Error writing to the file: %s\n", e.message);
         }
+    }
+    
+    public void on_save_as_button_clicked () {
+        var dialog = new Gtk.FileDialog ();
+        dialog.set_title ("Save MangoHud.conf As");
+        dialog.set_accept_label ("Save");
+    
+        dialog.save.begin (this.active_window, null, (obj, res) => {
+            try {
+                var file = dialog.save.end (res);
+                save_config_to_file (file.get_path ());
+            } catch (Error e) {
+                stderr.printf ("Error when saving the file: %s\n", e.message);
+            }
+        });
+    }
+
+    public void save_config_to_file (string file_path) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            stderr.printf ("MangoHud.conf does not exist.\n");
+            return;
+        }
+    
+        try {
+            var input_stream = new DataInputStream (file.read ());
+            var output_stream = new DataOutputStream (File.new_for_path (file_path).replace (null, false, FileCreateFlags.NONE));
+    
+            string line;
+            while ((line = input_stream.read_line ()) != null) {
+                output_stream.put_string (line + "\n");
+            }
+    
+            output_stream.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+
+    public void on_restore_config_button_clicked () {
+        var dialog = new Gtk.FileDialog ();
+        dialog.set_title ("Select Config File to Restore");
+        dialog.set_accept_label ("Restore");
+    
+        dialog.open.begin (this.active_window, null, (obj, res) => {
+            try {
+                var file = dialog.open.end (res);
+                restore_config_from_file (file.get_path ());
+            } catch (Error e) {
+                stderr.printf ("Error when selecting a file: %s\n", e.message);
+            }
+        });
+    }
+
+    public void restore_config_from_file (string file_path) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+    
+        try {
+            var input_stream = new DataInputStream (File.new_for_path (file_path).read ());
+            var output_stream = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+    
+            string line;
+            while ((line = input_stream.read_line ()) != null) {
+                output_stream.put_string (line + "\n");
+            }
+    
+            output_stream.close ();
+            stdout.printf ("Configuration restored from %s\n", file_path);
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+        load_states_from_file ();
     }
 
     public void on_about_button_clicked () {
