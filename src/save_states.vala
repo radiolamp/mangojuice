@@ -40,8 +40,8 @@ public class SaveStates {
             order_map.set ("inform_start", inform_start);
 
             var inform_end = new ArrayList<int> ();
-            inform_end.add (8);
-            for (int i = 4; i < 8; i++) {
+            inform_end.add (9);
+            for (int i = 4; i < 9; i++) {
                 inform_end.add (i);
             }
             order_map.set ("inform_end", inform_end);

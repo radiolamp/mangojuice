@@ -88,7 +88,7 @@ public class MangoJuice : Adw.Application {
         "media_player", "network", "full", "log_versioning", "upload_logs"
     };
     public string[] inform_config_vars = {
-        "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "present_mode"
+        "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
     };
     public string[] options_config_vars = {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display"
@@ -121,7 +121,7 @@ public class MangoJuice : Adw.Application {
         "Media", "Network", "Full ON", "Log Versioning", "Upload Results "
     };
     public string[] inform_label_texts = {
-        "FPS", "FPS Color", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame", "VPS"
+        "FPS", "FPS Color", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame", "Temt °F", "VPS" 
     };
     public bool test_button_pressed = false;
     public Entry custom_text_center_entry;
