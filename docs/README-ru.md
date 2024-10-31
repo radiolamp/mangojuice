@@ -56,6 +56,7 @@ flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.y
 ## Горячие клавиши:
 - 'Ctrl + Q' - Выйти
 - 'Ctrl + S' - Сохранить
+- 'Ctrl + T' - Test
 
 ## Поддержка
 

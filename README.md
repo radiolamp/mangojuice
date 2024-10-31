@@ -61,8 +61,9 @@ flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.y
 ```
 
 ## Hotkey:
-- 'Ctrl + Q' - exit
-- 'Ctrl + S' - save
+- 'Ctrl + Q' - Exit
+- 'Ctrl + S' - Save
+- 'Ctrl + T' - Test
 
 ## Support:
 
