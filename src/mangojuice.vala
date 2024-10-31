@@ -428,6 +428,8 @@ public class MangoJuice : Adw.Application {
         add_scroll_event_handler (borders_scale);
         add_scroll_event_handler (colums_scale);
         add_scroll_event_handler (font_size_scale);
+        add_scroll_event_handler (offset_x_scale);
+        add_scroll_event_handler (offset_y_scale);
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
         var style_manager = Adw.StyleManager.get_default ();
