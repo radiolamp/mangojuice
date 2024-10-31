@@ -180,6 +180,11 @@ public class MangoJuice : Adw.Application {
     public ColorDialogButton media_player_color_button;
     public ColorDialogButton network_color_button;
 
+    public Scale offset_x_scale;
+    public Scale offset_y_scale;
+    public Label offset_x_value_label;
+    public Label offset_y_value_label;   
+
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
         var quit_action = new SimpleAction ("quit", null);
@@ -204,7 +209,7 @@ public class MangoJuice : Adw.Application {
 
         const string[] QUIT_ACCELS = { "<Ctrl>Q" };
         this.set_accels_for_action ("app.quit", QUIT_ACCELS);
-        
+
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (() => {
             try {
@@ -680,7 +685,7 @@ public class MangoJuice : Adw.Application {
         custom_switch_flow_box.set_margin_top (FLOW_BOX_MARGIN);
         custom_switch_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         custom_switch_flow_box.set_selection_mode (SelectionMode.NONE);
-        
+
         var custom_switch_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         custom_switch_pair.append (custom_switch_label);
         custom_switch_pair.append (custom_switch);
@@ -744,7 +749,7 @@ public class MangoJuice : Adw.Application {
         position_colums_flow_box.set_margin_top (FLOW_BOX_MARGIN);
         position_colums_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         position_colums_flow_box.set_selection_mode (SelectionMode.NONE);
-        
+
         var position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         position_pair.append (new Label ("Position"));
         position_pair.append (position_dropdown);
@@ -763,6 +768,48 @@ public class MangoJuice : Adw.Application {
         position_colums_flow_box.insert (toggle_hud_pair, -1);
 
         visual_box.append (position_colums_flow_box);
+
+        offset_x_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 1000, 1);
+        offset_x_scale.set_hexpand (true);
+        offset_x_scale.set_size_request (250, -1);
+        offset_x_value_label = new Label ("");
+        offset_x_value_label.set_halign (Align.END);
+        offset_x_scale.value_changed.connect (() => {
+            offset_x_value_label.label = "%d".printf ((int)offset_x_scale.get_value ());
+            update_offset_x_in_file ("%d".printf ((int)offset_x_scale.get_value ()));
+        });
+
+        offset_y_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 1000, 1);
+        offset_y_scale.set_hexpand (true);
+        offset_y_scale.set_size_request (250, -1);
+        offset_y_value_label = new Label ("");
+        offset_y_value_label.set_halign (Align.END);
+        offset_y_scale.value_changed.connect (() => {
+            offset_y_value_label.label = "%d".printf ((int)offset_y_scale.get_value ());
+            update_offset_y_in_file ("%d".printf ((int)offset_y_scale.get_value ()));
+        });
+
+        var offset_flow_box = new FlowBox ();
+        offset_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        offset_flow_box.set_max_children_per_line (2);
+        offset_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        offset_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        offset_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        offset_flow_box.set_selection_mode (SelectionMode.NONE);
+
+        var offset_x_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        offset_x_pair.append (new Label ("Offset X"));
+        offset_x_pair.append (offset_x_scale);
+        offset_x_pair.append (offset_x_value_label);
+        offset_flow_box.insert (offset_x_pair, -1);
+    
+        var offset_y_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        offset_y_pair.append (new Label ("Offset Y"));
+        offset_y_pair.append (offset_y_scale);
+        offset_y_pair.append (offset_y_value_label);
+        offset_flow_box.insert (offset_y_pair, -1);
+ 
+        visual_box.append (offset_flow_box);
 
         var fonts_label = new Label ("Font");
         fonts_label.set_halign (Align.CENTER);
@@ -1956,6 +2003,24 @@ public class MangoJuice : Adw.Application {
                     network_color_button.set_rgba (rgba);
                 }
 
+                if (line.has_prefix ("offset_x=")) {
+                    if (offset_x_scale != null) {
+                        offset_x_scale.set_value (int.parse (line.substring ("offset_x=".length)));
+                        if (offset_x_value_label != null) {
+                            offset_x_value_label.label = "%d".printf ((int)offset_x_scale.get_value ());
+                        }
+                    }
+                }
+            
+                if (line.has_prefix ("offset_y=")) {
+                    if (offset_y_scale != null) {
+                        offset_y_scale.set_value (int.parse (line.substring ("offset_y=".length)));
+                        if (offset_y_value_label != null) {
+                            offset_y_value_label.label = "%d".printf ((int)offset_y_scale.get_value ());
+                        }
+                    }
+                }
+
             }
         } catch (Error e) {
             stderr.printf ("Error reading the file: %s\n", e.message);
@@ -2824,6 +2889,62 @@ public class MangoJuice : Adw.Application {
                 lines.add (line);
             }
 
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+
+    public void update_offset_x_in_file (string offset_x_value) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+    
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ((line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("offset_x=")) {
+                    line = "offset_x=%s".printf (offset_x_value);
+                }
+                lines.add (line);
+            }
+    
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
+    
+    public void update_offset_y_in_file (string offset_y_value) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+    
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ((line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("offset_y=")) {
+                    line = "offset_y=%s".printf (offset_y_value);
+                }
+                lines.add (line);
+            }
+    
             var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
             foreach (var l in lines) {
                 file_stream_write.put_string (l + "\n");
