@@ -1,7 +1,6 @@
 // save_states.vala
 
 using Gtk;
-using Adw;
 using Gee;
 
 public class SaveStates {
@@ -21,7 +20,7 @@ public class SaveStates {
             if (mango_juice.offset_x_scale != null) {
                 data_stream.put_string ("offset_x=%d\n".printf ((int)mango_juice.offset_x_scale.get_value ()));
             }
-                        
+
             if (mango_juice.offset_y_scale != null) {
                 data_stream.put_string ("offset_y=%d\n".printf ((int)mango_juice.offset_y_scale.get_value ()));
             }

@@ -1,7 +1,6 @@
 // load_states.vala
 
 using Gtk;
-using Adw;
 using Gee;
 
 public class LoadStates {
