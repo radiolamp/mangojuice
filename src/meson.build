@@ -6,7 +6,8 @@ deps = [
 sources = files(
     'about_dialog.vala',
     'mangojuice.vala',
-    'save_states.vala'
+    'save_states.vala',
+    'load_states.vala'
 )
 
 executable(
