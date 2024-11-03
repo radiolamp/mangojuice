@@ -9,7 +9,7 @@ namespace AboutDialog {
             license_type = Gtk.License.GPL_3_0,
         };
 
-        dialog.add_link ("MangoHud на GitHub", "https://github.com/radiolamp/mangojuice");
+        dialog.add_link ("MangoJuice на GitHub", "https://github.com/radiolamp/mangojuice");
         dialog.present (parent_window);
     }
 }
