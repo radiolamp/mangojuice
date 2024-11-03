@@ -426,6 +426,7 @@ public class MangoJuice : Adw.Application {
     
         foreach (var scale in scales) {
             add_scroll_event_handler (scale);
+            add_value_changed_handler (scale);
         }
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
@@ -475,6 +476,12 @@ public class MangoJuice : Adw.Application {
 
     private bool ignore_scroll (double dx, double dy) {
         return true;
+    }
+
+    public void add_value_changed_handler (Scale scale) {
+        scale.value_changed.connect (() => {
+            SaveStates.save_states_to_file (this);
+        });
     }
 
     public void initialize_switches_and_labels (Box metrics_box, Box extras_box, Box performance_box, Box visual_box) {
@@ -675,6 +682,7 @@ public class MangoJuice : Adw.Application {
         alpha_scale.value_changed.connect ( () => {
             double value = alpha_scale.get_value ();
             alpha_value_label.label = "%.1f".printf (value / 100.0);
+            SaveStates.save_states_to_file (this);
         });
 
         var custom_switch_flow_box = new FlowBox ();
@@ -1661,19 +1669,6 @@ public class MangoJuice : Adw.Application {
     
         performance_box.append (fps_sampling_period_flow_box);
     }
-
-    //public void load_switch_from_file (string line, Switch[] switches, string[] config_vars) {
-    //    for (int i = 0; i < config_vars.length; i++) {
-    //        string config_var = config_vars[i];
-    //        if (config_var == "io_read \n io_write") {
-    //            if (line == "io_read" || line == "io_write") {
-    //                switches[i].active = true;
-    //            }
-    //        } else if (line == config_var) {
-    //            switches[i].active = true;
-    //        }
-    //    }
-    //}
 
     public void restart_vkcube () {
         try {
