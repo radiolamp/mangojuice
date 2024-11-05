@@ -647,6 +647,9 @@ public class MangoJuice : Adw.Application {
         custom_text_center_entry = new Entry ();
         custom_text_center_entry.placeholder_text = "You text";
         custom_text_center_entry.hexpand = true;
+        custom_text_center_entry.changed.connect (() => {
+            SaveStates.save_states_to_file (this);
+        });
 
         var customize_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         customize_box.set_margin_start (FLOW_BOX_MARGIN);
@@ -746,6 +749,7 @@ public class MangoJuice : Adw.Application {
         toggle_hud_entry.set_margin_bottom (FLOW_BOX_MARGIN);
         toggle_hud_entry.changed.connect ( () => {
             update_toggle_hud_in_file (toggle_hud_entry.text);
+            SaveStates.save_states_to_file (this);
         });
 
         var position_colums_flow_box = new FlowBox ();
@@ -908,6 +912,7 @@ public class MangoJuice : Adw.Application {
         cpu_color_button.notify["rgba"].connect ( () => {
             var rgba = cpu_color_button.get_rgba ().copy ();
             update_cpu_color_in_file (rgba_to_hex (rgba));
+            SaveStates.save_states_to_file (this);
         });
 
         gpu_text_entry = new Entry ();
@@ -915,6 +920,7 @@ public class MangoJuice : Adw.Application {
         gpu_text_entry.hexpand = true;
         gpu_text_entry.changed.connect ( () => {
             update_gpu_text_in_file (gpu_text_entry.text);
+            SaveStates.save_states_to_file (this);
         });
 
         cpu_text_entry = new Entry ();
@@ -922,6 +928,7 @@ public class MangoJuice : Adw.Application {
         cpu_text_entry.hexpand = true;
         cpu_text_entry.changed.connect ( () => {
             update_cpu_text_in_file (cpu_text_entry.text);
+            SaveStates.save_states_to_file (this);
         });
 
         var color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -941,6 +948,7 @@ public class MangoJuice : Adw.Application {
         fps_value_entry_1.hexpand = true;
         fps_value_entry_1.changed.connect ( () => {
             update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
+            SaveStates.save_states_to_file (this);
         });
 
         fps_value_entry_2 = new Entry ();
@@ -949,6 +957,7 @@ public class MangoJuice : Adw.Application {
         fps_value_entry_2.hexpand = true;
         fps_value_entry_2.changed.connect ( () => {
             update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
+            SaveStates.save_states_to_file (this);
         });
 
         var fps_clarge_label = new Label ("Charge FPS");
@@ -1001,6 +1010,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_value_entry_1.hexpand = true;
         gpu_load_value_entry_1.changed.connect ( () => {
             update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
+            SaveStates.save_states_to_file (this);
         });
 
         gpu_load_value_entry_2 = new Entry ();
@@ -1009,6 +1019,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_value_entry_2.hexpand = true;
         gpu_load_value_entry_2.changed.connect ( () => {
             update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
+            SaveStates.save_states_to_file (this);
         });
 
         var gpu_load_clarge_label = new Label ("GPU Load %");
@@ -1061,6 +1072,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_value_entry_1.hexpand = true;
         cpu_load_value_entry_1.changed.connect ( () => {
             update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
+            SaveStates.save_states_to_file (this);
         });
 
         cpu_load_value_entry_2 = new Entry ();
@@ -1069,6 +1081,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_value_entry_2.hexpand = true;
         cpu_load_value_entry_2.changed.connect ( () => {
             update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
+            SaveStates.save_states_to_file (this);
         });
 
         var cpu_load_clarge_label = new Label ("CPU Load %");
@@ -1302,6 +1315,7 @@ public class MangoJuice : Adw.Application {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
             var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
             update_font_file_in_file (selected_font_path);
+            SaveStates.save_states_to_file (this);
         });
     }
 
@@ -1479,6 +1493,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_1.hexpand = true;
         fps_limit_entry_1.changed.connect ( () => {
             update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+            SaveStates.save_states_to_file (this);
         });
 
         fps_limit_entry_2 = new Entry ();
@@ -1486,6 +1501,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_2.hexpand = true;
         fps_limit_entry_2.changed.connect ( () => {
             update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+            SaveStates.save_states_to_file (this);
         });
 
         fps_limit_entry_3 = new Entry ();
@@ -1493,6 +1509,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_3.hexpand = true;
         fps_limit_entry_3.changed.connect ( () => {
             update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+            SaveStates.save_states_to_file (this);
         });
 
         var toggle_fps_limit_model = new Gtk.StringList (null);
@@ -1532,12 +1549,18 @@ public class MangoJuice : Adw.Application {
             vulkan_model.append (item);
         }
         vulkan_dropdown = new DropDown (vulkan_model, null);
-
+        vulkan_dropdown.notify["selected-item"].connect (() => {
+            save_and_restart ();
+        });
+    
         var opengl_model = new Gtk.StringList (null);
         foreach (var item in opengl_values) {
             opengl_model.append (item);
         }
         opengl_dropdown = new DropDown (opengl_model, null);
+        opengl_dropdown.notify["selected-item"].connect (() => {
+            save_and_restart ();
+        });
 
         var vulkan_label = new Label ("Vulkan");
         vulkan_label.set_halign (Align.START);
@@ -1686,6 +1709,19 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf ("Error when restarting glxgears: %s\n", e.message);
         }
+    }
+
+    public void restart_vkcube_or_glxgears () {
+        if (is_vkcube_running ()) {
+            restart_vkcube ();
+        } else if (is_glxgears_running ()) {
+            restart_glxgears ();
+        }
+    }
+
+    public void save_and_restart () {
+        SaveStates.save_states_to_file (this);
+        restart_vkcube_or_glxgears ();
     }
 
     public bool is_vkcube_running () {
