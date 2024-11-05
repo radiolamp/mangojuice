@@ -420,6 +420,17 @@ public class MangoJuice : Adw.Application {
             }
         });
 
+        gpu_switches[4].notify["active"].connect ( () => {
+            if (gpu_switches[4].active) {
+                gpu_switches[2].active = true;
+            }
+        });
+        gpu_switches[2].notify["active"].connect ( () => {
+            if (!gpu_switches[2].active) {
+                gpu_switches[4].active = false;
+            }
+        });
+
         var scales = new Scale[] {
             duracion_scale, autostart_scale, interval_scale, af, picmip, borders_scale, colums_scale, font_size_scale,
             offset_x_scale, offset_y_scale };
@@ -551,7 +562,8 @@ public class MangoJuice : Adw.Application {
         bool any_gpu_switch_active = false;
 
         for (int i = 0; i < gpu_switches.length; i++) {
-            if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name" && gpu_config_vars[i] != "engine_version") {
+            if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name"
+                && gpu_config_vars[i] != "engine_version" && gpu_config_vars[i] != "gpu_mem_clock") {
                 any_gpu_switch_active = true;
                 break;
             }
@@ -1285,7 +1297,7 @@ public class MangoJuice : Adw.Application {
 
     }
 
-    public void initialize_font_dropdown (Box visual_box) {
+        public void initialize_font_dropdown (Box visual_box) {
         var font_model = new Gtk.StringList (null);
         font_model.append ("Default");
 
@@ -1309,12 +1321,28 @@ public class MangoJuice : Adw.Application {
 
         font_dropdown = new DropDown (font_model, null);
         font_dropdown.set_hexpand (true);
-        font_dropdown.notify["selected-item"].connect ( () => {
+        font_dropdown.set_size_request (300, -1);
+        font_dropdown.notify["selected-item"].connect (() => {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
             var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
             update_font_file_in_file (selected_font_path);
             SaveStates.save_states_to_file (this);
         });
+
+        var factory = new Gtk.SignalListItemFactory ();
+        factory.setup.connect ((item) => {
+            var list_item = item as Gtk.ListItem;
+            var label = new Gtk.Label (null);
+            label.set_ellipsize (Pango.EllipsizeMode.END);
+            label.set_xalign (0.0f);
+            list_item.set_child (label);
+        });
+        factory.bind.connect ((item) => {
+            var list_item = item as Gtk.ListItem;
+            var label = list_item.get_child () as Gtk.Label;
+            label.label = (list_item.get_item () as StringObject)?.get_string () ?? "";
+        });
+        font_dropdown.set_factory (factory);
     }
 
     public string find_font_path_by_name (string font_name, Gee.List<string> fonts) {
