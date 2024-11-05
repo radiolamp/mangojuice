@@ -1308,8 +1308,6 @@ public class MangoJuice : Adw.Application {
         }
 
         font_dropdown = new DropDown (font_model, null);
-        font_dropdown.set_size_request (100, -1);
-        font_dropdown.set_valign (Align.CENTER);
         font_dropdown.set_hexpand (true);
         font_dropdown.notify["selected-item"].connect ( () => {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
