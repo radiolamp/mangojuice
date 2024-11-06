@@ -829,7 +829,7 @@ public class MangoJuice : Adw.Application {
 
         visual_box.append (position_colums_flow_box);
 
-        offset_x_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 1000, 1);
+        offset_x_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 1500, 1);
         offset_x_scale.set_hexpand (true);
         offset_x_scale.set_size_request (250, -1);
         offset_x_value_label = new Label ("");
@@ -839,7 +839,7 @@ public class MangoJuice : Adw.Application {
             update_offset_x_in_file ("%d".printf ((int)offset_x_scale.get_value ()));
         });
 
-        offset_y_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 1000, 1);
+        offset_y_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 1500, 1);
         offset_y_scale.set_hexpand (true);
         offset_y_scale.set_size_request (250, -1);
         offset_y_value_label = new Label ("");
