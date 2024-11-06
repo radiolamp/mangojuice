@@ -601,10 +601,13 @@ public class MangoJuice : Adw.Application {
         intel_power_fix_button.clicked.connect ( () => {
             try {
                 Process.spawn_command_line_sync ("pkexec chmod 0644 /sys/class/powercap/intel-rapl\\:0/energy_uj");
+                check_file_permissions ();
             } catch (Error e) {
                 stderr.printf ("Error when executing the command: %s\n", e.message);
             }
         });
+
+        check_file_permissions ();
 
         logs_key_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" }) {
@@ -2747,6 +2750,36 @@ public class MangoJuice : Adw.Application {
             stderr.printf ("Error writing to the file: %s\n", e.message);
         }
         LoadStates.load_states_from_file (this);
+    }
+
+    public void check_file_permissions () {
+        try {
+            File file = File.new_for_path ("/sys/class/powercap/intel-rapl:0/energy_uj");
+            if (!file.query_exists ()) {
+                stderr.printf ("File does not exist: %s\n", file.get_path ());
+                return;
+            }
+
+            string[] argv = { "stat", "-c", "%a", file.get_path () };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+
+            if (exit_status == 0) {
+                string permissions = standard_output.strip ();
+
+                if (permissions == "644") {
+                    intel_power_fix_button.add_css_class ("suggested-action");
+                } else {
+                    intel_power_fix_button.remove_css_class ("suggested-action");
+                }
+            } else {
+                stderr.printf ("Error getting file permissions: %s\n", standard_error);
+            }
+        } catch (Error e) {
+            stderr.printf ("Error checking file permissions: %s\n", e.message);
+        }
     }
 
     public void on_about_button_clicked () {
