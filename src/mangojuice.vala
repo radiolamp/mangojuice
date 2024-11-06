@@ -169,7 +169,6 @@ public class MangoJuice : Adw.Application {
     public ColorDialogButton cpu_load_color_button_1;
     public ColorDialogButton cpu_load_color_button_2;
     public ColorDialogButton cpu_load_color_button_3;
-
     public ColorDialogButton background_color_button;
     public ColorDialogButton frametime_color_button;
     public ColorDialogButton vram_color_button;
@@ -179,13 +178,15 @@ public class MangoJuice : Adw.Application {
     public ColorDialogButton text_color_button;
     public ColorDialogButton media_player_color_button;
     public ColorDialogButton network_color_button;
-
+    public Entry blacklist_entry;
     public Scale offset_x_scale;
     public Scale offset_y_scale;
     public Label offset_x_value_label;
     public Label offset_y_value_label;   
     public Scale fps_sampling_period_scale;
     public Label fps_sampling_period_value_label;
+    public Button mangohud_global_button;
+    public bool mangohud_global_enabled = false;
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -208,7 +209,7 @@ public class MangoJuice : Adw.Application {
             this.quit ();
         });
         this.add_action (quit_action);
-        this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
+        //this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
 
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (() => {
@@ -226,7 +227,11 @@ public class MangoJuice : Adw.Application {
             }
         });
         this.add_action (test_action_new);
-        this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
+        //this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
+
+        var mangohud_global_action = new SimpleAction ("mangohud_global", null);
+        mangohud_global_action.activate.connect (on_mangohud_global_button_clicked);
+        this.add_action (mangohud_global_action);
     }
 
     protected override void activate () {
@@ -357,6 +362,7 @@ public class MangoJuice : Adw.Application {
         window.set_content (content_box);
 
         window.present ();
+        check_mangohud_global_status ();
         LoadStates.load_states_from_file (this);
         SaveStates.save_states_to_file (this);
 
@@ -625,26 +631,54 @@ public class MangoJuice : Adw.Application {
             restart_application ();
         });
 
+        blacklist_entry = new Entry ();
+        blacklist_entry.placeholder_text = "Blacklist: (vkcube,WatchDogs2.exe)";
+        blacklist_entry.hexpand = true;
+        blacklist_entry.changed.connect (() => {
+            update_blacklist_in_file (blacklist_entry.text);
+            SaveStates.save_states_to_file (this);
+        });
+
+        var blacklist_flow_box = new FlowBox ();
+        blacklist_flow_box.set_max_children_per_line (1);
+        blacklist_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        blacklist_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        blacklist_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        blacklist_flow_box.set_selection_mode (SelectionMode.NONE);
+
+        var blacklist_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        blacklist_pair.append (blacklist_entry);
+        
+        mangohud_global_button = new Button.with_label ("Mangohud Global");
+        mangohud_global_button.clicked.connect (() => {
+            on_mangohud_global_button_clicked ();
+        });
+        
+        blacklist_pair.append (mangohud_global_button);
+        blacklist_flow_box.insert (blacklist_pair, -1);
+        
+        extras_box.append (blacklist_flow_box);
+    
         var custom_command_flow_box = new FlowBox ();
         custom_command_flow_box.set_max_children_per_line (2);
         custom_command_flow_box.set_margin_start (FLOW_BOX_MARGIN);
         custom_command_flow_box.set_margin_end (FLOW_BOX_MARGIN);
         custom_command_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         custom_command_flow_box.set_selection_mode (SelectionMode.NONE);
-
+    
         var pair1 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         pair1.append (custom_command_entry);
         pair1.append (new Label ("Logs key"));
         pair1.append (logs_key_combo);
         custom_command_flow_box.insert (pair1, -1);
-
+    
         var pair2 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         pair2.append (custom_logs_path_entry);
         pair2.append (logs_path_button);
         pair2.append (intel_power_fix_button);
         pair2.append (reset_button);
         custom_command_flow_box.insert (pair2, -1);
-
+    
         extras_box.append (custom_command_flow_box);
 
         var customize_label = new Label ("Customize");
@@ -2677,6 +2711,34 @@ public class MangoJuice : Adw.Application {
             stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
+
+    public void update_blacklist_in_file (string blacklist_value) {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        var file = config_dir.get_child ("MangoHud.conf");
+        if (!file.query_exists ()) {
+            return;
+        }
+    
+        try {
+            var lines = new ArrayList<string> ();
+            var file_stream = new DataInputStream (file.read ());
+            string line;
+            while ( (line = file_stream.read_line ()) != null) {
+                if (line.has_prefix ("blacklist=")) {
+                    line = "blacklist=%s".printf (blacklist_value);
+                }
+                lines.add (line);
+            }
+    
+            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            foreach (var l in lines) {
+                file_stream_write.put_string (l + "\n");
+            }
+            file_stream_write.close ();
+        } catch (Error e) {
+            stderr.printf ("Error writing to the file: %s\n", e.message);
+        }
+    }
     
     public void on_save_as_button_clicked () {
         var dialog = new Gtk.FileDialog ();
@@ -2779,6 +2841,72 @@ public class MangoJuice : Adw.Application {
             }
         } catch (Error e) {
             stderr.printf ("Error checking file permissions: %s\n", e.message);
+        }
+    }
+
+    public void on_mangohud_global_button_clicked () {
+        if (mangohud_global_enabled) {
+            try {
+                Process.spawn_command_line_sync ("pkexec sed -i '/MANGOHUD=1/d' /etc/environment");
+                mangohud_global_enabled = false;
+                mangohud_global_button.remove_css_class ("suggested-action");
+                check_mangohud_global_status ();
+                show_restart_warning ();
+            } catch (Error e) {
+                stderr.printf ("Error deleting MANGOHUD from /etc/environment: %s\n", e.message);
+            }
+        } else {
+            try {
+                // Используем pkexec для выполнения команды с правами суперпользователя
+                Process.spawn_command_line_sync ("pkexec sh -c 'echo \"MANGOHUD=1\" >> /etc/environment'");
+                mangohud_global_enabled = true;
+                mangohud_global_button.add_css_class ("suggested-action");
+                check_mangohud_global_status ();
+                show_restart_warning ();
+            } catch (Error e) {
+                stderr.printf ("Error restore MANGOHUD from /etc/environment: %s\n", e.message);
+            }
+        }
+    }
+
+    public void show_restart_warning () {
+        var dialog = new Adw.AlertDialog ("Warning", "The changes will take effect only after the system is restarted.");
+        dialog.add_response ("ok", "OK");
+        dialog.add_response ("restart", "Restart");
+        dialog.set_default_response ("ok");
+        dialog.set_response_appearance ("restart", Adw.ResponseAppearance.SUGGESTED);
+
+        dialog.present (this.active_window);
+
+        dialog.response.connect ((response) => {
+            if (response == "restart") {
+                try {
+                    Process.spawn_command_line_sync ("reboot");
+                } catch (Error e) {
+                    stderr.printf ("Error when restarting the system: %s\n", e.message);
+                }
+            }
+            dialog.destroy ();
+        });
+    }
+
+    public void check_mangohud_global_status () {
+        try {
+            string[] argv = { "grep", "MANGOHUD=1", "/etc/environment" };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+    
+            if (exit_status == 0) {
+                mangohud_global_enabled = true;
+                mangohud_global_button.add_css_class ("suggested-action");
+            } else {
+                mangohud_global_enabled = false;
+                mangohud_global_button.remove_css_class ("suggested-action");
+            }
+        } catch (Error e) {
+            stderr.printf ("Error checking the MANGOHUD status: %s\n", e.message);
         }
     }
 

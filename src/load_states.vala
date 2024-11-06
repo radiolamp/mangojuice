@@ -412,6 +412,10 @@ public class LoadStates {
                         }
                     }
                 }
+
+                if (line.has_prefix ("blacklist=")) {
+                    mango_juice.blacklist_entry.text = line.substring ("blacklist=".length);
+                }
             }
         } catch (Error e) {
             stderr.printf ("Error reading the file: %s\n", e.message);
