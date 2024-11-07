@@ -19,11 +19,11 @@
 
 using Gtk;
 
-namespace AboutDialog {
+namespace MangoJuice.About {
     public void show_about_dialog (Widget widget) {
         var dialog = new Adw.AboutDialog () {
-            application_icon = "io.github.radiolamp.mangojuice",
-            application_name = "MangoJuice",
+            application_icon = Config.APP_ID,
+            application_name = Config.APP_NAME,
             developer_name = "Radiolamp",
             translator_credits = _("translator-credits"),
             developers = {
@@ -33,11 +33,11 @@ namespace AboutDialog {
             artists = {},
             documenters = {},
             designers = {},
-            version = "0.7.8",
+            version = Config.VERSION,
             license_type = Gtk.License.GPL_3_0,
             copyright = "© 2024 Radiolamp",
-            issue_url = "https://github.com/radiolamp/mangojuice/issues",
-            website = "https://github.com/radiolamp/mangojuice"
+            issue_url = Config.BUGTRACKER,
+            website = Config.HOMEPAGE
         };
 
         // Translators: don't translate MangoHud

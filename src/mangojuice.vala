@@ -2,7 +2,7 @@ using Gtk;
 using Adw;
 using Gee;
 
-public class MangoJuice : Adw.Application {
+public class MangoJuice.MangoJuiceApplication : Adw.Application {
     public Button save_button;
     public Button reset_button;
     public Button logs_path_button;
@@ -188,7 +188,7 @@ public class MangoJuice : Adw.Application {
     public Button mangohud_global_button;
     public bool mangohud_global_enabled = false;
 
-    public MangoJuice () {
+    public MangoJuiceApplication () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
         var quit_action = new SimpleAction ("quit", null);
         quit_action.activate.connect (() => {
@@ -239,6 +239,10 @@ public class MangoJuice : Adw.Application {
         window.set_default_size (955, 600);
         window.set_title ("MangoJuice");
 
+        if (Config.IS_DEVEL) {
+            window.add_css_class ("devel");
+        }
+
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => SaveStates.save_states_to_file (this));
         window.add_action (save_action);
@@ -281,10 +285,10 @@ public class MangoJuice : Adw.Application {
         visual_scrolled_window.set_vexpand (true);
         visual_scrolled_window.set_child (visual_box);
 
-        view_stack.add_titled (metrics_scrolled_window, "metrics_box", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
-        view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
-        view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
-        view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
+        view_stack.add_titled (metrics_scrolled_window, "metrics_box", "Metrics").icon_name = "metrics-symbolic";
+        view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "extras-symbolic";
+        view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "performance-symbolic";
+        view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "visual-symbolic";
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
@@ -2911,15 +2915,10 @@ public class MangoJuice : Adw.Application {
     }
 
     public void on_about_button_clicked () {
-        AboutDialog.show_about_dialog (this.active_window);
+        MangoJuice.About.show_about_dialog (this.active_window);
     }
 
     public string rgba_to_hex (Gdk.RGBA rgba) {
         return "%02x%02x%02x".printf ((int) (rgba.red * 255), (int) (rgba.green * 255), (int) (rgba.blue * 255));
-    }
-
-    public static int main (string[] args) {
-        var app = new MangoJuice ();
-        return app.run (args);
     }
 }

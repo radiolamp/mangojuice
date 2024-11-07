@@ -3,8 +3,8 @@
 using Gtk;
 using Gee;
 
-public class LoadStates {
-    public static void load_states_from_file (MangoJuice mango_juice) {
+public class MangoJuice.LoadStates {
+    public static void load_states_from_file (MangoJuiceApplication mango_juice) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
         if (!file.query_exists ()) {

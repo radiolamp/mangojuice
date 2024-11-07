@@ -16,6 +16,8 @@ finish-args:
 modules:
   - name: mangojuice
     buildsystem: meson
+    config-opts: 
+      - -Dis_devel=true
     sources:
       - type: dir
         path: ../../

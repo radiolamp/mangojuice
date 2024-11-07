@@ -3,8 +3,8 @@
 using Gtk;
 using Gee;
 
-public class SaveStates {
-    public static void save_states_to_file (MangoJuice mango_juice) {
+public class MangoJuice.SaveStates {
+    public static void save_states_to_file (MangoJuiceApplication mango_juice) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
 

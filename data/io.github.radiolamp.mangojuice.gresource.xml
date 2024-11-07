@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/io/github/radiolamp/mangojuice/icons/scalable/actions/">
+    <file alias="extras-symbolic.svg">assets/icons/extras-symbolic.svg</file>
+    <file alias="metrics-symbolic.svg">assets/icons/metrics-symbolic.svg</file>
+    <file alias="performance-symbolic.svg">assets/icons/performance-symbolic.svg</file>
+    <file alias="visual-symbolic.svg">assets/icons/visual-symbolic.svg</file>
+  </gresource>
+  <gresource prefix="/io/github/radiolamp/mangojuice">
+    <file>style.css</file>
+  </gresource>
+</gresources>
