@@ -608,6 +608,7 @@ public class MangoJuice : Adw.Application {
             try {
                 Process.spawn_command_line_sync ("pkexec chmod 0644 /sys/class/powercap/intel-rapl\\:0/energy_uj");
                 check_file_permissions ();
+                restart_vkcube_or_glxgears ();
             } catch (Error e) {
                 stderr.printf ("Error when executing the command: %s\n", e.message);
             }
