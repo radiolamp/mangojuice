@@ -37,9 +37,11 @@ namespace AboutDialog {
             license_type = Gtk.License.GPL_3_0,
             copyright = "© 2024 Radiolamp",
             issue_url = "https://github.com/radiolamp/mangojuice/issues",
+            website = "https://github.com/radiolamp/mangojuice"
         };
 
-        dialog.add_link ("MangoJuice на GitHub", "https://github.com/radiolamp/mangojuice");
+        // Translators: don't translate MangoHud
+        dialog.add_link (_("MangoHud repository"), "https://github.com/flightlessmango/MangoHud");
         dialog.present (widget);
     }
 }
