@@ -3,16 +3,25 @@ vapi_sources = files(
 )
 
 vala_sources = files(
-    'about_dialog.vala',
-    'load_states.vala',
+    'pages/extras.vala',
+    'pages/metrics.vala',
+    'pages/performance.vala',
+    'pages/visual.vala',
+    'widgets/block.vala',
+    'widgets/titled-switch.vala',
+    'about.vala',
+    'application.vala',
+    'load-states.vala',
     'main.vala',
     'mangojuice.vala',
-    'save_states.vala',
+    'save-states.vala',
+    'utils.vala',
+    'window.vala',
 )
 
 sources = [
   vapi_sources,
-#   blueprints,
+  blueprints,
   vala_sources,
   resources
 ]

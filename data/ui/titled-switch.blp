@@ -1,0 +1,46 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $MangoJuiceTitledSwitch : Adw.Bin {  
+  hexpand: false;
+
+  Box {
+    spacing: 10;
+
+    Switch {
+      valign: center;
+      vexpand: false;
+      hexpand: false;
+      active: bind template.active bidirectional;
+    }
+
+    Box {
+      orientation: vertical;
+      hexpand: true;
+
+      Label {
+        halign: start;
+        hexpand: true;
+        ellipsize: end;
+        label: bind template.title;
+      }
+
+      Label subtitle_label {
+        styles [
+          "dim-label",
+          "caption"
+        ]
+
+        halign: start;
+        hexpand: true;
+        ellipsize: end;
+        natural-wrap-mode: word;
+        label: bind template.subtitle;
+        wrap: true;
+        wrap-mode: char;
+        max-width-chars: 20;
+        lines: 4;
+      }
+    }    
+  }
+}

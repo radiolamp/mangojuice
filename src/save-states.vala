@@ -237,7 +237,7 @@ public class MangoJuice.SaveStates {
             }
 
             if (mango_juice.gpu_color_button != null) {
-                var gpu_color = mango_juice.rgba_to_hex (mango_juice.gpu_color_button.get_rgba ());
+                var gpu_color = rgba_to_hex (mango_juice.gpu_color_button.get_rgba ());
                 if (gpu_color != "") {
                     data_stream.put_string ("gpu_color=%s\n".printf (gpu_color));
                 }
@@ -251,7 +251,7 @@ public class MangoJuice.SaveStates {
             }
 
             if (mango_juice.cpu_color_button != null) {
-                var cpu_color = mango_juice.rgba_to_hex (mango_juice.cpu_color_button.get_rgba ());
+                var cpu_color = rgba_to_hex (mango_juice.cpu_color_button.get_rgba ());
                 if (cpu_color != "") {
                     data_stream.put_string ("cpu_color=%s\n".printf (cpu_color));
                 }
@@ -266,9 +266,9 @@ public class MangoJuice.SaveStates {
             }
 
             if (mango_juice.fps_color_button_1 != null && mango_juice.fps_color_button_2 != null && mango_juice.fps_color_button_3 != null) {
-                var fps_color_1 = mango_juice.rgba_to_hex (mango_juice.fps_color_button_1.get_rgba ());
-                var fps_color_2 = mango_juice.rgba_to_hex (mango_juice.fps_color_button_2.get_rgba ());
-                var fps_color_3 = mango_juice.rgba_to_hex (mango_juice.fps_color_button_3.get_rgba ());
+                var fps_color_1 = rgba_to_hex (mango_juice.fps_color_button_1.get_rgba ());
+                var fps_color_2 = rgba_to_hex (mango_juice.fps_color_button_2.get_rgba ());
+                var fps_color_3 = rgba_to_hex (mango_juice.fps_color_button_3.get_rgba ());
                 if (fps_color_1 != "" && fps_color_2 != "" && fps_color_3 != "") {
                     data_stream.put_string ("fps_color=%s,%s,%s\n".printf (fps_color_1, fps_color_2, fps_color_3));
                 }
@@ -283,9 +283,9 @@ public class MangoJuice.SaveStates {
             }
 
             if (mango_juice.gpu_load_color_button_1 != null && mango_juice.gpu_load_color_button_2 != null && mango_juice.gpu_load_color_button_3 != null) {
-                var gpu_load_color_1 = mango_juice.rgba_to_hex (mango_juice.gpu_load_color_button_1.get_rgba ());
-                var gpu_load_color_2 = mango_juice.rgba_to_hex (mango_juice.gpu_load_color_button_2.get_rgba ());
-                var gpu_load_color_3 = mango_juice.rgba_to_hex (mango_juice.gpu_load_color_button_3.get_rgba ());
+                var gpu_load_color_1 = rgba_to_hex (mango_juice.gpu_load_color_button_1.get_rgba ());
+                var gpu_load_color_2 = rgba_to_hex (mango_juice.gpu_load_color_button_2.get_rgba ());
+                var gpu_load_color_3 = rgba_to_hex (mango_juice.gpu_load_color_button_3.get_rgba ());
                 if (gpu_load_color_1 != "" && gpu_load_color_2 != "" && gpu_load_color_3 != "") {
                     data_stream.put_string ("gpu_load_color=%s,%s,%s\n".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3));
                 }
@@ -300,72 +300,72 @@ public class MangoJuice.SaveStates {
             }
 
             if (mango_juice.cpu_load_color_button_1 != null && mango_juice.cpu_load_color_button_2 != null && mango_juice.cpu_load_color_button_3 != null) {
-                var cpu_load_color_1 = mango_juice.rgba_to_hex (mango_juice.cpu_load_color_button_1.get_rgba ());
-                var cpu_load_color_2 = mango_juice.rgba_to_hex (mango_juice.cpu_load_color_button_2.get_rgba ());
-                var cpu_load_color_3 = mango_juice.rgba_to_hex (mango_juice.cpu_load_color_button_3.get_rgba ());
+                var cpu_load_color_1 = rgba_to_hex (mango_juice.cpu_load_color_button_1.get_rgba ());
+                var cpu_load_color_2 = rgba_to_hex (mango_juice.cpu_load_color_button_2.get_rgba ());
+                var cpu_load_color_3 = rgba_to_hex (mango_juice.cpu_load_color_button_3.get_rgba ());
                 if (cpu_load_color_1 != "" && cpu_load_color_2 != "" && cpu_load_color_3 != "") {
                     data_stream.put_string ("cpu_load_color=%s,%s,%s\n".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3));
                 }
             }
 
             if (mango_juice.background_color_button != null) {
-                var background_color = mango_juice.rgba_to_hex (mango_juice.background_color_button.get_rgba ());
+                var background_color = rgba_to_hex (mango_juice.background_color_button.get_rgba ());
                 if (background_color != "") {
                     data_stream.put_string ("background_color=%s\n".printf (background_color));
                 }
             }
 
             if (mango_juice.frametime_color_button != null) {
-                var frametime_color = mango_juice.rgba_to_hex (mango_juice.frametime_color_button.get_rgba ());
+                var frametime_color = rgba_to_hex (mango_juice.frametime_color_button.get_rgba ());
                 if (frametime_color != "") {
                     data_stream.put_string ("frametime_color=%s\n".printf (frametime_color));
                 }
             }
 
             if (mango_juice.vram_color_button != null) {
-                var vram_color = mango_juice.rgba_to_hex (mango_juice.vram_color_button.get_rgba ());
+                var vram_color = rgba_to_hex (mango_juice.vram_color_button.get_rgba ());
                 if (vram_color != "") {
                     data_stream.put_string ("vram_color=%s\n".printf (vram_color));
                 }
             }
 
             if (mango_juice.ram_color_button != null) {
-                var ram_color = mango_juice.rgba_to_hex (mango_juice.ram_color_button.get_rgba ());
+                var ram_color = rgba_to_hex (mango_juice.ram_color_button.get_rgba ());
                 if (ram_color != "") {
                     data_stream.put_string ("ram_color=%s\n".printf (ram_color));
                 }
             }
 
             if (mango_juice.wine_color_button != null) {
-                var wine_color = mango_juice.rgba_to_hex (mango_juice.wine_color_button.get_rgba ());
+                var wine_color = rgba_to_hex (mango_juice.wine_color_button.get_rgba ());
                 if (wine_color != "") {
                     data_stream.put_string ("wine_color=%s\n".printf (wine_color));
                 }
             }
 
             if (mango_juice.engine_color_button != null) {
-                var engine_color = mango_juice.rgba_to_hex (mango_juice.engine_color_button.get_rgba ());
+                var engine_color = rgba_to_hex (mango_juice.engine_color_button.get_rgba ());
                 if (engine_color != "") {
                     data_stream.put_string ("engine_color=%s\n".printf (engine_color));
                 }
             }
 
             if (mango_juice.text_color_button != null) {
-                var text_color = mango_juice.rgba_to_hex (mango_juice.text_color_button.get_rgba ());
+                var text_color = rgba_to_hex (mango_juice.text_color_button.get_rgba ());
                 if (text_color != "") {
                     data_stream.put_string ("text_color=%s\n".printf (text_color));
                 }
             }
 
             if (mango_juice.media_player_color_button != null) {
-                var media_player_color = mango_juice.rgba_to_hex (mango_juice.media_player_color_button.get_rgba ());
+                var media_player_color = rgba_to_hex (mango_juice.media_player_color_button.get_rgba ());
                 if (media_player_color != "") {
                     data_stream.put_string ("media_player_color=%s\n".printf (media_player_color));
                 }
             }
 
             if (mango_juice.network_color_button != null) {
-                var network_color = mango_juice.rgba_to_hex (mango_juice.network_color_button.get_rgba ());
+                var network_color = rgba_to_hex (mango_juice.network_color_button.get_rgba ());
                 if (network_color != "") {
                     data_stream.put_string ("network_color=%s".printf (network_color));
                 }

@@ -189,7 +189,7 @@ public class MangoJuice.MangoJuiceApplication : Adw.Application {
     public bool mangohud_global_enabled = false;
 
     public MangoJuiceApplication () {
-        Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
+        Object (application_id: Config.APP_ID, flags: ApplicationFlags.DEFAULT_FLAGS);
         var quit_action = new SimpleAction ("quit", null);
         quit_action.activate.connect (() => {
             if (is_vkcube_running ()) {
@@ -1792,36 +1792,6 @@ public class MangoJuice.MangoJuiceApplication : Adw.Application {
         restart_vkcube_or_glxgears ();
     }
 
-    public bool is_vkcube_running () {
-        try {
-            string[] argv = { "pgrep", "vkcube" };
-            int exit_status;
-            string standard_output;
-            string standard_error;
-            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-
-            return exit_status == 0;
-        } catch (Error e) {
-            stderr.printf ("Error checking running processes: %s\n", e.message);
-            return false;
-        }
-    }
-
-    public bool is_glxgears_running () {
-        try {
-            string[] argv = { "pgrep", "glxgears" };
-            int exit_status;
-            string standard_output;
-            string standard_error;
-            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-
-            return exit_status == 0;
-        } catch (Error e) {
-            stderr.printf ("Error checking running processes: %s\n", e.message);
-            return false;
-        }
-    }
-
     public void delete_mangohub_conf () {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
@@ -2918,7 +2888,5 @@ public class MangoJuice.MangoJuiceApplication : Adw.Application {
         MangoJuice.About.show_about_dialog (this.active_window);
     }
 
-    public string rgba_to_hex (Gdk.RGBA rgba) {
-        return "%02x%02x%02x".printf ((int) (rgba.red * 255), (int) (rgba.green * 255), (int) (rgba.blue * 255));
-    }
+    
 }

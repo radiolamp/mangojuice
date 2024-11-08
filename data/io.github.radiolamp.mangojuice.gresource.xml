@@ -8,5 +8,12 @@
   </gresource>
   <gresource prefix="/io/github/radiolamp/mangojuice">
     <file>style.css</file>
+    <file preprocess="xml-stripblanks">ui/block.ui</file>
+    <file preprocess="xml-stripblanks">ui/extras-page.ui</file>
+    <file preprocess="xml-stripblanks">ui/metrics-page.ui</file>
+    <file preprocess="xml-stripblanks">ui/performance-page.ui</file>
+    <file preprocess="xml-stripblanks">ui/titled-switch.ui</file>
+    <file preprocess="xml-stripblanks">ui/visual-page.ui</file>
+    <file preprocess="xml-stripblanks">ui/window.ui</file>
   </gresource>
 </gresources>

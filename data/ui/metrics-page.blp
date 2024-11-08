@@ -1,0 +1,122 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $MangoJuiceMetricsPage : Adw.Bin {
+  ScrolledWindow {
+    hscrollbar-policy: never;
+    propagate-natural-height: true;
+
+    Adw.Clamp {
+      maximum-size: 900;
+      margin-bottom: 24;
+      margin-end: 12;
+      margin-start: 12;
+      margin-top: 12;
+
+      Box {
+        orientation: vertical;
+        spacing: 24;
+
+        $MangoJuiceBlock {
+          title: "Block 1";
+
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            column-spacing: 12;
+            row-spacing: 6;
+
+            $MangoJuiceTitledSwitch sr1 {
+              title: "I'm Row, Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr2 {
+              title: "I'm Row, Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr3 {
+              title: "I'm Row, Hi!";
+              subtitle: "This for you";
+            }
+
+            $MangoJuiceTitledSwitch sr4 {
+              title: "I'm Row, Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr5 {
+              title: "I'm Row, Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr6 {
+              title: "I'm Row, Hi!";
+              subtitle: "This for you";
+            }
+
+            $MangoJuiceTitledSwitch sr7 {
+              title: "I'm Row, Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr8 {
+              title: "I'm Row, Hi!";
+              subtitle: "This for you";
+            }
+          };
+        }
+
+        $MangoJuiceBlock {
+          title: "Block 2";
+
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            column-spacing: 12;
+            row-spacing: 6;
+
+            $MangoJuiceTitledSwitch sr9 {
+              title: "Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr10 {
+              title: "Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr11 {
+              title: "Hi!";
+              subtitle: "This for you";
+            }
+
+            $MangoJuiceTitledSwitch sr12 {
+              title: "Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr13 {
+              title: "Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr14 {
+              title: "Hi!";
+            }
+
+            $MangoJuiceTitledSwitch sr15 {
+              title: "Hi!";
+              subtitle: "This for you";
+            }
+
+            $MangoJuiceTitledSwitch sr16 {
+              title: "Hi!";
+              subtitle: "This option need for big dick";
+            }
+          };
+        }
+      }
+    }
+  }
+}
+
+SizeGroup {
+  widgets [sr1, sr2, sr3, sr4, sr5, sr6, sr7, sr8, sr9, sr10, sr11, sr12, sr13, sr14, sr15, sr16]
+
+  mode: horizontal;
+}

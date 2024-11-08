@@ -49,17 +49,24 @@ if compile_schemas.found()
   args: ['--strict', '--dry-run', meson.current_source_dir()])
 endif
 
-# blueprints = custom_target('blueprints',
-#   input: files(
-#   ),
-#   output: '.',
-#   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
-# )
+blueprints = custom_target('blueprints',
+  input: files(
+    'ui/block.blp',
+    'ui/extras-page.blp',
+    'ui/metrics-page.blp',
+    'ui/performance-page.blp',
+    'ui/titled-switch.blp',
+    'ui/visual-page.blp',
+    'ui/window.blp',
+  ),
+  output: '.',
+  command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
+)
 
 resources = gnome.compile_resources(
     'mangojuice-resources',
     files('@0@.gresource.xml'.format(app_id)),
-    # dependencies: blueprints,
+    dependencies: blueprints,
     source_dir: meson.current_build_dir()
 )
 

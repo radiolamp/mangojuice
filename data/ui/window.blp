@@ -1,0 +1,97 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $MangoJuiceWindow : Adw.ApplicationWindow {
+  width-request: 360;
+  height-request: 294;
+
+  Adw.Breakpoint {
+    condition ("min-width: 750px")
+    setters {
+      view_switcher.policy: wide;
+    }
+  }
+
+  Adw.Breakpoint {
+    condition ("max-width: 450px")
+    setters {
+      view_switcher.visible: false;
+      switcher_bar.reveal: true;
+    }
+  }
+
+  Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar header_bar {
+      [start]
+      Button test_button {
+        label: _("Test");
+      }
+
+      title-widget: Adw.ViewSwitcher view_switcher {
+        policy: narrow;
+        stack: view_stack;
+      };
+
+      [end]
+      MenuButton menu_button {
+        icon-name: "open-menu-symbolic";
+        menu-model: primary_menu;
+      }
+
+      [end]
+      Button save_button {
+        styles [
+          "suggested-action"
+        ]
+
+        label: _("Save");
+      }
+    }
+
+    content: Adw.ToastOverlay toast_overlay {
+      Adw.ViewStack view_stack {
+        Adw.ViewStackPage {
+          name: "metrics";
+          title: _("Metrics");
+          icon-name: "metrics-symbolic";
+          child: $MangoJuiceMetricsPage metrics_page {};
+        }
+
+        Adw.ViewStackPage {
+          name: "extras";
+          title: _("Extras");
+          icon-name: "extras-symbolic";
+          child: $MangoJuiceExtrasPage extras_page {};
+        }
+
+        Adw.ViewStackPage {
+          name: "performance";
+          title: _("Performance");
+          icon-name: "performance-symbolic";
+          child: $MangoJuicePerformancePage performance_page {};
+        }
+
+        Adw.ViewStackPage {
+          name: "visual";
+          title: _("Visual");
+          icon-name: "visual-symbolic";
+          child: $MangoJuiceVisualPage visual_page {};
+        }
+      }
+    };
+
+    [bottom]
+    Adw.ViewSwitcherBar switcher_bar {
+      stack: view_stack;
+    }
+  }
+}
+
+menu primary_menu {
+  section {
+    item (_("_Preferences"), "win.preferences")
+    // item (_("_Keyboard Shortcuts"), "win.show-help-overlay")
+    item (_("_About MangoJuice"), "win.about")
+  }
+}

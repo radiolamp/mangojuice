@@ -1,0 +1,25 @@
+using Gtk 4.0;
+using Adw 1;
+template $MangoJuiceBlock : Adw.Bin {
+  Box {
+    orientation: vertical;
+    spacing: 16;
+
+    Label {
+      styles [
+        "title-2"
+      ]
+
+      halign: start;
+      hexpand: true;
+      ellipsize: end;
+      lines: 2;
+      wrap-mode: word;
+      label: bind template.title;
+    }
+
+    Adw.Bin {
+      child: bind template.content;
+    }
+  }
+}

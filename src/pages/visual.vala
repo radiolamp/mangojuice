@@ -17,7 +17,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-public static int main (string[] argv) {
-    var app = new MangoJuice.Application ();
-    return app.run (argv);
+[GtkTemplate (ui = "/io/github/radiolamp/mangojuice/ui/visual-page.ui")]
+public sealed class MangoJuice.VisualPage : Adw.Bin {
+
 }
+ 
