@@ -7,7 +7,7 @@ template $MangoJuiceMetricsPage : Adw.Bin {
     propagate-natural-height: true;
 
     Adw.Clamp {
-      maximum-size: 900;
+      maximum-size: 1300;
       margin-bottom: 24;
       margin-end: 12;
       margin-start: 12;
@@ -18,95 +18,175 @@ template $MangoJuiceMetricsPage : Adw.Bin {
         spacing: 24;
 
         $MangoJuiceBlock {
-          title: "Block 1";
+          title: "GPU";
 
           content: FlowBox {
             selection-mode: none;
             min-children-per-line: 2;
             max-children-per-line: 6;
+            halign: start;
             column-spacing: 12;
             row-spacing: 6;
 
-            $MangoJuiceTitledSwitch sr1 {
-              title: "I'm Row, Hi!";
+            $MangoJuiceTitledSwitch load_gpu_switch {
+              title: _("Load");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr2 {
-              title: "I'm Row, Hi!";
+            $MangoJuiceTitledSwitch load_color_gpu_switch {
+              title: _("Load color");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr3 {
-              title: "I'm Row, Hi!";
-              subtitle: "This for you";
+            $MangoJuiceTitledSwitch vram_switch {
+              title: _("VRAM");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr4 {
-              title: "I'm Row, Hi!";
+            $MangoJuiceTitledSwitch core_freq_gpu_switch {
+              title: _("Core Freq");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr5 {
-              title: "I'm Row, Hi!";
+            $MangoJuiceTitledSwitch mem_freq_switch {
+              title: _("Mem Freq");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr6 {
-              title: "I'm Row, Hi!";
-              subtitle: "This for you";
+            $MangoJuiceTitledSwitch temp_gpu_switch {
+              title: _("Temp");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr7 {
-              title: "I'm Row, Hi!";
+            $MangoJuiceTitledSwitch memory_temp_switch {
+              title: _("Memory Temp");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr8 {
-              title: "I'm Row, Hi!";
-              subtitle: "This for you";
+            $MangoJuiceTitledSwitch juntion_switch {
+              title: _("Juntion");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch fans_switch {
+              title: _("Fans");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch model_switch {
+              title: _("Model");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch power_gpu_switch {
+              title: _("Power");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch voltage_switch {
+              title: _("Voltage");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch throttling_switch {
+              title: _("Throttling");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch throttling_graph_switch {
+              title: _("Throttling GRAPH");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch vulkan_driver_switch {
+              title: _("Vulkan Driver");
+              changed => $on_switch_changed ();
             }
           };
         }
 
         $MangoJuiceBlock {
-          title: "Block 2";
+          title: "CPU";
 
           content: FlowBox {
             selection-mode: none;
             min-children-per-line: 2;
             max-children-per-line: 6;
+            halign: start;
             column-spacing: 12;
             row-spacing: 6;
 
-            $MangoJuiceTitledSwitch sr9 {
-              title: "Hi!";
+            $MangoJuiceTitledSwitch load_cpu_switch {
+              title: _("Load");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr10 {
-              title: "Hi!";
+            $MangoJuiceTitledSwitch load_color_cpu_switch {
+              title: _("Load Color");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr11 {
-              title: "Hi!";
-              subtitle: "This for you";
+            $MangoJuiceTitledSwitch core_load_switch {
+              title: _("Core Load");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr12 {
-              title: "Hi!";
+            $MangoJuiceTitledSwitch core_bars_switch {
+              title: _("Core Bars");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr13 {
-              title: "Hi!";
+            $MangoJuiceTitledSwitch core_freq_cpu_switch {
+              title: _("Core Freq");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr14 {
-              title: "Hi!";
+            $MangoJuiceTitledSwitch temp_cpu_switch {
+              title: _("Temp");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr15 {
-              title: "Hi!";
-              subtitle: "This for you";
+            $MangoJuiceTitledSwitch power_cpu_switch {
+              title: _("Power");
+              changed => $on_switch_changed ();
+            }
+          };
+        }
+
+        $MangoJuiceBlock {
+          title: "Other";
+
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            halign: start;
+            column-spacing: 12;
+            row-spacing: 6;
+
+            $MangoJuiceTitledSwitch ram_switch {
+              title: _("RAM");
+              changed => $on_switch_changed ();
             }
 
-            $MangoJuiceTitledSwitch sr16 {
-              title: "Hi!";
-              subtitle: "This option need for big dick";
+            $MangoJuiceTitledSwitch disk_io_switch {
+              title: _("Disk IO");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch process_switch {
+              title: _("Disk IO");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch swap_switch {
+              title: _("Swap");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch fan_steamdeck_switch {
+              title: _("Fan SteamDeck");
+              changed => $on_switch_changed ();
             }
           };
         }
@@ -116,7 +196,7 @@ template $MangoJuiceMetricsPage : Adw.Bin {
 }
 
 SizeGroup {
-  widgets [sr1, sr2, sr3, sr4, sr5, sr6, sr7, sr8, sr9, sr10, sr11, sr12, sr13, sr14, sr15, sr16]
+  widgets [load_gpu_switch, load_color_gpu_switch, vram_switch, core_freq_gpu_switch, mem_freq_switch, temp_gpu_switch, memory_temp_switch, juntion_switch, fans_switch, model_switch, power_gpu_switch, voltage_switch, throttling_switch, throttling_graph_switch, vulkan_driver_switch, load_cpu_switch, load_color_cpu_switch, core_load_switch, core_bars_switch, core_freq_cpu_switch, temp_cpu_switch, power_cpu_switch, ram_switch, disk_io_switch, process_switch, swap_switch, fan_steamdeck_switch]
 
   mode: horizontal;
 }

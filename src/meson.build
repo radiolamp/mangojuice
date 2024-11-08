@@ -5,6 +5,7 @@ vapi_sources = files(
 vala_sources = files(
     'pages/extras.vala',
     'pages/metrics.vala',
+    'pages/page.vala',
     'pages/performance.vala',
     'pages/visual.vala',
     'widgets/block.vala',
@@ -16,6 +17,7 @@ vala_sources = files(
     'mangojuice.vala',
     'save-states.vala',
     'utils.vala',
+    'values-manager.vala',
     'window.vala',
 )
 

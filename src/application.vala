@@ -17,11 +17,17 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+namespace MangoJuice {
+    MangoJuice.Application application_inst;
+}
+
 public sealed class MangoJuice.Application : Adw.Application {
 
     const ActionEntry[] ACTION_ENTRIES = {
         { "quit", on_quit_action },
     };
+
+    public ValuesManager values_manager { get; private set; }
 
     public Application () {
         Object (
@@ -32,6 +38,9 @@ public sealed class MangoJuice.Application : Adw.Application {
     }
 
     construct {
+        application_inst = this;
+        values_manager = new ValuesManager ();
+
         add_action_entries (ACTION_ENTRIES, this);
         set_accels_for_action ("app.quit", { "<primary>q" });
     }

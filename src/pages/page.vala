@@ -17,13 +17,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-[GtkTemplate (ui = "/io/github/radiolamp/mangojuice/ui/performance-page.ui")]
-public sealed class MangoJuice.PerformancePage : Page {
+public abstract class MangoJuice.Page : Adw.Bin {
 
-    public override MetricsValues get_values () {
-        return {};
-    }
+    public abstract MetricsValues get_values ();
 
-    public override void set_values (MetricsValues metrics_values) {
-    }
+    public abstract void set_values (MetricsValues metrics_values);
 }

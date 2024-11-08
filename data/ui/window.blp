@@ -38,15 +38,6 @@ template $MangoJuiceWindow : Adw.ApplicationWindow {
         icon-name: "open-menu-symbolic";
         menu-model: primary_menu;
       }
-
-      [end]
-      Button save_button {
-        styles [
-          "suggested-action"
-        ]
-
-        label: _("Save");
-      }
     }
 
     content: Adw.ToastOverlay toast_overlay {
