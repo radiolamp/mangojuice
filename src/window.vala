@@ -1,4 +1,7 @@
-//windows.vala
+// window.vala
+
+using Gtk;
+using GLib;
 
 [GtkTemplate (ui = "/io/github/radiolamp/mangojuice/ui/window.ui")]
 public sealed class MangoJuice.Window : Adw.ApplicationWindow {
@@ -11,6 +14,9 @@ public sealed class MangoJuice.Window : Adw.ApplicationWindow {
     private unowned PerformancePage performance_page;
     [GtkChild]
     private unowned VisualPage visual_page;
+
+    [GtkChild]
+    private unowned Button test_button;
 
     const ActionEntry[] ACTION_ENTRIES = {
         { "about", on_about_action },
@@ -30,7 +36,7 @@ public sealed class MangoJuice.Window : Adw.ApplicationWindow {
     }
 
     construct {
-        var settings = new Settings ("io.github.radiolamp.mangojuice");
+        var settings = new GLib.Settings ("io.github.radiolamp.mangojuice"); // Явно указываем GLib.Settings
         settings.bind ("window-width", this, "default-width", SettingsBindFlags.DEFAULT);
         settings.bind ("window-height", this, "default-height", SettingsBindFlags.DEFAULT);
         settings.bind ("window-maximized", this, "maximized", SettingsBindFlags.DEFAULT);
@@ -43,9 +49,15 @@ public sealed class MangoJuice.Window : Adw.ApplicationWindow {
         if (Config.IS_DEVEL) {
             add_css_class ("devel");
         }
+
+        test_button.clicked.connect (on_test_button_clicked);
     }
 
     public void on_about_action () {
         MangoJuice.About.show_about_dialog (this);
+    }
+
+    private void on_test_button_clicked () {
+        run_test_command ();
     }
 }
