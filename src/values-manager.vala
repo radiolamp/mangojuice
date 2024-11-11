@@ -1,21 +1,4 @@
-/*
- * Copyright (C) 2024 Radiolamp
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+//values-manager.vala
 
 public sealed class MangoJuice.ValuesManager {
 
@@ -27,12 +10,7 @@ public sealed class MangoJuice.ValuesManager {
 
     public void trigger_changed () {
         // Load here
-        AllValues all_values = {
-            metrics: pages.get (Pages.METRICS).get_values (),
-            extras: pages.get (Pages.EXTRAS).get_values (),
-            performance: pages.get (Pages.PERFORMANCE).get_values (),
-            visual: pages.get (Pages.VISUAL).get_values (),
-        };
+        // Удаляем объявление и использование переменной all_values, если она не нужна
     }
 
     public void set_all_values (AllValues all_values) {
