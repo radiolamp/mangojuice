@@ -1,0 +1,202 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $MangoJuiceMetricsPage : $MangoJuicePage {
+  ScrolledWindow {
+    hscrollbar-policy: never;
+    propagate-natural-height: true;
+
+    Adw.Clamp {
+      maximum-size: 1300;
+      margin-bottom: 24;
+      margin-end: 12;
+      margin-start: 12;
+      margin-top: 12;
+
+      Box {
+        orientation: vertical;
+        spacing: 24;
+
+        $MangoJuiceBlock {
+          title: "GPU";
+
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            halign: start;
+            column-spacing: 12;
+            row-spacing: 6;
+
+            $MangoJuiceTitledSwitch load_gpu_switch {
+              title: _("Load");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch load_color_gpu_switch {
+              title: _("Load color");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch vram_switch {
+              title: _("VRAM");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch core_freq_gpu_switch {
+              title: _("Core Freq");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch mem_freq_switch {
+              title: _("Mem Freq");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch temp_gpu_switch {
+              title: _("Temp");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch memory_temp_switch {
+              title: _("Memory Temp");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch juntion_switch {
+              title: _("Juntion");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch fans_switch {
+              title: _("Fans");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch model_switch {
+              title: _("Model");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch power_gpu_switch {
+              title: _("Power");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch voltage_switch {
+              title: _("Voltage");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch throttling_switch {
+              title: _("Throttling");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch throttling_graph_switch {
+              title: _("Throttling GRAPH");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch vulkan_driver_switch {
+              title: _("Vulkan Driver");
+              changed => $on_switch_changed ();
+            }
+          };
+        }
+
+        $MangoJuiceBlock {
+          title: "CPU";
+
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            halign: start;
+            column-spacing: 12;
+            row-spacing: 6;
+
+            $MangoJuiceTitledSwitch load_cpu_switch {
+              title: _("Load");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch load_color_cpu_switch {
+              title: _("Load Color");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch core_load_switch {
+              title: _("Core Load");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch core_bars_switch {
+              title: _("Core Bars");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch core_freq_cpu_switch {
+              title: _("Core Freq");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch temp_cpu_switch {
+              title: _("Temp");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch power_cpu_switch {
+              title: _("Power");
+              changed => $on_switch_changed ();
+            }
+          };
+        }
+
+        $MangoJuiceBlock {
+          title: "Other";
+
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            halign: start;
+            column-spacing: 12;
+            row-spacing: 6;
+
+            $MangoJuiceTitledSwitch ram_switch {
+              title: _("RAM");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch disk_io_switch {
+              title: _("Disk IO");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch process_switch {
+              title: _("Disk IO");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch swap_switch {
+              title: _("Swap");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch fan_steamdeck_switch {
+              title: _("Fan SteamDeck");
+              changed => $on_switch_changed ();
+            }
+          };
+        }
+      }
+    }
+  }
+}
+
+SizeGroup {
+  widgets [load_gpu_switch, load_color_gpu_switch, vram_switch, core_freq_gpu_switch, mem_freq_switch, temp_gpu_switch, memory_temp_switch, juntion_switch, fans_switch, model_switch, power_gpu_switch, voltage_switch, throttling_switch, throttling_graph_switch, vulkan_driver_switch, load_cpu_switch, load_color_cpu_switch, core_load_switch, core_bars_switch, core_freq_cpu_switch, temp_cpu_switch, power_cpu_switch, ram_switch, disk_io_switch, process_switch, swap_switch, fan_steamdeck_switch]
+
+  mode: horizontal;
+}

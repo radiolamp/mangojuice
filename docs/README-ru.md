@@ -70,10 +70,10 @@ flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.y
 
 <div align="center">
   <a href="https://boosty.to/radiolamp/donate">
-    <img height="200" src="/data/assets/boosty_qrcode.png" alt="Boosty">
+    <img height="200" src="/assets/boosty_qrcode.png" alt="Boosty">
   </a>
   <a href="https://www.tbank.ru/cf/1J1DvYNesgD">
-    <img height="200" src="/data/assets/tbank_qrcode.png" alt="TBank">
+    <img height="200" src="/assets/tbank_qrcode.png" alt="TBank">
   </a>
 </div>
 
