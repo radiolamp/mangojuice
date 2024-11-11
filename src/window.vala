@@ -29,6 +29,7 @@ public sealed class MangoJuice.Window : Adw.ApplicationWindow {
             test_button.visible = false;
         }
 
+        this.add_action_entries (ACTION_ENTRIES, this);
     }
 
     static construct {
