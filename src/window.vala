@@ -24,6 +24,11 @@ public sealed class MangoJuice.Window : Adw.ApplicationWindow {
 
     public Window (MangoJuice.Application app) {
         Object (application: app);
+
+        if (!is_vkcube_available () && !is_glxgears_available ()) {
+            test_button.visible = false;
+        }
+
     }
 
     static construct {
