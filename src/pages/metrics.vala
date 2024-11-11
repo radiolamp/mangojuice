@@ -1,21 +1,4 @@
-/*
- * Copyright (C) 2024 Radiolamp
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+// metric.vala
 
 [GtkTemplate (ui = "/io/github/radiolamp/mangojuice/ui/metrics-page.ui")]
 public sealed class MangoJuice.MetricsPage : Page {
@@ -75,9 +58,22 @@ public sealed class MangoJuice.MetricsPage : Page {
     [GtkChild]
     unowned TitledSwitch fan_steamdeck_switch;
 
+    private MSave msave;
+    private MLoad mload;
+
+    construct {
+        msave = new MSave ();
+        mload = new MLoad ();
+
+        // Загрузка состояния переключателей при создании страницы
+        var metrics_values = mload.load_metrics_values ();
+        set_values (metrics_values);
+    }
+
     [GtkCallback]
     public void on_switch_changed (TitledSwitch obj, bool active) {
         application_inst.values_manager.trigger_changed ();
+        save_values ();
     }
 
     public override MetricsValues get_values () {
@@ -113,6 +109,37 @@ public sealed class MangoJuice.MetricsPage : Page {
     }
 
     public override void set_values (MetricsValues metrics_values) {
+        load_gpu_switch.active = metrics_values.load_gpu;
+        load_color_gpu_switch.active = metrics_values.load_color_gpu;
+        vram_switch.active = metrics_values.vram;
+        core_freq_gpu_switch.active = metrics_values.core_freq_gpu;
+        mem_freq_switch.active = metrics_values.mem_freq;
+        temp_gpu_switch.active = metrics_values.temp_gpu;
+        memory_temp_switch.active = metrics_values.memory_temp;
+        juntion_switch.active = metrics_values.juntion;
+        fans_switch.active = metrics_values.fans;
+        model_switch.active = metrics_values.model;
+        power_gpu_switch.active = metrics_values.power_gpu;
+        voltage_switch.active = metrics_values.voltage;
+        throttling_switch.active = metrics_values.throttling;
+        throttling_graph_switch.active = metrics_values.throttling_graph;
+        vulkan_driver_switch.active = metrics_values.vulkan_driver;
+        load_cpu_switch.active = metrics_values.load_cpu;
+        load_color_cpu_switch.active = metrics_values.load_color_cpu;
+        core_load_switch.active = metrics_values.core_load;
+        core_bars_switch.active = metrics_values.core_bars;
+        core_freq_cpu_switch.active = metrics_values.core_freq_cpu;
+        temp_cpu_switch.active = metrics_values.temp_cpu;
+        power_cpu_switch.active = metrics_values.power_cpu;
+        ram_switch.active = metrics_values.ram;
+        disk_io_switch.active = metrics_values.disk_io;
+        process_switch.active = metrics_values.process;
+        swap_switch.active = metrics_values.swap;
+        fan_steamdeck_switch.active = metrics_values.fan_steamdeck;
+    }
+
+    private void save_values () {
+        var metrics_values = get_values ();
+        msave.save_metrics_values (metrics_values);
     }
 }
- 

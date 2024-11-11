@@ -11,6 +11,8 @@ vala_sources = files(
     'widgets/block.vala',
     'widgets/titled-switch.vala',
     'about.vala',
+    'msave.vala',
+    'mload.vala',
     'application.vala',
     'main.vala',
     'utils.vala',
