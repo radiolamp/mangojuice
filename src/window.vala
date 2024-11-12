@@ -1,6 +1,3 @@
-//gpl-3.0 license
-// window.vala
-
 using Gtk;
 using GLib;
 
@@ -21,6 +18,8 @@ public sealed class MangoJuice.Window : Adw.ApplicationWindow {
 
     const ActionEntry[] ACTION_ENTRIES = {
         { "about", on_about_action },
+        { "save_config", on_save_config_action_sync },
+        { "load_config", on_load_config_action_sync },
     };
 
     public Window (MangoJuice.Application app) {
@@ -66,5 +65,62 @@ public sealed class MangoJuice.Window : Adw.ApplicationWindow {
 
     private void on_test_button_clicked () {
         run_test_command ();
+    }
+
+    private async void on_save_config_action () {
+        var file_dialog = new Gtk.FileDialog ();
+        file_dialog.set_title ("Save Mangohud.conf");
+        file_dialog.set_initial_name ("Mangohud.conf");
+
+        try {
+            var file = yield file_dialog.save (this, null);
+            var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+            var config_file = config_dir.get_child ("MangoHud.conf");
+
+            try {
+                config_file.copy (file, FileCopyFlags.OVERWRITE);
+            } catch (Error e) {
+                warning ("Error saving config: %s", e.message);
+            }
+        } catch (Error e) {
+            warning ("Error opening file chooser: %s", e.message);
+        }
+    }
+
+    private async void on_load_config_action () {
+        var file_dialog = new Gtk.FileDialog ();
+        file_dialog.set_title ("Load Mangohud.conf");
+
+        try {
+            var file = yield file_dialog.open (this, null);
+            var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+            var config_file = config_dir.get_child ("MangoHud.conf");
+
+            try {
+                file.copy (config_file, FileCopyFlags.OVERWRITE);
+            } catch (Error e) {
+                warning ("Error loading config: %s", e.message);
+            }
+        } catch (Error e) {
+            warning ("Error opening file chooser: %s", e.message);
+        }
+    }
+
+    private void on_save_config_action_sync () {
+        var loop = new MainLoop ();
+        on_save_config_action.begin ((obj, res) => {
+            on_save_config_action.end (res);
+            loop.quit ();
+        });
+        loop.run ();
+    }
+
+    private void on_load_config_action_sync () {
+        var loop = new MainLoop ();
+        on_load_config_action.begin ((obj, res) => {
+            on_load_config_action.end (res);
+            loop.quit ();
+        });
+        loop.run ();
     }
 }

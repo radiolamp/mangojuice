@@ -9,6 +9,8 @@ public sealed class MangoJuice.ValuesManager {
         pages.set (name, page);
     }
 
+    public void save_page_settings (Pages page, Object page_instance) {}
+
     public void set_all_values (AllValues all_values) {
         pages.get (Pages.METRICS).set_values (all_values.metrics);
         pages.get (Pages.EXTRAS).set_values (all_values.extras);
