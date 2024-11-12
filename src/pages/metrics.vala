@@ -72,7 +72,6 @@ public sealed class MangoJuice.MetricsPage : Page {
 
     [GtkCallback]
     public void on_switch_changed (TitledSwitch obj, bool active) {
-        application_inst.values_manager.trigger_changed ();
         save_values ();
     }
 

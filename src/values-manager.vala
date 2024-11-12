@@ -8,11 +8,6 @@ public sealed class MangoJuice.ValuesManager {
         pages.set (name, page);
     }
 
-    public void trigger_changed () {
-        // Load here
-        // Удаляем объявление и использование переменной all_values, если она не нужна
-    }
-
     public void set_all_values (AllValues all_values) {
         pages.get (Pages.METRICS).set_values (all_values.metrics);
         pages.get (Pages.EXTRAS).set_values (all_values.extras);
