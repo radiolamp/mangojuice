@@ -33,6 +33,38 @@ namespace MangoJuice {
         public bool fan_steamdeck;
     }
 
+    public struct ExtrasValues {
+        public bool refresh_rate_switch;
+        public bool resolution_switch;
+        public bool system_exec_switch;
+        public bool time_switch;
+        public bool arch_switch;
+        public bool wine_switch;
+        public bool engine_switch;
+        public bool engine_short_names_switch;
+        public bool winesync_switch;
+        public bool version_switch;
+        public bool gamemode_switch;
+        public bool vkbasalt_switch;
+        public bool exec_name_switch;
+        public bool fcat_switch;
+        public bool fsr_switch;
+        public bool hdr_switch;
+        public bool hud_compact_switch;
+        public bool compact_api_switch;
+        public bool no_display_switch;
+        public bool battery_switch;
+        public bool battery_watt_switch;
+        public bool battery_time_switch;
+        public bool device_battery_icon_switch;
+        public bool device_battery_switch;
+        public bool media_player_switch;
+        public bool network_switch;
+        public bool full_switch;
+        public bool log_versioning_switch;
+        public bool upload_logs_switch;
+    }
+
     public struct AllValues {
         MetricsValues metrics;
         MetricsValues extras;
