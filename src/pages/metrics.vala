@@ -1,3 +1,4 @@
+//gpl-3.0 license
 // metric.vala
 
 [GtkTemplate (ui = "/io/github/radiolamp/mangojuice/ui/metrics-page.ui")]

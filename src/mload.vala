@@ -1,3 +1,4 @@
+//gpl-3.0 license
 // mload.vala
 
 public class MangoJuice.MLoad : Object {

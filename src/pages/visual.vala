@@ -1,3 +1,4 @@
+//gpl-3.0 license
 //visual.vala
 
 [GtkTemplate (ui = "/io/github/radiolamp/mangojuice/ui/visual-page.ui")]

@@ -1,3 +1,4 @@
+//gpl-3.0 license
 //utils.vala
 
 namespace MangoJuice {

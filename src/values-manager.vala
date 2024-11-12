@@ -1,3 +1,4 @@
+//gpl-3.0 license
 //values-manager.vala
 
 public sealed class MangoJuice.ValuesManager {

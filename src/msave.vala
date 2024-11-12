@@ -1,3 +1,4 @@
+//gpl-3.0 license
 // msave.vala
 
 public class MangoJuice.MSave : Object {

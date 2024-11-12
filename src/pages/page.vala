@@ -1,3 +1,4 @@
+//gpl-3.0 license
 //page.vala
 
 public abstract class MangoJuice.Page : Adw.Bin {

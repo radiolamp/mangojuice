@@ -1,3 +1,6 @@
+//gpl-3.0 license
+//extras-page.blp
+
 using Gtk 4.0;
 using Adw 1;
 
@@ -207,7 +210,37 @@ template $MangoJuiceExtrasPage : $MangoJuicePage {
 }
 
 SizeGroup {
-  widgets [refresh_rate_switch, wine_switch, version_switch, battery_switch, media_player_switch]
+  widgets [
+    refresh_rate_switch, 
+    resolution_switch, 
+    system_exec_switch, 
+    time_switch, 
+    arch_switch, 
+    wine_switch, 
+    engine_switch, 
+    engine_short_names_switch, 
+    winesync_switch, 
+    version_switch, 
+    gamemode_switch, 
+    vkbasalt_switch, 
+    exec_name_switch, 
+    fcat_switch, 
+    fsr_switch, 
+    hdr_switch, 
+    hud_compact_switch, 
+    compact_api_switch, 
+    no_display_switch, 
+    battery_switch, 
+    battery_watt_switch, 
+    battery_time_switch, 
+    device_battery_icon_switch, 
+    device_battery_switch, 
+    media_player_switch, 
+    network_switch, 
+    full_switch, 
+    log_versioning_switch, 
+    upload_logs_switch
+  ]
 
   mode: horizontal;
 }

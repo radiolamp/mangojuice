@@ -1,3 +1,4 @@
+//gpl-3.0 license
 //block
 
 [GtkTemplate (ui = "/io/github/radiolamp/mangojuice/ui/block.ui")]

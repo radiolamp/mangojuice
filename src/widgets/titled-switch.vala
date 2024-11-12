@@ -1,3 +1,4 @@
+//gpl-3.0 license
 //titled-switch
 
 [GtkTemplate (ui = "/io/github/radiolamp/mangojuice/ui/titled-switch.ui")]

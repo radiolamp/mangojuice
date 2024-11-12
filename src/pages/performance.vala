@@ -1,3 +1,4 @@
+//gpl-3.0 license
 //performance.vala
 
 [GtkTemplate (ui = "/io/github/radiolamp/mangojuice/ui/performance-page.ui")]

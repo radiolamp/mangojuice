@@ -1,3 +1,4 @@
+//gpl-3.0 license
 // window.vala
 
 using Gtk;

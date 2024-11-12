@@ -1,3 +1,4 @@
+//gpl-3.0 license
 //main.vala
 
 public static int main (string[] argv) {
