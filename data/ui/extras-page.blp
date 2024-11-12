@@ -7,15 +7,207 @@ template $MangoJuiceExtrasPage : $MangoJuicePage {
     propagate-natural-height: true;
 
     Adw.Clamp {
-      maximum-size: 700;
+      maximum-size: 1300;
       margin-bottom: 24;
       margin-end: 12;
       margin-start: 12;
       margin-top: 12;
 
-      Label {
-        label: "BEBRA";
+      Box {
+        orientation: vertical;
+        spacing: 24;
+
+        $MangoJuiceBlock {
+          title: "System";
+
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            halign: start;
+            column-spacing: 12;
+            row-spacing: 6;
+
+            $MangoJuiceTitledSwitch refresh_rate_switch {
+              title: _("Refresh rate");
+              subtitle: "only Gamemode";
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch resolution_switch {
+              title: _("Resolution");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch system_exec_switch {
+              title: _("Session");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch time_switch {
+              title: _("Time");
+              changed => $on_switch_changed ();
+            }
+
+            $MangoJuiceTitledSwitch arch_switch {
+              title: _("Arch");
+              changed => $on_switch_changed ();
+            }
+          };
+        }
+        
+        $MangoJuiceBlock {
+          title: "Wine";
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            halign: start;
+            column-spacing: 12;
+            row-spacing: 6;
+            $MangoJuiceTitledSwitch wine_switch {
+              title: _("Version");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch engine_switch {
+              title: _("Engine Ver");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch engine_short_names_switch {
+              title: _("Short names");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch winesync_switch {
+              title: _("Winesync");
+              changed => $on_switch_changed ();
+            }
+          };
+        }
+
+        $MangoJuiceBlock {
+          title: "Options";
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            halign: start;
+            column-spacing: 12;
+            row-spacing: 6;
+            $MangoJuiceTitledSwitch version_switch {
+              title: _("HUD Version");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch gamemode_switch {
+              title: _("Gamemode");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch vkbasalt_switch {
+              title: _("VKbasalt");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch exec_name_switch {
+              title: _("Name");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch fcat_switch {
+              title: _("Fcat");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch fsr_switch {
+              title: _("FSR");
+              subtitle: "only Gamemode";
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch hdr_switch {
+              title: _("HDR");
+              subtitle: "only Gamemode";
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch hud_compact_switch {
+              title: _("Compact HUD");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch compact_api_switch {
+              title: _("Compact API");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch no_display_switch {
+              title: _("Hide HUD");
+              changed => $on_switch_changed ();
+            }
+          };
+        }
+
+        $MangoJuiceBlock {
+          title: "Battary";
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            halign: start;
+            column-spacing: 12;
+            row-spacing: 6;
+            $MangoJuiceTitledSwitch battery_switch {
+              title: _("Percentage");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch battery_watt_switch {
+              title: _("Wattage");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch battery_time_switch {
+              title: _("Time remain");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch device_battery_icon_switch {
+              title: _("Battery icon");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch device_battery_switch {
+              title: _("Device");
+              changed => $on_switch_changed ();
+            }
+          };
+        }
+
+        $MangoJuiceBlock {
+          title: "Other";
+          content: FlowBox {
+            selection-mode: none;
+            min-children-per-line: 2;
+            max-children-per-line: 6;
+            halign: start;
+            column-spacing: 12;
+            row-spacing: 6;
+            $MangoJuiceTitledSwitch media_player_switch {
+              title: _("Media");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch network_switch {
+              title: _("Network");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch full_switch {
+              title: _("Full ON");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch log_versioning_switch {
+              title: _("Log Versioning");
+              changed => $on_switch_changed ();
+            }
+            $MangoJuiceTitledSwitch upload_logs_switch {
+              title: _("Upload Results");
+              changed => $on_switch_changed ();
+            }
+          };
+        }
       }
     }
   }
+}
+
+SizeGroup {
+  widgets [refresh_rate_switch, wine_switch, version_switch, battery_switch, media_player_switch]
+
+  mode: horizontal;
 }

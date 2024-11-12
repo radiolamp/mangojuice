@@ -101,5 +101,4 @@ public class MangoJuice.MSave : Object {
             warning ("Error saving metrics values: %s", e.message);
         }
     }
-    
 }
