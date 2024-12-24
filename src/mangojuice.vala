@@ -138,11 +138,11 @@ public class MangoJuice : Adw.Application {
     public Label font_size_value_label;
     public DropDown font_dropdown;
 
-    public string[] vulkan_values = { "Adaptive", "OFF", "ON", "Mailbox" };
-    public string[] vulkan_config_values = { "0", "1", "3", "2" };
+    public string[] vulkan_values = { "Unset", "Adaptive", "OFF", "ON", "Mailbox" };
+    public string[] vulkan_config_values = { "", "0", "1", "3", "2" };
 
-    public string[] opengl_values = { "Adaptive", "OFF", "ON", "Mailbox" };
-    public string[] opengl_config_values = { "-1", "0", "1", "n" };
+    public string[] opengl_values = { "Unset", "Adaptive", "OFF", "ON", "Mailbox" };
+    public string[] opengl_config_values = { "", "-1", "0", "1", "n" };
 
     public Entry gpu_text_entry;
     public ColorDialogButton gpu_color_button;

@@ -159,13 +159,17 @@ public class SaveStates {
             if (mango_juice.vulkan_dropdown.selected_item != null) {
                 var vulkan_value = (mango_juice.vulkan_dropdown.selected_item as StringObject)?.get_string () ?? "";
                 var vulkan_config_value = mango_juice.get_vulkan_config_value (vulkan_value);
-                data_stream.put_string ("vsync=%s\n".printf (vulkan_config_value));
+                if (vulkan_config_value != "") {
+                    data_stream.put_string ("vsync=%s\n".printf (vulkan_config_value));
+                }
             }
-
+            
             if (mango_juice.opengl_dropdown.selected_item != null) {
                 var opengl_value = (mango_juice.opengl_dropdown.selected_item as StringObject)?.get_string () ?? "";
                 var opengl_config_value = mango_juice.get_opengl_config_value (opengl_value);
-                data_stream.put_string ("gl_vsync=%s\n".printf (opengl_config_value));
+                if (opengl_config_value != "") {
+                    data_stream.put_string ("gl_vsync=%s\n".printf (opengl_config_value));
+                }
             }
 
             if (mango_juice.filter_dropdown.selected_item != null) {
