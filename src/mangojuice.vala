@@ -301,16 +301,17 @@ public class MangoJuice : Adw.Application {
         // Изначально скрываем нижний HeaderBar
         bottom_headerbar.set_visible (false);
     
-        // Обработка изменения ширины окна
         window.notify["default-width"].connect (() => {
             int width = window.get_width ();
             toolbar_view_switcher.policy = (width < 800) ? ViewSwitcherPolicy.NARROW : ViewSwitcherPolicy.WIDE;
-    
+        
             // Показываем или скрываем нижний HeaderBar в зависимости от ширины окна
             if (width < 600) {
                 bottom_headerbar.set_visible (true);
+                toolbar_view_switcher.set_visible (false); // Скрываем toolbar_view_switcher в верхнем HeaderBar
             } else {
                 bottom_headerbar.set_visible (false);
+                toolbar_view_switcher.set_visible (true); // Показываем toolbar_view_switcher в верхнем HeaderBar
             }
         });
     
