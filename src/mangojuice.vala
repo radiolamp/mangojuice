@@ -106,7 +106,7 @@ public class MangoJuice : Adw.Application {
         "RAM", "Disk IO", "Persistent", "Swap", "Fan"
     };
     public string[] system_label_texts = {
-        "Refresh rate*", "Resolution", "Session", "Time", "Arch                      "
+        "Refresh rate", "Resolution", "Session", "Time", "Arch                      "
     };
     public string[] wine_label_texts = {
         "Version", "Engine Ver", "Short names", "Winesync           "
@@ -135,10 +135,10 @@ public class MangoJuice : Adw.Application {
         "Memory", "Input/Output", "Memory", "Memory", "Steam deck"
     };
     public string[] system_label_texts_2 = {
-        "", "", "", "", ""
+        "Only gamescope", "Window", "X11/Wayland", "Watch", "Processor"
     };
     public string[] wine_label_texts_2 = {
-        "", "", "", ""
+        "Wine", "Wine", "Wine", "Wine"
     };
     public string[] options_label_texts_2 = {
         "", "", "", "", "", "", "", "", "", ""
@@ -713,6 +713,8 @@ public class MangoJuice : Adw.Application {
 
         var customize_label = new Label ("Customize");
         customize_label.set_halign (Align.CENTER);
+        customize_label.set_halign (Align.START);
+        customize_label.set_markup ("<span size='14000'>%s</span>".printf ("Customize"));
         customize_label.set_margin_top (FLOW_BOX_MARGIN);
         customize_label.set_margin_start (FLOW_BOX_MARGIN);
         customize_label.set_margin_end (FLOW_BOX_MARGIN);
@@ -903,6 +905,8 @@ public class MangoJuice : Adw.Application {
 
         var fonts_label = new Label ("Font");
         fonts_label.set_halign (Align.CENTER);
+        fonts_label.set_halign (Align.START);
+        fonts_label.set_markup ("<span size='14000'>%s</span>".printf ("Font"));
         fonts_label.set_margin_top (FLOW_BOX_MARGIN);
         fonts_label.set_margin_start (FLOW_BOX_MARGIN);
         fonts_label.set_margin_end (FLOW_BOX_MARGIN);
@@ -951,6 +955,8 @@ public class MangoJuice : Adw.Application {
 
         var color_label = new Label ("Color");
         color_label.set_halign (Align.CENTER);
+        color_label.set_halign (Align.START);
+        color_label.set_markup ("<span size='14000'>%s</span>".printf ("Color"));
         color_label.set_margin_top (FLOW_BOX_MARGIN);
         color_label.set_margin_bottom (FLOW_BOX_MARGIN);
         color_label.set_margin_start (FLOW_BOX_MARGIN);
@@ -1449,6 +1455,8 @@ public class MangoJuice : Adw.Application {
         label.set_margin_top (FLOW_BOX_MARGIN);
         label.set_margin_start (FLOW_BOX_MARGIN);
         label.set_margin_end (FLOW_BOX_MARGIN);
+        label.set_halign (Align.START);
+        label.set_markup ("<span size='14000'>%s</span>".printf (title));
     
         parent_box.append (label);
     
@@ -1516,7 +1524,9 @@ public class MangoJuice : Adw.Application {
 
     public void create_scales_and_labels (Box parent_box) {
         var logging_label = new Label ("Logging");
-        logging_label.set_valign (Align.CENTER);
+        logging_label.set_valign (Align.START);
+        logging_label.set_halign (Align.START);
+        logging_label.set_markup ("<span size='14000'>%s</span>".printf ("Logging"));
         logging_label.set_margin_top (FLOW_BOX_MARGIN);
         logging_label.set_margin_start (FLOW_BOX_MARGIN);
         logging_label.set_margin_end (FLOW_BOX_MARGIN);
@@ -1585,6 +1595,8 @@ public class MangoJuice : Adw.Application {
     public void create_limiters_and_filters (Box performance_box) {
         var limiters_label = new Label (LIMITERS_TITLE);
         limiters_label.set_halign (Align.CENTER);
+        limiters_label.set_halign (Align.START);
+        limiters_label.set_markup ("<span size='14000'>%s</span>".printf ("Limiters FPS"));
         limiters_label.set_margin_top (FLOW_BOX_MARGIN);
         limiters_label.set_margin_start (FLOW_BOX_MARGIN);
         limiters_label.set_margin_end (FLOW_BOX_MARGIN);
@@ -1647,6 +1659,8 @@ public class MangoJuice : Adw.Application {
 
         var vsync_label = new Label ("VSync");
         vsync_label.set_halign (Align.CENTER);
+        vsync_label.set_halign (Align.START);
+        vsync_label.set_markup ("<span size='14000'>%s</span>".printf ("VSync"));
         vsync_label.set_margin_top (FLOW_BOX_MARGIN);
         vsync_label.set_margin_start (FLOW_BOX_MARGIN);
         vsync_label.set_margin_end (FLOW_BOX_MARGIN);
@@ -1701,6 +1715,8 @@ public class MangoJuice : Adw.Application {
 
         var filters_label = new Label (FILTERS_TITLE);
         filters_label.set_halign (Align.CENTER);
+        filters_label.set_halign (Align.START);
+        filters_label.set_markup ("<span size='14000'>%s</span>".printf ("Filters"));
         filters_label.set_margin_top (FLOW_BOX_MARGIN);
         filters_label.set_margin_start (FLOW_BOX_MARGIN);
         filters_label.set_margin_end (FLOW_BOX_MARGIN);
@@ -1767,6 +1783,8 @@ public class MangoJuice : Adw.Application {
 
         var fps_sampling_period_label = new Label ("Other");
         fps_sampling_period_label.set_halign (Align.CENTER);
+        fps_sampling_period_label.set_halign (Align.START);
+        fps_sampling_period_label.set_markup ("<span size='14000'>%s</span>".printf ("Other"));
         fps_sampling_period_label.set_margin_top (FLOW_BOX_MARGIN);
         fps_sampling_period_label.set_margin_start (FLOW_BOX_MARGIN);
         fps_sampling_period_label.set_margin_end (FLOW_BOX_MARGIN);
