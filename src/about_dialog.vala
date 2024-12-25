@@ -5,7 +5,7 @@ namespace AboutDialog {
         var dialog = new Adw.AboutDialog () {
             application_icon = "io.github.radiolamp.mangojuice",
             application_name = "MangoJuice",
-            version = "0.7.8",
+            version = "0.8.0",
             license_type = Gtk.License.GPL_3_0,
         };
 
