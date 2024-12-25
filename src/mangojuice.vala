@@ -123,6 +123,35 @@ public class MangoJuice : Adw.Application {
     public string[] inform_label_texts = {
         "FPS", "FPS Color", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame", "Temt °F", "VPS" 
     };
+    public string[] gpu_label_texts_2 = {
+        "GPU Load", "Load Color", "VRAM Usage", "Core Clock", "Memory Clock",
+        "Temperature", "Memory Temp", "Junction Temp", "Fan Speed", "GPU Model",
+        "Power Usage", "Voltage", "Throttling", "Throttling Graph", "Driver Version"
+    };
+    public string[] cpu_label_texts_2 = {
+        "", "", "", "", "", "", ""
+    };
+    public string[] other_label_texts_2 = {
+        "", "", "", "", ""
+    };
+    public string[] system_label_texts_2 = {
+        "", "", "", "", ""
+    };
+    public string[] wine_label_texts_2 = {
+        "", "", "", ""
+    };
+    public string[] options_label_texts_2 = {
+        "", "", "", "", "", "", "", "", "", ""
+    };
+    public string[] battery_label_texts_2 = {
+        "", "", "", "", ""
+    };
+    public string[] other_extra_label_texts_2 = {
+        "", "", "", "", ""
+    };
+    public string[] inform_label_texts_2 = {
+        "", "", "", "", "", "", "", "", "", ""
+    };
     public bool test_button_pressed = false;
     public Entry custom_text_center_entry;
     public Switch custom_switch;
@@ -522,16 +551,16 @@ public class MangoJuice : Adw.Application {
         other_extra_labels = new Label[other_extra_label_texts.length];
         inform_labels = new Label[inform_label_texts.length];
 
-        create_switches_and_labels (metrics_box, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts);
-        create_switches_and_labels (metrics_box, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts);
-        create_switches_and_labels (metrics_box, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts);
-        create_switches_and_labels (extras_box, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts);
-        create_switches_and_labels (extras_box, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts);
-        create_switches_and_labels (extras_box, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts);
-        create_switches_and_labels (extras_box, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts);
-        create_switches_and_labels (extras_box, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts);
+        create_switches_and_labels (metrics_box, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts, gpu_label_texts_2);
+        create_switches_and_labels (metrics_box, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts, cpu_label_texts_2);
+        create_switches_and_labels (metrics_box, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts, other_label_texts_2);
+        create_switches_and_labels (extras_box, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts, system_label_texts_2);
+        create_switches_and_labels (extras_box, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts, wine_label_texts_2);
+        create_switches_and_labels (extras_box, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts, options_label_texts_2);
+        create_switches_and_labels (extras_box, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts, battery_label_texts_2);
+        create_switches_and_labels (extras_box, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts, other_extra_label_texts_2);
         create_scales_and_labels (extras_box);
-        create_switches_and_labels (performance_box, INFORM_TITLE, inform_switches, inform_labels, inform_config_vars, inform_label_texts);
+        create_switches_and_labels (performance_box, INFORM_TITLE, inform_switches, inform_labels, inform_config_vars, inform_label_texts, inform_label_texts_2);
         create_limiters_and_filters (performance_box);
         add_switch_handler (gpu_switches);
         add_switch_handler (cpu_switches);
@@ -1414,15 +1443,15 @@ public class MangoJuice : Adw.Application {
         return fonts;
     }
 
-    public void create_switches_and_labels (Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts) {
+    public void create_switches_and_labels (Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
         var label = new Label (title);
         label.add_css_class ("bold-label");
         label.set_margin_top (FLOW_BOX_MARGIN);
         label.set_margin_start (FLOW_BOX_MARGIN);
         label.set_margin_end (FLOW_BOX_MARGIN);
-
+    
         parent_box.append (label);
-
+    
         var flow_box = new FlowBox ();
         flow_box.set_homogeneous (true);
         flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
@@ -1432,18 +1461,33 @@ public class MangoJuice : Adw.Application {
         flow_box.set_margin_start (FLOW_BOX_MARGIN);
         flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
-
+        flow_box.set_max_children_per_line (6); // Установите нужное количество колонок
+    
         for (int i = 0; i < config_vars.length; i++) {
-            var row_box = get_box ();
+            var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+            row_box.set_hexpand (true); // Растягиваем контейнер по горизонтали
+            row_box.set_valign (Align.CENTER); // Выравниваем элементы по центру по вертикали
+    
             switches[i] = new Switch ();
-            labels[i] = get_label ();
-            labels[i].label = label_texts[i];
-            labels[i].set_halign (Align.START);
+            switches[i].set_valign (Align.CENTER); // Выравниваем свитч по центру по вертикали
+    
+            // Создаем контейнер для двух строк текста
+            var text_box = new Box (Orientation.VERTICAL, 0);
+            text_box.set_valign (Align.CENTER); // Выравниваем текст по центру по вертикали
+    
+            var label1 = new Label (label_texts[i]);
+            var label2 = new Label (label_texts_2[i]);
+            label1.set_halign (Align.START);
+            label2.set_halign (Align.START);
+    
+            text_box.append (label1);
+            text_box.append (label2);
+    
             row_box.append (switches[i]);
-            row_box.append (labels[i]);
+            row_box.append (text_box); // Добавляем контейнер с двумя строками текста
             flow_box.insert (row_box, -1);
         }
-
+    
         parent_box.append (flow_box);
     }
 
