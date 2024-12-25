@@ -58,10 +58,10 @@ public class MangoJuice : Adw.Application {
     public const string INFORM_TITLE = "Information";
     public const string LIMITERS_TITLE = "Limiters FPS";
     public const string FILTERS_TITLE = "Filters";
-    public const int MAIN_BOX_SPACING = 10;
-    public const int FLOW_BOX_ROW_SPACING = 10;
-    public const int FLOW_BOX_COLUMN_SPACING = 10;
-    public const int FLOW_BOX_MARGIN = 10;
+    public const int MAIN_BOX_SPACING = 12;
+    public const int FLOW_BOX_ROW_SPACING = 12;
+    public const int FLOW_BOX_COLUMN_SPACING = 12;
+    public const int FLOW_BOX_MARGIN = 12;
     public string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
@@ -265,7 +265,7 @@ public class MangoJuice : Adw.Application {
 
     protected override void activate () {
         var window = new Adw.ApplicationWindow (this);
-        window.set_default_size (955, 600);
+        window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
 
         var save_action = new SimpleAction ("save", null);
@@ -281,6 +281,16 @@ public class MangoJuice : Adw.Application {
         var view_stack = new ViewStack ();
         var toolbar_view_switcher = new ViewSwitcher ();
         toolbar_view_switcher.stack = view_stack;
+        toolbar_view_switcher.policy = ViewSwitcherPolicy.WIDE; // Иконка слева, текст справа
+    
+        window.notify["default-width"].connect (() => {
+            int width = window.get_width (); // Получаем текущую ширину окна
+            if (width < 800) {
+                toolbar_view_switcher.policy = ViewSwitcherPolicy.NARROW; // Иконка сверху, текст снизу
+            } else {
+                toolbar_view_switcher.policy = ViewSwitcherPolicy.WIDE; // Иконка слева, текст справа
+            }
+        });
 
         var metrics_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var extras_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
