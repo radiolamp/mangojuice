@@ -94,16 +94,16 @@ public class MangoJuice : Adw.Application {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display"
     };
     public string[] gpu_label_texts = {
-        "Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
+        "GPU", "Load Color", "VRAM", "Core Freq", "Mem Freq",
         "Temp", "Memory Temp", "Juntion", "Fans", "Model",
         "Power", "Voltage", "Throttling", "Throttling GRAPH", "Vulkan Driver"
     };
     public string[] cpu_label_texts = {
         "Load", "Load Color", "Core Load", "Core Bars", "Core Freq", "Temp",
-        "Power                       "
+        "Power"
     };
     public string[] other_label_texts = {
-        "RAM", "Disk IO", "Procces", "Swap", "Fan SteamDeck    "
+        "RAM", "Disk IO", "Persistent", "Swap", "Fan"
     };
     public string[] system_label_texts = {
         "Refresh rate*", "Resolution", "Session", "Time", "Arch                      "
@@ -124,15 +124,15 @@ public class MangoJuice : Adw.Application {
         "FPS", "FPS Color", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame", "Temt °F", "VPS" 
     };
     public string[] gpu_label_texts_2 = {
-        "GPU Load", "Load Color", "VRAM Usage", "Core Clock", "Memory Clock",
-        "Temperature", "Memory Temp", "Junction Temp", "Fan Speed", "GPU Model",
-        "Power Usage", "Voltage", "Throttling", "Throttling Graph", "Driver Version"
+        "Graphics card", "Graphics card", "Graphics card", "Graphics card", "Graphics card",
+        "Graphics card", "Graphics card", "Graphics card", "Graphics card", "Graphics card",
+        "Graphics card", "Graphics card", "Graphics card", "Graphics card", "Driver Version"
     };
     public string[] cpu_label_texts_2 = {
-        "", "", "", "", "", "", ""
+        "Сentral processor", "Сentral processor", "Сentral processor", "Сentral processor", "Сentral processor", "Сentral processor", "Сentral processor"
     };
     public string[] other_label_texts_2 = {
-        "", "", "", "", ""
+        "Memory", "Input/Output", "Memory", "Memory", "Steam deck"
     };
     public string[] system_label_texts_2 = {
         "", "", "", "", ""
@@ -1461,24 +1461,31 @@ public class MangoJuice : Adw.Application {
         flow_box.set_margin_start (FLOW_BOX_MARGIN);
         flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
-        flow_box.set_max_children_per_line (6); // Установите нужное количество колонок
     
         for (int i = 0; i < config_vars.length; i++) {
             var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            row_box.set_hexpand (true); // Растягиваем контейнер по горизонтали
-            row_box.set_valign (Align.CENTER); // Выравниваем элементы по центру по вертикали
-    
+            row_box.set_hexpand (true);
+            row_box.set_valign (Align.CENTER);
+
             switches[i] = new Switch ();
-            switches[i].set_valign (Align.CENTER); // Выравниваем свитч по центру по вертикали
+            switches[i].set_valign (Align.CENTER);
     
-            // Создаем контейнер для двух строк текста
             var text_box = new Box (Orientation.VERTICAL, 0);
-            text_box.set_valign (Align.CENTER); // Выравниваем текст по центру по вертикали
+            text_box.set_valign (Align.CENTER);
+            text_box.set_halign (Align.START);
+            text_box.set_size_request (140, -1); // Ширина 140 пикселей, нужна если не работает выравнивание.
     
-            var label1 = new Label (label_texts[i]);
-            var label2 = new Label (label_texts_2[i]);
+            var label1 = new Label (null);
+            label1.set_markup ("<b>%s</b>".printf (label_texts[i])); // Жирный текст
             label1.set_halign (Align.START);
+            label1.set_hexpand (false);
+    
+            var label2 = new Label (label_texts_2[i]);
             label2.set_halign (Align.START);
+            label2.set_hexpand (false);
+
+            label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
+            label2.set_markup ("<span size='9000'>%s</span>".printf (label_texts_2[i]));
     
             text_box.append (label1);
             text_box.append (label2);
