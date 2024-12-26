@@ -221,7 +221,8 @@ public class SaveStates {
             if (mango_juice.font_dropdown.selected_item != null) {
                 var font_name = (mango_juice.font_dropdown.selected_item as StringObject)?.get_string () ?? "";
                 if (font_name != "Default") {
-                    var font_path = mango_juice.find_font_path_by_name (font_name, mango_juice.find_fonts ("/usr/share/fonts"));
+                    // Убираем аргумент "/usr/share/fonts" из вызова find_fonts
+                    var font_path = mango_juice.find_font_path_by_name (font_name, mango_juice.find_fonts ());
                     if (font_path != "") {
                         data_stream.put_string ("font_file=%s\n".printf (font_path));
                         data_stream.put_string ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b\n");

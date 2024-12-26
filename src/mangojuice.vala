@@ -1358,28 +1358,17 @@ public class MangoJuice : Adw.Application {
 
     }
 
-        public void initialize_font_dropdown (Box visual_box) {
+    public void initialize_font_dropdown (Box visual_box) {
         var font_model = new Gtk.StringList (null);
         font_model.append ("Default");
-
-        var fonts = new Gee.ArrayList<string> ();
-        fonts.add_all (find_fonts ("/usr/share/fonts"));
-
-        var local_fonts_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".local/share/fonts");
-        if (!local_fonts_dir.query_exists ()) {
-            try {
-                local_fonts_dir.make_directory_with_parents ();
-            } catch (Error e) {
-                stderr.printf ("Error creating the directory: %s\n", e.message);
-            }
-        }
-        fonts.add_all (find_fonts (local_fonts_dir.get_path ()));
-
-        foreach (var font in fonts) {
-            var font_name = Path.get_basename (font);
+    
+        var fonts = find_fonts ();
+    
+        foreach (var font_path in fonts) {
+            var font_name = Path.get_basename (font_path);
             font_model.append (font_name);
         }
-
+    
         font_dropdown = new DropDown (font_model, null);
         font_dropdown.set_hexpand (true);
         font_dropdown.set_size_request (300, -1);
@@ -1389,7 +1378,7 @@ public class MangoJuice : Adw.Application {
             update_font_file_in_file (selected_font_path);
             SaveStates.save_states_to_file (this);
         });
-
+    
         var factory = new Gtk.SignalListItemFactory ();
         factory.setup.connect ((item) => {
             var list_item = item as Gtk.ListItem;
@@ -1406,6 +1395,44 @@ public class MangoJuice : Adw.Application {
         font_dropdown.set_factory (factory);
     }
 
+    public Gee.List<string> find_fonts () {
+        var fonts = new Gee.ArrayList<string> ();
+    
+        try {
+            // Выполняем команду fc-list для получения списка шрифтов
+            string[] argv = { "fc-list", ":", "file" };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+    
+            if (exit_status == 0) {
+                // Разделяем вывод на строки
+                string[] lines = standard_output.split ("\n");
+                foreach (var line in lines) {
+                    // Каждая строка содержит путь к файлу шрифта и его имя
+                    if (line.strip () != "") {
+                        // Разделяем строку по двоеточию и берем первую часть (путь к шрифту)
+                        string[] parts = line.split (":");
+                        if (parts.length > 0) {
+                            string font_path = parts[0].strip ();
+                            // Проверяем расширение файла
+                            if (font_path.has_suffix (".ttf") || font_path.has_suffix (".otf")) {
+                                fonts.add (font_path);
+                            }
+                        }
+                    }
+                }
+            } else {
+                stderr.printf ("Error executing fc-list: %s\n", standard_error);
+            }
+        } catch (Error e) {
+            stderr.printf ("Error when searching for fonts: %s\n", e.message);
+        }
+    
+        return fonts;
+    }
+
     public string find_font_path_by_name (string font_name, Gee.List<string> fonts) {
         foreach (var font_path in fonts) {
             if (Path.get_basename (font_path) == font_name) {
@@ -1413,28 +1440,6 @@ public class MangoJuice : Adw.Application {
             }
         }
         return "";
-    }
-
-    public Gee.List<string> find_fonts (string directory) {
-        var fonts = new Gee.ArrayList<string> ();
-        var dir = File.new_for_path (directory);
-
-        try {
-            var enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-            FileInfo file_info;
-            while ( (file_info = enumerator.next_file ()) != null) {
-                var file = dir.get_child (file_info.get_name ());
-                if (file_info.get_file_type () == FileType.DIRECTORY) {
-                    fonts.add_all (find_fonts (file.get_path ()));
-                } else if (file_info.get_name ().has_suffix (".ttf")) {
-                    fonts.add (file.get_path ());
-                }
-            }
-        } catch (Error e) {
-            stderr.printf ("Error when searching for fonts: %s\n", e.message);
-        }
-
-        return fonts;
     }
 
     public void create_switches_and_labels (Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
