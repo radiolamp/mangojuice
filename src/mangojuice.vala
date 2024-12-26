@@ -1361,11 +1361,21 @@ public class MangoJuice : Adw.Application {
     public void initialize_font_dropdown (Box visual_box) {
         var font_model = new Gtk.StringList (null);
         font_model.append ("Default");
-    
+
         var fonts = find_fonts ();
-    
+
+        var font_names = new Gee.ArrayList<string> ();
+
         foreach (var font_path in fonts) {
             var font_name = Path.get_basename (font_path);
+            font_names.add (font_name);
+        }
+
+        font_names.sort ((a, b) => {
+            return a.collate (b);
+        });
+
+        foreach (var font_name in font_names) {
             font_model.append (font_name);
         }
     
