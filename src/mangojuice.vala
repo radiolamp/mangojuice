@@ -1484,6 +1484,7 @@ public class MangoJuice : Adw.Application {
             var label2 = new Label (label_texts_2[i]);
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
+            label2.add_css_class ("dim-label");
 
             label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
             label2.set_markup ("<span size='9000'>%s</span>".printf (label_texts_2[i]));
