@@ -79,7 +79,7 @@ public class MangoJuice : Adw.Application {
         "time", "arch"
     };
     public string[] wine_config_vars = {
-        "wine", "engine", "engine_short_names", "winesync"
+        "wine", "engine_version", "engine_short_names", "winesync"
     };
     public string[] battery_config_vars = {
         "battery", "battery_watt", "battery_time", "device_battery_icon", "device_battery=gamepad,mouse"
@@ -106,30 +106,30 @@ public class MangoJuice : Adw.Application {
         "RAM", "Disk IO", "Persistent", "Swap", "Fan"
     };
     public string[] system_label_texts = {
-        "Refresh rate", "Resolution", "Session", "Time", "Arch                      "
+        "Refresh rate", "Resolution", "Session", "Time", "Arch"
     };
     public string[] wine_label_texts = {
-        "Version", "Engine Ver", "Short names", "Winesync           "
+        "Version", "Engine Ver", "Short names", "Winesync"
     };
     public string[] options_label_texts = {
-        "HUD Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR*", "HDR*", "Compact HUD", "Compact API", "Hide HUD           "
+        "HUD Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR", "HDR", "Compact HUD", "Compact API", "Hide HUD"
     };
     public string[] battery_label_texts = {
-        "Percentage", "Wattage", "Time remain", "Battery icon", "Device                 "
+        "Percentage", "Wattage", "Time remain", "Battery icon", "Device"
     };
     public string[] other_extra_label_texts = {
         "Media", "Network", "Full ON", "Log Versioning", "Upload Results "
     };
     public string[] inform_label_texts = {
-        "FPS", "FPS Color", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram/Curve", "Frame", "Temt °F", "VPS" 
+        "FPS", "FPS Color", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram", "Frame", "Temt °F", "VPS" 
     };
     public string[] gpu_label_texts_2 = {
-        "Graphics card", "Graphics card", "Graphics card", "Graphics card", "Graphics card",
-        "Graphics card", "Graphics card", "Graphics card", "Graphics card", "Graphics card",
-        "Graphics card", "Graphics card", "Graphics card", "Graphics card", "Driver Version"
+        "Percentage load", "Color text", "Display system VRAM", "Display GPU core", "Display GPU memory",
+        "GPU temperature", "GDDR temperatures", "Memory Temperature", "Fan in rpm", "Display GPU name",
+        "Display draw in watts", "Display draw in voltage", "GPU is throttling?", "Trolling curve", "Driver Version"
     };
     public string[] cpu_label_texts_2 = {
-        "Сentral processor", "Сentral processor", "Сentral processor", "Сentral processor", "Сentral processor", "Сentral processor", "Сentral processor"
+        "Percentage load", "Color text", "Display all streams", "Streams in the graph", "Processor frequency", "Processor temperature", "CPU consumption watt"
     };
     public string[] other_label_texts_2 = {
         "Memory", "Input/Output", "Memory", "Memory", "Steam deck"
@@ -138,19 +138,19 @@ public class MangoJuice : Adw.Application {
         "Only gamescope", "Window", "X11/Wayland", "Watch", "Processor"
     };
     public string[] wine_label_texts_2 = {
-        "Wine", "Wine", "Wine", "Wine"
+        "Wine or Proton version", "X11/Wayland", "Version used engin", "Wine sync method"
     };
     public string[] options_label_texts_2 = {
-        "", "", "", "", "", "", "", "", "", ""
+        "Mangohud", "Priority of game processes", "Enhance the visual graphics", "Launched process", "Visual updating frames", "Only gamescope", "Only gamescope", "Removes fields", "Only OpenGL", "Hide overlay"
     };
     public string[] battery_label_texts_2 = {
-        "", "", "", "", ""
+        "Display current battery", "Display wattage battery", "Time for battery ", "Icon of percent", "Wireless device battery"
     };
     public string[] other_extra_label_texts_2 = {
-        "", "", "", "", ""
+        "Show media player", "Show network interfaces", "Excludes histogram", "Adds information the log", "Automatic uploads of logs"
     };
     public string[] inform_label_texts_2 = {
-        "", "", "", "", "", "", "", "", "", ""
+        "Show FPS", "Color text", "Average worst frame", "Average worst frame", "Display FPS limit", "Display frametime", "Graph to histogram", "Display frame count", "Show temperature °F", "Present mode"
     };
     public bool test_button_pressed = false;
     public Entry custom_text_center_entry;
@@ -306,7 +306,7 @@ public class MangoJuice : Adw.Application {
             toolbar_view_switcher.policy = (width < 800) ? ViewSwitcherPolicy.NARROW : ViewSwitcherPolicy.WIDE;
         
             // Показываем или скрываем нижний HeaderBar в зависимости от ширины окна
-            if (width < 600) {
+            if (width < 520) {
                 bottom_headerbar.set_visible (true);
                 toolbar_view_switcher.set_visible (false); // Скрываем toolbar_view_switcher в верхнем HeaderBar
             } else {
@@ -1485,7 +1485,7 @@ public class MangoJuice : Adw.Application {
             var text_box = new Box (Orientation.VERTICAL, 0);
             text_box.set_valign (Align.CENTER);
             text_box.set_halign (Align.START);
-            text_box.set_size_request (140, -1); // Ширина 140 пикселей, нужна если не работает выравнивание.
+            text_box.set_size_request (160, -1); // Ширина 160 пикселей, нужна если не работает выравнивание.
     
             var label1 = new Label (null);
             label1.set_markup ("<b>%s</b>".printf (label_texts[i])); // Жирный текст
