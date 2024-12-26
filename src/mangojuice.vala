@@ -268,64 +268,53 @@ public class MangoJuice : Adw.Application {
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
     
-        // Добавляем действие для сохранения
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => SaveStates.save_states_to_file (this));
         window.add_action (save_action);
         this.set_accels_for_action ("win.save", { "<primary>s" });
-    
-        // Основной контейнер
+
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
-    
-        // Создаем ViewStack и ViewSwitcher
+
         var view_stack = new ViewStack ();
         var toolbar_view_switcher = new ViewSwitcher ();
         toolbar_view_switcher.stack = view_stack;
         toolbar_view_switcher.policy = ViewSwitcherPolicy.WIDE;
-    
-        // Создаем нижний HeaderBar
+
         var bottom_headerbar = new Gtk.HeaderBar ();
         bottom_headerbar.show_title_buttons = false;
-    
-        // Создаем копию ViewSwitcher для нижнего HeaderBar
+
         var bottom_view_switcher = new ViewSwitcher ();
         bottom_view_switcher.stack = view_stack;
-    
-        // Добавляем ViewSwitcher в нижний HeaderBar и выравниваем по центру
+
         var center_box = new Box (Orientation.HORIZONTAL, 0);
         center_box.set_halign (Align.CENTER);
         center_box.append (bottom_view_switcher);
         bottom_headerbar.set_title_widget (center_box);
-    
-        // Изначально скрываем нижний HeaderBar
+
         bottom_headerbar.set_visible (false);
     
         window.notify["default-width"].connect (() => {
             int width = window.get_width ();
             toolbar_view_switcher.policy = (width < 800) ? ViewSwitcherPolicy.NARROW : ViewSwitcherPolicy.WIDE;
-        
-            // Показываем или скрываем нижний HeaderBar в зависимости от ширины окна
+    
             if (width < 520) {
                 bottom_headerbar.set_visible (true);
-                toolbar_view_switcher.set_visible (false); // Скрываем toolbar_view_switcher в верхнем HeaderBar
+                toolbar_view_switcher.set_visible (false);
             } else {
                 bottom_headerbar.set_visible (false);
-                toolbar_view_switcher.set_visible (true); // Показываем toolbar_view_switcher в верхнем HeaderBar
+                toolbar_view_switcher.set_visible (true);
             }
         });
-    
-        // Создаем контейнеры для разных разделов
+
         var metrics_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var extras_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var performance_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var visual_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
     
-        // Инициализация переключателей и меток
         initialize_switches_and_labels (metrics_box, extras_box, performance_box, visual_box);
         initialize_custom_controls (extras_box, visual_box);
-    
-        // Создаем прокручиваемые окна для каждого раздела
+
         var metrics_scrolled_window = new ScrolledWindow ();
         metrics_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         metrics_scrolled_window.set_vexpand (true);
@@ -345,18 +334,15 @@ public class MangoJuice : Adw.Application {
         visual_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         visual_scrolled_window.set_vexpand (true);
         visual_scrolled_window.set_child (visual_box);
-    
-        // Добавляем разделы в ViewStack
+
         view_stack.add_titled (metrics_scrolled_window, "metrics_box", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
         view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
         view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
         view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
-    
-        // Создаем верхний HeaderBar
+
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
-    
-        // Кнопка "Save"
+
         save_button = new Button.with_label ("Save");
         save_button.add_css_class ("suggested-action");
         save_button.clicked.connect (() => {
@@ -370,8 +356,7 @@ public class MangoJuice : Adw.Application {
             }
         });
         header_bar.pack_end (save_button);
-    
-        // Кнопка "Test"
+
         var test_button = new Button.with_label ("Test");
         test_button.clicked.connect (() => {
             try {
@@ -388,37 +373,41 @@ public class MangoJuice : Adw.Application {
             }
         });
         header_bar.pack_start (test_button);
-    
-        // Меню
+
+        var save_as_action = new SimpleAction ("save_as", null);
+        save_as_action.activate.connect (on_save_as_button_clicked);
+        this.add_action (save_as_action);
+
+        var restore_config_action = new SimpleAction ("restore_config", null);
+        restore_config_action.activate.connect (on_restore_config_button_clicked);
+        this.add_action (restore_config_action);
+
         var menu_button = new MenuButton ();
         var menu_model = new GLib.Menu ();
-        menu_model.append_item (new GLib.MenuItem ("Save As", "app.save_as"));
-        menu_model.append_item (new GLib.MenuItem ("Restore", "app.restore_config"));
-        menu_model.append_item (new GLib.MenuItem ("About", "app.about"));
+        var save_as_item = new GLib.MenuItem ("Save As", "app.save_as");
+        menu_model.append_item (save_as_item);
+        var restore_config_item = new GLib.MenuItem ("Restore", "app.restore_config");
+        menu_model.append_item (restore_config_item);
+        var about_item = new GLib.MenuItem ("About", "app.about");
+        menu_model.append_item (about_item);
         menu_button.set_menu_model (menu_model);
         menu_button.set_icon_name ("open-menu-symbolic");
         header_bar.pack_end (menu_button);
-    
-        // Основной контейнер для содержимого окна
+
         var content_box = new Box (Orientation.VERTICAL, 0);
         content_box.append (header_bar);
         content_box.append (view_stack);
-    
-        // Добавляем нижний HeaderBar в основной контейнер
+
         content_box.append (bottom_headerbar);
-    
-        // Устанавливаем содержимое окна
+
         window.set_content (content_box);
         window.present ();
-    
-        // Проверка статуса MangoHud Global
+
         check_mangohud_global_status ();
-    
-        // Загрузка и сохранение состояний
+
         LoadStates.load_states_from_file (this);
         SaveStates.save_states_to_file (this);
-    
-        // Обработка закрытия окна
+
         window.close_request.connect (() => {
             if (is_vkcube_running ()) {
                 try {
@@ -436,8 +425,7 @@ public class MangoJuice : Adw.Application {
             }
             return false;
         });
-    
-        // Дополнительные обработчики событий
+
         inform_switches[2].notify["active"].connect (() => {
             if (inform_switches[2].active) inform_switches[3].active = false;
         });
@@ -468,8 +456,7 @@ public class MangoJuice : Adw.Application {
         gpu_switches[2].notify["active"].connect (() => {
             if (!gpu_switches[2].active) gpu_switches[4].active = false;
         });
-    
-        // Обработчики для Scale
+
         var scales = new Scale[] {
             duracion_scale, autostart_scale, interval_scale, af, picmip, borders_scale, colums_scale, font_size_scale,
             offset_x_scale, offset_y_scale };
@@ -478,18 +465,15 @@ public class MangoJuice : Adw.Application {
             add_scroll_event_handler (scale);
             add_value_changed_handler (scale);
         }
-    
-        // Настройка стилей
+
         toolbar_view_switcher.add_css_class ("viewswitcher");
         var style_manager = Adw.StyleManager.get_default ();
         style_manager.set_color_scheme (Adw.ColorScheme.DEFAULT);
-    
-        // Скрыть кнопку "Test", если vkcube и glxgears недоступны
+
         if (!is_vkcube_available () && !is_glxgears_available ()) {
             test_button.set_visible (false);
         }
-    
-        // Добавляем действие "About"
+
         var about_action = new SimpleAction ("about", null);
         about_action.activate.connect (on_about_button_clicked);
         this.add_action (about_action);
