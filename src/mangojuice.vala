@@ -2802,6 +2802,7 @@ public class MangoJuice : Adw.Application {
         var dialog = new Gtk.FileDialog ();
         dialog.set_title ("Save MangoHud.conf As");
         dialog.set_accept_label ("Save");
+        dialog.set_initial_name ("MangoHud.conf");
     
         dialog.save.begin (this.active_window, null, (obj, res) => {
             try {
