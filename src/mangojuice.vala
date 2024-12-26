@@ -298,7 +298,7 @@ public class MangoJuice : Adw.Application {
             int width = window.get_width ();
             toolbar_view_switcher.policy = (width < 800) ? ViewSwitcherPolicy.NARROW : ViewSwitcherPolicy.WIDE;
     
-            if (width < 520) {
+            if (width < 550) {
                 bottom_headerbar.set_visible (true);
                 toolbar_view_switcher.set_visible (false);
             } else {
