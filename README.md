@@ -25,6 +25,7 @@ and also in the repository:
 * `gtk4`
 * `libadwaita-1`
 * `gio-2.0`
+* `fontconfig`
 * `mangohud`
 * `mesa-demos`
 * `vulkan-tools`
