@@ -7,6 +7,7 @@ sources = files(
     'about_dialog.vala',
     'mangojuice.vala',
     'save_states.vala',
+    'OtherBox.vala',
     'load_states.vala'
 )
 

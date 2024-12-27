@@ -1,8 +1,10 @@
 using Gtk;
 using Adw;
 using Gee;
+//using OtherBox;
 
 public class MangoJuice : Adw.Application {
+    public OtherBox other_box;
     public Button save_button;
     public Button reset_button;
     public Button logs_path_button;
@@ -311,6 +313,7 @@ public class MangoJuice : Adw.Application {
         var extras_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var performance_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var visual_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
+        var other_box = new OtherBox ();
     
         initialize_switches_and_labels (metrics_box, extras_box, performance_box, visual_box);
         initialize_custom_controls (extras_box, visual_box);
@@ -335,10 +338,16 @@ public class MangoJuice : Adw.Application {
         visual_scrolled_window.set_vexpand (true);
         visual_scrolled_window.set_child (visual_box);
 
+        var other_scrolled_window = new ScrolledWindow ();
+        other_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+        other_scrolled_window.set_vexpand (true);
+        other_scrolled_window.set_child (other_box);
+
         view_stack.add_titled (metrics_scrolled_window, "metrics_box", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
         view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
         view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
         view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
+        view_stack.add_titled (other_scrolled_window, "other_box", "Other").icon_name = "io.github.radiolamp.mangojuice-other-symbolic";
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
