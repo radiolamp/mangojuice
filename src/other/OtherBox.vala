@@ -4,6 +4,7 @@ public class OtherBox : Box {
 
     public Scale cas_scale;
     public Label cas_value_label;
+    public Switch cas_switch;
 
     public OtherBox () {
         Object (orientation: Orientation.VERTICAL, spacing: 12);
@@ -41,11 +42,21 @@ public class OtherBox : Box {
             OtherSave.save_states (this); // Сохраняем состояние
         });
 
-        // Создаем контейнер для Scale и меток
+        // Переключатель для включения/выключения CAS
+        cas_switch = new Switch ();
+        cas_switch.set_active (false); // Начальное состояние (выключено)
+        cas_switch.set_valign (Align.CENTER); // Выравниваем по центру по вертикали
+        cas_switch.state_set.connect ((state) => {
+            OtherSave.save_states (this); // Сохраняем состояние
+            return false;
+        });
+
+        // Создаем контейнер для Switch, Scale и меток
         var cas_box = new Box (Orientation.HORIZONTAL, 12);
         cas_box.set_margin_top (12);
         cas_box.set_margin_start (12);
         cas_box.set_margin_end (12);
+        cas_box.append (cas_switch); // Добавляем переключатель
         cas_box.append (new Label ("CAS Sharpness"));
         cas_box.append (cas_scale);
         cas_box.append (cas_value_label);

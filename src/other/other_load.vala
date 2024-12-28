@@ -8,13 +8,8 @@ public class OtherLoad {
 
         // Проверяем, существует ли директория
         if (!config_dir.query_exists ()) {
-            stdout.printf ("Config directory does not exist. Creating...\n");
-            try {
-                config_dir.make_directory_with_parents (); // Создаем директорию, если ее нет
-            } catch (Error e) {
-                stderr.printf ("Error creating config directory: %s\n", e.message);
-                return;
-            }
+            stdout.printf ("Config directory does not exist. Skipping load.\n");
+            return;
         }
 
         // Проверяем, существует ли файл
@@ -28,6 +23,7 @@ public class OtherLoad {
             var file_stream = new DataInputStream (file.read ());
             string line;
             bool casSharpnessFound = false;
+            bool effectsCasFound = false;
 
             while ((line = file_stream.read_line ()) != null) {
                 if (line.has_prefix ("casSharpness=")) {
@@ -42,6 +38,15 @@ public class OtherLoad {
                         stderr.printf ("Error: cas_scale is null\n");
                     }
                     casSharpnessFound = true;
+                } else if (line.has_prefix ("effects = cas")) {
+                    // Устанавливаем состояние переключателя
+                    if (other_box.cas_switch != null) {
+                        other_box.cas_switch.set_active (true);
+                        stdout.printf ("Loaded effects = cas\n");
+                    } else {
+                        stderr.printf ("Error: cas_switch is null\n");
+                    }
+                    effectsCasFound = true;
                 }
             }
 
@@ -49,6 +54,11 @@ public class OtherLoad {
             if (!casSharpnessFound && other_box.cas_scale != null) {
                 other_box.cas_scale.set_value (0);
                 other_box.cas_value_label.label = "0.00";
+            }
+
+            // Если effects = cas не найден, устанавливаем состояние переключателя по умолчанию (выключено)
+            if (!effectsCasFound && other_box.cas_switch != null) {
+                other_box.cas_switch.set_active (false);
             }
         } catch (Error e) {
             stderr.printf ("Error reading the file: %s\n", e.message);
