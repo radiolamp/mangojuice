@@ -1,7 +1,6 @@
 using Gtk;
 using Adw;
 using Gee;
-//using OtherBox;
 
 public class MangoJuice : Adw.Application {
     public OtherBox other_box;
