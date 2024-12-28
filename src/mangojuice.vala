@@ -346,7 +346,20 @@ public class MangoJuice : Adw.Application {
         view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
         view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
         view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
-        view_stack.add_titled (other_scrolled_window, "other_box", "Other").icon_name = "io.github.radiolamp.mangojuice-other-symbolic";
+        //view_stack.add_titled (other_scrolled_window, "other_box", "Other").icon_name = "io.github.radiolamp.mangojuice-other-symbolic";
+
+        bool is_vkbasalt_installed = check_vkbasalt_installed ();
+
+        // Добавляем other_box только если vkbasalt установлен
+        if (is_vkbasalt_installed) {
+            // Используем уже существующие переменные (если они объявлены как поля класса)
+            other_box = new OtherBox ();
+            other_scrolled_window = new ScrolledWindow ();
+            other_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+            other_scrolled_window.set_vexpand (true);
+            other_scrolled_window.set_child (other_box);
+            view_stack.add_titled (other_scrolled_window, "other_box", "Other").icon_name = "io.github.radiolamp.mangojuice-other-symbolic";
+        }
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
@@ -2989,6 +3002,21 @@ public class MangoJuice : Adw.Application {
             }
         } catch (Error e) {
             stderr.printf ("Error checking the MANGOHUD status: %s\n", e.message);
+        }
+    }
+
+    public bool check_vkbasalt_installed () {
+        try {
+            string[] argv = { "which", "vkbasalt" };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+    
+            return exit_status == 0;
+        } catch (Error e) {
+            stderr.printf ("Error checking vkbasalt availability: %s\n", e.message);
+            return false;
         }
     }
 
