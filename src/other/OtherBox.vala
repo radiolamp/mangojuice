@@ -21,6 +21,9 @@ public class OtherBox : Box {
     public ArrayList<Switch> switches { get; private set; }
     public ArrayList<Label> labels { get; private set; }
 
+    public Button vkbasalt_global_button { get; private set; }
+    public bool vkbasalt_global_enabled { get; private set; }
+
     public OtherBox () {
         Object (orientation: Orientation.VERTICAL, spacing: 12);
 
@@ -56,6 +59,18 @@ public class OtherBox : Box {
         create_scale_with_entry ("SMAA Max Search Steps", 0, 112, 1, 8, "%d");
         create_scale_with_entry ("SMAA Max Steps Diag", 0, 20, 1, 0, "%d");
         create_scale_with_entry ("SMAA Corner Rounding", 0, 100, 1, 25, "%d");
+
+        // Добавляем кнопку Global VkBasalt
+        vkbasalt_global_button = new Button.with_label ("Global VkBasalt");
+        vkbasalt_global_button.set_margin_top (FLOW_BOX_MARGIN);
+        vkbasalt_global_button.set_margin_end (FLOW_BOX_MARGIN);
+        vkbasalt_global_button.set_margin_start (FLOW_BOX_MARGIN);
+        vkbasalt_global_button.set_margin_bottom (FLOW_BOX_MARGIN);
+        vkbasalt_global_button.clicked.connect (on_vkbasalt_global_button_clicked);
+        this.append (vkbasalt_global_button);
+
+        // Проверяем текущее состояние VkBasalt
+        check_vkbasalt_global_status ();
 
         OtherLoad.load_states (this);
     }
@@ -138,9 +153,8 @@ public class OtherBox : Box {
 
         // Создаем Label и задаем размер
         var label = new Label (label_text);
-        label.set_size_request (160, -1); // Ширина 160 пикселей, высота автоматическая
+        label.set_size_request (160, -1);
         label.add_css_class ("bold-label");
-        label.set_halign (Align.START);   // Выравнивание текста по левому краю
 
         // Добавляем Label, Scale и Entry в контейнер
         box.append (label);
@@ -208,5 +222,73 @@ public class OtherBox : Box {
         }
     
         parent_box.append (flow_box);
+    }
+
+    // Метод для обработки нажатия на кнопку Global VkBasalt
+    private void on_vkbasalt_global_button_clicked () {
+        if (vkbasalt_global_enabled) {
+            try {
+                Process.spawn_command_line_sync ("pkexec sed -i '/ENABLE_VKBASALT=1/d' /etc/environment");
+                vkbasalt_global_enabled = false;
+                vkbasalt_global_button.remove_css_class ("suggested-action");
+                check_vkbasalt_global_status ();
+                show_restart_warning ();
+            } catch (Error e) {
+                stderr.printf ("Error deleting ENABLE_VKBASALT from /etc/environment: %s\n", e.message);
+            }
+        } else {
+            try {
+                Process.spawn_command_line_sync ("pkexec sh -c 'echo \"ENABLE_VKBASALT=1\" >> /etc/environment'");
+                vkbasalt_global_enabled = true;
+                vkbasalt_global_button.add_css_class ("suggested-action");
+                check_vkbasalt_global_status ();
+                show_restart_warning ();
+            } catch (Error e) {
+                stderr.printf ("Error adding ENABLE_VKBASALT to /etc/environment: %s\n", e.message);
+            }
+        }
+    }
+
+    // Метод для проверки текущего состояния VkBasalt
+    private void check_vkbasalt_global_status () {
+        try {
+            string[] argv = { "grep", "ENABLE_VKBASALT=1", "/etc/environment" };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+    
+            if (exit_status == 0) {
+                vkbasalt_global_enabled = true;
+                vkbasalt_global_button.add_css_class ("suggested-action");
+            } else {
+                vkbasalt_global_enabled = false;
+                vkbasalt_global_button.remove_css_class ("suggested-action");
+            }
+        } catch (Error e) {
+            stderr.printf ("Error checking the ENABLE_VKBASALT status: %s\n", e.message);
+        }
+    }
+
+    // Метод для показа предупреждения о необходимости перезагрузки
+    private void show_restart_warning () {
+        var dialog = new Adw.AlertDialog ("Warning", "The changes will take effect only after the system is restarted.");
+        dialog.add_response ("ok", "OK");
+        dialog.add_response ("restart", "Restart");
+        dialog.set_default_response ("ok");
+        dialog.set_response_appearance ("restart", Adw.ResponseAppearance.SUGGESTED);
+
+        dialog.present (this.get_root () as Gtk.Window);
+
+        dialog.response.connect ((response) => {
+            if (response == "restart") {
+                try {
+                    Process.spawn_command_line_sync ("reboot");
+                } catch (Error e) {
+                    stderr.printf ("Error when restarting the system: %s\n", e.message);
+                }
+            }
+            dialog.destroy ();
+        });
     }
 }
