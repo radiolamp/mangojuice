@@ -762,7 +762,7 @@ public class MangoJuice : Adw.Application {
         borders_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 15, -1);
         borders_scale.set_hexpand (true);
         borders_scale.set_size_request (250, -1);
-        borders_value_label = new Label ("");
+        borders_value_label = new Label ("0");
         borders_value_label.set_width_chars (3);
         borders_value_label.set_halign (Align.END);
         borders_scale.value_changed.connect ( () => borders_value_label.label = "%d".printf ( (int)borders_scale.get_value ()));
@@ -771,7 +771,7 @@ public class MangoJuice : Adw.Application {
         alpha_scale.set_hexpand (true);
         alpha_scale.set_size_request (250, -1);
         alpha_scale.set_value (50);
-        alpha_value_label = new Label ("");
+        alpha_value_label = new Label ("50");
         alpha_value_label.set_width_chars (3);
         alpha_scale.value_changed.connect ( () => {
             double value = alpha_scale.get_value ();
@@ -827,7 +827,7 @@ public class MangoJuice : Adw.Application {
         colums_scale.set_hexpand (true);
         colums_scale.set_value (3);
         colums_scale.set_size_request (350, -1);
-        colums_value_label = new Label ("");
+        colums_value_label = new Label ("3");
         colums_value_label.set_width_chars (3);
         colums_value_label.set_halign (Align.CENTER);
         colums_scale.value_changed.connect ( () => colums_value_label.label = "%d".printf ( (int)colums_scale.get_value ()));
@@ -875,7 +875,7 @@ public class MangoJuice : Adw.Application {
         offset_x_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 1500, 1);
         offset_x_scale.set_hexpand (true);
         offset_x_scale.set_size_request (250, -1);
-        offset_x_value_label = new Label ("");
+        offset_x_value_label = new Label ("0");
         offset_x_value_label.set_width_chars (5);
         offset_x_value_label.set_halign (Align.END);
         offset_x_scale.value_changed.connect (() => {
@@ -886,7 +886,7 @@ public class MangoJuice : Adw.Application {
         offset_y_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 1500, 1);
         offset_y_scale.set_hexpand (true);
         offset_y_scale.set_size_request (250, -1);
-        offset_y_value_label = new Label ("");
+        offset_y_value_label = new Label ("0");
         offset_y_value_label.set_width_chars (5);
         offset_y_value_label.set_halign (Align.END);
         offset_y_scale.value_changed.connect (() => {
@@ -934,7 +934,7 @@ public class MangoJuice : Adw.Application {
         font_size_scale.set_hexpand (true);
         font_size_scale.set_value (24);
         font_size_scale.set_size_request (400, -1);
-        font_size_value_label = new Label ("");
+        font_size_value_label = new Label ("24");
         font_size_value_label.set_width_chars (3);
         font_size_value_label.set_halign (Align.END);
         font_size_scale.value_changed.connect ( () => {
@@ -1583,7 +1583,7 @@ public class MangoJuice : Adw.Application {
         duracion_scale.set_value (30);
         duracion_scale.set_size_request (150, -1);
         duracion_scale.set_hexpand (true);
-        duracion_value_label = new Label ("");
+        duracion_value_label = new Label ("30");
         duracion_value_label.set_width_chars (5);
         duracion_value_label.set_halign (Align.END);
         duracion_scale.value_changed.connect (() => duracion_value_label.label = "%d s".printf ((int)duracion_scale.get_value ()));
@@ -1591,7 +1591,7 @@ public class MangoJuice : Adw.Application {
         autostart_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 30, 1);
         autostart_scale.set_value (0);
         autostart_scale.set_hexpand (true);
-        autostart_value_label = new Label ("");
+        autostart_value_label = new Label ("0");
         autostart_value_label.set_width_chars (3);
         autostart_value_label.set_halign (Align.END);
         autostart_scale.value_changed.connect (() => autostart_value_label.label = "%d s".printf ((int)autostart_scale.get_value ()));
@@ -1599,7 +1599,7 @@ public class MangoJuice : Adw.Application {
         interval_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 500, 1);
         interval_scale.set_value (100);
         interval_scale.set_hexpand (true);
-        interval_value_label = new Label ("");
+        interval_value_label = new Label ("100");
         interval_value_label.set_width_chars (6);
         interval_value_label.set_halign (Align.END);
         interval_scale.value_changed.connect (() => interval_value_label.label = "%d ms".printf ((int)interval_scale.get_value ()));
@@ -1774,7 +1774,7 @@ public class MangoJuice : Adw.Application {
         af = new Scale.with_range (Orientation.HORIZONTAL, 0, 16, 1);
         af.set_hexpand (true);
         af.set_size_request (200, -1);
-        af_label = new Label ("");
+        af_label = new Label ("0");
         af_label.set_width_chars (3);
         af_label.set_halign (Align.END);
         af.value_changed.connect (() => af_label.label = "%d".printf ((int)af.get_value ()));
@@ -1783,7 +1783,7 @@ public class MangoJuice : Adw.Application {
         picmip.set_hexpand (true);
         picmip.set_size_request (200, -1);
         picmip.set_value (0);
-        picmip_label = new Label ("");
+        picmip_label = new Label ("0");
         picmip_label.set_width_chars (3);
         picmip_label.set_halign (Align.END);
         picmip.value_changed.connect (() => picmip_label.label = "%d".printf ((int)picmip.get_value ()));
@@ -1836,7 +1836,7 @@ public class MangoJuice : Adw.Application {
         fps_sampling_period_scale.set_hexpand (true);
         fps_sampling_period_scale.set_size_request (200, -1);
         fps_sampling_period_scale.set_value (500);
-        fps_sampling_period_value_label = new Label ("");
+        fps_sampling_period_value_label = new Label ("1000");
         fps_sampling_period_value_label.set_width_chars (8);
         fps_sampling_period_value_label.set_halign (Align.END);
         fps_sampling_period_scale.value_changed.connect (() => {
