@@ -666,6 +666,7 @@ public class MangoJuice : Adw.Application {
         reset_button.add_css_class ("destructive-action");
         reset_button.clicked.connect ( () => {
             delete_mangohub_conf ();
+            delete_vkbasalt_conf ();
             restart_application ();
         });
 
@@ -1935,6 +1936,21 @@ public class MangoJuice : Adw.Application {
             }
         } else {
             warning ("MangoHud.conf file does not exist.");
+        }
+    }
+
+    public void delete_vkbasalt_conf () {
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("vkBasalt");
+        var file = config_dir.get_child ("vkBasalt.conf");
+        if (file.query_exists ()) {
+            try {
+                file.delete ();
+                warning ("vkBasalt.conf file deleted.");
+            } catch (Error e) {
+                stderr.printf ("Error deleting vkBasalt.conf: %s\n", e.message);
+            }
+        } else {
+            warning ("vkBasalt.conf file does not exist.");
         }
     }
 
