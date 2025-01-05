@@ -239,7 +239,7 @@ public class MangoJuice : Adw.Application {
             this.quit ();
         });
         this.add_action (quit_action);
-        this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
+        //this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
 
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (() => {
@@ -257,7 +257,7 @@ public class MangoJuice : Adw.Application {
             }
         });
         this.add_action (test_action_new);
-        this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
+        //this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
 
         var mangohud_global_action = new SimpleAction ("mangohud_global", null);
         mangohud_global_action.activate.connect (on_mangohud_global_button_clicked);
@@ -272,7 +272,7 @@ public class MangoJuice : Adw.Application {
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => SaveStates.save_states_to_file (this));
         window.add_action (save_action);
-        this.set_accels_for_action ("win.save", { "<primary>s" });
+        //this.set_accels_for_action ("win.save", { "<primary>s" });
 
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
@@ -346,7 +346,6 @@ public class MangoJuice : Adw.Application {
         view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
         view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
         view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
-        //view_stack.add_titled (other_scrolled_window, "other_box", "Other").icon_name = "io.github.radiolamp.mangojuice-other-symbolic";
 
         bool is_vkbasalt_installed = check_vkbasalt_installed ();
 
@@ -3007,15 +3006,21 @@ public class MangoJuice : Adw.Application {
 
     public bool check_vkbasalt_installed () {
         try {
-            string[] argv = { "which", "vkbasalt" };
+            // Use 'find' to search for 'libvkbasalt.so' in /usr
+            string[] argv = { "find", "/usr", "-name", "libvkbasalt.so" };
             int exit_status;
             string standard_output;
             string standard_error;
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
     
-            return exit_status == 0;
+            // Check if the output contains the path to libvkbasalt.so
+            if (standard_output.contains ("/libvkbasalt.so")) {
+                return true; // libvkbasalt.so found
+            } else {
+                return false; // libvkbasalt.so not found
+            }
         } catch (Error e) {
-            stderr.printf ("Error checking vkbasalt availability: %s\n", e.message);
+            stderr.printf ("Error checking for libvkbasalt.so: %s\n", e.message);
             return false;
         }
     }
