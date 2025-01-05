@@ -4,13 +4,11 @@ using Gee;
 public class OtherSave {
 
     public static void save_states (OtherBox other_box) {
-        // Определяем путь к директории конфигурации
         var config_dir = File.new_for_path (Environment.get_home_dir ())
                              .get_child (".config")
                              .get_child ("vkBasalt");
         var config_file = config_dir.get_child ("vkBasalt.conf");
 
-        // Проверяем, существует ли директория, и создаем ее, если нет
         if (!config_dir.query_exists ()) {
             try {
                 config_dir.make_directory_with_parents ();
@@ -22,23 +20,21 @@ public class OtherSave {
 
         DataOutputStream file_stream_write = null;
         try {
-            // Открываем файл для записи (создаем новый, если он уже существует)
             file_stream_write = new DataOutputStream (config_file.replace (null, false, FileCreateFlags.NONE));
 
-            // Сохраняем значение CAS Sharpness
-            double casSharpness = other_box.cas_scale.get_value ();
-            string casSharpness_line = "casSharpness=%.2f\n".printf (casSharpness).replace (",", ".");
-            file_stream_write.put_string (casSharpness_line);
+            // Сохраняем значения Scale и Entry
+            save_scale_value (file_stream_write, "casSharpness", other_box.scales[0], other_box.entries[0], "%.2f");
+            save_scale_value (file_stream_write, "dlsSharpness", other_box.scales[1], other_box.entries[1], "%.2f");
+            save_scale_value (file_stream_write, "dlsDenoise", other_box.scales[2], other_box.entries[2], "%.2f");
+            save_scale_value (file_stream_write, "fxaaQualitySubpix", other_box.scales[3], other_box.entries[3], "%.2f");
+            save_scale_value (file_stream_write, "fxaaEdgeThreshold", other_box.scales[4], other_box.entries[4], "%.3f");
+            save_scale_value (file_stream_write, "fxaaEdgeThresholdMin", other_box.scales[5], other_box.entries[5], "%.4f");
+            save_scale_value (file_stream_write, "smaaThreshold", other_box.scales[6], other_box.entries[6], "%.2f");
 
-            // Сохраняем значение DLS Sharpness
-            double dlsSharpness = other_box.dls_sharpness_scale.get_value ();
-            string dlsSharpness_line = "dlsSharpness=%.2f\n".printf (dlsSharpness).replace (",", ".");
-            file_stream_write.put_string (dlsSharpness_line);
-
-            // Сохраняем значение DLS Denoise
-            double dlsDenoise = other_box.dls_denoise_scale.get_value ();
-            string dlsDenoise_line = "dlsDenoise=%.2f\n".printf (dlsDenoise).replace (",", ".");
-            file_stream_write.put_string (dlsDenoise_line);
+            // Сохраняем целочисленные значения
+            save_int_scale_value (file_stream_write, "smaaMaxSearchSteps", other_box.scales[7], other_box.entries[7]);
+            save_int_scale_value (file_stream_write, "smaaMaxSearchStepsDiag", other_box.scales[8], other_box.entries[8]);
+            save_int_scale_value (file_stream_write, "smaaCornerRounding", other_box.scales[9], other_box.entries[9]);
 
             // Сохраняем активные эффекты
             var active_effects = new Gee.ArrayList<string> ();
@@ -57,7 +53,6 @@ public class OtherSave {
         } catch (Error e) {
             stderr.printf ("Ошибка при записи в файл: %s\n", e.message);
         } finally {
-            // Закрываем поток записи
             if (file_stream_write != null) {
                 try {
                     file_stream_write.close ();
@@ -66,5 +61,19 @@ public class OtherSave {
                 }
             }
         }
+    }
+
+    // Вспомогательный метод для сохранения дробных значений
+    private static void save_scale_value (DataOutputStream file_stream_write, string key, Scale scale, Entry entry, string format) throws Error {
+        double value = scale.get_value ();
+        string line = "%s=%s\n".printf (key, format.printf (value).replace (",", "."));
+        file_stream_write.put_string (line);
+    }
+
+    // Вспомогательный метод для сохранения целочисленных значений
+    private static void save_int_scale_value (DataOutputStream file_stream_write, string key, Scale scale, Entry entry) throws Error {
+        int value = (int) scale.get_value ();
+        string line = "%s=%d\n".printf (key, value);
+        file_stream_write.put_string (line);
     }
 }

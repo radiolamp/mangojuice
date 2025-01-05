@@ -95,7 +95,7 @@ public class MangoJuice : Adw.Application {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display"
     };
     public string[] gpu_label_texts = {
-        "GPU", "Load Color", "VRAM", "Core Freq", "Mem Freq",
+        "Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
         "Temp", "Memory Temp", "Juntion", "Fans", "Model",
         "Power", "Voltage", "Throttling", "Throttling GRAPH", "Vulkan Driver"
     };
