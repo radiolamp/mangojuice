@@ -22,19 +22,19 @@ public class OtherSave {
         try {
             file_stream_write = new DataOutputStream (config_file.replace (null, false, FileCreateFlags.NONE));
 
-            // Сохраняем значения Scale и Entry
-            save_scale_value (file_stream_write, "casSharpness", other_box.scales[0], other_box.entries[0], "%.2f");
-            save_scale_value (file_stream_write, "dlsSharpness", other_box.scales[1], other_box.entries[1], "%.2f");
-            save_scale_value (file_stream_write, "dlsDenoise", other_box.scales[2], other_box.entries[2], "%.2f");
-            save_scale_value (file_stream_write, "fxaaQualitySubpix", other_box.scales[3], other_box.entries[3], "%.2f");
-            save_scale_value (file_stream_write, "fxaaEdgeThreshold", other_box.scales[4], other_box.entries[4], "%.3f");
-            save_scale_value (file_stream_write, "fxaaEdgeThresholdMin", other_box.scales[5], other_box.entries[5], "%.4f");
-            save_scale_value (file_stream_write, "smaaThreshold", other_box.scales[6], other_box.entries[6], "%.2f");
+            // Сохраняем значения Scale и Entry, если они активны
+            save_scale_value_if_active (file_stream_write, "casSharpness", other_box.scales[0], other_box.entries[0], "%.2f", other_box, "cas");
+            save_scale_value_if_active (file_stream_write, "dlsSharpness", other_box.scales[1], other_box.entries[1], "%.2f", other_box, "dls");
+            save_scale_value_if_active (file_stream_write, "dlsDenoise", other_box.scales[2], other_box.entries[2], "%.2f", other_box, "dls");
+            save_scale_value_if_active (file_stream_write, "fxaaQualitySubpix", other_box.scales[3], other_box.entries[3], "%.2f", other_box, "fxaa");
+            save_scale_value_if_active (file_stream_write, "fxaaEdgeThreshold", other_box.scales[4], other_box.entries[4], "%.3f", other_box, "fxaa");
+            save_scale_value_if_active (file_stream_write, "fxaaEdgeThresholdMin", other_box.scales[5], other_box.entries[5], "%.4f", other_box, "fxaa");
+            save_scale_value_if_active (file_stream_write, "smaaThreshold", other_box.scales[6], other_box.entries[6], "%.2f", other_box, "smaa");
 
-            // Сохраняем целочисленные значения
-            save_int_scale_value (file_stream_write, "smaaMaxSearchSteps", other_box.scales[7], other_box.entries[7]);
-            save_int_scale_value (file_stream_write, "smaaMaxSearchStepsDiag", other_box.scales[8], other_box.entries[8]);
-            save_int_scale_value (file_stream_write, "smaaCornerRounding", other_box.scales[9], other_box.entries[9]);
+            // Сохраняем целочисленные значения, если они активны
+            save_int_scale_value_if_active (file_stream_write, "smaaMaxSearchSteps", other_box.scales[7], other_box.entries[7], other_box, "smaa");
+            save_int_scale_value_if_active (file_stream_write, "smaaMaxSearchStepsDiag", other_box.scales[8], other_box.entries[8], other_box, "smaa");
+            save_int_scale_value_if_active (file_stream_write, "smaaCornerRounding", other_box.scales[9], other_box.entries[9], other_box, "smaa");
 
             // Сохраняем активные эффекты
             var active_effects = new Gee.ArrayList<string> ();
@@ -63,17 +63,21 @@ public class OtherSave {
         }
     }
 
-    // Вспомогательный метод для сохранения дробных значений
-    private static void save_scale_value (DataOutputStream file_stream_write, string key, Scale scale, Entry entry, string format) throws Error {
-        double value = scale.get_value ();
-        string line = "%s=%s\n".printf (key, format.printf (value).replace (",", "."));
-        file_stream_write.put_string (line);
+    // Вспомогательный метод для сохранения дробных значений, если Scale активен
+    private static void save_scale_value_if_active (DataOutputStream file_stream_write, string key, Scale scale, Entry entry, string format, OtherBox other_box, string switch_name) throws Error {
+        if (other_box.is_scale_active (scale, switch_name)) {
+            double value = scale.get_value ();
+            string line = "%s=%s\n".printf (key, format.printf (value).replace (",", "."));
+            file_stream_write.put_string (line);
+        }
     }
 
-    // Вспомогательный метод для сохранения целочисленных значений
-    private static void save_int_scale_value (DataOutputStream file_stream_write, string key, Scale scale, Entry entry) throws Error {
-        int value = (int) scale.get_value ();
-        string line = "%s=%d\n".printf (key, value);
-        file_stream_write.put_string (line);
+    // Вспомогательный метод для сохранения целочисленных значений, если Scale активен
+    private static void save_int_scale_value_if_active (DataOutputStream file_stream_write, string key, Scale scale, Entry entry, OtherBox other_box, string switch_name) throws Error {
+        if (other_box.is_scale_active (scale, switch_name)) {
+            int value = (int) scale.get_value ();
+            string line = "%s=%d\n".printf (key, value);
+            file_stream_write.put_string (line);
+        }
     }
 }
