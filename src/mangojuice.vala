@@ -57,8 +57,6 @@ public class MangoJuice : Adw.Application {
     public const string BATTERY_TITLE = "Battery";
     public const string OTHER_EXTRA_TITLE = "Other";
     public const string INFORM_TITLE = "Information";
-    public const string LIMITERS_TITLE = "Limiters FPS";
-    public const string FILTERS_TITLE = "Filters";
     public const int MAIN_BOX_SPACING = 12;
     public const int FLOW_BOX_ROW_SPACING = 12;
     public const int FLOW_BOX_COLUMN_SPACING = 12;
@@ -724,17 +722,12 @@ public class MangoJuice : Adw.Application {
         extras_box.append (custom_command_flow_box);
 
         var customize_label = new Label ("Customize");
-        customize_label.set_halign (Align.CENTER);
         customize_label.set_halign (Align.START);
-        customize_label.set_markup ("<span size='14000'>%s</span>".printf ("Customize"));
-        customize_label.set_margin_top (FLOW_BOX_MARGIN);
+        customize_label.add_css_class ("title-4");
         customize_label.set_margin_start (FLOW_BOX_MARGIN);
-        customize_label.set_margin_end (FLOW_BOX_MARGIN);
-        var customize_font_description = new Pango.FontDescription ();
-        customize_font_description.set_weight (Pango.Weight.BOLD);
-        var customize_attr_list = new Pango.AttrList ();
-        customize_attr_list.insert (new Pango.AttrFontDesc (customize_font_description));
-        customize_label.set_attributes (customize_attr_list);
+        customize_label.set_margin_top (FLOW_BOX_MARGIN);
+        customize_label.set_margin_bottom (FLOW_BOX_MARGIN);
+
         visual_box.append (customize_label);
 
         custom_text_center_entry = new Entry ();
@@ -800,12 +793,14 @@ public class MangoJuice : Adw.Application {
         var borders_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         borders_pair.append (new Label ("Borders"));
         borders_pair.append (borders_scale);
+        borders_pair.set_size_request (50, -1);
         borders_pair.append (borders_value_label);
         custom_switch_flow_box.insert (borders_pair, -1);
 
         var alpha_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         alpha_pair.append (new Label ("Alpha"));
         alpha_pair.append (alpha_scale);
+        alpha_pair.set_size_request (50, -1);
         alpha_pair.append (alpha_value_label);
         custom_switch_flow_box.insert (alpha_pair, -1);
 
@@ -820,7 +815,7 @@ public class MangoJuice : Adw.Application {
             position_model.append (item);
         }
         position_dropdown = new DropDown (position_model, null);
-        position_dropdown.set_size_request (100, -1);
+        position_dropdown.set_size_request (80, -1);
         position_dropdown.set_valign (Align.CENTER);
         position_dropdown.set_hexpand (true);
         position_dropdown.notify["selected-item"].connect ( () => {
@@ -830,7 +825,7 @@ public class MangoJuice : Adw.Application {
         colums_scale = new Scale.with_range (Orientation.HORIZONTAL, 1, 6, -1);
         colums_scale.set_hexpand (true);
         colums_scale.set_value (3);
-        colums_scale.set_size_request (240, -1);
+        colums_scale.set_size_request (200, -1);
         colums_value_label = new Label ("3");
         colums_value_label.set_width_chars (3);
         colums_value_label.set_halign (Align.CENTER);
@@ -921,17 +916,12 @@ public class MangoJuice : Adw.Application {
         visual_box.append (offset_flow_box);
 
         var fonts_label = new Label ("Font");
-        fonts_label.set_halign (Align.CENTER);
         fonts_label.set_halign (Align.START);
-        fonts_label.set_markup ("<span size='14000'>%s</span>".printf ("Font"));
-        fonts_label.set_margin_top (FLOW_BOX_MARGIN);
+        fonts_label.add_css_class ("title-4");
         fonts_label.set_margin_start (FLOW_BOX_MARGIN);
-        fonts_label.set_margin_end (FLOW_BOX_MARGIN);
-        var fonts_font_description = new Pango.FontDescription ();
-        fonts_font_description.set_weight (Pango.Weight.BOLD);
-        var fonts_attr_list = new Pango.AttrList ();
-        fonts_attr_list.insert (new Pango.AttrFontDesc (fonts_font_description));
-        fonts_label.set_attributes (fonts_attr_list);
+        fonts_label.set_margin_top (FLOW_BOX_MARGIN);
+        fonts_label.set_margin_bottom (FLOW_BOX_MARGIN);
+
         visual_box.append (fonts_label);
 
         font_size_scale = new Scale.with_range (Orientation.HORIZONTAL, 8, 64, 1);
@@ -972,18 +962,12 @@ public class MangoJuice : Adw.Application {
         visual_box.append (fonts_flow_box);
 
         var color_label = new Label ("Color");
-        color_label.set_halign (Align.CENTER);
         color_label.set_halign (Align.START);
-        color_label.set_markup ("<span size='14000'>%s</span>".printf ("Color"));
+        color_label.add_css_class ("title-4");
+        color_label.set_margin_start (FLOW_BOX_MARGIN);
         color_label.set_margin_top (FLOW_BOX_MARGIN);
         color_label.set_margin_bottom (FLOW_BOX_MARGIN);
-        color_label.set_margin_start (FLOW_BOX_MARGIN);
-        color_label.set_margin_end (FLOW_BOX_MARGIN);
-        var color_font_description = new Pango.FontDescription ();
-        color_font_description.set_weight (Pango.Weight.BOLD);
-        var color_attr_list = new Pango.AttrList ();
-        color_attr_list.insert (new Pango.AttrFontDesc (color_font_description));
-        color_label.set_attributes (color_attr_list);
+
         visual_box.append (color_label);
 
         var color_flow_box = new FlowBox ();
@@ -1064,6 +1048,9 @@ public class MangoJuice : Adw.Application {
 
         var fps_clarge_label = new Label ("Charge FPS");
         fps_clarge_label.set_halign (Align.START);
+        fps_clarge_label.add_css_class ("title-4");
+        fps_clarge_label.set_margin_start (FLOW_BOX_MARGIN);
+        visual_box.append (fps_clarge_label);
 
         var color_dialog_fps = new ColorDialog ();
         fps_color_button_1 = new ColorDialogButton (color_dialog_fps);
@@ -1098,7 +1085,6 @@ public class MangoJuice : Adw.Application {
         fps_color_box.set_margin_end (FLOW_BOX_MARGIN);
         fps_color_box.set_margin_top (FLOW_BOX_MARGIN);
         fps_color_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        fps_color_box.append (fps_clarge_label);
         fps_color_box.append (fps_value_entry_1);
         fps_color_box.append (fps_value_entry_2);
         fps_color_box.append (fps_color_button_1);
@@ -1124,8 +1110,11 @@ public class MangoJuice : Adw.Application {
             SaveStates.save_states_to_file (this);
         });
 
-        var gpu_load_clarge_label = new Label ("GPU Load %");
+        var gpu_load_clarge_label = new Label ("GPU Load as a percentage");
         gpu_load_clarge_label.set_halign (Align.START);
+        gpu_load_clarge_label.add_css_class ("title-4");
+        gpu_load_clarge_label.set_margin_start (FLOW_BOX_MARGIN);
+        visual_box.append (gpu_load_clarge_label);
 
         var color_dialog_gpu_load = new ColorDialog ();
         gpu_load_color_button_1 = new ColorDialogButton (color_dialog_gpu_load);
@@ -1160,7 +1149,6 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_box.set_margin_end (FLOW_BOX_MARGIN);
         gpu_load_color_box.set_margin_top (FLOW_BOX_MARGIN);
         gpu_load_color_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        gpu_load_color_box.append (gpu_load_clarge_label);
         gpu_load_color_box.append (gpu_load_value_entry_1);
         gpu_load_color_box.append (gpu_load_value_entry_2);
         gpu_load_color_box.append (gpu_load_color_button_1);
@@ -1185,9 +1173,6 @@ public class MangoJuice : Adw.Application {
             update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
-
-        var cpu_load_clarge_label = new Label ("CPU Load %");
-        cpu_load_clarge_label.set_halign (Align.START);
 
         var color_dialog_cpu_load = new ColorDialog ();
         cpu_load_color_button_1 = new ColorDialogButton (color_dialog_cpu_load);
@@ -1217,12 +1202,17 @@ public class MangoJuice : Adw.Application {
             update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
 
+        var cpu_load_clarge_label = new Label ("CPU Load as a percentage");
+        cpu_load_clarge_label.set_halign (Align.START);
+        cpu_load_clarge_label.add_css_class ("title-4");
+        cpu_load_clarge_label.set_margin_start (FLOW_BOX_MARGIN);
+        visual_box.append (cpu_load_clarge_label);
+
         var cpu_load_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         cpu_load_color_box.set_margin_start (FLOW_BOX_MARGIN);
         cpu_load_color_box.set_margin_end (FLOW_BOX_MARGIN);
         cpu_load_color_box.set_margin_top (FLOW_BOX_MARGIN);
         cpu_load_color_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        cpu_load_color_box.append (cpu_load_clarge_label);
         cpu_load_color_box.append (cpu_load_value_entry_1);
         cpu_load_color_box.append (cpu_load_value_entry_2);
         cpu_load_color_box.append (cpu_load_color_button_1);
@@ -1478,12 +1468,11 @@ public class MangoJuice : Adw.Application {
 
     public void create_switches_and_labels (Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
         var label = new Label (title);
-        label.add_css_class ("bold-label");
         label.set_margin_top (FLOW_BOX_MARGIN);
         label.set_margin_start (FLOW_BOX_MARGIN);
         label.set_margin_end (FLOW_BOX_MARGIN);
         label.set_halign (Align.START);
-        label.set_markup ("<span size='14000'>%s</span>".printf (title));
+        label.add_css_class ("title-4");
     
         parent_box.append (label);
     
@@ -1552,18 +1541,11 @@ public class MangoJuice : Adw.Application {
 
     public void create_scales_and_labels (Box parent_box) {
         var logging_label = new Label ("Logging");
-        logging_label.set_valign (Align.START);
         logging_label.set_halign (Align.START);
-        logging_label.set_markup ("<span size='14000'>%s</span>".printf ("Logging"));
-        logging_label.set_margin_top (FLOW_BOX_MARGIN);
+        logging_label.add_css_class ("title-4");
         logging_label.set_margin_start (FLOW_BOX_MARGIN);
-        logging_label.set_margin_end (FLOW_BOX_MARGIN);
-
-        var font_description = new Pango.FontDescription ();
-        font_description.set_weight (Pango.Weight.BOLD);
-        var attr_list = new Pango.AttrList ();
-        attr_list.insert (new Pango.AttrFontDesc (font_description));
-        logging_label.set_attributes (attr_list);
+        logging_label.set_margin_top (FLOW_BOX_MARGIN);
+        logging_label.set_margin_bottom (FLOW_BOX_MARGIN);
 
         parent_box.append (logging_label);
 
@@ -1624,21 +1606,15 @@ public class MangoJuice : Adw.Application {
     }
 
     public void create_limiters_and_filters (Box performance_box) {
-        var limiters_label = new Label (LIMITERS_TITLE);
-        limiters_label.set_halign (Align.CENTER);
-        limiters_label.set_halign (Align.START);
-        limiters_label.set_markup ("<span size='14000'>%s</span>".printf ("Limiters FPS"));
-        limiters_label.set_margin_top (FLOW_BOX_MARGIN);
-        limiters_label.set_margin_start (FLOW_BOX_MARGIN);
-        limiters_label.set_margin_end (FLOW_BOX_MARGIN);
 
-        var font_description = new Pango.FontDescription ();
-        font_description.set_weight (Pango.Weight.BOLD);
-        var attr_list = new Pango.AttrList ();
-        attr_list.insert (new Pango.AttrFontDesc (font_description));
-        limiters_label.set_attributes (attr_list);
+        var limiters_label = new Label ("Limiters FPS");
+        limiters_label.set_halign (Align.START);
+        limiters_label.add_css_class ("title-4");
+        limiters_label.set_margin_start (FLOW_BOX_MARGIN);
+        limiters_label.set_margin_bottom (FLOW_BOX_MARGIN);
 
         performance_box.append (limiters_label);
+        
 
         var fps_limit_method_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "late", "early" }) {
@@ -1688,16 +1664,10 @@ public class MangoJuice : Adw.Application {
 
         var vsync_label = new Label ("VSync");
         vsync_label.set_halign (Align.START);
-        vsync_label.set_markup ("<span size='14000'>%s</span>".printf ("VSync"));
-        vsync_label.set_margin_top (FLOW_BOX_MARGIN);
+        vsync_label.add_css_class ("title-4");
         vsync_label.set_margin_start (FLOW_BOX_MARGIN);
-        vsync_label.set_margin_end (FLOW_BOX_MARGIN);
-
-        font_description = new Pango.FontDescription ();
-        font_description.set_weight (Pango.Weight.BOLD);
-        attr_list = new Pango.AttrList ();
-        attr_list.insert (new Pango.AttrFontDesc (font_description));
-        vsync_label.set_attributes (attr_list);
+        vsync_label.set_margin_top (FLOW_BOX_MARGIN);
+        vsync_label.set_margin_bottom (FLOW_BOX_MARGIN);
 
         performance_box.append (vsync_label);
 
@@ -1737,18 +1707,12 @@ public class MangoJuice : Adw.Application {
         vsync_box.append (opengl_dropdown);
         performance_box.append (vsync_box);
 
-        var filters_label = new Label (FILTERS_TITLE);
+        var filters_label = new Label ("Filters");
         filters_label.set_halign (Align.START);
-        filters_label.set_markup ("<span size='14000'>%s</span>".printf ("Filters"));
-        filters_label.set_margin_top (FLOW_BOX_MARGIN);
+        filters_label.add_css_class ("title-4");
         filters_label.set_margin_start (FLOW_BOX_MARGIN);
-        filters_label.set_margin_end (FLOW_BOX_MARGIN);
-
-        font_description = new Pango.FontDescription ();
-        font_description.set_weight (Pango.Weight.BOLD);
-        attr_list = new Pango.AttrList ();
-        attr_list.insert (new Pango.AttrFontDesc (font_description));
-        filters_label.set_attributes (attr_list);
+        filters_label.set_margin_top (FLOW_BOX_MARGIN);
+        filters_label.set_margin_bottom (FLOW_BOX_MARGIN);
 
         performance_box.append (filters_label);
 
@@ -1807,17 +1771,11 @@ public class MangoJuice : Adw.Application {
 
         var fps_sampling_period_label = new Label ("Other");
         fps_sampling_period_label.set_halign (Align.START);
-        fps_sampling_period_label.set_markup ("<span size='14000'>%s</span>".printf ("Other"));
-        fps_sampling_period_label.set_margin_top (FLOW_BOX_MARGIN);
+        fps_sampling_period_label.add_css_class ("title-4");
         fps_sampling_period_label.set_margin_start (FLOW_BOX_MARGIN);
-        fps_sampling_period_label.set_margin_end (FLOW_BOX_MARGIN);
-    
-        var fps_sampling_period_font_description = new Pango.FontDescription ();
-        fps_sampling_period_font_description.set_weight (Pango.Weight.BOLD);
-        var fps_sampling_period_attr_list = new Pango.AttrList ();
-        fps_sampling_period_attr_list.insert (new Pango.AttrFontDesc (fps_sampling_period_font_description));
-        fps_sampling_period_label.set_attributes (fps_sampling_period_attr_list);
-    
+        fps_sampling_period_label.set_margin_top (FLOW_BOX_MARGIN);
+        fps_sampling_period_label.set_margin_bottom (FLOW_BOX_MARGIN);
+
         performance_box.append (fps_sampling_period_label);
     
         fps_sampling_period_scale = new Scale.with_range (Orientation.HORIZONTAL, 250, 2000, 1);
