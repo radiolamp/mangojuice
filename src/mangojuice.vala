@@ -758,7 +758,7 @@ public class MangoJuice : Adw.Application {
 
         borders_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 15, -1);
         borders_scale.set_hexpand (true);
-        borders_scale.set_size_request (240, -1);
+        borders_scale.set_size_request (200, -1);
         borders_value_label = new Label ("0");
         borders_value_label.set_width_chars (3);
         borders_value_label.set_halign (Align.END);
@@ -766,7 +766,7 @@ public class MangoJuice : Adw.Application {
 
         alpha_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 100, 1);
         alpha_scale.set_hexpand (true);
-        alpha_scale.set_size_request (240, -1);
+        alpha_scale.set_size_request (200, -1);
         alpha_scale.set_value (50);
         alpha_value_label = new Label ("50");
         alpha_value_label.set_width_chars (3);
