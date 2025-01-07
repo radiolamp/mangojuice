@@ -237,7 +237,7 @@ public class MangoJuice : Adw.Application {
             this.quit ();
         });
         this.add_action (quit_action);
-        //this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
+        this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
 
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (() => {
@@ -255,7 +255,7 @@ public class MangoJuice : Adw.Application {
             }
         });
         this.add_action (test_action_new);
-        //this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
+        this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
 
         var mangohud_global_action = new SimpleAction ("mangohud_global", null);
         mangohud_global_action.activate.connect (on_mangohud_global_button_clicked);
@@ -448,8 +448,7 @@ public class MangoJuice : Adw.Application {
             }
             return false;
         });
-    
-        // Логика переключения переключателей
+
         inform_switches[2].notify["active"].connect (() => {
             if (inform_switches[2].active) inform_switches[3].active = false;
         });
