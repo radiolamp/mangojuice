@@ -934,7 +934,7 @@ public class MangoJuice : Adw.Application {
         font_size_scale = new Scale.with_range (Orientation.HORIZONTAL, 8, 64, 1);
         font_size_scale.set_hexpand (true);
         font_size_scale.set_value (24);
-        font_size_scale.set_size_request (400, -1);
+        font_size_scale.set_size_request (240, -1);
         font_size_value_label = new Label ("24");
         font_size_value_label.set_width_chars (3);
         font_size_value_label.set_halign (Align.END);
@@ -1408,7 +1408,7 @@ public class MangoJuice : Adw.Application {
     
         font_dropdown = new DropDown (font_model, null);
         font_dropdown.set_hexpand (true);
-        font_dropdown.set_size_request (300, -1);
+        font_dropdown.set_size_request (100, -1);
         font_dropdown.notify["selected-item"].connect (() => {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
             var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
