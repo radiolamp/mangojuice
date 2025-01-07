@@ -266,11 +266,10 @@ public class MangoJuice : Adw.Application {
         var window = new Adw.ApplicationWindow (this);
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
-    
+
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => SaveStates.save_states_to_file (this));
         window.add_action (save_action);
-        //this.set_accels_for_action ("win.save", { "<primary>s" });
 
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
@@ -282,29 +281,28 @@ public class MangoJuice : Adw.Application {
 
         var bottom_headerbar = new Gtk.HeaderBar ();
         bottom_headerbar.show_title_buttons = false;
-
+    
         var bottom_view_switcher = new ViewSwitcher ();
         bottom_view_switcher.stack = view_stack;
-
+    
         var center_box = new Box (Orientation.HORIZONTAL, 0);
         center_box.set_halign (Align.CENTER);
         center_box.append (bottom_view_switcher);
         bottom_headerbar.set_title_widget (center_box);
 
         bottom_headerbar.set_visible (false);
+
+        var breakpoint_800px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 800px"));
+        var breakpoint_550px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 550px"));
+
+        breakpoint_800px.add_setter (toolbar_view_switcher, "policy", ViewSwitcherPolicy.NARROW);
     
-        window.notify["default-width"].connect (() => {
-            int width = window.get_width ();
-            toolbar_view_switcher.policy = (width < 800) ? ViewSwitcherPolicy.NARROW : ViewSwitcherPolicy.WIDE;
-    
-            if (width < 550) {
-                bottom_headerbar.set_visible (true);
-                toolbar_view_switcher.set_visible (false);
-            } else {
-                bottom_headerbar.set_visible (false);
-                toolbar_view_switcher.set_visible (true);
-            }
-        });
+        breakpoint_550px.add_setter (toolbar_view_switcher, "policy", ViewSwitcherPolicy.NARROW);
+        breakpoint_550px.add_setter (bottom_headerbar, "visible", true);
+        breakpoint_550px.add_setter (toolbar_view_switcher, "visible", false);
+
+        window.add_breakpoint (breakpoint_800px);
+        window.add_breakpoint (breakpoint_550px);
 
         var metrics_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var extras_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
@@ -334,14 +332,13 @@ public class MangoJuice : Adw.Application {
         visual_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         visual_scrolled_window.set_vexpand (true);
         visual_scrolled_window.set_child (visual_box);
-
+    
         var other_scrolled_window = new ScrolledWindow ();
         other_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         other_scrolled_window.set_vexpand (true);
         other_scrolled_window.set_child (other_box);
 
         string? current_desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
-
         bool is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
 
         if (is_gnome) {
@@ -359,7 +356,6 @@ public class MangoJuice : Adw.Application {
         }
 
         bool is_vkbasalt_installed = check_vkbasalt_installed ();
-
         if (is_vkbasalt_installed) {
             other_box = new OtherBox ();
             other_scrolled_window = new ScrolledWindow ();
@@ -425,7 +421,6 @@ public class MangoJuice : Adw.Application {
         var content_box = new Box (Orientation.VERTICAL, 0);
         content_box.append (header_bar);
         content_box.append (view_stack);
-
         content_box.append (bottom_headerbar);
 
         window.set_content (content_box);
@@ -453,7 +448,8 @@ public class MangoJuice : Adw.Application {
             }
             return false;
         });
-
+    
+        // Логика переключения переключателей
         inform_switches[2].notify["active"].connect (() => {
             if (inform_switches[2].active) inform_switches[3].active = false;
         });
