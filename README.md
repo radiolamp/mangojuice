@@ -28,7 +28,7 @@ and also in the repository:
 * `fontconfig`
 * `mangohud`
 
-#### Optional dependencies
+#### Optional dependencies:
 * `mesa-demos`
 * `vulkan-tools`
 * `vkbasalt`
