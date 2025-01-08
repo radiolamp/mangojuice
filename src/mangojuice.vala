@@ -1733,24 +1733,35 @@ public class MangoJuice : Adw.Application {
         fps_sampling_period_label.set_margin_top (FLOW_BOX_MARGIN);
         fps_sampling_period_label.set_margin_bottom (FLOW_BOX_MARGIN);
         performance_box.append (fps_sampling_period_label);
-
+        
         var fps_sampling_period_widget = create_scale_entry_widget ("FPS Sampling", "Milliseconds", 250, 2000, 500);
         fps_sampling_period_scale = fps_sampling_period_widget.scale;
         fps_sampling_period_entry = fps_sampling_period_widget.entry;
-
+        
+        // Флаг для предотвращения рекурсивного обновления
+        bool is_updating = false;
+        
         fps_sampling_period_scale.value_changed.connect (() => {
-            fps_sampling_period_entry.text = "%d".printf ((int)fps_sampling_period_scale.get_value ());
-            update_fps_sampling_period_in_file ("%d".printf ((int)fps_sampling_period_scale.get_value ()));
-        });
-
-        fps_sampling_period_entry.changed.connect (() => {
-            int value = int.parse (fps_sampling_period_entry.text);
-            if (value >= 250 && value <= 2000 && value != (int)fps_sampling_period_scale.get_value ()) {
-                fps_sampling_period_scale.set_value (value);
-                update_fps_sampling_period_in_file ("%d".printf (value));
+            if (!is_updating) {
+                is_updating = true; // Блокируем обновление
+                fps_sampling_period_entry.text = "%d".printf ((int)fps_sampling_period_scale.get_value ());
+                update_fps_sampling_period_in_file ("%d".printf ((int)fps_sampling_period_scale.get_value ()));
+                is_updating = false; // Разблокируем обновление
             }
         });
-
+        
+        fps_sampling_period_entry.changed.connect (() => {
+            if (!is_updating) {
+                is_updating = true; // Блокируем обновление
+                int value = int.parse (fps_sampling_period_entry.text);
+                if (value >= 250 && value <= 2000 && value != (int)fps_sampling_period_scale.get_value ()) {
+                    fps_sampling_period_scale.set_value (value);
+                    update_fps_sampling_period_in_file ("%d".printf (value));
+                }
+                is_updating = false; // Разблокируем обновление
+            }
+        });
+        
         var fps_sampling_period_flow_box = new FlowBox ();
         fps_sampling_period_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         fps_sampling_period_flow_box.set_max_children_per_line (1);
@@ -1759,7 +1770,6 @@ public class MangoJuice : Adw.Application {
         fps_sampling_period_flow_box.set_margin_top (FLOW_BOX_MARGIN);
         fps_sampling_period_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         fps_sampling_period_flow_box.set_selection_mode (SelectionMode.NONE);
-
         fps_sampling_period_flow_box.insert (fps_sampling_period_widget.widget, -1);
         performance_box.append (fps_sampling_period_flow_box);
     }
@@ -2844,67 +2854,111 @@ public class MangoJuice : Adw.Application {
         public Box widget;
     }
 
+    private void setup_numeric_entry (Entry entry) {
+        entry.input_purpose = Gtk.InputPurpose.NUMBER; // Указываем, что поле предназначено для чисел
+        entry.set_max_length (4); // Ограничиваем длину ввода
+    
+        // Фильтр для ввода только цифр
+        entry.insert_text.connect ((new_text, new_text_length, ref position) => {
+            foreach (var c in new_text.to_utf8 ()) {
+                if (!c.isdigit () && c != '-') { // Разрешаем цифры и минус
+                    Signal.stop_emission_by_name (entry, "insert-text");
+                    break;
+                }
+            }
+        });
+    }
+
+    private void validate_entry_value (Entry entry, int min, int max) {
+        int value = 0;
+        if (int.try_parse (entry.text, out value)) {
+            if (value < min || value > max) {
+                entry.add_css_class ("error");
+            } else {
+                entry.remove_css_class ("error");
+            }
+        } else {
+            entry.add_css_class ("error");
+        }
+    }
+
     private ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
         ScaleEntryWidget result = ScaleEntryWidget ();
-
+    
         // Создаем Text + Scale + Entry
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
         result.scale.set_size_request (150, -1);
         result.scale.set_hexpand (true);
-
+    
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
-
+    
+        // Настраиваем Entry для ввода только чисел
+        setup_numeric_entry (result.entry);
+    
         bool is_updating = false;
-
+    
         result.scale.value_changed.connect (() => {
             if (!is_updating) {
                 is_updating = true;
-                result.entry.text = "%d".printf ((int)result.scale.get_value ());
-                is_updating = false;
+                // Отложенное обновление Entry
+                GLib.Idle.add (() => {
+                    result.entry.text = "%d".printf ((int)result.scale.get_value ());
+                    validate_entry_value (result.entry, min, max); // Проверяем значение
+                    is_updating = false;
+                    return false; // Останавливаем выполнение idle-функции
+                });
             }
         });
-
+    
         result.entry.changed.connect (() => {
             if (!is_updating) {
-                int value = int.parse (result.entry.text);
-                if (value >= min && value <= max && value != (int)result.scale.get_value ()) {
-                    is_updating = true;
-                    result.scale.set_value (value);
-                    is_updating = false;
+                int value = 0;
+                if (int.try_parse (result.entry.text, out value)) {
+                    if (value >= min && value <= max && value != (int)result.scale.get_value ()) {
+                        is_updating = true;
+                        // Отложенное обновление Scale
+                        GLib.Idle.add (() => {
+                            result.scale.set_value (value);
+                            validate_entry_value (result.entry, min, max); // Проверяем значение
+                            is_updating = false;
+                            return false; // Останавливаем выполнение idle-функции
+                        });
+                    }
                 }
+                validate_entry_value (result.entry, min, max); // Проверяем значение
             }
         });
-
+    
         var text_box = new Box (Orientation.VERTICAL, 0);
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
-
+    
         var label1 = new Label (null);
         label1.set_markup ("<b>%s</b>".printf (title));
         label1.set_halign (Align.START);
         label1.set_hexpand (false);
-
+    
         var label2 = new Label (null);
         label2.set_markup ("<span size='9000'>%s</span>".printf (description));
         label2.set_halign (Align.START);
         label2.set_hexpand (false);
         label2.add_css_class ("dim-label");
-
+    
         text_box.append (label1);
         text_box.append (label2);
-
+    
         result.widget = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         result.widget.append (text_box); // Label слева
         result.widget.append (result.scale);    // Scale
         result.widget.append (result.entry);    // Entry
-
+    
         return result;
-    }
+    }    
 
     public void check_file_permissions () {
         try {
