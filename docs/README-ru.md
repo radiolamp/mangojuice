@@ -21,8 +21,12 @@
 * `gio-2.0`
 * `fontconfig`
 * `mangohud`
+
+#### Опциональные Зависимости:
 * `mesa-demos`
 * `vulkan-tools`
+* `vkbasalt`
+
 
 #### Утилиты для сборки:
 * `meson`

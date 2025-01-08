@@ -27,8 +27,11 @@ and also in the repository:
 * `gio-2.0`
 * `fontconfig`
 * `mangohud`
+
+#### Optional dependencies
 * `mesa-demos`
 * `vulkan-tools`
+* `vkbasalt`
 
 #### Build utilities:
 * `meson`
