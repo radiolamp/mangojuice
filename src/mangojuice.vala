@@ -1735,10 +1735,10 @@ public class MangoJuice : Adw.Application {
         var fps_sampling_period_widget = create_scale_entry_widget ("FPS Sampling", "Milliseconds", 250, 2000, 500);
         fps_sampling_period_scale = fps_sampling_period_widget.scale;
         fps_sampling_period_entry = fps_sampling_period_widget.entry;
-        
+
         // Флаг для предотвращения рекурсивного обновления
         bool is_updating = false;
-        
+
         fps_sampling_period_scale.value_changed.connect (() => {
             if (!is_updating) {
                 is_updating = true; // Блокируем обновление
@@ -1747,7 +1747,7 @@ public class MangoJuice : Adw.Application {
                 is_updating = false; // Разблокируем обновление
             }
         });
-        
+
         fps_sampling_period_entry.changed.connect (() => {
             if (!is_updating) {
                 is_updating = true; // Блокируем обновление
@@ -1759,7 +1759,7 @@ public class MangoJuice : Adw.Application {
                 is_updating = false; // Разблокируем обновление
             }
         });
-        
+
         var fps_sampling_period_flow_box = new FlowBox ();
         fps_sampling_period_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         fps_sampling_period_flow_box.set_max_children_per_line (1);
