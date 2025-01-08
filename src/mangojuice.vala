@@ -276,10 +276,6 @@ public class MangoJuice : Adw.Application {
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
 
-        var save_action = new SimpleAction ("save", null);
-        save_action.activate.connect (() => SaveStates.save_states_to_file (this));
-        window.add_action (save_action);
-
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
 
@@ -376,20 +372,6 @@ public class MangoJuice : Adw.Application {
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
 
-        save_button = new Button.with_label ("Save");
-        save_button.add_css_class ("suggested-action");
-        save_button.clicked.connect (() => {
-            SaveStates.save_states_to_file (this);
-            if (test_button_pressed) {
-                if (is_vkcube_available ()) {
-                    restart_vkcube ();
-                } else if (is_glxgears_available ()) {
-                    restart_glxgears ();
-                }
-            }
-        });
-        header_bar.pack_end (save_button);
-
         var test_button = new Button.with_label ("Test");
         test_button.clicked.connect (() => {
             try {
@@ -417,6 +399,8 @@ public class MangoJuice : Adw.Application {
 
         var menu_button = new MenuButton ();
         var menu_model = new GLib.Menu ();
+        var save_item = new GLib.MenuItem ("Save", "app.save");
+        menu_model.append_item (save_item);
         var save_as_item = new GLib.MenuItem ("Save As", "app.save_as");
         menu_model.append_item (save_as_item);
         var restore_config_item = new GLib.MenuItem ("Restore", "app.restore_config");
@@ -426,6 +410,20 @@ public class MangoJuice : Adw.Application {
         menu_button.set_menu_model (menu_model);
         menu_button.set_icon_name ("open-menu-symbolic");
         header_bar.pack_end (menu_button);
+
+        var save_action = new SimpleAction ("save", null);
+        save_action.activate.connect (() => {
+            SaveStates.save_states_to_file (this);
+            if (test_button_pressed) {
+                if (is_vkcube_available ()) {
+                    restart_vkcube ();
+                } else if (is_glxgears_available ()) {
+                    restart_glxgears ();
+                }
+            }
+        });
+
+        this.add_action (save_action);
 
         var content_box = new Box (Orientation.VERTICAL, 0);
         content_box.append (header_bar);
@@ -2884,22 +2882,21 @@ public class MangoJuice : Adw.Application {
 
     private ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
         ScaleEntryWidget result = ScaleEntryWidget ();
-    
+
         // Создаем Text + Scale + Entry
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
         result.scale.set_size_request (150, -1);
         result.scale.set_hexpand (true);
-    
+
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
-    
-        // Настраиваем Entry для ввода только чисел
+
         setup_numeric_entry (result.entry);
-    
+
         bool is_updating = false;
     
         result.scale.value_changed.connect (() => {
@@ -2914,7 +2911,7 @@ public class MangoJuice : Adw.Application {
                 });
             }
         });
-    
+
         result.entry.changed.connect (() => {
             if (!is_updating) {
                 int value = 0;
@@ -2933,32 +2930,32 @@ public class MangoJuice : Adw.Application {
                 validate_entry_value (result.entry, min, max); // Проверяем значение
             }
         });
-    
+
         var text_box = new Box (Orientation.VERTICAL, 0);
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
-    
+
         var label1 = new Label (null);
         label1.set_markup ("<b>%s</b>".printf (title));
         label1.set_halign (Align.START);
         label1.set_hexpand (false);
-    
+
         var label2 = new Label (null);
         label2.set_markup ("<span size='9000'>%s</span>".printf (description));
         label2.set_halign (Align.START);
         label2.set_hexpand (false);
         label2.add_css_class ("dim-label");
-    
+
         text_box.append (label1);
         text_box.append (label2);
-    
+
         result.widget = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         result.widget.append (text_box); // Label слева
         result.widget.append (result.scale);    // Scale
         result.widget.append (result.entry);    // Entry
-    
+
         return result;
-    }    
+    }
 
     public void check_file_permissions () {
         try {
