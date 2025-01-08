@@ -45,6 +45,9 @@ public class MangoJuice : Adw.Application {
     public Scale picmip;
     public Label af_label;
     public Label picmip_label;
+    public Entry picmip_entry;
+    public Entry af_entry;
+    public Entry fps_sampling_period_entry;
     public Entry fps_limit_entry_1;
     public Entry fps_limit_entry_2;
     public Entry fps_limit_entry_3;
@@ -1584,49 +1587,46 @@ public class MangoJuice : Adw.Application {
     }
 
     public void create_limiters_and_filters (Box performance_box) {
-
         var limiters_label = new Label ("Limiters FPS");
         limiters_label.set_halign (Align.START);
         limiters_label.add_css_class ("title-4");
         limiters_label.set_margin_start (FLOW_BOX_MARGIN);
         limiters_label.set_margin_bottom (FLOW_BOX_MARGIN);
-
         performance_box.append (limiters_label);
-        
-
+    
         var fps_limit_method_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "late", "early" }) {
             fps_limit_method_model.append (item);
         }
         fps_limit_method = new DropDown (fps_limit_method_model, null);
-
+    
         fps_limit_entry_1 = new Entry ();
         fps_limit_entry_1.placeholder_text = "Limit 1";
-        fps_limit_entry_1.changed.connect ( () => {
+        fps_limit_entry_1.changed.connect (() => {
             update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
-
+    
         fps_limit_entry_2 = new Entry ();
         fps_limit_entry_2.placeholder_text = "Limit 2";
-        fps_limit_entry_2.changed.connect ( () => {
+        fps_limit_entry_2.changed.connect (() => {
             update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
-
+    
         fps_limit_entry_3 = new Entry ();
         fps_limit_entry_3.placeholder_text = "Limit 3";
-        fps_limit_entry_3.changed.connect ( () => {
+        fps_limit_entry_3.changed.connect (() => {
             update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
-
+    
         var toggle_fps_limit_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }) {
             toggle_fps_limit_model.append (item);
         }
         toggle_fps_limit = new DropDown (toggle_fps_limit_model, null);
-
+    
         var limiters_box = new FlowBox ();
         limiters_box.set_max_children_per_line (5);
         limiters_box.set_margin_start (FLOW_BOX_MARGIN);
@@ -1639,16 +1639,15 @@ public class MangoJuice : Adw.Application {
         limiters_box.append (fps_limit_entry_3);
         limiters_box.append (toggle_fps_limit);
         performance_box.append (limiters_box);
-
+    
         var vsync_label = new Label ("VSync");
         vsync_label.set_halign (Align.START);
         vsync_label.add_css_class ("title-4");
         vsync_label.set_margin_start (FLOW_BOX_MARGIN);
         vsync_label.set_margin_top (FLOW_BOX_MARGIN);
         vsync_label.set_margin_bottom (FLOW_BOX_MARGIN);
-
         performance_box.append (vsync_label);
-
+    
         var vulkan_model = new Gtk.StringList (null);
         foreach (var item in vulkan_values) {
             vulkan_model.append (item);
@@ -1666,13 +1665,13 @@ public class MangoJuice : Adw.Application {
         opengl_dropdown.notify["selected-item"].connect (() => {
             save_and_restart ();
         });
-
+    
         var vulkan_label = new Label ("Vulkan");
         vulkan_label.set_halign (Align.END);
-
+    
         var opengl_label = new Label ("OpenGL");
         opengl_label.set_halign (Align.END);
-
+    
         var vsync_box = new FlowBox ();
         vsync_box.set_max_children_per_line (5);
         vsync_box.set_margin_start (FLOW_BOX_MARGIN);
@@ -1684,16 +1683,15 @@ public class MangoJuice : Adw.Application {
         vsync_box.append (opengl_label);
         vsync_box.append (opengl_dropdown);
         performance_box.append (vsync_box);
-
+    
         var filters_label = new Label ("Filters");
         filters_label.set_halign (Align.START);
         filters_label.add_css_class ("title-4");
         filters_label.set_margin_start (FLOW_BOX_MARGIN);
         filters_label.set_margin_top (FLOW_BOX_MARGIN);
         filters_label.set_margin_bottom (FLOW_BOX_MARGIN);
-
         performance_box.append (filters_label);
-
+    
         var filter_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "none", "bicubic", "trilinear", "retro" }) {
             filter_model.append (item);
@@ -1702,23 +1700,14 @@ public class MangoJuice : Adw.Application {
         filter_dropdown.set_valign (Align.START);
         filter_dropdown.set_hexpand (true);
 
-        af = new Scale.with_range (Orientation.HORIZONTAL, 0, 16, 1);
-        af.set_hexpand (true);
-        af.set_size_request (150, -1);
-        af_label = new Label ("0");
-        af_label.set_width_chars (3);
-        af_label.set_halign (Align.END);
-        af.value_changed.connect (() => af_label.label = "%d".printf ((int)af.get_value ()));
-
-        picmip = new Scale.with_range (Orientation.HORIZONTAL, -16, 16, 1);
-        picmip.set_hexpand (true);
-        picmip.set_size_request (150, -1);
-        picmip.set_value (0);
-        picmip_label = new Label ("0");
-        picmip_label.set_width_chars (3);
-        picmip_label.set_halign (Align.END);
-        picmip.value_changed.connect (() => picmip_label.label = "%d".printf ((int)picmip.get_value ()));
-
+        var af_widget = create_scale_entry_widget ("Anisotropic", "Filtering", 0, 16, 0);
+        af = af_widget.scale;
+        af_entry = af_widget.entry;
+    
+        var picmip_widget = create_scale_entry_widget ("Mipmap", "Aliasing", -16, 16, 0);
+        picmip = picmip_widget.scale;
+        picmip_entry = picmip_widget.entry;
+    
         var filters_flow_box = new FlowBox ();
         filters_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         filters_flow_box.set_max_children_per_line (3);
@@ -1727,24 +1716,19 @@ public class MangoJuice : Adw.Application {
         filters_flow_box.set_margin_top (FLOW_BOX_MARGIN);
         filters_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         filters_flow_box.set_selection_mode (SelectionMode.NONE);
-
+    
         var filter_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        filter_pair.append (new Label ("Filter"));
         filter_pair.append (filter_dropdown);
         filters_flow_box.insert (filter_pair, -1);
-
+    
         var af_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        af_pair.append (new Label ("Anisotropic filtering"));
-        af_pair.append (af);
-        af_pair.append (af_label);
+        af_pair.append (af_widget.widget);
         filters_flow_box.insert (af_pair, -1);
-
+    
         var picmip_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        picmip_pair.append (new Label ("Mipmap LoD bias"));
-        picmip_pair.append (picmip);
-        picmip_pair.append (picmip_label);
+        picmip_pair.append (picmip_widget.widget);
         filters_flow_box.insert (picmip_pair, -1);
-
+    
         performance_box.append (filters_flow_box);
 
         var fps_sampling_period_label = new Label ("Other");
@@ -1753,20 +1737,28 @@ public class MangoJuice : Adw.Application {
         fps_sampling_period_label.set_margin_start (FLOW_BOX_MARGIN);
         fps_sampling_period_label.set_margin_top (FLOW_BOX_MARGIN);
         fps_sampling_period_label.set_margin_bottom (FLOW_BOX_MARGIN);
-
         performance_box.append (fps_sampling_period_label);
-    
-        fps_sampling_period_scale = new Scale.with_range (Orientation.HORIZONTAL, 250, 2000, 1);
-        fps_sampling_period_scale.set_hexpand (true);
-        fps_sampling_period_scale.set_value (500);
-        fps_sampling_period_value_label = new Label ("1000");
-        fps_sampling_period_value_label.set_width_chars (8);
-        fps_sampling_period_value_label.set_halign (Align.END);
+        
+        // Создаем виджет для FPS Sampling Period
+        var fps_sampling_period_widget = create_scale_entry_widget ("FPS Sampling", "Milliseconds", 250, 2000, 500);
+        fps_sampling_period_scale = fps_sampling_period_widget.scale;
+        fps_sampling_period_entry = fps_sampling_period_widget.entry;
+        
+        // Подключаем обработчик изменения значения
         fps_sampling_period_scale.value_changed.connect (() => {
-            fps_sampling_period_value_label.label = "%d ms".printf ((int)fps_sampling_period_scale.get_value ());
+            fps_sampling_period_entry.text = "%d".printf ((int)fps_sampling_period_scale.get_value ());
             update_fps_sampling_period_in_file ("%d".printf ((int)fps_sampling_period_scale.get_value ()));
         });
-    
+        
+        fps_sampling_period_entry.changed.connect (() => {
+            int value = int.parse (fps_sampling_period_entry.text);
+            if (value >= 250 && value <= 2000 && value != (int)fps_sampling_period_scale.get_value ()) {
+                fps_sampling_period_scale.set_value (value);
+                update_fps_sampling_period_in_file ("%d".printf (value));
+            }
+        });
+        
+        // Добавляем виджет в контейнер
         var fps_sampling_period_flow_box = new FlowBox ();
         fps_sampling_period_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         fps_sampling_period_flow_box.set_max_children_per_line (1);
@@ -1775,14 +1767,10 @@ public class MangoJuice : Adw.Application {
         fps_sampling_period_flow_box.set_margin_top (FLOW_BOX_MARGIN);
         fps_sampling_period_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         fps_sampling_period_flow_box.set_selection_mode (SelectionMode.NONE);
-    
-        var fps_sampling_period_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        fps_sampling_period_pair.append (new Label ("FPS Sampling"));
-        fps_sampling_period_pair.append (fps_sampling_period_scale);
-        fps_sampling_period_pair.append (fps_sampling_period_value_label);
-        fps_sampling_period_flow_box.insert (fps_sampling_period_pair, -1);
-    
+        
+        fps_sampling_period_flow_box.insert (fps_sampling_period_widget.widget, -1);
         performance_box.append (fps_sampling_period_flow_box);
+        
     }
 
     public void restart_vkcube () {
