@@ -161,6 +161,8 @@ public class MangoJuice : Adw.Application {
     public Scale alpha_scale;
     public Label borders_value_label;
     public Label alpha_value_label;
+    public Entry borders_entry;
+    public Entry alpha_entry;
     public DropDown position_dropdown;
     public Scale colums_scale;
     public Label colums_value_label;
@@ -758,34 +760,36 @@ public class MangoJuice : Adw.Application {
         var custom_switch_label = new Label ("Horizontal Hud");
         custom_switch_label.set_halign (Align.START);
         custom_switch_label.set_hexpand (true);
-
+        
         custom_switch = new Switch ();
         custom_switch.set_valign (Align.START);
         custom_switch.set_margin_end (FLOW_BOX_MARGIN);
         custom_switch.notify["active"].connect (() => {
             SaveStates.save_states_to_file (this);
         });
-
-        borders_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 15, -1);
-        borders_scale.set_hexpand (true);
-        borders_scale.set_size_request (200, -1);
+        
+        var borders_widget = create_scale_entry_widget ("Borders", "Round", 0, 15, 0);
+        borders_scale = borders_widget.scale;
+        borders_entry = borders_widget.entry;
         borders_value_label = new Label ("0");
         borders_value_label.set_width_chars (3);
         borders_value_label.set_halign (Align.END);
-        borders_scale.value_changed.connect ( () => borders_value_label.label = "%d".printf ( (int)borders_scale.get_value ()));
-
-        alpha_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 100, 1);
-        alpha_scale.set_hexpand (true);
-        alpha_scale.set_size_request (200, -1);
-        alpha_scale.set_value (50);
+        borders_scale.value_changed.connect (() => {
+            borders_value_label.label = "%d".printf ((int)borders_scale.get_value ());
+            SaveStates.save_states_to_file (this);
+        });
+        
+        var alpha_widget = create_scale_entry_widget ("Alpha", "Transparency", 0, 100, 50);
+        alpha_scale = alpha_widget.scale;
+        alpha_entry = alpha_widget.entry;
         alpha_value_label = new Label ("50");
         alpha_value_label.set_width_chars (3);
-        alpha_scale.value_changed.connect ( () => {
+        alpha_scale.value_changed.connect (() => {
             double value = alpha_scale.get_value ();
             alpha_value_label.label = "%.1f".printf (value / 100.0);
             SaveStates.save_states_to_file (this);
         });
-
+        
         var custom_switch_flow_box = new FlowBox ();
         custom_switch_flow_box.set_max_children_per_line (3);
         custom_switch_flow_box.set_margin_start (FLOW_BOX_MARGIN);
@@ -793,27 +797,21 @@ public class MangoJuice : Adw.Application {
         custom_switch_flow_box.set_margin_top (FLOW_BOX_MARGIN);
         custom_switch_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         custom_switch_flow_box.set_selection_mode (SelectionMode.NONE);
-
+        
         var custom_switch_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         custom_switch_pair.append (custom_switch_label);
         custom_switch_pair.append (custom_switch);
         custom_switch_pair.set_size_request (50, -1);
         custom_switch_flow_box.insert (custom_switch_pair, -1);
-
+        
         var borders_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        borders_pair.append (new Label ("Borders"));
-        borders_pair.append (borders_scale);
-        borders_pair.set_size_request (50, -1);
-        borders_pair.append (borders_value_label);
+        borders_pair.append (borders_widget.widget);
         custom_switch_flow_box.insert (borders_pair, -1);
-
+        
         var alpha_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        alpha_pair.append (new Label ("Alpha"));
-        alpha_pair.append (alpha_scale);
-        alpha_pair.set_size_request (50, -1);
-        alpha_pair.append (alpha_value_label);
+        alpha_pair.append (alpha_widget.widget);
         custom_switch_flow_box.insert (alpha_pair, -1);
-
+        
         visual_box.append (custom_switch_flow_box);
 
         var position_model = new Gtk.StringList (null);
