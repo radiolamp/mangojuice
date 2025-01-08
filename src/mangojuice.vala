@@ -166,6 +166,7 @@ public class MangoJuice : Adw.Application {
     public DropDown position_dropdown;
     public Scale colums_scale;
     public Label colums_value_label;
+    public Entry colums_entry;
     public Entry toggle_hud_entry;
     public Scale font_size_scale;
     public Label font_size_value_label;
@@ -789,7 +790,7 @@ public class MangoJuice : Adw.Application {
             alpha_value_label.label = "%.1f".printf (value / 100.0);
             SaveStates.save_states_to_file (this);
         });
-        
+
         var custom_switch_flow_box = new FlowBox ();
         custom_switch_flow_box.set_max_children_per_line (3);
         custom_switch_flow_box.set_margin_start (FLOW_BOX_MARGIN);
@@ -813,7 +814,7 @@ public class MangoJuice : Adw.Application {
         custom_switch_flow_box.insert (alpha_pair, -1);
         
         visual_box.append (custom_switch_flow_box);
-
+        
         var position_model = new Gtk.StringList (null);
         foreach (var item in new string[] {
             "top-left", "top-center", "top-right",
@@ -826,31 +827,34 @@ public class MangoJuice : Adw.Application {
         position_dropdown.set_size_request (80, -1);
         position_dropdown.set_valign (Align.CENTER);
         position_dropdown.set_hexpand (true);
-        position_dropdown.notify["selected-item"].connect ( () => {
-            update_position_in_file ( (position_dropdown.selected_item as StringObject)?.get_string () ?? "");
+        position_dropdown.notify["selected-item"].connect (() => {
+            update_position_in_file ((position_dropdown.selected_item as StringObject)?.get_string () ?? "");
         });
-
-        colums_scale = new Scale.with_range (Orientation.HORIZONTAL, 1, 6, -1);
-        colums_scale.set_hexpand (true);
-        colums_scale.set_value (3);
-        colums_scale.set_size_request (200, -1);
+        
+        var colums_widget = create_scale_entry_widget ("Columns", "Number of columns", 1, 6, 3);
+        colums_scale = colums_widget.scale;
+        colums_entry = colums_widget.entry;
         colums_value_label = new Label ("3");
         colums_value_label.set_width_chars (3);
         colums_value_label.set_halign (Align.CENTER);
-        colums_scale.value_changed.connect ( () => colums_value_label.label = "%d".printf ( (int)colums_scale.get_value ()));
-
+        colums_scale.value_changed.connect (() => {
+            colums_value_label.label = "%d".printf ((int)colums_scale.get_value ());
+            SaveStates.save_states_to_file (this);
+        });
+        
         toggle_hud_entry = new Entry ();
         toggle_hud_entry.placeholder_text = "Key";
         toggle_hud_entry.text = "Shift_R+F12";
         toggle_hud_entry.set_hexpand (true);
         toggle_hud_entry.set_size_request (20, -1);
+        toggle_hud_entry.set_valign (Align.CENTER); 
         toggle_hud_entry.set_margin_top (FLOW_BOX_MARGIN);
         toggle_hud_entry.set_margin_bottom (FLOW_BOX_MARGIN);
-        toggle_hud_entry.changed.connect ( () => {
+        toggle_hud_entry.changed.connect (() => {
             update_toggle_hud_in_file (toggle_hud_entry.text);
             SaveStates.save_states_to_file (this);
         });
-
+        
         var position_colums_flow_box = new FlowBox ();
         position_colums_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         position_colums_flow_box.set_max_children_per_line (3);
@@ -859,24 +863,23 @@ public class MangoJuice : Adw.Application {
         position_colums_flow_box.set_margin_top (FLOW_BOX_MARGIN);
         position_colums_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         position_colums_flow_box.set_selection_mode (SelectionMode.NONE);
-
+        
         var position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         position_pair.append (new Label ("Position"));
         position_pair.append (position_dropdown);
         position_colums_flow_box.insert (position_pair, -1);
-
+        
         var colums_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        colums_pair.append (new Label ("Colums"));
-        colums_pair.append (colums_scale);
-        colums_pair.append (colums_value_label);
+        colums_pair.append (colums_widget.widget);
+        colums_pair.set_valign (Align.CENTER); 
         position_colums_flow_box.insert (colums_pair, -1);
-
+        
         var toggle_hud_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         toggle_hud_pair.append (new Label ("Toggle HUD"));
         toggle_hud_pair.set_hexpand (true);
         toggle_hud_pair.append (toggle_hud_entry);
         position_colums_flow_box.insert (toggle_hud_pair, -1);
-
+        
         visual_box.append (position_colums_flow_box);
 
         offset_x_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 1500, 1);
