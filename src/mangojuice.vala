@@ -1553,9 +1553,8 @@ public class MangoJuice : Adw.Application {
         logging_label.set_margin_start (FLOW_BOX_MARGIN);
         logging_label.set_margin_top (FLOW_BOX_MARGIN);
         logging_label.set_margin_bottom (FLOW_BOX_MARGIN);
-
         parent_box.append (logging_label);
-
+        
         var scales_flow_box = new FlowBox ();
         scales_flow_box.set_homogeneous (true);
         scales_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
@@ -1566,49 +1565,21 @@ public class MangoJuice : Adw.Application {
         scales_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         scales_flow_box.set_selection_mode (SelectionMode.NONE);
 
-        duracion_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 200, 1);
-        duracion_scale.set_value (30);
-        duracion_scale.set_size_request (150, -1);
-        duracion_scale.set_hexpand (true);
-        duracion_value_label = new Label ("30");
-        duracion_value_label.set_width_chars (5);
-        duracion_value_label.set_halign (Align.END);
-        duracion_scale.value_changed.connect (() => duracion_value_label.label = "%d s".printf ((int)duracion_scale.get_value ()));
+        string[] label_texts = { "Duracion", "Autostart", "Interval" };
+        string[] label_texts_2 = { "Seconds", "Seconds", "Milliseconds" };
 
-        autostart_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 30, 1);
-        autostart_scale.set_value (0);
-        autostart_scale.set_hexpand (true);
-        autostart_value_label = new Label ("0");
-        autostart_value_label.set_width_chars (3);
-        autostart_value_label.set_halign (Align.END);
-        autostart_scale.value_changed.connect (() => autostart_value_label.label = "%d s".printf ((int)autostart_scale.get_value ()));
+        var duracion_widget = create_scale_entry_widget (label_texts[0], label_texts_2[0], 0, 200, 30);
+        duracion_scale = duracion_widget.scale;
+        scales_flow_box.insert (duracion_widget.widget, -1);
 
-        interval_scale = new Scale.with_range (Orientation.HORIZONTAL, 0, 500, 1);
-        interval_scale.set_value (100);
-        interval_scale.set_hexpand (true);
-        interval_value_label = new Label ("100");
-        interval_value_label.set_width_chars (6);
-        interval_value_label.set_halign (Align.END);
-        interval_scale.value_changed.connect (() => interval_value_label.label = "%d ms".printf ((int)interval_scale.get_value ()));
+        var autostart_widget = create_scale_entry_widget (label_texts[1], label_texts_2[1], 0, 30, 0);
+        autostart_scale = autostart_widget.scale;
+        scales_flow_box.insert (autostart_widget.widget, -1);
 
-        var pair1 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        pair1.append (new Label ("Duracion"));
-        pair1.append (duracion_scale);
-        pair1.append (duracion_value_label);
-        scales_flow_box.insert (pair1, -1);
-
-        var pair2 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        pair2.append (new Label ("Autostart"));
-        pair2.append (autostart_scale);
-        pair2.append (autostart_value_label);
-        scales_flow_box.insert (pair2, -1);
-
-        var pair3 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        pair3.append (new Label ("Interval"));
-        pair3.append (interval_scale);
-        pair3.append (interval_value_label);
-        scales_flow_box.insert (pair3, -1);
-
+        var interval_widget = create_scale_entry_widget (label_texts[2], label_texts_2[2], 0, 500, 100);
+        interval_scale = interval_widget.scale;
+        scales_flow_box.insert (interval_widget.widget, -1);
+        
         parent_box.append (scales_flow_box);
     }
 
@@ -2886,6 +2857,74 @@ public class MangoJuice : Adw.Application {
             stderr.printf ("Error writing to the file: %s\n", e.message);
         }
         LoadStates.load_states_from_file (this);
+    }
+
+    private struct ScaleEntryWidget {
+        public Scale scale;
+        public Entry entry;
+        public Box widget;
+    }
+
+    private ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
+        ScaleEntryWidget result = ScaleEntryWidget ();
+    
+        // Создаем Text + Scale + Entry
+        result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
+        result.scale.set_value (initial_value);
+        result.scale.set_size_request (150, -1);
+        result.scale.set_hexpand (true);
+
+        result.entry = new Entry ();
+        result.entry.text = "%d".printf (initial_value);
+        result.entry.set_width_chars (3);
+        result.entry.set_max_width_chars (4);
+        result.entry.set_halign (Align.END);
+
+        bool is_updating = false;
+
+        result.scale.value_changed.connect (() => {
+            if (!is_updating) {
+                is_updating = true;
+                result.entry.text = "%d".printf ((int)result.scale.get_value ());
+                is_updating = false;
+            }
+        });
+
+        result.entry.changed.connect (() => {
+            if (!is_updating) {
+                int value = int.parse (result.entry.text);
+                if (value >= min && value <= max && value != (int)result.scale.get_value ()) {
+                    is_updating = true;
+                    result.scale.set_value (value);
+                    is_updating = false;
+                }
+            }
+        });
+
+        var text_box = new Box (Orientation.VERTICAL, 0);
+        text_box.set_valign (Align.CENTER);
+        text_box.set_halign (Align.START);
+
+        var label1 = new Label (null);
+        label1.set_markup ("<b>%s</b>".printf (title));
+        label1.set_halign (Align.START);
+        label1.set_hexpand (false);
+
+        var label2 = new Label (null);
+        label2.set_markup ("<span size='9000'>%s</span>".printf (description));
+        label2.set_halign (Align.START);
+        label2.set_hexpand (false);
+        label2.add_css_class ("dim-label");
+
+        text_box.append (label1);
+        text_box.append (label2);
+
+        result.widget = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        result.widget.append (text_box); // Label слева
+        result.widget.append (result.scale);    // Scale
+        result.widget.append (result.entry);    // Entry
+        
+        return result;
     }
 
     public void check_file_permissions () {
