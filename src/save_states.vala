@@ -188,6 +188,7 @@ public class SaveStates {
 
             if (mango_juice.custom_switch.active) {
                 data_stream.put_string ("horizontal\n");
+                data_stream.put_string ("horizontal_stretch=0\n");
             }
 
             if (mango_juice.borders_scale != null) {
