@@ -11,16 +11,15 @@ finish-args:
   - --socket=wayland
   - --device=dri
   - --env=PATH=/app/bin:/usr/bin:/app/utils/bin:/usr/lib/extensions/vulkan/MangoHud/bin
-  - --filesystem=xdg-config/MangoHud:create
+  - --env=MANGOHUD_CONFIGFILE=/app/config/MangoHud/MangoHud.conf
 
 modules:
   - name: mangojuice
     buildsystem: meson
+    config-opts:
     sources:
-      - type: git
-        url: https://github.com/radiolamp/mangojuice.git
-        tag: 0.8.0
-        #commit: 17a4f2de462d5614d0626fb86305d4c8bc51ade7
+      - type: dir
+        path: ../../
 
   - name: vulkan-tools
     buildsystem: cmake-ninja
