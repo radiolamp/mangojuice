@@ -11,7 +11,7 @@ finish-args:
   - --socket=wayland
   - --device=dri
   - --env=PATH=/app/bin:/usr/bin:/app/utils/bin:/usr/lib/extensions/vulkan/MangoHud/bin
-  - --env=MANGOHUD_CONFIGFILE=/app/config/MangoHud/MangoHud.conf
+  - --filesystem=xdg-config/MangoHud:create
 
 modules:
   - name: mangojuice
