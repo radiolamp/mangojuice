@@ -49,16 +49,29 @@ public class OtherBox : Box {
             });
         }
 
-        create_scale_with_entry ("CAS Sharpness", -1.0, 1.0, 0.01, 0.0, "%.2f", "cas");
-        create_scale_with_entry ("DLS Sharpness", 0.0, 1.0, 0.01, 0.5, "%.2f", "dls");
-        create_scale_with_entry ("DLS Denoise", 0.0, 1.0, 0.01, 0.17, "%.2f", "dls");
-        create_scale_with_entry ("FXAA Quality Subpix", 0.0, 1.0, 0.01, 0.75, "%.2f", "fxaa");
-        create_scale_with_entry ("FXAA Edge Threshold", 0.0, 0.333, 0.01, 0.125, "%.3f", "fxaa");
-        create_scale_with_entry ("FXAA Threshold Min", 0.0, 0.0833, 0.001, 0.0833, "%.4f", "fxaa");
-        create_scale_with_entry ("SMAA Threshold", 0.0, 0.5, 0.01, 0.05, "%.2f", "smaa");
-        create_scale_with_entry ("SMAA Max Search Steps", 0, 112, 1, 8, "%d", "smaa");
-        create_scale_with_entry ("SMAA Max Steps Diag", 0, 20, 1, 0, "%d", "smaa");
-        create_scale_with_entry ("SMAA Corner Rounding", 0, 100, 1, 25, "%d", "smaa");
+        // Создаем FlowBox для размещения элементов в два столбца
+        var flow_box = new FlowBox ();
+        flow_box.set_homogeneous (true);
+        flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
+        flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        flow_box.set_selection_mode (SelectionMode.NONE);
+        flow_box.set_max_children_per_line (2); // Устанавливаем два столбца
+        this.append (flow_box);
+
+        create_scale_with_entry (flow_box, "CAS Sharpness", -1.0, 1.0, 0.01, 0.0, "%.2f", "cas");
+        create_scale_with_entry (flow_box, "DLS Sharpness", 0.0, 1.0, 0.01, 0.5, "%.2f", "dls");
+        create_scale_with_entry (flow_box, "DLS Denoise", 0.0, 1.0, 0.01, 0.17, "%.2f", "dls");
+        create_scale_with_entry (flow_box, "FXAA Quality Subpix", 0.0, 1.0, 0.01, 0.75, "%.2f", "fxaa");
+        create_scale_with_entry (flow_box, "FXAA Edge Threshold", 0.0, 0.333, 0.01, 0.125, "%.3f", "fxaa");
+        create_scale_with_entry (flow_box, "FXAA Threshold Min", 0.0, 0.0833, 0.001, 0.0833, "%.4f", "fxaa");
+        create_scale_with_entry (flow_box, "SMAA Threshold", 0.0, 0.5, 0.01, 0.05, "%.2f", "smaa");
+        create_scale_with_entry (flow_box, "SMAA Max Search Steps", 0, 112, 1, 8, "%d", "smaa");
+        create_scale_with_entry (flow_box, "SMAA Max Steps Diag", 0, 20, 1, 0, "%d", "smaa");
+        create_scale_with_entry (flow_box, "SMAA Corner Rounding", 0, 100, 1, 25, "%d", "smaa");
 
         vkbasalt_global_button = new Button.with_label ("Global VkBasalt");
         vkbasalt_global_button.set_margin_top (FLOW_BOX_MARGIN);
@@ -89,7 +102,7 @@ public class OtherBox : Box {
         return is_switch_active (switch_name);
     }
 
-    private void create_scale_with_entry (string label_text, double min, double max, double step, double initial_value, string format, string switch_name) {
+    private void create_scale_with_entry (FlowBox flow_box, string label_text, double min, double max, double step, double initial_value, string format, string switch_name) {
         var main_box = new Box (Orientation.VERTICAL, 6);
         main_box.set_margin_start (FLOW_BOX_MARGIN);
         main_box.set_margin_end (FLOW_BOX_MARGIN);
@@ -158,7 +171,7 @@ public class OtherBox : Box {
         switch_entry_map[switch_name].add (entry);
         switch_reset_map[switch_name].add (reset_button);
 
-        this.append (main_box);
+        flow_box.insert (main_box, -1);
     }
 
     private void update_scale_entry_reset_state (Switch switch_widget) {
