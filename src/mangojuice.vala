@@ -291,15 +291,7 @@ public class MangoJuice : Adw.Application {
     }
 
     protected override void activate () {
-
-        Intl.setlocale (LocaleCategory.ALL, "");
-        Intl.textdomain ("mangojuice");
-        Intl.bindtextdomain ("mangojuice", "/usr/share/locale");
-        Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
-        stdout.printf(_("Load") + "\n");
-        stdout.printf(_("Temp") + "\n");
     
-
         var window = new Adw.ApplicationWindow (this);
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
@@ -3107,8 +3099,13 @@ public class MangoJuice : Adw.Application {
         return "%02x%02x%02x".printf ((int) (rgba.red * 255), (int) (rgba.green * 255), (int) (rgba.blue * 255));
     }
 
-    public static int main (string[] args) {
-        var app = new MangoJuice ();
-        return app.run (args);
+    public static int main(string[] args) {
+        Intl.setlocale(LocaleCategory.ALL, "");
+        Intl.textdomain("mangojuice");
+        Intl.bindtextdomain("mangojuice", "/usr/share/locale");
+        Intl.bind_textdomain_codeset("mangojuice", "UTF-8");
+
+        var app = new MangoJuice();
+        return app.run(args);
     }
 }
