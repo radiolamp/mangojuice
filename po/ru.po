@@ -1,51 +1,36 @@
-# Russian translations for PACKAGE package.
-# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-#  <anton.osi2014@yandex.ru>, 2025.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: mangojuice\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-14 20:00+0300\n"
-"PO-Revision-Date: 2025-01-14 20:05+0300\n"
-"Last-Translator:  <anton.osi2014@yandex.ru>\n"
-"Language-Team: Russian <gnu@d07.ru>\n"
+"POT-Creation-Date: 2025-01-14 20:00+0000\n"
+"PO-Revision-Date: 2025-01-14 20:00+0000\n"
+"Last-Translator: Your Name <your.email@example.com>\n"
+"Language-Team: Russian <your.team@example.com>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ASCII\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: src/mangojuice.vala:54
 msgid "GPU"
-msgstr "dndsnk"
+msgstr "Графический процессор"
 
-#: src/mangojuice.vala:55
 msgid "CPU"
-msgstr ""
+msgstr "Центральный процессор"
 
-#: src/mangojuice.vala:56 src/mangojuice.vala:61
 msgid "Other"
-msgstr ""
+msgstr "Другое"
 
-#: src/mangojuice.vala:57
 msgid "System"
-msgstr ""
+msgstr "Система"
 
-#: src/mangojuice.vala:58
 msgid "Wine"
-msgstr ""
+msgstr "Wine"
 
-#: src/mangojuice.vala:59
 msgid "Options"
-msgstr ""
+msgstr "Настройки"
 
-#: src/mangojuice.vala:60
 msgid "Battery"
-msgstr ""
+msgstr "Батарея"
 
-#: src/mangojuice.vala:62
 msgid "Information"
-msgstr ""
+msgstr "Информация"
