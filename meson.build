@@ -1,26 +1,29 @@
 project(
-    'mangojuice', 'vala',
-    version: '0.8.0',
+    'mangojuice', 'vala',  # Имя проекта и язык (Vala)
+    version: '0.8.0',      # Версия проекта
     default_options: [
-        'warning_level=0',
-        'localedir=/usr/share/locale'
+        'warning_level=0',  # Отключение предупреждений компилятора
+        'localedir=/usr/share/locale'  # Каталог для установки файлов локализации
     ]
 )
 
-i18n = import('i18n')
-gnome = import('gnome')
+# Импорт необходимых модулей
+i18n = import('i18n')  # Модуль для локализации
+gnome = import('gnome')  # Модуль для работы с GNOME
 
-add_project_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()), language: 'c')
-
-add_project_arguments('-Wno-discarded-qualifiers', language: 'c')
-
-# Подключение поддиректорий
-subdir('data')
-subdir('src')
-
-i18n.gettext(meson.project_name(),
-    args: '--directory=' + meson.project_source_root(),
-    preset: 'glib',
-    install: true,
-    install_dir: get_option('localedir')
+# Добавление аргументов компиляции
+add_project_arguments(
+    '-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()),  # Имя пакета для gettext
+    language: 'c'
 )
+
+# Отключение предупреждений (если необходимо)
+add_project_arguments(
+    '-Wno-discarded-qualifiers',  # Игнорировать предупреждения о потере квалификаторов
+    language: 'c'
+)
+
+# Подключение подкаталогов
+subdir('data')  # Каталог для ресурсов (например, .gresource.xml)
+subdir('src')   # Каталог с исходным кодом
+subdir('po')    # Каталог для локализации (файлы .po, .pot)
