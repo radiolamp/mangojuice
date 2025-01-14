@@ -1,0 +1,51 @@
+# Russian translations for PACKAGE package.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#  <anton.osi2014@yandex.ru>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-14 20:00+0300\n"
+"PO-Revision-Date: 2025-01-14 20:05+0300\n"
+"Last-Translator:  <anton.osi2014@yandex.ru>\n"
+"Language-Team: Russian <gnu@d07.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/mangojuice.vala:54
+msgid "GPU"
+msgstr ""
+
+#: src/mangojuice.vala:55
+msgid "CPU"
+msgstr ""
+
+#: src/mangojuice.vala:56 src/mangojuice.vala:61
+msgid "Other"
+msgstr ""
+
+#: src/mangojuice.vala:57
+msgid "System"
+msgstr ""
+
+#: src/mangojuice.vala:58
+msgid "Wine"
+msgstr ""
+
+#: src/mangojuice.vala:59
+msgid "Options"
+msgstr ""
+
+#: src/mangojuice.vala:60
+msgid "Battery"
+msgstr ""
+
+#: src/mangojuice.vala:62
+msgid "Information"
+msgstr ""
