@@ -1514,36 +1514,39 @@ public class MangoJuice : Adw.Application {
             var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
             row_box.set_hexpand (true);
             row_box.set_valign (Align.CENTER);
-
+        
             switches[i] = new Switch ();
             switches[i].set_valign (Align.CENTER);
-
+        
             var text_box = new Box (Orientation.VERTICAL, 0);
             text_box.set_valign (Align.CENTER);
             text_box.set_halign (Align.START);
-            text_box.set_size_request (160, -1); // Ширина 160 пикселей, нужна если не работает выравнивание.
-
+            text_box.set_size_request (160, -1); // Ширина 160 пикселей
+        
             var label1 = new Label (null);
             label1.set_markup ("<b>%s</b>".printf (label_texts[i])); // Жирный текст
             label1.set_halign (Align.START);
             label1.set_hexpand (false);
 
-            var label2 = new Label (label_texts_2[i]);
+            string truncated_text = label_texts_2[i];
+            if (label_texts_2[i].char_count() > 22) {
+                truncated_text = label_texts_2[i].substring(0, label_texts_2[i].index_of_nth_char(22)) + "...";
+            }
+
+            var label2 = new Label (null);
+            label2.set_markup ("<span size='9000'>%s</span>".printf (truncated_text)); // Обрезанный текст
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
 
-            label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
-            label2.set_markup ("<span size='9000'>%s</span>".printf (label_texts_2[i]));
-
             text_box.append (label1);
             text_box.append (label2);
-
+        
             row_box.append (switches[i]);
             row_box.append (text_box); // Добавляем контейнер с двумя строками текста
             flow_box.insert (row_box, -1);
         }
-
+        
         parent_box.append (flow_box);
     }
 
