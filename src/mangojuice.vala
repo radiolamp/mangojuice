@@ -96,63 +96,82 @@ public class MangoJuice : Adw.Application {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display"
     };
     public string[] gpu_label_texts = {
-        "Load", "Load Color", "VRAM", "Core Freq", "Mem Freq",
-        "Temp", "Memory Temp", "Juntion", "Fans", "Model",
-        "Power", "Voltage", "Throttling", "Throttling GRAPH", "Vulkan Driver"
+        _("Load"), _("Load Color"), _("VRAM"), _("Core Freq"), _("Mem Freq"),
+        _("Temp"), _("Memory Temp"), _("Junction"), _("Fans"), _("Model"),
+        _("Power"), _("Voltage"), _("Throttling"), _("Throttling GRAPH"), _("Vulkan Driver")
     };
+    
     public string[] cpu_label_texts = {
-        "Load", "Load Color", "Core Load", "Core Bars", "Core Freq", "Temp",
-        "Power"
+        _("Load"), _("Load Color"), _("Core Load"), _("Core Bars"), _("Core Freq"), _("Temp"),
+        _("Power")
     };
+    
     public string[] other_label_texts = {
-        "RAM", "Disk IO", "Persistent", "Swap", "Fan"
+        _("RAM"), _("Disk IO"), _("Persistent"), _("Swap"), _("Fan")
     };
+    
     public string[] system_label_texts = {
-        "Refresh rate", "Resolution", "Session", "Time", "Arch"
+        _("Refresh rate"), _("Resolution"), _("Session"), _("Time"), _("Arch")
     };
+    
     public string[] wine_label_texts = {
-        "Version", "Engine Ver", "Short names", "Winesync"
+        _("Version"), _("Engine Ver"), _("Short names"), _("Winesync")
     };
+    
     public string[] options_label_texts = {
-        "HUD Version", "Gamemode", "VKbasalt", "Name", "Fcat", "FSR", "HDR", "Compact HUD", "Compact API", "Hide HUD"
+        _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"), _("Compact API"), _("Hide HUD")
     };
+    
     public string[] battery_label_texts = {
-        "Percentage", "Wattage", "Time remain", "Battery icon", "Device"
+        _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
     };
+    
     public string[] other_extra_label_texts = {
-        "Media", "Network", "Full ON", "Log Versioning", "Upload Results "
+        _("Media"), _("Network"), _("Full ON"), _("Log Versioning"), _("Upload Results")
     };
+    
     public string[] inform_label_texts = {
-        "FPS", "FPS Color", "FPS low 1%", "FPS low 0.1%", "Frame limit", "Frame time", "Histogram", "Frame", "Temt °F", "VPS" 
+        _("FPS"), _("FPS Color"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
     };
+    
     public string[] gpu_label_texts_2 = {
-        "Percentage load", "Color text", "Display system VRAM", "Display GPU core", "Display GPU memory",
-        "GPU temperature", "GDDR temperatures", "Memory Temperature", "Fan in rpm", "Display GPU name",
-        "Display draw in watts", "Display draw in voltage", "GPU is throttling?", "Trolling curve", "Driver Version"
+        _("Percentage load"), _("Color text"), _("Display system VRAM"), _("Display GPU core"), _("Display GPU memory"),
+        _("GPU temperature"), _("GDDR temperatures"), _("Memory Temperature"), _("Fan in rpm"), _("Display GPU name"),
+        _("Display draw in watts"), _("Display draw in voltage"), _("GPU is throttling?"), _("Trolling curve"), _("Driver Version")
     };
+    
     public string[] cpu_label_texts_2 = {
-        "Percentage load", "Color text", "Display all streams", "Streams in the graph", "Processor frequency", "Processor temperature", "CPU consumption watt"
+        _("Percentage load"), _("Color text"), _("Display all streams"), _("Streams in the graph"), _("Processor frequency"), _("Processor temperature"), _("CPU consumption watt")
     };
+    
     public string[] other_label_texts_2 = {
-        "Memory", "Input/Output", "Memory", "Memory", "Steam deck"
+        _("Memory"), _("Input/Output"), _("Memory"), _("Memory"), _("Steam deck")
     };
+    
     public string[] system_label_texts_2 = {
-        "Only gamescope", "Window", "X11/Wayland", "Watch", "Processor"
+        _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Watch"), _("Processor")
     };
+    
     public string[] wine_label_texts_2 = {
-        "Wine or Proton version", "X11/Wayland", "Version used engin", "Wine sync method"
+        _("Wine or Proton version"), _("X11/Wayland"), _("Version used engin"), _("Wine sync method")
     };
+    
     public string[] options_label_texts_2 = {
-        "Mangohud", "Priority of game processes", "Enhance the visual graphics", "Launched process", "Visual updating frames", "Only gamescope", "Only gamescope", "Removes fields", "Only OpenGL", "Hide overlay"
+        _("Mangohud"), _("Priority of game processes"), _("Enhance the visual graphics"), _("Launched process"), _("Visual updating frames"),
+        _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Only OpenGL"), _("Hide overlay")
     };
+    
     public string[] battery_label_texts_2 = {
-        "Display current battery", "Display wattage battery", "Time for battery ", "Icon of percent", "Wireless device battery"
+        _("Display current battery"), _("Display wattage battery"), _("Time for battery"), _("Icon of percent"), _("Wireless device battery")
     };
+    
     public string[] other_extra_label_texts_2 = {
-        "Show media player", "Show network interfaces", "Excludes histogram", "Adds information the log", "Automatic uploads of logs"
+        _("Show media player"), _("Show network interfaces"), _("Excludes histogram"), _("Adds information the log"), _("Automatic uploads of logs")
     };
+    
     public string[] inform_label_texts_2 = {
-        "Show FPS", "Color text", "Average worst frame", "Average worst frame", "Display FPS limit", "Display frametime", "Graph to histogram", "Display frame count", "Show temperature °F", "Present mode"
+        _("Show FPS"), _("Color text"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
+        _("Graph to histogram"), _("Display frame count"), _("Show temperature °F"), _("Present mode")
     };
     public bool test_button_pressed = false;
     public Entry custom_text_center_entry;
@@ -277,9 +296,9 @@ public class MangoJuice : Adw.Application {
         Intl.textdomain ("mangojuice");
         Intl.bindtextdomain ("mangojuice", "/usr/share/locale");
         Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
-        stdout.printf ("Locale: %s\n", Intl.setlocale (LocaleCategory.ALL, ""));
-        stdout.printf ("Textdomain: %s\n", Intl.textdomain (null));
-        stdout.printf ("Bindtextdomain: %s\n", Intl.bindtextdomain ("mangojuice", null));
+        stdout.printf(_("Load") + "\n");
+        stdout.printf(_("Temp") + "\n");
+    
 
         var window = new Adw.ApplicationWindow (this);
         window.set_default_size (1024, 700);

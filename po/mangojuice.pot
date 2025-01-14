@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-14 20:00+0300\n"
+"POT-Creation-Date: 2025-01-14 22:41+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/mangojuice.vala:54
@@ -47,4 +47,476 @@ msgstr ""
 
 #: src/mangojuice.vala:62
 msgid "Information"
+msgstr ""
+
+#: src/mangojuice.vala:99 src/mangojuice.vala:105
+msgid "Load"
+msgstr ""
+
+#: src/mangojuice.vala:99 src/mangojuice.vala:105
+msgid "Load Color"
+msgstr ""
+
+#: src/mangojuice.vala:99
+msgid "VRAM"
+msgstr ""
+
+#: src/mangojuice.vala:99 src/mangojuice.vala:105
+msgid "Core Freq"
+msgstr ""
+
+#: src/mangojuice.vala:99
+msgid "Mem Freq"
+msgstr ""
+
+#: src/mangojuice.vala:100 src/mangojuice.vala:105
+msgid "Temp"
+msgstr ""
+
+#: src/mangojuice.vala:100
+msgid "Memory Temp"
+msgstr ""
+
+#: src/mangojuice.vala:100
+msgid "Junction"
+msgstr ""
+
+#: src/mangojuice.vala:100
+msgid "Fans"
+msgstr ""
+
+#: src/mangojuice.vala:100
+msgid "Model"
+msgstr ""
+
+#: src/mangojuice.vala:101 src/mangojuice.vala:106
+msgid "Power"
+msgstr ""
+
+#: src/mangojuice.vala:101
+msgid "Voltage"
+msgstr ""
+
+#: src/mangojuice.vala:101
+msgid "Throttling"
+msgstr ""
+
+#: src/mangojuice.vala:101
+msgid "Throttling GRAPH"
+msgstr ""
+
+#: src/mangojuice.vala:101
+msgid "Vulkan Driver"
+msgstr ""
+
+#: src/mangojuice.vala:105
+msgid "Core Load"
+msgstr ""
+
+#: src/mangojuice.vala:105
+msgid "Core Bars"
+msgstr ""
+
+#: src/mangojuice.vala:110
+msgid "RAM"
+msgstr ""
+
+#: src/mangojuice.vala:110
+msgid "Disk IO"
+msgstr ""
+
+#: src/mangojuice.vala:110
+msgid "Persistent"
+msgstr ""
+
+#: src/mangojuice.vala:110
+msgid "Swap"
+msgstr ""
+
+#: src/mangojuice.vala:110
+msgid "Fan"
+msgstr ""
+
+#: src/mangojuice.vala:114
+msgid "Refresh rate"
+msgstr ""
+
+#: src/mangojuice.vala:114
+msgid "Resolution"
+msgstr ""
+
+#: src/mangojuice.vala:114
+msgid "Session"
+msgstr ""
+
+#: src/mangojuice.vala:114
+msgid "Time"
+msgstr ""
+
+#: src/mangojuice.vala:114
+msgid "Arch"
+msgstr ""
+
+#: src/mangojuice.vala:118
+msgid "Version"
+msgstr ""
+
+#: src/mangojuice.vala:118
+msgid "Engine Ver"
+msgstr ""
+
+#: src/mangojuice.vala:118
+msgid "Short names"
+msgstr ""
+
+#: src/mangojuice.vala:118
+msgid "Winesync"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "HUD Version"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "Gamemode"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "VKbasalt"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "Name"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "Fcat"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "FSR"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "HDR"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "Compact HUD"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "Compact API"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "Hide HUD"
+msgstr ""
+
+#: src/mangojuice.vala:126
+msgid "Percentage"
+msgstr ""
+
+#: src/mangojuice.vala:126
+msgid "Wattage"
+msgstr ""
+
+#: src/mangojuice.vala:126
+msgid "Time remain"
+msgstr ""
+
+#: src/mangojuice.vala:126
+msgid "Battery icon"
+msgstr ""
+
+#: src/mangojuice.vala:126
+msgid "Device"
+msgstr ""
+
+#: src/mangojuice.vala:130
+msgid "Media"
+msgstr ""
+
+#: src/mangojuice.vala:130
+msgid "Network"
+msgstr ""
+
+#: src/mangojuice.vala:130
+msgid "Full ON"
+msgstr ""
+
+#: src/mangojuice.vala:130
+msgid "Log Versioning"
+msgstr ""
+
+#: src/mangojuice.vala:130
+msgid "Upload Results"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "FPS"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "FPS Color"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "FPS low 1%"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "FPS low 0.1%"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "Frame limit"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "Frame time"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "Histogram"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "Frame"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "Temt °F"
+msgstr ""
+
+#: src/mangojuice.vala:134
+msgid "VPS"
+msgstr ""
+
+#: src/mangojuice.vala:138 src/mangojuice.vala:144
+msgid "Percentage load"
+msgstr ""
+
+#: src/mangojuice.vala:138 src/mangojuice.vala:144 src/mangojuice.vala:173
+msgid "Color text"
+msgstr ""
+
+#: src/mangojuice.vala:138
+msgid "Display system VRAM"
+msgstr ""
+
+#: src/mangojuice.vala:138
+msgid "Display GPU core"
+msgstr ""
+
+#: src/mangojuice.vala:138
+msgid "Display GPU memory"
+msgstr ""
+
+#: src/mangojuice.vala:139
+msgid "GPU temperature"
+msgstr ""
+
+#: src/mangojuice.vala:139
+msgid "GDDR temperatures"
+msgstr ""
+
+#: src/mangojuice.vala:139
+msgid "Memory Temperature"
+msgstr ""
+
+#: src/mangojuice.vala:139
+msgid "Fan in rpm"
+msgstr ""
+
+#: src/mangojuice.vala:139
+msgid "Display GPU name"
+msgstr ""
+
+#: src/mangojuice.vala:140
+msgid "Display draw in watts"
+msgstr ""
+
+#: src/mangojuice.vala:140
+msgid "Display draw in voltage"
+msgstr ""
+
+#: src/mangojuice.vala:140
+msgid "GPU is throttling?"
+msgstr ""
+
+#: src/mangojuice.vala:140
+msgid "Trolling curve"
+msgstr ""
+
+#: src/mangojuice.vala:140
+msgid "Driver Version"
+msgstr ""
+
+#: src/mangojuice.vala:144
+msgid "Display all streams"
+msgstr ""
+
+#: src/mangojuice.vala:144
+msgid "Streams in the graph"
+msgstr ""
+
+#: src/mangojuice.vala:144
+msgid "Processor frequency"
+msgstr ""
+
+#: src/mangojuice.vala:144
+msgid "Processor temperature"
+msgstr ""
+
+#: src/mangojuice.vala:144
+msgid "CPU consumption watt"
+msgstr ""
+
+#: src/mangojuice.vala:148
+msgid "Memory"
+msgstr ""
+
+#: src/mangojuice.vala:148
+msgid "Input/Output"
+msgstr ""
+
+#: src/mangojuice.vala:148
+msgid "Steam deck"
+msgstr ""
+
+#: src/mangojuice.vala:152 src/mangojuice.vala:161
+msgid "Only gamescope"
+msgstr ""
+
+#: src/mangojuice.vala:152
+msgid "Window"
+msgstr ""
+
+#: src/mangojuice.vala:152 src/mangojuice.vala:156
+msgid "X11/Wayland"
+msgstr ""
+
+#: src/mangojuice.vala:152
+msgid "Watch"
+msgstr ""
+
+#: src/mangojuice.vala:152
+msgid "Processor"
+msgstr ""
+
+#: src/mangojuice.vala:156
+msgid "Wine or Proton version"
+msgstr ""
+
+#: src/mangojuice.vala:156
+msgid "Version used engin"
+msgstr ""
+
+#: src/mangojuice.vala:156
+msgid "Wine sync method"
+msgstr ""
+
+#: src/mangojuice.vala:160
+msgid "Mangohud"
+msgstr ""
+
+#: src/mangojuice.vala:160
+msgid "Priority of game processes"
+msgstr ""
+
+#: src/mangojuice.vala:160
+msgid "Enhance the visual graphics"
+msgstr ""
+
+#: src/mangojuice.vala:160
+msgid "Launched process"
+msgstr ""
+
+#: src/mangojuice.vala:160
+msgid "Visual updating frames"
+msgstr ""
+
+#: src/mangojuice.vala:161
+msgid "Removes fields"
+msgstr ""
+
+#: src/mangojuice.vala:161
+msgid "Only OpenGL"
+msgstr ""
+
+#: src/mangojuice.vala:161
+msgid "Hide overlay"
+msgstr ""
+
+#: src/mangojuice.vala:165
+msgid "Display current battery"
+msgstr ""
+
+#: src/mangojuice.vala:165
+msgid "Display wattage battery"
+msgstr ""
+
+#: src/mangojuice.vala:165
+msgid "Time for battery"
+msgstr ""
+
+#: src/mangojuice.vala:165
+msgid "Icon of percent"
+msgstr ""
+
+#: src/mangojuice.vala:165
+msgid "Wireless device battery"
+msgstr ""
+
+#: src/mangojuice.vala:169
+msgid "Show media player"
+msgstr ""
+
+#: src/mangojuice.vala:169
+msgid "Show network interfaces"
+msgstr ""
+
+#: src/mangojuice.vala:169
+msgid "Excludes histogram"
+msgstr ""
+
+#: src/mangojuice.vala:169
+msgid "Adds information the log"
+msgstr ""
+
+#: src/mangojuice.vala:169
+msgid "Automatic uploads of logs"
+msgstr ""
+
+#: src/mangojuice.vala:173
+msgid "Show FPS"
+msgstr ""
+
+#: src/mangojuice.vala:173
+msgid "Average worst frame"
+msgstr ""
+
+#: src/mangojuice.vala:173
+msgid "Display FPS limit"
+msgstr ""
+
+#: src/mangojuice.vala:173
+msgid "Display frametime"
+msgstr ""
+
+#: src/mangojuice.vala:174
+msgid "Graph to histogram"
+msgstr ""
+
+#: src/mangojuice.vala:174
+msgid "Display frame count"
+msgstr ""
+
+#: src/mangojuice.vala:174
+msgid "Show temperature °F"
+msgstr ""
+
+#: src/mangojuice.vala:174
+msgid "Present mode"
 msgstr ""
