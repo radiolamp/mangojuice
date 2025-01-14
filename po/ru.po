@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/mangojuice.vala:54
 msgid "GPU"
-msgstr ""
+msgstr "dndsnk"
 
 #: src/mangojuice.vala:55
 msgid "CPU"
