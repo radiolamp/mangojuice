@@ -43,10 +43,10 @@ msgid "Information"
 msgstr "Информация"
 
 msgid "Load"
-msgstr "Загрузка"
+msgstr "Нагрузка"
 
 msgid "Load Color"
-msgstr "Цвет загрузки"
+msgstr "Цвет нагрузки"
 
 msgid "VRAM"
 msgstr "Видеопамять"
@@ -88,7 +88,7 @@ msgid "Vulkan Driver"
 msgstr "Драйвер Vulkan"
 
 msgid "Core Load"
-msgstr "Загрузка ядра"
+msgstr "Нагрузка ядра"
 
 msgid "Core Bars"
 msgstr "График ядер"
@@ -415,10 +415,10 @@ msgid "Mangohud variable"
 msgstr "Переменная Mangohud"
 
 msgid "Home"
-msgstr "Домашняя папка"
+msgstr "Домашняя директория"
 
 msgid "Folder logs"
-msgstr "Папка логов"
+msgstr "Католог"
 
 msgid "Intel Power Fix"
 msgstr "Патч Intel Power"
@@ -433,7 +433,7 @@ msgid "Mangohud Global"
 msgstr "Системный Mangohud"
 
 msgid "Logs key"
-msgstr "Ключ логов"
+msgstr "Логирование"
 
 msgid "Customize"
 msgstr "Настройка"
@@ -448,13 +448,13 @@ msgid "Borders"
 msgstr "Границы"
 
 msgid "Round"
-msgstr "Круглые"
+msgstr "Радиус скругления"
 
 msgid "Alpha"
 msgstr "Прозрачность"
 
 msgid "Transparency"
-msgstr "Прозрачность"
+msgstr "Альфа канал"
 
 msgid "top-left"
 msgstr "сверху слева"
@@ -481,7 +481,7 @@ msgid "bottom-right"
 msgstr "снизу справа"
 
 msgid "Columns"
-msgstr "Колонки"
+msgstr "Размер"
 
 msgid "Number of columns"
 msgstr "Количество колонок"
@@ -535,10 +535,10 @@ msgid "Charge FPS"
 msgstr "Заряд FPS"
 
 msgid "GPU Load as a percentage"
-msgstr "Загрузка GPU в процентах"
+msgstr "Нагрузка GPU в процентах"
 
 msgid "CPU Load as a percentage"
-msgstr "Загрузка CPU в процентах"
+msgstr "Нагрузка CPU в процентах"
 
 msgid "Background"
 msgstr "Фон"
@@ -605,3 +605,30 @@ msgstr "Сглаживание"
 
 msgid "FPS Sampling"
 msgstr "Частота обновления"
+
+msgid "Contrast Adaptive Sharpening"
+msgstr "Контрастная адаптивная резкость"
+
+msgid "Denoised Luma Sharpening"
+msgstr "Устранение шума и повышение резкости"
+
+msgid "Fast Approximate Anti-Aliasing"
+msgstr "Быстрое приближенное сглаживание"
+
+msgid "Subpixel Morphological Antialiasing"
+msgstr "Субпиксельное морфологическое сглаживание"
+
+msgid "Color LookUp Table"
+msgstr "Таблица цветовых преобразований"
+
+msgid "Metrics"
+msgstr "Метрики"
+
+msgid "Extras"
+msgstr "Дополнительно"
+
+msgid "Performance"
+msgstr "Производительность"
+
+msgid "Visual"
+msgstr "Визуальные"

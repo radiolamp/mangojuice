@@ -37,7 +37,13 @@ public class OtherBox : Box {
 
         string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
         string[] label_texts = { "CAS", "DLS", "FXAA", "SMAA", "LUT" };
-        string[] label_texts_2 = { "Contrast Adaptive Sharpening", "Denoised Luma Sharpening", "Fast Approximate Anti-Aliasing", "Subpixel Morphological Antialiasing", "Color LookUp Table" };
+        string[] label_texts_2 = {
+            _("Contrast Adaptive Sharpening"),
+            _("Denoised Luma Sharpening"),
+            _("Fast Approximate Anti-Aliasing"),
+            _("Subpixel Morphological Antialiasing"),
+            _("Color LookUp Table")
+        };
 
         create_switches_and_labels (this, "VkBasalt", switches, labels, config_vars, label_texts, label_texts_2);
 
@@ -104,8 +110,6 @@ public class OtherBox : Box {
 
     private void create_scale_with_entry (FlowBox flow_box, string label_text, double min, double max, double step, double initial_value, string format, string switch_name) {
         var main_box = new Box (Orientation.VERTICAL, 6);
-        main_box.set_margin_start (FLOW_BOX_MARGIN);
-        main_box.set_margin_end (FLOW_BOX_MARGIN);
 
         var label = new Label (label_text);
         label.set_halign (Align.START);
