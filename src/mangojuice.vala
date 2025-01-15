@@ -2384,7 +2384,6 @@ public class MangoJuice : Adw.Application {
     public static int main (string[] args) {
         Intl.setlocale (LocaleCategory.ALL, "");
         Intl.textdomain ("mangojuice");
-        Intl.bindtextdomain ("mangojuice", "/usr/share/locale");
         Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
 
         var app = new MangoJuice ();
