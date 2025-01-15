@@ -720,7 +720,7 @@ public class MangoJuice : Adw.Application {
         blacklist_entry.placeholder_text = _("Blacklist: (vkcube,WatchDogs2.exe)");
         blacklist_entry.hexpand = true;
         blacklist_entry.changed.connect (() => {
-            update_blacklist_in_file (blacklist_entry.text);
+            LoadStates.update_blacklist_in_file (blacklist_entry.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -929,7 +929,7 @@ public class MangoJuice : Adw.Application {
         offset_x_value_label.set_halign (Align.END);
         offset_x_scale.value_changed.connect (() => {
             offset_x_value_label.label = "%d".printf ((int)offset_x_scale.get_value ());
-            update_offset_x_in_file ("%d".printf ((int)offset_x_scale.get_value ()));
+            LoadStates.update_offset_x_in_file ("%d".printf ((int)offset_x_scale.get_value ()));
         });
 
         var offset_y_widget = create_scale_entry_widget (_("Offset Y"), _("Vertical offset"), 0, 1500, 0);
@@ -940,7 +940,7 @@ public class MangoJuice : Adw.Application {
         offset_y_value_label.set_halign (Align.END);
         offset_y_scale.value_changed.connect (() => {
             offset_y_value_label.label = "%d".printf ((int)offset_y_scale.get_value ());
-            update_offset_y_in_file ("%d".printf ((int)offset_y_scale.get_value ()));
+            LoadStates.update_offset_y_in_file ("%d".printf ((int)offset_y_scale.get_value ()));
         });
 
         var offset_flow_box = new FlowBox ();
@@ -1030,7 +1030,7 @@ public class MangoJuice : Adw.Application {
         gpu_color_button.set_rgba (default_gpu_color);
         gpu_color_button.notify["rgba"].connect ( () => {
             var rgba = gpu_color_button.get_rgba ().copy ();
-            update_gpu_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_gpu_color_in_file (rgba_to_hex (rgba));
         });
 
         cpu_color_button = new ColorDialogButton (color_dialog);
@@ -1039,7 +1039,7 @@ public class MangoJuice : Adw.Application {
         cpu_color_button.set_rgba (default_cpu_color);
         cpu_color_button.notify["rgba"].connect ( () => {
             var rgba = cpu_color_button.get_rgba ().copy ();
-            update_cpu_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_cpu_color_in_file (rgba_to_hex (rgba));
             SaveStates.save_states_to_file (this);
         });
 
@@ -1047,7 +1047,7 @@ public class MangoJuice : Adw.Application {
         gpu_text_entry.placeholder_text = _("GPU custom name");
         gpu_text_entry.hexpand = true;
         gpu_text_entry.changed.connect ( () => {
-            update_gpu_text_in_file (gpu_text_entry.text);
+            LoadStates.update_gpu_text_in_file (gpu_text_entry.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1055,7 +1055,7 @@ public class MangoJuice : Adw.Application {
         cpu_text_entry.placeholder_text = _("CPU custom name");
         cpu_text_entry.hexpand = true;
         cpu_text_entry.changed.connect ( () => {
-            update_cpu_text_in_file (cpu_text_entry.text);
+            LoadStates.update_cpu_text_in_file (cpu_text_entry.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1075,7 +1075,7 @@ public class MangoJuice : Adw.Application {
         fps_value_entry_1.text = "30";
         fps_value_entry_1.hexpand = true;
         fps_value_entry_1.changed.connect ( () => {
-            update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
+            LoadStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1084,7 +1084,7 @@ public class MangoJuice : Adw.Application {
         fps_value_entry_2.text = "60";
         fps_value_entry_2.hexpand = true;
         fps_value_entry_2.changed.connect ( () => {
-            update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
+            LoadStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1101,7 +1101,7 @@ public class MangoJuice : Adw.Application {
         fps_color_button_1.set_rgba (default_fps_color_1);
         fps_color_button_1.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_1.get_rgba ().copy ();
-            update_fps_color_in_file (rgba_to_hex (rgba), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (fps_color_button_3.get_rgba ()));
+            LoadStates.update_fps_color_in_file (rgba_to_hex (rgba), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (fps_color_button_3.get_rgba ()));
         });
 
         fps_color_button_2 = new ColorDialogButton (color_dialog_fps);
@@ -1110,7 +1110,7 @@ public class MangoJuice : Adw.Application {
         fps_color_button_2.set_rgba (default_fps_color_2);
         fps_color_button_2.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_2.get_rgba ().copy ();
-            update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (fps_color_button_3.get_rgba ()));
+            LoadStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (fps_color_button_3.get_rgba ()));
         });
 
         fps_color_button_3 = new ColorDialogButton (color_dialog_fps);
@@ -1119,7 +1119,7 @@ public class MangoJuice : Adw.Application {
         fps_color_button_3.set_rgba (default_fps_color_3);
         fps_color_button_3.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_3.get_rgba ().copy ();
-            update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+            LoadStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
 
         var fps_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -1139,7 +1139,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_value_entry_1.text = "60";
         gpu_load_value_entry_1.hexpand = true;
         gpu_load_value_entry_1.changed.connect ( () => {
-            update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
+            LoadStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1148,7 +1148,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_value_entry_2.text = "90";
         gpu_load_value_entry_2.hexpand = true;
         gpu_load_value_entry_2.changed.connect ( () => {
-            update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
+            LoadStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1165,7 +1165,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_button_1.set_rgba (default_gpu_load_color_1);
         gpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_1.get_rgba ().copy ();
-            update_gpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
+            LoadStates.update_gpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
         });
 
         gpu_load_color_button_2 = new ColorDialogButton (color_dialog_gpu_load);
@@ -1174,7 +1174,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_button_2.set_rgba (default_gpu_load_color_2);
         gpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_2.get_rgba ().copy ();
-            update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
+            LoadStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
         });
 
         gpu_load_color_button_3 = new ColorDialogButton (color_dialog_gpu_load);
@@ -1183,7 +1183,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_button_3.set_rgba (default_gpu_load_color_3);
         gpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_3.get_rgba ().copy ();
-            update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+            LoadStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
 
         var gpu_load_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -1203,7 +1203,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_value_entry_1.text = "60";
         cpu_load_value_entry_1.hexpand = true;
         cpu_load_value_entry_1.changed.connect ( () => {
-            update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
+            LoadStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1212,7 +1212,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_value_entry_2.text = "90";
         cpu_load_value_entry_2.hexpand = true;
         cpu_load_value_entry_2.changed.connect ( () => {
-            update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
+            LoadStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1223,7 +1223,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_color_button_1.set_rgba (default_cpu_load_color_1);
         cpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_1.get_rgba ().copy ();
-            update_cpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
+            LoadStates.update_cpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
         });
 
         cpu_load_color_button_2 = new ColorDialogButton (color_dialog_cpu_load);
@@ -1232,7 +1232,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_color_button_2.set_rgba (default_cpu_load_color_2);
         cpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_2.get_rgba ().copy ();
-            update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
+            LoadStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
         });
 
         cpu_load_color_button_3 = new ColorDialogButton (color_dialog_cpu_load);
@@ -1241,7 +1241,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_color_button_3.set_rgba (default_cpu_load_color_3);
         cpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_3.get_rgba ().copy ();
-            update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+            LoadStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
 
         var cpu_load_clarge_label = new Label (_("CPU Load as a percentage"));
@@ -1268,7 +1268,7 @@ public class MangoJuice : Adw.Application {
         background_color_button.set_rgba (default_background_color);
         background_color_button.notify["rgba"].connect ( () => {
             var rgba = background_color_button.get_rgba ().copy ();
-            update_background_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_background_color_in_file (rgba_to_hex (rgba));
         });
 
         frametime_color_button = new ColorDialogButton (color_dialog);
@@ -1277,7 +1277,7 @@ public class MangoJuice : Adw.Application {
         frametime_color_button.set_rgba (default_frametime_color);
         frametime_color_button.notify["rgba"].connect ( () => {
             var rgba = frametime_color_button.get_rgba ().copy ();
-            update_frametime_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_frametime_color_in_file (rgba_to_hex (rgba));
         });
 
         vram_color_button = new ColorDialogButton (color_dialog);
@@ -1286,7 +1286,7 @@ public class MangoJuice : Adw.Application {
         vram_color_button.set_rgba (default_vram_color);
         vram_color_button.notify["rgba"].connect ( () => {
             var rgba = vram_color_button.get_rgba ().copy ();
-            update_vram_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_vram_color_in_file (rgba_to_hex (rgba));
         });
 
         ram_color_button = new ColorDialogButton (color_dialog);
@@ -1295,7 +1295,7 @@ public class MangoJuice : Adw.Application {
         ram_color_button.set_rgba (default_ram_color);
         ram_color_button.notify["rgba"].connect ( () => {
             var rgba = ram_color_button.get_rgba ().copy ();
-            update_ram_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_ram_color_in_file (rgba_to_hex (rgba));
         });
 
         wine_color_button = new ColorDialogButton (color_dialog);
@@ -1304,7 +1304,7 @@ public class MangoJuice : Adw.Application {
         wine_color_button.set_rgba (default_wine_color);
         wine_color_button.notify["rgba"].connect ( () => {
             var rgba = wine_color_button.get_rgba ().copy ();
-            update_wine_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_wine_color_in_file (rgba_to_hex (rgba));
         });
 
         engine_color_button = new ColorDialogButton (color_dialog);
@@ -1313,7 +1313,7 @@ public class MangoJuice : Adw.Application {
         engine_color_button.set_rgba (default_engine_color);
         engine_color_button.notify["rgba"].connect ( () => {
             var rgba = engine_color_button.get_rgba ().copy ();
-            update_engine_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_engine_color_in_file (rgba_to_hex (rgba));
         });
 
         text_color_button = new ColorDialogButton (color_dialog);
@@ -1322,7 +1322,7 @@ public class MangoJuice : Adw.Application {
         text_color_button.set_rgba (default_text_color);
         text_color_button.notify["rgba"].connect ( () => {
             var rgba = text_color_button.get_rgba ().copy ();
-            update_text_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_text_color_in_file (rgba_to_hex (rgba));
         });
 
         media_player_color_button = new ColorDialogButton (color_dialog);
@@ -1331,7 +1331,7 @@ public class MangoJuice : Adw.Application {
         media_player_color_button.set_rgba (default_media_player_color);
         media_player_color_button.notify["rgba"].connect ( () => {
             var rgba = media_player_color_button.get_rgba ().copy ();
-            update_media_player_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_media_player_color_in_file (rgba_to_hex (rgba));
         });
 
         network_color_button = new ColorDialogButton (color_dialog);
@@ -1340,7 +1340,7 @@ public class MangoJuice : Adw.Application {
         network_color_button.set_rgba (default_network_color);
         network_color_button.notify["rgba"].connect ( () => {
             var rgba = network_color_button.get_rgba ().copy ();
-            update_network_color_in_file (rgba_to_hex (rgba));
+            LoadStates.update_network_color_in_file (rgba_to_hex (rgba));
         });
 
         ColorDialogButton[] color_buttons = { background_color_button, frametime_color_button, vram_color_button, ram_color_button, wine_color_button, engine_color_button, media_player_color_button, network_color_button, text_color_button };
@@ -1586,21 +1586,21 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_1 = new Entry ();
         fps_limit_entry_1.placeholder_text = _("Limit 1");
         fps_limit_entry_1.changed.connect (() => {
-            update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+            LoadStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
 
         fps_limit_entry_2 = new Entry ();
         fps_limit_entry_2.placeholder_text = _("Limit 2");
         fps_limit_entry_2.changed.connect (() => {
-            update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+            LoadStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
 
         fps_limit_entry_3 = new Entry ();
         fps_limit_entry_3.placeholder_text = _("Limit 3");
         fps_limit_entry_3.changed.connect (() => {
-            update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+            LoadStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1731,7 +1731,7 @@ public class MangoJuice : Adw.Application {
             if (!is_updating) {
                 is_updating = true; // Блокируем обновление
                 fps_sampling_period_entry.text = "%d".printf ((int)fps_sampling_period_scale.get_value ());
-                update_fps_sampling_period_in_file ("%d".printf ((int)fps_sampling_period_scale.get_value ()));
+                LoadStates.update_fps_sampling_period_in_file ("%d".printf ((int)fps_sampling_period_scale.get_value ()));
                 is_updating = false; // Разблокируем обновление
             }
         });
@@ -1742,7 +1742,7 @@ public class MangoJuice : Adw.Application {
                 int value = int.parse (fps_sampling_period_entry.text);
                 if (value >= 250 && value <= 2000 && value != (int)fps_sampling_period_scale.get_value ()) {
                     fps_sampling_period_scale.set_value (value);
-                    update_fps_sampling_period_in_file ("%d".printf (value));
+                    LoadStates.update_fps_sampling_period_in_file ("%d".printf (value));
                 }
                 is_updating = false; // Разблокируем обновление
             }
@@ -2084,678 +2084,6 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf ("Error checking glxgears availability: %s\n", e.message);
             return false;
-        }
-    }
-
-    public void update_gpu_text_in_file (string gpu_text) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("gpu_text=")) {
-                    line = "gpu_text=%s".printf (gpu_text);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_gpu_color_in_file (string gpu_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("gpu_color=")) {
-                    line = "gpu_color=%s".printf (gpu_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_cpu_text_in_file (string cpu_text) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("cpu_text=")) {
-                    line = "cpu_text=%s".printf (cpu_text);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_cpu_color_in_file (string cpu_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("cpu_color=")) {
-                    line = "cpu_color=%s".printf (cpu_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_fps_value_in_file (string fps_value_1, string fps_value_2) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("fps_value=")) {
-                    line = "fps_value=%s,%s".printf (fps_value_1, fps_value_2);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_fps_color_in_file (string fps_color_1, string fps_color_2, string fps_color_3) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("fps_color=")) {
-                    line = "fps_color=%s,%s,%s".printf (fps_color_1, fps_color_2, fps_color_3);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_gpu_load_value_in_file (string gpu_load_value_1, string gpu_load_value_2) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("gpu_load_value=")) {
-                    line = "gpu_load_value=%s,%s".printf (gpu_load_value_1, gpu_load_value_2);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_gpu_load_color_in_file (string gpu_load_color_1, string gpu_load_color_2, string gpu_load_color_3) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("gpu_load_color=")) {
-                    line = "gpu_load_color=%s,%s,%s".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_cpu_load_value_in_file (string cpu_load_value_1, string cpu_load_value_2) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("cpu_load_value=")) {
-                    line = "cpu_load_value=%s,%s".printf (cpu_load_value_1, cpu_load_value_2);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_cpu_load_color_in_file (string cpu_load_color_1, string cpu_load_color_2, string cpu_load_color_3) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("cpu_load_color=")) {
-                    line = "cpu_load_color=%s,%s,%s".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_background_color_in_file (string background_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("background_color=")) {
-                    line = "background_color=%s".printf (background_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_frametime_color_in_file (string frametime_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("frametime_color=")) {
-                    line = "frametime_color=%s".printf (frametime_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_vram_color_in_file (string vram_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("vram_color=")) {
-                    line = "vram_color=%s".printf (vram_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_ram_color_in_file (string ram_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("ram_color=")) {
-                    line = "ram_color=%s".printf (ram_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_wine_color_in_file (string wine_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("wine_color=")) {
-                    line = "wine_color=%s".printf (wine_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_engine_color_in_file (string engine_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("engine_color=")) {
-                    line = "engine_color=%s".printf (engine_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_text_color_in_file (string text_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("text_color=")) {
-                    line = "text_color=%s".printf (text_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_media_player_color_in_file (string media_player_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("media_player_color=")) {
-                    line = "media_player_color=%s".printf (media_player_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_network_color_in_file (string network_color) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("network_color=")) {
-                    line = "network_color=%s".printf (network_color);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_fps_limit_in_file (string fps_limit_1, string fps_limit_2, string fps_limit_3) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("fps_limit=")) {
-                    line = "fps_limit=%s,%s,%s".printf (fps_limit_1, fps_limit_2, fps_limit_3);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_offset_x_in_file (string offset_x_value) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ((line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("offset_x=")) {
-                    line = "offset_x=%s".printf (offset_x_value);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_offset_y_in_file (string offset_y_value) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ((line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("offset_y=")) {
-                    line = "offset_y=%s".printf (offset_y_value);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_fps_sampling_period_in_file (string fps_sampling_period_value) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ((line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("fps_sampling_period=")) {
-                    line = "fps_sampling_period=%s".printf (fps_sampling_period_value);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_blacklist_in_file (string blacklist_value) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("blacklist=")) {
-                    line = "blacklist=%s".printf (blacklist_value);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
