@@ -100,75 +100,75 @@ public class MangoJuice : Adw.Application {
         _("Temp"), _("Memory Temp"), _("Junction"), _("Fans"), _("Model"),
         _("Power"), _("Voltage"), _("Throttling"), _("Throttling GRAPH"), _("Vulkan Driver")
     };
-    
+
     public string[] cpu_label_texts = {
         _("Load"), _("Load Color"), _("Core Load"), _("Core Bars"), _("Core Freq"), _("Temp"),
         _("Power")
     };
-    
+
     public string[] other_label_texts = {
         _("RAM"), _("Disk IO"), _("Persistent"), _("Swap"), _("Fan")
     };
-    
+
     public string[] system_label_texts = {
         _("Refresh rate"), _("Resolution"), _("Session"), _("Time"), _("Arch")
     };
-    
+
     public string[] wine_label_texts = {
         _("Version"), _("Engine Ver"), _("Short names"), _("Winesync")
     };
-    
+
     public string[] options_label_texts = {
         _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"), _("Compact API"), _("Hide HUD")
     };
-    
+
     public string[] battery_label_texts = {
         _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
     };
-    
+
     public string[] other_extra_label_texts = {
         _("Media"), _("Network"), _("Full ON"), _("Log Versioning"), _("Upload Results")
     };
-    
+
     public string[] inform_label_texts = {
         _("FPS"), _("FPS Color"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
     };
-    
+
     public string[] gpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display system VRAM"), _("Display GPU core"), _("Display GPU memory"),
         _("GPU temperature"), _("GDDR temperatures"), _("Memory Temperature"), _("Fan in rpm"), _("Display GPU name"),
         _("Display draw in watts"), _("Display draw in voltage"), _("GPU is throttling?"), _("Trolling curve"), _("Driver Version")
     };
-    
+
     public string[] cpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display all streams"), _("Streams in the graph"), _("Processor frequency"), _("Processor temperature"), _("CPU consumption watt")
     };
-    
+
     public string[] other_label_texts_2 = {
         _("Memory"), _("Input/Output"), _("Memory"), _("Memory"), _("Steam deck")
     };
-    
+
     public string[] system_label_texts_2 = {
         _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Watch"), _("Processor")
     };
-    
+
     public string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("X11/Wayland"), _("Version used engin"), _("Wine sync method")
     };
-    
+
     public string[] options_label_texts_2 = {
         _("Mangohud"), _("Priority of game processes"), _("Enhance the visual graphics"), _("Launched process"), _("Visual updating frames"),
         _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Only OpenGL"), _("Hide overlay")
     };
-    
+
     public string[] battery_label_texts_2 = {
         _("Display current battery"), _("Display wattage battery"), _("Time for battery"), _("Icon of percent"), _("Wireless device battery")
     };
-    
+
     public string[] other_extra_label_texts_2 = {
         _("Show media player"), _("Show network interfaces"), _("Excludes histogram"), _("Adds information the log"), _("Automatic uploads of logs")
     };
-    
+
     public string[] inform_label_texts_2 = {
         _("Show FPS"), _("Color text"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
         _("Graph to histogram"), _("Display frame count"), _("Show temperature °F"), _("Present mode")
@@ -236,7 +236,7 @@ public class MangoJuice : Adw.Application {
     public Scale offset_x_scale;
     public Scale offset_y_scale;
     public Label offset_x_value_label;
-    public Label offset_y_value_label; 
+    public Label offset_y_value_label;
     public Entry offset_x_entry;
     public Entry offset_y_entry;
     public Scale fps_sampling_period_scale;
@@ -291,7 +291,7 @@ public class MangoJuice : Adw.Application {
     }
 
     protected override void activate () {
-    
+
         var window = new Adw.ApplicationWindow (this);
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
@@ -409,14 +409,6 @@ public class MangoJuice : Adw.Application {
         });
         header_bar.pack_start (test_button);
 
-        var save_as_action = new SimpleAction ("save_as", null);
-        save_as_action.activate.connect (on_save_as_button_clicked);
-        this.add_action (save_as_action);
-
-        var restore_config_action = new SimpleAction ("restore_config", null);
-        restore_config_action.activate.connect (on_restore_config_button_clicked);
-        this.add_action (restore_config_action);
-
         var menu_button = new MenuButton ();
         var menu_model = new GLib.Menu ();
         var save_item = new GLib.MenuItem (_("Save"), "app.save");
@@ -453,28 +445,45 @@ public class MangoJuice : Adw.Application {
         window.set_content (content_box);
         window.present ();
 
+        GLib.Idle.add (() => {
+            initialize_rest_of_ui (view_stack);
+            return false;
+        });
+
         check_mangohud_global_status ();
 
         LoadStates.load_states_from_file (this);
-        SaveStates.save_states_to_file (this);
 
-        window.close_request.connect (() => {
-            if (is_vkcube_running ()) {
-                try {
-                    Process.spawn_command_line_sync ("pkill vkcube");
-                } catch (Error e) {
-                    stderr.printf ("Error closing vkcube: %s\n", e.message);
-                }
-            }
-            if (is_glxgears_running ()) {
-                try {
-                    Process.spawn_command_line_sync ("pkill glxgears");
-                } catch (Error e) {
-                    stderr.printf ("Error closing glxgears: %s\n", e.message);
-                }
-            }
-            return false;
-        });
+        toolbar_view_switcher.add_css_class ("viewswitcher");
+        var style_manager = Adw.StyleManager.get_default ();
+        style_manager.set_color_scheme (Adw.ColorScheme.DEFAULT);
+
+        if (!is_vkcube_available () && !is_glxgears_available ()) {
+            test_button.set_visible (false);
+        }
+    }
+
+    private void initialize_rest_of_ui (ViewStack view_stack) {
+
+        var save_as_action = new SimpleAction ("save_as", null);
+        save_as_action.activate.connect (on_save_as_button_clicked);
+        this.add_action (save_as_action);
+
+        var restore_config_action = new SimpleAction ("restore_config", null);
+        restore_config_action.activate.connect (on_restore_config_button_clicked);
+        this.add_action (restore_config_action);
+
+        var about_action = new SimpleAction ("about", null);
+        about_action.activate.connect (on_about_button_clicked);
+        this.add_action (about_action);
+
+        var scales = new Scale[] {
+            duracion_scale, autostart_scale, interval_scale, af, picmip, borders_scale, colums_scale, font_size_scale,
+            offset_x_scale, offset_y_scale };
+        foreach (var scale in scales) {
+            add_scroll_event_handler (scale);
+            add_value_changed_handler (scale);
+        }
 
         inform_switches[2].notify["active"].connect (() => {
             if (inform_switches[2].active) inform_switches[3].active = false;
@@ -506,27 +515,6 @@ public class MangoJuice : Adw.Application {
         gpu_switches[2].notify["active"].connect (() => {
             if (!gpu_switches[2].active) gpu_switches[4].active = false;
         });
-
-        var scales = new Scale[] {
-            duracion_scale, autostart_scale, interval_scale, af, picmip, borders_scale, colums_scale, font_size_scale,
-            offset_x_scale, offset_y_scale };
-
-        foreach (var scale in scales) {
-            add_scroll_event_handler (scale);
-            add_value_changed_handler (scale);
-        }
-
-        toolbar_view_switcher.add_css_class ("viewswitcher");
-        var style_manager = Adw.StyleManager.get_default ();
-        style_manager.set_color_scheme (Adw.ColorScheme.DEFAULT);
-
-        if (!is_vkcube_available () && !is_glxgears_available ()) {
-            test_button.set_visible (false);
-        }
-
-        var about_action = new SimpleAction ("about", null);
-        about_action.activate.connect (on_about_button_clicked);
-        this.add_action (about_action);
     }
 
     public void add_scroll_event_handler (Scale scale) {
@@ -1478,28 +1466,28 @@ public class MangoJuice : Adw.Application {
             var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
             row_box.set_hexpand (true);
             row_box.set_valign (Align.CENTER);
-        
+
             switches[i] = new Switch ();
             switches[i].set_valign (Align.CENTER);
-        
+
             var text_box = new Box (Orientation.VERTICAL, 0);
             text_box.set_valign (Align.CENTER);
             text_box.set_halign (Align.START);
             text_box.set_size_request (160, -1); // Ширина 160 пикселей
-        
+
             var label1 = new Label (null);
             label1.set_markup ("<b>%s</b>".printf (label_texts[i])); // Жирный текст
             label1.set_halign (Align.START);
             label1.set_hexpand (false);
-            label1.set_ellipsize (Pango.EllipsizeMode.END); 
+            label1.set_ellipsize (Pango.EllipsizeMode.END);
 
             string truncated_text = label_texts_2[i];
-            if (label_texts_2[i].char_count() > 22) {
-                truncated_text = label_texts_2[i].substring(0, label_texts_2[i].index_of_nth_char(22)) + "...";
+            if (label_texts_2[i].char_count () > 22) {
+                truncated_text = label_texts_2[i].substring (0, label_texts_2[i].index_of_nth_char (22)) + "...";
             }
 
             var label2 = new Label (null);
-            label2.set_markup ("<span size='9000'>%s</span>".printf (truncated_text)); // Обрезанный текст
+            label2.set_markup ("<span size='9000'>%s</span>".printf (truncated_text));
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
@@ -1507,12 +1495,12 @@ public class MangoJuice : Adw.Application {
 
             text_box.append (label1);
             text_box.append (label2);
-        
+
             row_box.append (switches[i]);
             row_box.append (text_box); // Добавляем контейнер с двумя строками текста
             flow_box.insert (row_box, -1);
         }
-        
+
         parent_box.append (flow_box);
     }
 
@@ -2198,20 +2186,18 @@ public class MangoJuice : Adw.Application {
 
     private ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
         ScaleEntryWidget result = ScaleEntryWidget ();
-    
-        // Создаем Scale
+
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
         result.scale.set_size_request (140, -1);
         result.scale.set_hexpand (true);
 
-        // Создаем Entry
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
-    
+
         setup_numeric_entry (result.entry);
 
         bool is_updating = false;
@@ -2262,16 +2248,15 @@ public class MangoJuice : Adw.Application {
         label2.set_hexpand (false);
         label2.add_css_class ("dim-label");
         label2.set_ellipsize (Pango.EllipsizeMode.END);
-    
+
         text_box.append (label1);
         text_box.append (label2);
-    
-        // Создаем основной контейнер для виджета
+
         result.widget = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        result.widget.append (text_box); // Label слева
-        result.widget.append (result.scale); // Scale
-        result.widget.append (result.entry); // Entry
-    
+        result.widget.append (text_box);
+        result.widget.append (result.scale);
+        result.widget.append (result.entry);
+
         return result;
     }
 
@@ -2329,7 +2314,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void show_restart_warning () {
+    private void show_restart_warning () {
         var dialog = new Adw.AlertDialog ("Warning", "The changes will take effect only after the system is restarted.");
         dialog.add_response ("ok", "OK");
         dialog.add_response ("restart", "Restart");
@@ -2397,13 +2382,13 @@ public class MangoJuice : Adw.Application {
         return "%02x%02x%02x".printf ((int) (rgba.red * 255), (int) (rgba.green * 255), (int) (rgba.blue * 255));
     }
 
-    public static int main(string[] args) {
-        Intl.setlocale(LocaleCategory.ALL, "");
-        Intl.textdomain("mangojuice");
-        Intl.bindtextdomain("mangojuice", "/usr/share/locale");
-        Intl.bind_textdomain_codeset("mangojuice", "UTF-8");
+    public static int main (string[] args) {
+        Intl.setlocale (LocaleCategory.ALL, "");
+        Intl.textdomain ("mangojuice");
+        Intl.bindtextdomain ("mangojuice", "/usr/share/locale");
+        Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
 
-        var app = new MangoJuice();
-        return app.run(args);
+        var app = new MangoJuice ();
+        return app.run (args);
     }
 }
