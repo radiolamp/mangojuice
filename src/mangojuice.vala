@@ -2856,9 +2856,9 @@ public class MangoJuice : Adw.Application {
         // Создаем Scale
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
-        result.scale.set_size_request (150, -1);
+        result.scale.set_size_request (140, -1);
         result.scale.set_hexpand (true);
-    
+
         // Создаем Entry
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
@@ -2867,7 +2867,7 @@ public class MangoJuice : Adw.Application {
         result.entry.set_halign (Align.END);
     
         setup_numeric_entry (result.entry);
-    
+
         bool is_updating = false;
     
         result.scale.value_changed.connect (() => {
@@ -2881,7 +2881,7 @@ public class MangoJuice : Adw.Application {
                 });
             }
         });
-    
+
         result.entry.changed.connect (() => {
             if (!is_updating) {
                 int value = 0;
@@ -2899,26 +2899,23 @@ public class MangoJuice : Adw.Application {
                 validate_entry_value (result.entry, min, max);
             }
         });
-    
-        // Создаем контейнер для текста (заголовок и описание)
+
         var text_box = new Box (Orientation.VERTICAL, 0);
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
-    
-        // Заголовок
+
         var label1 = new Label (null);
         label1.set_markup ("<b>%s</b>".printf (title));
         label1.set_halign (Align.START);
         label1.set_hexpand (false);
-        label1.set_ellipsize (Pango.EllipsizeMode.END); // Обрезаем текст, если он не помещается
-    
-        // Описание
+        label1.set_ellipsize (Pango.EllipsizeMode.END);
+
         var label2 = new Label (null);
         label2.set_markup ("<span size='9000'>%s</span>".printf (description));
         label2.set_halign (Align.START);
         label2.set_hexpand (false);
         label2.add_css_class ("dim-label");
-        label2.set_ellipsize (Pango.EllipsizeMode.END); // Обрезаем текст, если он не помещается
+        label2.set_ellipsize (Pango.EllipsizeMode.END);
     
         text_box.append (label1);
         text_box.append (label2);
