@@ -3,6 +3,10 @@ deps = [
     dependency('gee-0.8')
 ]
 
+vapi_sources = files(
+  'config.vapi',
+)
+
 sources = files(
     'about_dialog.vala',
     'mangojuice.vala',

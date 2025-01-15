@@ -15,6 +15,9 @@ add_project_arguments(
     language: 'c'
 )
 
+conf = configuration_data()
+conf.set_quoted('GNOMELOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
+
 add_project_arguments(
     '-Wno-discarded-qualifiers',  # Игнорировать предупреждения о потере квалификаторов
     language: 'c'
