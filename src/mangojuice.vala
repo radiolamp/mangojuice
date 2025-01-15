@@ -36,15 +36,13 @@ public class MangoJuice : Adw.Application {
     public Scale duracion_scale;
     public Scale autostart_scale;
     public Scale interval_scale;
-    public Label duracion_value_label;
-    public Label autostart_value_label;
-    public Label interval_value_label;
+    public Entry duracion_entry;
+    public Entry autostart_entry;
+    public Entry interval_entry;
     public Gtk.StringList logs_key_model;
     public DropDown filter_dropdown;
     public Scale af;
     public Scale picmip;
-    public Label af_label;
-    public Label picmip_label;
     public Entry picmip_entry;
     public Entry af_entry;
     public Entry fps_sampling_period_entry;
@@ -178,17 +176,14 @@ public class MangoJuice : Adw.Application {
     public Switch custom_switch;
     public Scale borders_scale;
     public Scale alpha_scale;
-    public Label borders_value_label;
-    public Label alpha_value_label;
     public Entry borders_entry;
     public Entry alpha_entry;
+    public Label alpha_value_label;
     public DropDown position_dropdown;
     public Scale colums_scale;
-    public Label colums_value_label;
     public Entry colums_entry;
     public Entry toggle_hud_entry;
     public Scale font_size_scale;
-    public Label font_size_value_label;
     public Entry font_size_entry;
     public DropDown font_dropdown;
 
@@ -799,12 +794,11 @@ public class MangoJuice : Adw.Application {
         var borders_widget = create_scale_entry_widget (_("Borders"), _("Round"), 0, 15, 0);
         borders_scale = borders_widget.scale;
         borders_entry = borders_widget.entry;
-        borders_value_label = new Label ("0");
-        borders_value_label.set_width_chars (3);
-        borders_value_label.set_halign (Align.END);
+
         borders_scale.value_changed.connect (() => {
-            borders_value_label.label = "%d".printf ((int)borders_scale.get_value ());
-            SaveStates.save_states_to_file (this);
+            if (borders_entry != null) {
+                borders_entry.text = "%d".printf ((int)borders_scale.get_value ());
+            }
         });
 
         var alpha_widget = create_scale_entry_widget (_("Alpha"), _("Transparency"), 0, 100, 50);
@@ -861,12 +855,11 @@ public class MangoJuice : Adw.Application {
         var colums_widget = create_scale_entry_widget (_("Columns"), _("Number of columns"), 1, 6, 3);
         colums_scale = colums_widget.scale;
         colums_entry = colums_widget.entry;
-        colums_value_label = new Label ("3");
-        colums_value_label.set_width_chars (3);
-        colums_value_label.set_halign (Align.CENTER);
+
         colums_scale.value_changed.connect (() => {
-            colums_value_label.label = "%d".printf ((int)colums_scale.get_value ());
-            SaveStates.save_states_to_file (this);
+            if (colums_entry != null) {
+                colums_entry.text = "%d".printf ((int)colums_scale.get_value ());
+            }
         });
 
         toggle_hud_entry = new Entry ();
@@ -961,12 +954,10 @@ public class MangoJuice : Adw.Application {
         var font_size_widget = create_scale_entry_widget (_("Size"), _("Font size in pixels"), 8, 64, 24);
         font_size_scale = font_size_widget.scale;
         font_size_entry = font_size_widget.entry;
-        font_size_value_label = new Label ("24");
-        font_size_value_label.set_width_chars (3);
-        font_size_value_label.set_halign (Align.END);
         font_size_scale.value_changed.connect (() => {
-            font_size_value_label.label = "%d".printf ((int)font_size_scale.get_value ());
-            update_font_size_in_file ("%d".printf ((int)font_size_scale.get_value ()));
+            if (font_size_entry != null) {
+                font_size_entry.text = "%d".printf ((int)font_size_scale.get_value ());
+            }
         });
 
         initialize_font_dropdown (visual_box);
@@ -1335,7 +1326,7 @@ public class MangoJuice : Adw.Application {
         string[] color_labels = { _("Background"), _("Frametime"), _("VRAM"), _("RAM"), _("Wine"), _("Engine"), _("Media"), _("Network"), _("Text") };
 
         assert (color_buttons.length == color_labels.length);
-        
+
         for (int i = 0; i < color_buttons.length; i++) {
             var label = new Label (color_labels[i]);
             label.set_halign (Align.START);
@@ -1483,7 +1474,7 @@ public class MangoJuice : Adw.Application {
 
             string truncated_text = label_texts_2[i];
             if (label_texts_2[i].char_count () > 22) {
-                truncated_text = label_texts_2[i].substring (0, label_texts_2[i].index_of_nth_char (22)) + "...";
+                truncated_text = label_texts_2[i].substring (0, label_texts_2[i].index_of_nth_char (22)) + "…";
             }
 
             var label2 = new Label (null);

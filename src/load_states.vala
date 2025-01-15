@@ -42,25 +42,30 @@ public class LoadStates {
 
                 if (line.has_prefix ("log_duration=")) {
                     if (mango_juice.duracion_scale != null) {
-                        mango_juice.duracion_scale.set_value (int.parse (line.substring ("log_duration=".length)));
-                        if (mango_juice.duracion_value_label != null) {
-                            mango_juice.duracion_value_label.label = "%d s".printf ( (int)mango_juice.duracion_scale.get_value ());
+                        int duracion_value = int.parse (line.substring ("log_duration=".length));
+                        mango_juice.duracion_scale.set_value (duracion_value);
+                        if (mango_juice.duracion_entry != null) {
+                            mango_juice.duracion_entry.text = "%d".printf (duracion_value);
                         }
                     }
                 }
+                
                 if (line.has_prefix ("autostart_log=")) {
                     if (mango_juice.autostart_scale != null) {
-                        mango_juice.autostart_scale.set_value (int.parse (line.substring ("autostart_log=".length)));
-                        if (mango_juice.autostart_value_label != null) {
-                            mango_juice.autostart_value_label.label = "%d s".printf ( (int)mango_juice.autostart_scale.get_value ());
+                        int autostart_value = int.parse (line.substring ("autostart_log=".length));
+                        mango_juice.autostart_scale.set_value (autostart_value);
+                        if (mango_juice.autostart_entry != null) {
+                            mango_juice.autostart_entry.text = "%d".printf (autostart_value);
                         }
                     }
                 }
+                
                 if (line.has_prefix ("log_interval=")) {
                     if (mango_juice.interval_scale != null) {
-                        mango_juice.interval_scale.set_value (int.parse (line.substring ("log_interval=".length)));
-                        if (mango_juice.interval_value_label != null) {
-                            mango_juice.interval_value_label.label = "%d ms".printf ( (int)mango_juice.interval_scale.get_value ());
+                        int interval_value = int.parse (line.substring ("log_interval=".length));
+                        mango_juice.interval_scale.set_value (interval_value);
+                        if (mango_juice.interval_entry != null) {
+                            mango_juice.interval_entry.text = "%d".printf (interval_value);
                         }
                     }
                 }
@@ -137,18 +142,20 @@ public class LoadStates {
 
                 if (line.has_prefix ("af=")) {
                     if (mango_juice.af != null) {
-                        mango_juice.af.set_value (int.parse (line.substring ("af=".length)));
-                        if (mango_juice.af_label != null) {
-                            mango_juice.af_label.label = "%d".printf ( (int)mango_juice.af.get_value ());
+                        int af_value = int.parse (line.substring ("af=".length));
+                        mango_juice.af.set_value (af_value);
+                        if (mango_juice.af_entry != null) {
+                            mango_juice.af_entry.text = "%d".printf (af_value);
                         }
                     }
                 }
 
                 if (line.has_prefix ("picmip=")) {
                     if (mango_juice.picmip != null) {
-                        mango_juice.picmip.set_value (int.parse (line.substring ("picmip=".length)));
-                        if (mango_juice.picmip_label != null) {
-                            mango_juice.picmip_label.label = "%d".printf ( (int)mango_juice.picmip.get_value ());
+                        int picmip_value = int.parse (line.substring ("picmip=".length));
+                        mango_juice.picmip.set_value (picmip_value);
+                        if (mango_juice.picmip_entry != null) {
+                            mango_juice.picmip_entry.text = "%d".printf (picmip_value);
                         }
                     }
                 }
@@ -163,9 +170,10 @@ public class LoadStates {
 
                 if (line.has_prefix ("round_corners=")) {
                     if (mango_juice.borders_scale != null) {
-                        mango_juice.borders_scale.set_value (int.parse (line.substring ("round_corners=".length)));
-                        if (mango_juice.borders_value_label != null) {
-                            mango_juice.borders_value_label.label = "%d".printf ( (int)mango_juice.borders_scale.get_value ());
+                        int borders_value = int.parse (line.substring ("round_corners=".length));
+                        mango_juice.borders_scale.set_value (borders_value);
+                        if (mango_juice.borders_entry != null) {
+                            mango_juice.borders_entry.text = "%d".printf (borders_value);
                         }
                     }
                 }
@@ -193,9 +201,10 @@ public class LoadStates {
 
                 if (line.has_prefix ("table_columns=")) {
                     if (mango_juice.colums_scale != null) {
-                        mango_juice.colums_scale.set_value (int.parse (line.substring ("table_columns=".length)));
-                        if (mango_juice.colums_value_label != null) {
-                            mango_juice.colums_value_label.label = "%d".printf ( (int)mango_juice.colums_scale.get_value ());
+                        int colums_value = int.parse (line.substring ("table_columns=".length));
+                        mango_juice.colums_scale.set_value (colums_value);
+                        if (mango_juice.colums_entry != null) {
+                            mango_juice.colums_entry.text = "%d".printf (colums_value);
                         }
                     }
                 }
@@ -207,9 +216,10 @@ public class LoadStates {
 
                 if (line.has_prefix ("font_size=")) {
                     if (mango_juice.font_size_scale != null) {
-                        mango_juice.font_size_scale.set_value (int.parse (line.substring ("font_size=".length)));
-                        if (mango_juice.font_size_value_label != null) {
-                            mango_juice.font_size_value_label.label = "%d".printf ( (int)mango_juice.font_size_scale.get_value ());
+                        int font_size_value = int.parse (line.substring ("font_size=".length));
+                        mango_juice.font_size_scale.set_value (font_size_value);
+                        if (mango_juice.font_size_entry != null) {
+                            mango_juice.font_size_entry.text = "%d".printf (font_size_value);
                         }
                     }
                 }
