@@ -670,8 +670,16 @@ public class MangoJuice : Adw.Application {
         logs_path_button = new Button.with_label (_("Folder logs"));
         logs_path_button.clicked.connect ( () => open_folder_chooser_dialog ());
 
-        intel_power_fix_button = new Button.with_label (_("Intel Power Fix"));
+        intel_power_fix_button = new Button ();
         intel_power_fix_button.hexpand = true;
+
+        var intel_power_fix_label = new Label (_("Intel Power Fix"));
+        intel_power_fix_label.set_ellipsize (Pango.EllipsizeMode.END);
+        intel_power_fix_label.set_halign (Align.CENTER);
+        intel_power_fix_label.set_hexpand (true);
+
+        intel_power_fix_button.set_child (intel_power_fix_label);
+
         intel_power_fix_button.clicked.connect ( () => {
             try {
                 Process.spawn_command_line_sync ("pkexec chmod 0644 /sys/class/powercap/intel-rapl\\:0/energy_uj");
@@ -693,9 +701,15 @@ public class MangoJuice : Adw.Application {
             update_logs_key_in_file ( (logs_key_combo.selected_item as StringObject)?.get_string () ?? "");
         });
 
-        reset_button = new Button.with_label (_("Reset Config"));
+        reset_button = new Button ();
         reset_button.hexpand = true;
         reset_button.add_css_class ("destructive-action");
+
+        var reset_label = new Label (_("Reset Config"));
+        reset_label.set_ellipsize (Pango.EllipsizeMode.END);
+        reset_label.set_halign (Align.CENTER);
+        reset_label.set_hexpand (true);
+        reset_button.set_child (reset_label);
         reset_button.clicked.connect ( () => {
             delete_mangohub_conf ();
             delete_vkbasalt_conf ();

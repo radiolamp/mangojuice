@@ -421,10 +421,10 @@ msgid "Folder logs"
 msgstr "Папка логов"
 
 msgid "Intel Power Fix"
-msgstr "CPU Intel Питание"
+msgstr "Патч Intel Power"
 
 msgid "Reset Config"
-msgstr "Сбросить"
+msgstr "Сбросить конфиг"
 
 msgid "Blacklist: (vkcube,WatchDogs2.exe)"
 msgstr "Черный список: (vkcube,WatchDogs2.exe)"
