@@ -621,14 +621,14 @@ msgstr "Субпиксельное морфологическое сглажив
 msgid "Color LookUp Table"
 msgstr "Таблица цветовых преобразований"
 
-msgid "Metrics"
-msgstr "Метрики"
+msgid "none"
+msgstr "нет"
 
-msgid "Extras"
-msgstr "Дополнительно"
+msgid "bicubic"
+msgstr "бикубический"
 
-msgid "Performance"
-msgstr "Производительность"
+msgid "trilinear"
+msgstr "трилинейный"
 
-msgid "Visual"
-msgstr "Визуальные"
+msgid "retro"
+msgstr "ретро"
