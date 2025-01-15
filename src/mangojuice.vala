@@ -367,17 +367,17 @@ public class MangoJuice : Adw.Application {
         bool is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
 
         if (is_gnome) {
-            view_stack.add_titled (metrics_scrolled_window, "metrics_box", "Metrics").icon_name = "view-continuous-symbolic";
-            view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "application-x-addon-symbolic";
-            view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "emblem-system-symbolic";
-            view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "preferences-desktop-appearance-symbolic";
-            view_stack.add_titled (other_scrolled_window, "other_box", "Other").icon_name = "view-grid-symbolic";
+            view_stack.add_titled (metrics_scrolled_window, "metrics_box", _("Metrics")).icon_name = "view-continuous-symbolic";
+            view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "application-x-addon-symbolic";
+            view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "emblem-system-symbolic";
+            view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "preferences-desktop-appearance-symbolic";
+            view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "view-grid-symbolic";
         } else {
-            view_stack.add_titled (metrics_scrolled_window, "metrics_box", "Metrics").icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
-            view_stack.add_titled (extras_scrolled_window, "extras_box", "Extras").icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
-            view_stack.add_titled (performance_scrolled_window, "performance_box", "Performance").icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
-            view_stack.add_titled (visual_scrolled_window, "visual_box", "Visual").icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
-            view_stack.add_titled (other_scrolled_window, "other_box", "Other").icon_name = "io.github.radiolamp.mangojuice-other-symbolic";
+            view_stack.add_titled (metrics_scrolled_window, "metrics_box", _("Metrics")).icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
+            view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
+            view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
+            view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
+            view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "io.github.radiolamp.mangojuice-other-symbolic";
         }
 
         bool is_vkbasalt_installed = check_vkbasalt_installed ();

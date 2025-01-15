@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-15 11:56+0300\n"
+"POT-Creation-Date: 2025-01-15 15:42+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,8 @@ msgstr ""
 msgid "CPU"
 msgstr ""
 
-#: src/mangojuice.vala:56 src/mangojuice.vala:61 src/mangojuice.vala:1716
+#: src/mangojuice.vala:56 src/mangojuice.vala:61 src/mangojuice.vala:374
+#: src/mangojuice.vala:380 src/mangojuice.vala:1716
 msgid "Other"
 msgstr ""
 
@@ -521,6 +522,22 @@ msgstr ""
 msgid "Present mode"
 msgstr ""
 
+#: src/mangojuice.vala:370 src/mangojuice.vala:376
+msgid "Metrics"
+msgstr ""
+
+#: src/mangojuice.vala:371 src/mangojuice.vala:377
+msgid "Extras"
+msgstr ""
+
+#: src/mangojuice.vala:372 src/mangojuice.vala:378
+msgid "Performance"
+msgstr ""
+
+#: src/mangojuice.vala:373 src/mangojuice.vala:379
+msgid "Visual"
+msgstr ""
+
 #: src/mangojuice.vala:395
 msgid "Test"
 msgstr ""
@@ -815,24 +832,4 @@ msgstr ""
 
 #: src/mangojuice.vala:1724
 msgid "FPS Sampling"
-msgstr ""
-
-#: src/other/OtherBox.vala:41
-msgid "Contrast Adaptive Sharpening"
-msgstr ""
-
-#: src/other/OtherBox.vala:42
-msgid "Denoised Luma Sharpening"
-msgstr ""
-
-#: src/other/OtherBox.vala:43
-msgid "Fast Approximate Anti-Aliasing"
-msgstr ""
-
-#: src/other/OtherBox.vala:44
-msgid "Subpixel Morphological Antialiasing"
-msgstr ""
-
-#: src/other/OtherBox.vala:45
-msgid "Color LookUp Table"
 msgstr ""
