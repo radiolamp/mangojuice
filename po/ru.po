@@ -421,16 +421,16 @@ msgid "Folder logs"
 msgstr "Папка логов"
 
 msgid "Intel Power Fix"
-msgstr "Исправление питания Intel"
+msgstr "CPU Intel Питание"
 
 msgid "Reset Config"
-msgstr "Сбросить настройки"
+msgstr "Сбросить"
 
 msgid "Blacklist: (vkcube,WatchDogs2.exe)"
 msgstr "Черный список: (vkcube,WatchDogs2.exe)"
 
 msgid "Mangohud Global"
-msgstr "Глобальный Mangohud"
+msgstr "Системный Mangohud"
 
 msgid "Logs key"
 msgstr "Ключ логов"
@@ -604,4 +604,4 @@ msgid "Aliasing"
 msgstr "Сглаживание"
 
 msgid "FPS Sampling"
-msgstr "Сэмплирование FPS"
+msgstr "Частота обновления"

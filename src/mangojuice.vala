@@ -1333,6 +1333,7 @@ public class MangoJuice : Adw.Application {
         for (int i = 0; i < color_buttons.length; i++) {
             var label = new Label (color_labels[i]);
             label.set_halign (Align.START);
+            label.set_ellipsize (Pango.EllipsizeMode.END);
             label.hexpand = true;
 
             var box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -1472,6 +1473,7 @@ public class MangoJuice : Adw.Application {
             label1.set_markup ("<b>%s</b>".printf (label_texts[i])); // Жирный текст
             label1.set_halign (Align.START);
             label1.set_hexpand (false);
+            label1.set_ellipsize (Pango.EllipsizeMode.END); 
 
             string truncated_text = label_texts_2[i];
             if (label_texts_2[i].char_count() > 22) {
@@ -1483,6 +1485,7 @@ public class MangoJuice : Adw.Application {
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
+            label2.set_ellipsize (Pango.EllipsizeMode.END); 
 
             text_box.append (label1);
             text_box.append (label2);
@@ -2849,78 +2852,83 @@ public class MangoJuice : Adw.Application {
 
     private ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
         ScaleEntryWidget result = ScaleEntryWidget ();
-
-        // Создаем Text + Scale + Entry
+    
+        // Создаем Scale
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
         result.scale.set_size_request (150, -1);
         result.scale.set_hexpand (true);
-
+    
+        // Создаем Entry
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
-
+    
         setup_numeric_entry (result.entry);
-
+    
         bool is_updating = false;
     
         result.scale.value_changed.connect (() => {
             if (!is_updating) {
                 is_updating = true;
-                // Отложенное обновление Entry
                 GLib.Idle.add (() => {
                     result.entry.text = "%d".printf ((int)result.scale.get_value ());
-                    validate_entry_value (result.entry, min, max); // Проверяем значение
+                    validate_entry_value (result.entry, min, max);
                     is_updating = false;
-                    return false; // Останавливаем выполнение idle-функции
+                    return false;
                 });
             }
         });
-
+    
         result.entry.changed.connect (() => {
             if (!is_updating) {
                 int value = 0;
                 if (int.try_parse (result.entry.text, out value)) {
                     if (value >= min && value <= max && value != (int)result.scale.get_value ()) {
                         is_updating = true;
-                        // Отложенное обновление Scale
                         GLib.Idle.add (() => {
                             result.scale.set_value (value);
-                            validate_entry_value (result.entry, min, max); // Проверяем значение
+                            validate_entry_value (result.entry, min, max);
                             is_updating = false;
-                            return false; // Останавливаем выполнение idle-функции
+                            return false;
                         });
                     }
                 }
-                validate_entry_value (result.entry, min, max); // Проверяем значение
+                validate_entry_value (result.entry, min, max);
             }
         });
-
+    
+        // Создаем контейнер для текста (заголовок и описание)
         var text_box = new Box (Orientation.VERTICAL, 0);
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
-
+    
+        // Заголовок
         var label1 = new Label (null);
         label1.set_markup ("<b>%s</b>".printf (title));
         label1.set_halign (Align.START);
         label1.set_hexpand (false);
-
+        label1.set_ellipsize (Pango.EllipsizeMode.END); // Обрезаем текст, если он не помещается
+    
+        // Описание
         var label2 = new Label (null);
         label2.set_markup ("<span size='9000'>%s</span>".printf (description));
         label2.set_halign (Align.START);
         label2.set_hexpand (false);
         label2.add_css_class ("dim-label");
-
+        label2.set_ellipsize (Pango.EllipsizeMode.END); // Обрезаем текст, если он не помещается
+    
         text_box.append (label1);
         text_box.append (label2);
-
+    
+        // Создаем основной контейнер для виджета
         result.widget = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         result.widget.append (text_box); // Label слева
-        result.widget.append (result.scale);    // Scale
-        result.widget.append (result.entry);    // Entry
-
+        result.widget.append (result.scale); // Scale
+        result.widget.append (result.entry); // Entry
+    
         return result;
     }
 
