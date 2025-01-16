@@ -75,7 +75,7 @@ public class MangoJuice : Adw.Application {
         "ram", "io_read \n io_write", "procmem", "swap", "fan"
     };
     public string[] system_config_vars = {
-        "refresh_rate", "resolution", "exec=echo $XDG_SESSION_TYPE",
+        "refresh_rate", "resolution", "exec=echo \n exec=echo $XDG_SESSION_TYPE",
         "time", "arch"
     };
     public string[] wine_config_vars = {
