@@ -1,6 +1,6 @@
 project(
     'mangojuice', 'vala',
-    version: '0.8.0',
+    version: '0.8.1',
     default_options: [
         'warning_level=0',
     ]
@@ -9,7 +9,6 @@ project(
 i18n = import('i18n')
 gnome = import('gnome')
 
-# Добавление аргументов компиляции
 add_project_arguments(
     '-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()),
     language: 'c'
@@ -18,9 +17,10 @@ add_project_arguments(
 conf = configuration_data()
 conf.set_quoted('DATADIR', join_paths(get_option('prefix'), get_option('datadir')))
 conf.set_quoted('GNOMELOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
+conf.set_quoted('VERSION', meson.project_version())
 
 add_project_arguments(
-    '-Wno-discarded-qualifiers',  # Игнорировать предупреждения о потере квалификаторов
+    '-Wno-discarded-qualifiers',
     language: 'c'
 )
 

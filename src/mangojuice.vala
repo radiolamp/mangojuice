@@ -1,8 +1,6 @@
 using Gtk;
 using Adw;
 using Gee;
-using Config;
-
 
 public class MangoJuice : Adw.Application {
     public OtherBox other_box;
@@ -728,7 +726,9 @@ public class MangoJuice : Adw.Application {
             on_mangohud_global_button_clicked ();
         });
 
-        blacklist_pair.append (mangohud_global_button);
+        if (!is_flatpak ()) {
+            blacklist_pair.append (mangohud_global_button);
+        }
         blacklist_flow_box.insert (blacklist_pair, -1);
 
         extras_box.append (blacklist_flow_box);
@@ -756,7 +756,9 @@ public class MangoJuice : Adw.Application {
         custom_command_flow_box.insert (pair2, -1);
 
         var pair3 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        pair3.append (intel_power_fix_button);
+        if (!is_flatpak ()) {
+            pair3.append (intel_power_fix_button);
+        }
         pair3.append (reset_button);
         custom_command_flow_box.insert (pair3, -1);
 
