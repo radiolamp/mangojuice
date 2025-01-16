@@ -4,7 +4,6 @@ using Gee;
 
 public class MangoJuice : Adw.Application {
     public OtherBox other_box;
-    public Button save_button;
     public Button reset_button;
     public Button logs_path_button;
     public Button intel_power_fix_button;
@@ -496,7 +495,7 @@ public class MangoJuice : Adw.Application {
         uint timeout_id = 0;
 
         motion_controller.enter.connect ( () => {
-            timeout_id = Timeout.add (500, () => {
+            timeout_id = Timeout.add (300, () => {
                 controller.scroll.disconnect (ignore_scroll);
                 timeout_id = 0;
                 return false;
