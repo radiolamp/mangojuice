@@ -805,7 +805,9 @@ public class MangoJuice : Adw.Application {
 
         borders_scale.value_changed.connect (() => {
             if (borders_entry != null) {
+                int cursor_position = borders_entry.cursor_position;
                 borders_entry.text = "%d".printf ((int)borders_scale.get_value ());
+                borders_entry.set_position (cursor_position);
             }
         });
 
@@ -1573,6 +1575,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_1 = new Entry ();
         fps_limit_entry_1.placeholder_text = _("Limit 1");
         fps_limit_entry_1.changed.connect (() => {
+            validate_numeric_entry (fps_limit_entry_1, 0, 1000);
             LoadStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
@@ -1580,6 +1583,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_2 = new Entry ();
         fps_limit_entry_2.placeholder_text = _("Limit 2");
         fps_limit_entry_2.changed.connect (() => {
+            validate_numeric_entry (fps_limit_entry_2, 0, 1000);
             LoadStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
@@ -1587,6 +1591,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_3 = new Entry ();
         fps_limit_entry_3.placeholder_text = _("Limit 3");
         fps_limit_entry_3.changed.connect (() => {
+            validate_numeric_entry (fps_limit_entry_3, 0, 1000);
             LoadStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
@@ -2155,21 +2160,6 @@ public class MangoJuice : Adw.Application {
         public Box widget;
     }
 
-    private void setup_numeric_entry (Entry entry) {
-        entry.input_purpose = Gtk.InputPurpose.NUMBER; // Указываем, что поле предназначено для чисел
-        entry.set_max_length (4); // Ограничиваем длину ввода
-    
-        // Фильтр для ввода только цифр
-        entry.insert_text.connect ((new_text, new_text_length, ref position) => {
-            foreach (var c in new_text.to_utf8 ()) {
-                if (!c.isdigit () && c != '-') { // Разрешаем цифры и минус
-                    Signal.stop_emission_by_name (entry, "insert-text");
-                    break;
-                }
-            }
-        });
-    }
-
     private void validate_entry_value (Entry entry, int min, int max) {
         int value = 0;
         if (int.try_parse (entry.text, out value)) {
@@ -2197,7 +2187,7 @@ public class MangoJuice : Adw.Application {
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
 
-        setup_numeric_entry (result.entry);
+       validate_numeric_entry (result.entry, min, max);
 
         bool is_updating = false;
     
@@ -2371,6 +2361,40 @@ public class MangoJuice : Adw.Application {
             stderr.printf ("Error checking for libvkbasalt.so: %s\n", e.message);
             return false;
         }
+    }
+ 
+    private void validate_numeric_entry (Entry entry, int min_value = int.MIN, int max_value = int.MAX) {
+        entry.input_purpose = Gtk.InputPurpose.NUMBER;
+        entry.set_max_length (4);
+        entry.insert_text.connect ((new_text, new_text_length, ref position) => {
+            foreach (var c in new_text.to_utf8 ()) {
+                if (!c.isdigit () && c != '-') {
+                    Signal.stop_emission_by_name (entry, "insert-text");
+                    break;
+                }
+            }
+        });
+        entry.changed.connect (() => {
+            string text = entry.text;
+            bool is_valid = true;
+            foreach (var c in text.to_utf8 ()) {
+                if (!c.isdigit () && c != '-') {
+                    is_valid = false;
+                    break;
+                }
+            }
+            if (is_valid) {
+                int value = int.parse (text);
+                if (value < min_value || value > max_value) {
+                    is_valid = false;
+                }
+            }
+            if (is_valid) {
+                entry.remove_css_class ("error");
+            } else {
+                entry.add_css_class ("error");
+            }
+        });
     }
 
     public void on_about_button_clicked () {
