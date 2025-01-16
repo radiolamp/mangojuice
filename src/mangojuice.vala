@@ -1656,44 +1656,42 @@ public class MangoJuice : Adw.Application {
 
         var fps_sampling_period_label = create_label (_("Other"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         performance_box.append (fps_sampling_period_label);
-        
+
         var fps_sampling_period_widget = create_scale_entry_widget (_("FPS Sampling"), _("Milliseconds"), 250, 2000, 500);
         fps_sampling_period_scale = fps_sampling_period_widget.scale;
         fps_sampling_period_entry = fps_sampling_period_widget.entry;
-
+        
         bool is_updating = false;
-
+        
         fps_sampling_period_scale.value_changed.connect (() => {
             if (!is_updating) {
-                is_updating = true; // Блокируем обновление
-                fps_sampling_period_entry.text = "%d".printf ((int)fps_sampling_period_scale.get_value ());
-                LoadStates.update_fps_sampling_period_in_file ("%d".printf ((int)fps_sampling_period_scale.get_value ()));
-                is_updating = false; // Разблокируем обновление
+                is_updating = true;
+                int value = (int)fps_sampling_period_scale.get_value ();
+                fps_sampling_period_entry.text = "%d".printf (value);
+                LoadStates.update_fps_sampling_period_in_file ("%d".printf (value));
+                is_updating = false;
             }
         });
-
+        
         fps_sampling_period_entry.changed.connect (() => {
             if (!is_updating) {
-                is_updating = true; // Блокируем обновление
+                is_updating = true;
                 int value = int.parse (fps_sampling_period_entry.text);
                 if (value >= 250 && value <= 2000 && value != (int)fps_sampling_period_scale.get_value ()) {
                     fps_sampling_period_scale.set_value (value);
                     LoadStates.update_fps_sampling_period_in_file ("%d".printf (value));
                 }
-                is_updating = false; // Разблокируем обновление
+                is_updating = false;
             }
         });
 
-        var fps_sampling_period_flow_box = new FlowBox ();
-        fps_sampling_period_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
-        fps_sampling_period_flow_box.set_max_children_per_line (1);
-        fps_sampling_period_flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        fps_sampling_period_flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        fps_sampling_period_flow_box.set_margin_top (FLOW_BOX_MARGIN);
-        fps_sampling_period_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        fps_sampling_period_flow_box.set_selection_mode (SelectionMode.NONE);
-        fps_sampling_period_flow_box.insert (fps_sampling_period_widget.widget, -1);
-        performance_box.append (fps_sampling_period_flow_box);
+        var fps_sampling_period_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        fps_sampling_period_box.set_margin_start (FLOW_BOX_MARGIN);
+        fps_sampling_period_box.set_margin_end (FLOW_BOX_MARGIN);
+        fps_sampling_period_box.set_margin_top (FLOW_BOX_MARGIN);
+        fps_sampling_period_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        fps_sampling_period_box.append (fps_sampling_period_widget.widget);
+        performance_box.append (fps_sampling_period_box);
     }
 
     public void restart_vkcube () {
