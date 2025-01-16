@@ -5,7 +5,7 @@ namespace AboutDialog {
 
         const string[] developers = {
             "Radiolamp https://github.com/radiolamp/",
-            "Rirusha https://github.com/Rirusha",
+            "Rirusha https://rirusha.space",
             "Boria138 https://github.com/Boria138",
             "SpikedPaladin https://github.com/SpikedPaladin",
             "slserg https://github.com/slserg"
