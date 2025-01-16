@@ -15,6 +15,8 @@ sources = files(
     'load_states.vala'
 )
 
+configure_file(output: 'config.h', configuration: conf)
+config_h_dir = include_directories('.')
 
 executable(
     'mangojuice',
