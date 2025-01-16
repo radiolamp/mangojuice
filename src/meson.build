@@ -3,9 +3,7 @@ deps = [
     dependency('gee-0.8')
 ]
 
-vapi_sources = files(
-  'config.vapi',
-)
+vapi_sources = files('config.vapi')
 
 sources = files(
     'about_dialog.vala',
@@ -17,11 +15,14 @@ sources = files(
     'load_states.vala'
 )
 
+
 executable(
     'mangojuice',
     
     resources,
+    vapi_sources,
     sources,
+    vala_args: ['--vapidir', meson.current_source_dir()],
     dependencies: deps,
     install: true
 )

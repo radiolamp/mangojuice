@@ -1,6 +1,8 @@
 using Gtk;
 using Adw;
 using Gee;
+using Config;
+
 
 public class MangoJuice : Adw.Application {
     public OtherBox other_box;
@@ -2384,7 +2386,7 @@ public class MangoJuice : Adw.Application {
     public static int main (string[] args) {
         Intl.setlocale (LocaleCategory.ALL, "");
         Intl.textdomain ("mangojuice");
-        //Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
+        Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
         Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
 
         var app = new MangoJuice ();

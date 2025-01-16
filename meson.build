@@ -16,6 +16,7 @@ add_project_arguments(
 )
 
 conf = configuration_data()
+conf.set_quoted('DATADIR', join_paths(get_option('prefix'), get_option('datadir')))
 conf.set_quoted('GNOMELOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
 
 add_project_arguments(
