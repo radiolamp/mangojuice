@@ -263,20 +263,7 @@ public class MangoJuice : Adw.Application {
         this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
 
         var test_action_new = new SimpleAction ("test_new", null);
-        test_action_new.activate.connect (() => {
-            try {
-                if (is_vkcube_available ()) {
-                    Process.spawn_command_line_sync ("pkill vkcube");
-                    Process.spawn_command_line_async ("mangohud vkcube");
-                } else if (is_glxgears_available ()) {
-                    Process.spawn_command_line_sync ("pkill glxgears");
-                    Process.spawn_command_line_async ("mangohud glxgears");
-                }
-                test_button_pressed = true;
-            } catch (Error e) {
-                stderr.printf ("Error when running the command: %s\n", e.message);
-            }
-        });
+        test_action_new.activate.connect (run_test);
         this.add_action (test_action_new);
         this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
 
@@ -392,20 +379,7 @@ public class MangoJuice : Adw.Application {
         header_bar.set_title_widget (toolbar_view_switcher);
 
         var test_button = new Button.with_label (_("Test"));
-        test_button.clicked.connect (() => {
-            try {
-                if (is_vkcube_available ()) {
-                    Process.spawn_command_line_sync ("pkill vkcube");
-                    Process.spawn_command_line_async ("mangohud vkcube");
-                } else if (is_glxgears_available ()) {
-                    Process.spawn_command_line_sync ("pkill glxgears");
-                    Process.spawn_command_line_async ("mangohud glxgears");
-                }
-                test_button_pressed = true;
-            } catch (Error e) {
-                stderr.printf ("Error when running the command: %s\n", e.message);
-            }
-        });
+        test_button.clicked.connect (run_test);
         header_bar.pack_start (test_button);
 
         var menu_button = new MenuButton ();
@@ -773,138 +747,118 @@ public class MangoJuice : Adw.Application {
         custom_text_center_entry.changed.connect (() => {
             SaveStates.save_states_to_file (this);
         });
-
-        var customize_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        customize_box.set_margin_start (FLOW_BOX_MARGIN);
-        customize_box.set_margin_end (FLOW_BOX_MARGIN);
-        customize_box.set_margin_top (FLOW_BOX_MARGIN);
-        customize_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        customize_box.append (custom_text_center_entry);
-        visual_box.append (customize_box);
-
-        var custom_switch_label = new Label (_("Horizontal Hud"));
-        custom_switch_label.set_halign (Align.START);
-        custom_switch_label.set_hexpand (true);
-
-        custom_switch = new Switch ();
-        custom_switch.set_valign (Align.START);
-        custom_switch.set_margin_end (FLOW_BOX_MARGIN);
-        custom_switch.notify["active"].connect (() => {
-            SaveStates.save_states_to_file (this);
+        
+        var custom_text_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        custom_text_box.set_margin_start(FLOW_BOX_MARGIN);
+        custom_text_box.set_margin_end(FLOW_BOX_MARGIN);
+        custom_text_box.set_margin_top(FLOW_BOX_MARGIN);
+        custom_text_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        custom_text_box.append(custom_text_center_entry);
+        visual_box.append(custom_text_box);
+        
+        var combined_flow_box = new FlowBox();
+        combined_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
+        combined_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
+        combined_flow_box.set_max_children_per_line(3);
+        combined_flow_box.set_margin_start(FLOW_BOX_MARGIN);
+        combined_flow_box.set_margin_end(FLOW_BOX_MARGIN);
+        combined_flow_box.set_margin_top(FLOW_BOX_MARGIN);
+        combined_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
+        combined_flow_box.set_selection_mode(SelectionMode.NONE);
+        
+        var custom_switch_label = new Label(_("Horizontal Hud"));
+        custom_switch_label.set_halign(Align.START);
+        custom_switch_label.set_hexpand(true);
+        
+        custom_switch = new Switch();
+        custom_switch.set_valign(Align.START);
+        custom_switch.set_margin_end(FLOW_BOX_MARGIN);
+        custom_switch.notify["active"].connect(() => {
+            SaveStates.save_states_to_file(this);
         });
-
-        var borders_widget = create_scale_entry_widget (_("Borders"), _("Round"), 0, 15, 0);
+        
+        var custom_switch_pair = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        custom_switch_pair.append(custom_switch_label);
+        custom_switch_pair.append(custom_switch);
+        custom_switch_pair.set_size_request(50, -1);
+        combined_flow_box.insert(custom_switch_pair, -1);
+        
+        var borders_widget = create_scale_entry_widget(_("Borders"), _("Round"), 0, 15, 0);
         borders_scale = borders_widget.scale;
         borders_entry = borders_widget.entry;
-
-        borders_scale.value_changed.connect (() => {
+        borders_scale.value_changed.connect(() => {
             if (borders_entry != null) {
                 int cursor_position = borders_entry.cursor_position;
-                borders_entry.text = "%d".printf ((int)borders_scale.get_value ());
-                borders_entry.set_position (cursor_position);
+                borders_entry.text = "%d".printf((int)borders_scale.get_value());
+                borders_entry.set_position(cursor_position);
             }
         });
-
-        var alpha_widget = create_scale_entry_widget (_("Alpha"), _("Transparency"), 0, 100, 50);
+        combined_flow_box.insert(borders_widget.widget, -1);
+        
+        var alpha_widget = create_scale_entry_widget(_("Alpha"), _("Transparency"), 0, 100, 50);
         alpha_scale = alpha_widget.scale;
         alpha_entry = alpha_widget.entry;
-        alpha_value_label = new Label ("50");
-        alpha_value_label.set_width_chars (3);
-        alpha_scale.value_changed.connect (() => {
-            double value = alpha_scale.get_value ();
-            alpha_value_label.label = "%.1f".printf (value / 100.0);
-            SaveStates.save_states_to_file (this);
+        alpha_value_label = new Label("50");
+        alpha_value_label.set_width_chars(3);
+        alpha_scale.value_changed.connect(() => {
+            double value = alpha_scale.get_value();
+            alpha_value_label.label = "%.1f".printf(value / 100.0);
+            SaveStates.save_states_to_file(this);
         });
-
-        var custom_switch_flow_box = new FlowBox ();
-        custom_switch_flow_box.set_max_children_per_line (3);
-        custom_switch_flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        custom_switch_flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        custom_switch_flow_box.set_margin_top (FLOW_BOX_MARGIN);
-        custom_switch_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        custom_switch_flow_box.set_selection_mode (SelectionMode.NONE);
-
-        var custom_switch_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        custom_switch_pair.append (custom_switch_label);
-        custom_switch_pair.append (custom_switch);
-        custom_switch_pair.set_size_request (50, -1);
-        custom_switch_flow_box.insert (custom_switch_pair, -1);
-
-        var borders_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        borders_pair.append (borders_widget.widget);
-        custom_switch_flow_box.insert (borders_pair, -1);
-
-        var alpha_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        alpha_pair.append (alpha_widget.widget);
-        custom_switch_flow_box.insert (alpha_pair, -1);
-
-        visual_box.append (custom_switch_flow_box);
-
-        var position_model = new Gtk.StringList (null);
+        combined_flow_box.insert(alpha_widget.widget, -1);
+        
+        var position_model = new Gtk.StringList(null);
         foreach (var item in new string[] {
-            _("top-left"), _("top-center"), _("top-right"),
-            _("middle-left"), _("middle-right"),
-            _("bottom-left"), _("bottom-center"), _("bottom-right")
+            "top-left", "top-center", "top-right",
+            "middle-left", "middle-right",
+            "bottom-left", "bottom-center", "bottom-right"
         }) {
-            position_model.append (item);
+            position_model.append(item);
         }
-        position_dropdown = new DropDown (position_model, null);
-        position_dropdown.set_size_request (80, -1);
-        position_dropdown.set_valign (Align.CENTER);
-        position_dropdown.set_hexpand (true);
-        position_dropdown.notify["selected-item"].connect (() => {
-            LoadStates.update_position_in_file ((position_dropdown.selected_item as StringObject)?.get_string () ?? "");
+        position_dropdown = new DropDown(position_model, null);
+        position_dropdown.set_size_request(80, -1);
+        position_dropdown.set_valign(Align.CENTER);
+        position_dropdown.set_hexpand(true);
+        position_dropdown.notify["selected-item"].connect(() => {
+            LoadStates.update_position_in_file((position_dropdown.selected_item as StringObject)?.get_string() ?? "");
         });
-
-        var colums_widget = create_scale_entry_widget (_("Columns"), _("Number of columns"), 1, 6, 3);
+        
+        var position_pair = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        position_pair.append(new Label(_("Position")));
+        position_pair.append(position_dropdown);
+        combined_flow_box.insert(position_pair, -1);
+        
+        var colums_widget = create_scale_entry_widget(_("Columns"), _("Number of columns"), 1, 6, 3);
         colums_scale = colums_widget.scale;
         colums_entry = colums_widget.entry;
-
-        colums_scale.value_changed.connect (() => {
+        colums_entry.set_valign(Align.CENTER);
+        colums_scale.value_changed.connect(() => {
             if (colums_entry != null) {
-                colums_entry.text = "%d".printf ((int)colums_scale.get_value ());
+                colums_entry.text = "%d".printf((int)colums_scale.get_value());
             }
         });
-
-        toggle_hud_entry = new Entry ();
+        combined_flow_box.insert(colums_widget.widget, -1);
+        
+        toggle_hud_entry = new Entry();
         toggle_hud_entry.placeholder_text = _("Key");
         toggle_hud_entry.text = "Shift_R+F12";
-        toggle_hud_entry.set_hexpand (true);
-        toggle_hud_entry.set_size_request (20, -1);
-        toggle_hud_entry.set_valign (Align.CENTER);
-        toggle_hud_entry.set_margin_top (FLOW_BOX_MARGIN);
-        toggle_hud_entry.set_margin_bottom (FLOW_BOX_MARGIN);
-        toggle_hud_entry.changed.connect (() => {
-            LoadStates.update_toggle_hud_in_file (toggle_hud_entry.text);
-            SaveStates.save_states_to_file (this);
+        toggle_hud_entry.set_hexpand(true);
+        toggle_hud_entry.set_size_request(20, -1);
+        toggle_hud_entry.set_valign(Align.CENTER);
+        toggle_hud_entry.set_margin_top(FLOW_BOX_MARGIN);
+        toggle_hud_entry.set_margin_bottom(FLOW_BOX_MARGIN);
+        toggle_hud_entry.changed.connect(() => {
+            LoadStates.update_toggle_hud_in_file(toggle_hud_entry.text);
+            SaveStates.save_states_to_file(this);
         });
-
-        var position_colums_flow_box = new FlowBox ();
-        position_colums_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
-        position_colums_flow_box.set_max_children_per_line (3);
-        position_colums_flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        position_colums_flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        position_colums_flow_box.set_margin_top (FLOW_BOX_MARGIN);
-        position_colums_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        position_colums_flow_box.set_selection_mode (SelectionMode.NONE);
-
-        var position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        position_pair.append (new Label (_("Position")));
-        position_pair.append (position_dropdown);
-        position_colums_flow_box.insert (position_pair, -1);
-
-        var colums_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        colums_pair.append (colums_widget.widget);
-        colums_pair.set_valign (Align.CENTER);
-        position_colums_flow_box.insert (colums_pair, -1);
-
-        var toggle_hud_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        toggle_hud_pair.append (new Label (_("Toggle HUD")));
-        toggle_hud_pair.set_hexpand (true);
-        toggle_hud_pair.append (toggle_hud_entry);
-        position_colums_flow_box.insert (toggle_hud_pair, -1);
-
-        visual_box.append (position_colums_flow_box);
+        
+        var toggle_hud_pair = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        toggle_hud_pair.append(new Label(_("Toggle HUD")));
+        toggle_hud_pair.set_hexpand(true);
+        toggle_hud_pair.append(toggle_hud_entry);
+        combined_flow_box.insert(toggle_hud_pair, -1);
+        
+        visual_box.append(combined_flow_box);
 
         var offset_x_widget = create_scale_entry_widget (_("Offset X"), _("Horizontal offset"), 0, 1500, 0);
         offset_x_scale = offset_x_widget.scale;
@@ -1752,6 +1706,29 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf ("Error checking running processes: %s\n", e.message);
             return false;
+        }
+    }
+
+    private void run_test () {
+        try {
+            var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+            var config_file = config_dir.get_child ("MangoHud.conf");
+    
+            if (!config_file.query_exists ()) {
+                SaveStates.save_states_to_file (this);
+            }
+    
+            if (is_vkcube_available ()) {
+                Process.spawn_command_line_sync ("pkill vkcube");
+                Process.spawn_command_line_async ("mangohud vkcube");
+            } else if (is_glxgears_available ()) {
+                Process.spawn_command_line_sync ("pkill glxgears");
+                Process.spawn_command_line_async ("mangohud glxgears");
+            }
+    
+            test_button_pressed = true;
+        } catch (Error e) {
+            stderr.printf ("Ошибка при выполнении команды: %s\n", e.message);
         }
     }
 

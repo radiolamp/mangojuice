@@ -71,8 +71,8 @@ public class OtherBox : Box {
 
         create_scale_with_entry (flow_box, "CAS Sharpness", -1.0, 1.0, 0.01, 0.0, "%.2f", "cas");
         create_scale_with_entry (flow_box, "DLS Sharpness", 0.0, 1.0, 0.01, 0.5, "%.2f", "dls");
-        create_scale_with_entry (flow_box, "DLS Denoise", 0.0, 1.0, 0.01, 0.17, "%.2f", "dls");
         create_scale_with_entry (flow_box, "FXAA Quality Subpix", 0.0, 1.0, 0.01, 0.75, "%.2f", "fxaa");
+        create_scale_with_entry (flow_box, "DLS Denoise", 0.0, 1.0, 0.01, 0.17, "%.2f", "dls");
         create_scale_with_entry (flow_box, "FXAA Edge Threshold", 0.0, 0.333, 0.01, 0.125, "%.3f", "fxaa");
         create_scale_with_entry (flow_box, "FXAA Threshold Min", 0.0, 0.0833, 0.001, 0.0833, "%.4f", "fxaa");
         create_scale_with_entry (flow_box, "SMAA Threshold", 0.0, 0.5, 0.01, 0.05, "%.2f", "smaa");
