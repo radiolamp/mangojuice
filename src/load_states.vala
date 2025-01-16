@@ -541,6 +541,26 @@ public class LoadStates {
         update_file ("blacklist=", blacklist_value);
     }
 
+    public static void update_logs_key_in_file (string logs_key) {
+        update_file ("toggle_logging=", logs_key);
+    }
+
+    public static void update_position_in_file (string position_value) {
+        update_file ("position=", position_value);
+    }
+
+    public static void update_toggle_hud_in_file (string toggle_hud_value) {
+        update_file ("toggle_hud=", toggle_hud_value);
+    }
+
+    public static void update_font_size_in_file (string font_size_value) {
+        update_file ("font_size=", font_size_value);
+    }
+
+    public static void update_font_file_in_file (string font_file_value) {
+        update_file ("font_file=", font_file_value);
+    }
+
     private static void update_file (string prefix, string value) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");

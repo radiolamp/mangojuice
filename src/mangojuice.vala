@@ -685,7 +685,7 @@ public class MangoJuice : Adw.Application {
         }
         logs_key_combo = new DropDown (logs_key_model, null);
         logs_key_combo.notify["selected-item"].connect ( () => {
-            update_logs_key_in_file ( (logs_key_combo.selected_item as StringObject)?.get_string () ?? "");
+            LoadStates.update_logs_key_in_file ( (logs_key_combo.selected_item as StringObject)?.get_string () ?? "");
         });
 
         reset_button = new Button ();
@@ -853,7 +853,7 @@ public class MangoJuice : Adw.Application {
         position_dropdown.set_valign (Align.CENTER);
         position_dropdown.set_hexpand (true);
         position_dropdown.notify["selected-item"].connect (() => {
-            update_position_in_file ((position_dropdown.selected_item as StringObject)?.get_string () ?? "");
+            LoadStates.update_position_in_file ((position_dropdown.selected_item as StringObject)?.get_string () ?? "");
         });
 
         var colums_widget = create_scale_entry_widget (_("Columns"), _("Number of columns"), 1, 6, 3);
@@ -875,7 +875,7 @@ public class MangoJuice : Adw.Application {
         toggle_hud_entry.set_margin_top (FLOW_BOX_MARGIN);
         toggle_hud_entry.set_margin_bottom (FLOW_BOX_MARGIN);
         toggle_hud_entry.changed.connect (() => {
-            update_toggle_hud_in_file (toggle_hud_entry.text);
+            LoadStates.update_toggle_hud_in_file (toggle_hud_entry.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1354,7 +1354,7 @@ public class MangoJuice : Adw.Application {
         font_dropdown.notify["selected-item"].connect (() => {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
             var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
-            update_font_file_in_file (selected_font_path);
+            LoadStates.update_font_file_in_file (selected_font_path);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1784,146 +1784,6 @@ public class MangoJuice : Adw.Application {
             }
         } else {
             warning ("vkBasalt.conf file does not exist.");
-        }
-    }
-
-    public void update_logs_key_in_file (string logs_key) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("toggle_logging=")) {
-                    line = "toggle_logging=%s".printf (logs_key);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_position_in_file (string position_value) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("position=")) {
-                    line = "position=%s".printf (position_value);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_toggle_hud_in_file (string toggle_hud_value) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("toggle_hud=")) {
-                    line = "toggle_hud=%s".printf (toggle_hud_value);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_font_size_in_file (string font_size_value) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("font_size=")) {
-                    line = "font_size=%s".printf (font_size_value);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        }
-    }
-
-    public void update_font_file_in_file (string font_file_value) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (!file.query_exists ()) {
-            return;
-        }
-
-        try {
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            while ( (line = file_stream.read_line ()) != null) {
-                if (line.has_prefix ("font_file=")) {
-                    line = "font_file=%s".printf (font_file_value);
-                }
-                lines.add (line);
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
         }
     }
 
