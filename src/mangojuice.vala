@@ -626,8 +626,10 @@ public class MangoJuice : Adw.Application {
         custom_logs_path_entry.placeholder_text = _("Home");
         custom_logs_path_entry.hexpand = true;
     
-        logs_path_button = new Button.with_label (_("Folder logs"));
+        logs_path_button = new Button ();
+        logs_path_button.set_icon_name ("folder-symbolic");
         logs_path_button.clicked.connect ( () => open_folder_chooser_dialog ());
+        logs_path_button.set_tooltip_text (_("Folder logs"));
     
         intel_power_fix_button = new Button ();
         intel_power_fix_button.hexpand = true;
@@ -722,12 +724,12 @@ public class MangoJuice : Adw.Application {
         pair1.append (logs_key_combo);
         custom_command_flow_box.insert (pair1, -1);
     
-        var pair2 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        var pair2 = new Box (Orientation.HORIZONTAL, 5);
         pair2.append (custom_logs_path_entry);
         pair2.append (logs_path_button);
         custom_command_flow_box.insert (pair2, -1);
     
-        var pair3 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        var pair3 = new Box (Orientation.HORIZONTAL, 5);
         if (!is_flatpak ()) {
             pair3.append (intel_power_fix_button);
         }
