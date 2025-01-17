@@ -240,26 +240,6 @@ public class MangoJuice : Adw.Application {
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
-        var quit_action = new SimpleAction ("quit", null);
-        quit_action.activate.connect (() => {
-            if (is_vkcube_running ()) {
-                try {
-                    Process.spawn_command_line_sync ("pkill vkcube");
-                } catch (Error e) {
-                    stderr.printf ("Error closing vkcube: %s\n", e.message);
-                }
-            }
-            if (is_glxgears_running ()) {
-                try {
-                    Process.spawn_command_line_sync ("pkill glxgears");
-                } catch (Error e) {
-                    stderr.printf ("Error closing glxgears: %s\n", e.message);
-                }
-            }
-            this.quit ();
-        });
-        this.add_action (quit_action);
-        this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
 
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (run_test);
@@ -269,6 +249,13 @@ public class MangoJuice : Adw.Application {
         var mangohud_global_action = new SimpleAction ("mangohud_global", null);
         mangohud_global_action.activate.connect (on_mangohud_global_button_clicked);
         this.add_action (mangohud_global_action);
+
+        var quit_action = new SimpleAction ("quit", null);
+        quit_action.activate.connect (() => {
+            this.quit ();
+        });
+        this.add_action (quit_action);
+        this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
     }
 
     protected override void activate () {
@@ -487,6 +474,17 @@ public class MangoJuice : Adw.Application {
         gpu_switches[2].notify["active"].connect (() => {
             if (!gpu_switches[2].active) gpu_switches[4].active = false;
         });
+    }
+
+    protected override void shutdown () {
+        try {
+            Process.spawn_command_line_sync ("pkill vkcube");
+            Process.spawn_command_line_sync ("pkill glxgears");
+        } catch (Error e) {
+            stderr.printf ("Error closing test apps: %s\n", e.message);
+        }
+
+        base.shutdown ();
     }
 
     public void add_scroll_event_handler (Scale scale) {
