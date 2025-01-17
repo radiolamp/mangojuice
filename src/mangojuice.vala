@@ -2100,24 +2100,27 @@ public class MangoJuice : Adw.Application {
     }
 
     private void show_restart_warning () {
-        var dialog = new Adw.AlertDialog ("Warning", "The changes will take effect only after the system is restarted.");
-        dialog.add_response ("ok", "OK");
-        dialog.add_response ("restart", "Restart");
+        var dialog = new Adw.AlertDialog (
+            _("Warning"),
+            _("The changes will take effect only after the system is restarted.")
+        );
+        dialog.add_response ("ok", _("OK"));
+        dialog.add_response ("restart", _("Restart"));
+    
         dialog.set_default_response ("ok");
         dialog.set_response_appearance ("restart", Adw.ResponseAppearance.SUGGESTED);
-
         dialog.present (this.active_window);
-
+    
         dialog.response.connect ((response) => {
             if (response == "restart") {
                 try {
                     Process.spawn_command_line_sync ("reboot");
                 } catch (Error e) {
-                    stderr.printf ("Error when restarting the system: %s\n", e.message);
+                    stderr.printf (_("Error when restarting the system: %s\n"), e.message);
                 }
             }
             dialog.destroy ();
-        });
+        }); 
     }
 
     public void check_mangohud_global_status () {
