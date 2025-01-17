@@ -180,8 +180,11 @@ public class SaveStates {
             }
 
             if (mango_juice.custom_switch.active) {
-                data_stream.put_string ("horizontal\n");
-                data_stream.put_string ("horizontal_stretch=0\n");
+                try {
+                    data_stream.put_string ("horizontal\nhorizontal_stretch=0\n");
+                } catch (Error e) {
+                    stderr.printf ("Error writing to the file: %s\n", e.message);
+                }
             }
 
             if (mango_juice.borders_scale != null) {
