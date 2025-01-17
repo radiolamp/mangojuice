@@ -1568,13 +1568,13 @@ public class MangoJuice : Adw.Application {
         vsync_box.append (vulkan_dropdown);
         vsync_box.append (opengl_label);
         vsync_box.append (opengl_dropdown);
-        performance_box.append (vsync_box);
+        performance_box.append (vsync_box); 
 
         var filters_label = create_label (_("Filters"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         performance_box.append (filters_label);
 
         var filter_model = new Gtk.StringList (null);
-        foreach (var item in new string[] { _("none"), _("bicubic"), _("trilinear"), _("retro") }) {
+        foreach (var item in new string[] { "none", "bicubic", "trilinear", "retro" }) {
             filter_model.append (item);
         }
         filter_dropdown = new DropDown (filter_model, null);
