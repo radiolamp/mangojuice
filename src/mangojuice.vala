@@ -90,7 +90,7 @@ public class MangoJuice : Adw.Application {
         "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
     };
     public string[] options_config_vars = {
-        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display"
+        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display", "text_outline=0"
     };
     public string[] gpu_label_texts = {
         _("Load"), _("Load Color"), _("VRAM"), _("Core Freq"), _("Mem Freq"),
@@ -116,7 +116,8 @@ public class MangoJuice : Adw.Application {
     };
 
     public string[] options_label_texts = {
-        _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"), _("Compact API"), _("Hide HUD")
+        _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"),
+        _("Compact API"), _("Hide HUD"), _("Turn off the shadow")
     };
 
     public string[] battery_label_texts = {
@@ -155,7 +156,7 @@ public class MangoJuice : Adw.Application {
 
     public string[] options_label_texts_2 = {
         _("Mangohud"), _("Priority of game processes"), _("Enhance the visual graphics"), _("Launched process"), _("Visual updating frames"),
-        _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Only OpenGL"), _("Hide overlay")
+        _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Only OpenGL"), _("Hide overlay"), _("Turn off font shadow")
     };
 
     public string[] battery_label_texts_2 = {
