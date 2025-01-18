@@ -412,7 +412,10 @@ public class MangoJuice : Adw.Application {
 
         check_mangohud_global_status ();
 
-        LoadStates.load_states_from_file (this);
+        GLib.Idle.add (() => {
+            load_config_async.begin ();
+            return false;
+        });
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
         var style_manager = Adw.StyleManager.get_default ();
@@ -421,6 +424,10 @@ public class MangoJuice : Adw.Application {
         if (!is_vkcube_available () && !is_glxgears_available ()) {
             test_button.set_visible (false);
         }
+    }
+
+    private async void load_config_async () {
+        yield LoadStates.load_states_from_file (this);
     }
 
     private void initialize_rest_of_ui (ViewStack view_stack) {
@@ -1934,7 +1941,7 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf ("Error writing to the file: %s\n", e.message);
         }
-        LoadStates.load_states_from_file (this);
+        load_config_async.begin ();
     }
 
     private struct ScaleEntryWidget {
