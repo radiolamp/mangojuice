@@ -93,13 +93,13 @@ public class MangoJuice : Adw.Application {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display", "text_outline=0"
     };
     public string[] gpu_label_texts = {
-        _("Load"), _("Load Color"), _("VRAM"), _("Core Freq"), _("Mem Freq"),
+        _("Load GPU"), _("Load Color"), _("VRAM"), _("Core Freq"), _("Mem Freq"),
         _("Temp"), _("Memory Temp"), _("Junction"), _("Fans"), _("Model"),
         _("Power"), _("Voltage"), _("Throttling"), _("Throttling GRAPH"), _("Vulkan Driver")
     };
 
     public string[] cpu_label_texts = {
-        _("Load"), _("Load Color"), _("Core Load"), _("Core Bars"), _("Core Freq"), _("Temp"),
+        _("Load CPU"), _("Load Color"), _("Core Load"), _("Core Bars"), _("Core Freq"), _("Temp"),
         _("Power")
     };
 
@@ -155,12 +155,12 @@ public class MangoJuice : Adw.Application {
     };
 
     public string[] options_label_texts_2 = {
-        _("Mangohud"), _("Priority of game processes"), _("Enhance the visual graphics"), _("Launched process"), _("Visual updating frames"),
+        _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
         _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Only OpenGL"), _("Hide overlay"), _("Turn off font shadow")
     };
 
     public string[] battery_label_texts_2 = {
-        _("Display current battery"), _("Display wattage battery"), _("Time for battery"), _("Icon of percent"), _("Wireless device battery")
+        _("Check battery"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
     };
 
     public string[] other_extra_label_texts_2 = {
@@ -629,7 +629,7 @@ public class MangoJuice : Adw.Application {
         logs_path_button = new Button ();
         logs_path_button.set_icon_name ("folder-symbolic");
         logs_path_button.clicked.connect ( () => open_folder_chooser_dialog ());
-        logs_path_button.set_tooltip_text (_("Folder logs"));
+        logs_path_button.set_tooltip_text (_("The directory for saving the logging"));
     
         intel_power_fix_button = new Button ();
         intel_power_fix_button.hexpand = true;
@@ -840,7 +840,7 @@ public class MangoJuice : Adw.Application {
         combined_flow_box.insert(colums_widget.widget, -1);
         
         toggle_hud_entry = new Entry();
-        toggle_hud_entry.placeholder_text = _("Key");
+        toggle_hud_entry.placeholder_text = _("Key shortcuts");
         toggle_hud_entry.text = "Shift_R+F12";
         toggle_hud_entry.set_hexpand(true);
         toggle_hud_entry.set_size_request(20, -1);
@@ -853,7 +853,7 @@ public class MangoJuice : Adw.Application {
         });
         
         var toggle_hud_pair = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        toggle_hud_pair.append(new Label(_("Toggle HUD")));
+        toggle_hud_pair.append(new Label(_("Hide the HUD")));
         toggle_hud_pair.set_hexpand(true);
         toggle_hud_pair.append(toggle_hud_entry);
         combined_flow_box.insert(toggle_hud_pair, -1);
@@ -903,7 +903,7 @@ public class MangoJuice : Adw.Application {
         var fonts_label = create_label (_("Font"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (fonts_label);
     
-        var font_size_widget = create_scale_entry_widget (_("Size"), _("Font size in pixels"), 8, 64, 24);
+        var font_size_widget = create_scale_entry_widget (_("Size"), _("Size in pixels"), 8, 64, 24);
         font_size_scale = font_size_widget.scale;
         font_size_entry = font_size_widget.entry;
         font_size_scale.value_changed.connect (() => {
@@ -1018,7 +1018,7 @@ public class MangoJuice : Adw.Application {
             SaveStates.save_states_to_file (this);
         });
     
-        var fps_clarge_label = create_label (_("Charge FPS"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        var fps_clarge_label = create_label (_("FPS color levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (fps_clarge_label);
     
         var color_dialog_fps = new ColorDialog ();
@@ -1079,7 +1079,7 @@ public class MangoJuice : Adw.Application {
             SaveStates.save_states_to_file (this);
         });
     
-        var gpu_load_clarge_label = create_label (_("GPU Load as a percentage"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        var gpu_load_clarge_label = create_label (_("The color of CPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (gpu_load_clarge_label);
     
         var color_dialog_gpu_load = new ColorDialog ();
@@ -1168,7 +1168,7 @@ public class MangoJuice : Adw.Application {
             LoadStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
     
-        var cpu_load_clarge_label = create_label (_("CPU Load as a percentage"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        var cpu_load_clarge_label = create_label (_("The color of GPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (cpu_load_clarge_label); 
     
         var cpu_load_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
