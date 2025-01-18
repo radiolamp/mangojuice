@@ -104,7 +104,7 @@ public class MangoJuice : Adw.Application {
     };
 
     public string[] other_label_texts = {
-        _("RAM"), _("Disk IO"), _("Persistent"), _("Swap"), _("Fan")
+        _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap"), _("Fan")
     };
 
     public string[] system_label_texts = {
@@ -143,7 +143,7 @@ public class MangoJuice : Adw.Application {
     };
 
     public string[] other_label_texts_2 = {
-        _("Memory"), _("Input/Output"), _("Memory"), _("Memory"), _("Steam deck")
+        _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory"), _("Steam deck")
     };
 
     public string[] system_label_texts_2 = {

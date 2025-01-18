@@ -131,7 +131,7 @@ msgid "Disk IO"
 msgstr ""
 
 #: src/mangojuice.vala:107
-msgid "Persistent"
+msgid "Resident mem"
 msgstr ""
 
 #: src/mangojuice.vala:107
@@ -383,7 +383,7 @@ msgid "CPU consumption watt"
 msgstr ""
 
 #: src/mangojuice.vala:146
-msgid "Memory"
+msgid "RAM Memory"
 msgstr ""
 
 #: src/mangojuice.vala:146
