@@ -135,7 +135,7 @@ public class MangoJuice : Adw.Application {
     public string[] gpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display system VRAM"), _("Display GPU core"), _("Display GPU memory"),
         _("GPU temperature"), _("GDDR temperatures"), _("Memory Temperature"), _("Fan in rpm"), _("Display GPU name"),
-        _("Display draw in watts"), _("Display draw in voltage"), _("GPU is throttling?"), _("Trolling curve"), _("Driver Version")
+        _("Display draw in watts"), _("Display voltage"), _("GPU is throttling?"), _("Trolling curve"), _("Driver Version")
     };
 
     public string[] cpu_label_texts_2 = {
@@ -164,7 +164,7 @@ public class MangoJuice : Adw.Application {
     };
 
     public string[] other_extra_label_texts_2 = {
-        _("Show media player"), _("Show network interfaces"), _("Excludes histogram"), _("Adds information the log"), _("Automatic uploads of logs")
+        _("Show media player"), _("Display network"), _("Excludes histogram"), _("Log information"), _("Auto upload logs")
     };
 
     public string[] inform_label_texts_2 = {
