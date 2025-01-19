@@ -245,19 +245,33 @@ public class MangoJuice : Adw.Application {
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (run_test);
         this.add_action (test_action_new);
-        const string[] test_new_accels = { "<Control><Shift>T" };
+        const string[] test_new_accels = { "<Primary>T" };
         this.set_accels_for_action ("app.test_new", test_new_accels);
+
+        var restore_config_action = new SimpleAction ("restore_config", null);
+        restore_config_action.activate.connect (() => {
+            on_restore_config_button_clicked ();
+        });
+        this.add_action (restore_config_action);
+        this.set_accels_for_action ("app.restore_config", new string[] { "<Primary>R" });
 
         var mangohud_global_action = new SimpleAction ("mangohud_global", null);
         mangohud_global_action.activate.connect (on_mangohud_global_button_clicked);
         this.add_action (mangohud_global_action);
 
-        var quit_action = new SimpleAction ("quit", null);
-        quit_action.activate.connect (() => {
-            this.quit ();
+        var save_action = new SimpleAction ("save", null);
+        save_action.activate.connect (() => {
+            SaveStates.save_states_to_file (this);
         });
-        this.add_action (quit_action);
-        this.set_accels_for_action ("app.quit", new string[] { "<Primary>Q" });
+        this.add_action (save_action);
+        this.set_accels_for_action ("app.save", new string[] { "<Primary>S" });
+
+        var save_as_action = new SimpleAction ("save_as", null);
+        save_as_action.activate.connect (() => {
+            on_save_as_button_clicked ();
+        });
+        this.add_action (save_as_action);
+        this.set_accels_for_action ("app.save_as", new string[] { "<Primary>E" });
     }
 
     protected override void activate () {
