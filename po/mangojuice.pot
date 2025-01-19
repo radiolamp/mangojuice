@@ -838,3 +838,15 @@ msgstr ""
 #: src/other/OtherBox.vala:46
 msgid "Color LookUp Table"
 msgstr ""
+
+msgid "Profile 1"
+msgstr ""
+
+msgid "Profile 2"
+msgstr ""
+
+msgid "Profile 3"
+msgstr ""
+
+msgid "Restore profile"
+msgstr ""

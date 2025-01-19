@@ -835,3 +835,15 @@ msgstr "Субпиксельное морфологическое сглажив
 #: src/other/OtherBox.vala:46
 msgid "Color LookUp Table"
 msgstr "Регулировака цветовой таблицы"
+
+msgid "Profile 1"
+msgstr "Профиль 1"
+
+msgid "Profile 2"
+msgstr "Профиль 2"
+
+msgid "Profile 3"
+msgstr "Профиль 3"
+
+msgid "Restore profile"
+msgstr "Восстановить"
