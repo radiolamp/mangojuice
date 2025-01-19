@@ -411,11 +411,7 @@ public class MangoJuice : Adw.Application {
         });
 
         check_mangohud_global_status ();
-
-        GLib.Idle.add (() => {
-            load_config_async.begin ();
-            return false;
-        });
+        load_config_async.begin ();
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
         var style_manager = Adw.StyleManager.get_default ();
@@ -1822,17 +1818,17 @@ public class MangoJuice : Adw.Application {
     }
 
     public void restart_application () {
-        this.quit ();
         string mangojuice_path = Environment.find_program_in_path ("mangojuice");
         if (mangojuice_path != null) {
             try {
                 Process.spawn_command_line_async (mangojuice_path);
             } catch (Error e) {
-                stderr.printf ("Error when restarting the application: %s\n", e.message);
+                stderr.printf ("Ошибка при перезапуске приложения: %s\n", e.message);
             }
         } else {
-            stderr.printf ("The mangojuice executable was not found in the PATH.\n");
+            stderr.printf ("Исполняемый файл mangojuice не найден в PATH.\n");
         }
+        Process.exit (0);
     }
 
     public bool is_vkcube_available () {

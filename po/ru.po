@@ -613,7 +613,7 @@ msgstr "Горизонтальный HUD"
 
 #: src/mangojuice.vala:786
 msgid "Borders"
-msgstr "Границы"
+msgstr "Углы"
 
 #: src/mangojuice.vala:786
 msgid "Round"
@@ -685,7 +685,7 @@ msgstr "Название видеокарты"
 
 #: src/mangojuice.vala:985
 msgid "CPU custom name"
-msgstr "Название процесса"
+msgstr "Название процессора"
 
 #: src/mangojuice.vala:1004 src/mangojuice.vala:1065 src/mangojuice.vala:1126
 msgid "Medium"
