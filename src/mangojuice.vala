@@ -245,7 +245,8 @@ public class MangoJuice : Adw.Application {
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (run_test);
         this.add_action (test_action_new);
-        this.set_accels_for_action ("app.test_new", new string[] { "<Primary>T" });
+        const string[] test_new_accels = { "<Control><Shift>T" };
+        this.set_accels_for_action ("app.test_new", test_new_accels);
 
         var mangohud_global_action = new SimpleAction ("mangohud_global", null);
         mangohud_global_action.activate.connect (on_mangohud_global_button_clicked);
