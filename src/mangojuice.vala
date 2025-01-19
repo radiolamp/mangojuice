@@ -662,7 +662,7 @@ public class MangoJuice : Adw.Application {
         }
         logs_key_combo = new DropDown (logs_key_model, null);
         logs_key_combo.notify["selected-item"].connect ( () => {
-            LoadStates.update_logs_key_in_file ( (logs_key_combo.selected_item as StringObject)?.get_string () ?? "");
+            SaveStates.update_logs_key_in_file ( (logs_key_combo.selected_item as StringObject)?.get_string () ?? "");
         });
     
         reset_button = new Button ();
@@ -684,7 +684,7 @@ public class MangoJuice : Adw.Application {
         blacklist_entry.placeholder_text = _("Blacklist: (vkcube,WatchDogs2.exe)");
         blacklist_entry.hexpand = true;
         blacklist_entry.changed.connect (() => {
-            LoadStates.update_blacklist_in_file (blacklist_entry.text);
+            SaveStates.update_blacklist_in_file (blacklist_entry.text);
             SaveStates.save_states_to_file (this);
         });
     
@@ -823,7 +823,7 @@ public class MangoJuice : Adw.Application {
         position_dropdown.set_valign(Align.CENTER);
         position_dropdown.set_hexpand(true);
         position_dropdown.notify["selected-item"].connect(() => {
-            LoadStates.update_position_in_file((position_dropdown.selected_item as StringObject)?.get_string() ?? "");
+            SaveStates.update_position_in_file((position_dropdown.selected_item as StringObject)?.get_string() ?? "");
         });
         
         var position_pair = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -851,7 +851,7 @@ public class MangoJuice : Adw.Application {
         toggle_hud_entry.set_margin_top(FLOW_BOX_MARGIN);
         toggle_hud_entry.set_margin_bottom(FLOW_BOX_MARGIN);
         toggle_hud_entry.changed.connect(() => {
-            LoadStates.update_toggle_hud_in_file(toggle_hud_entry.text);
+            SaveStates.update_toggle_hud_in_file(toggle_hud_entry.text);
             SaveStates.save_states_to_file(this);
         });
         
@@ -871,7 +871,7 @@ public class MangoJuice : Adw.Application {
         offset_x_value_label.set_halign (Align.END);
         offset_x_scale.value_changed.connect (() => {
             offset_x_value_label.label = "%d".printf ((int)offset_x_scale.get_value ());
-            LoadStates.update_offset_x_in_file ("%d".printf ((int)offset_x_scale.get_value ()));
+            SaveStates.update_offset_x_in_file ("%d".printf ((int)offset_x_scale.get_value ()));
         });
     
         var offset_y_widget = create_scale_entry_widget (_("Offset Y"), _("Vertical offset"), 0, 1500, 0);
@@ -882,7 +882,7 @@ public class MangoJuice : Adw.Application {
         offset_y_value_label.set_halign (Align.END);
         offset_y_scale.value_changed.connect (() => {
             offset_y_value_label.label = "%d".printf ((int)offset_y_scale.get_value ());
-            LoadStates.update_offset_y_in_file ("%d".printf ((int)offset_y_scale.get_value ()));
+            SaveStates.update_offset_y_in_file ("%d".printf ((int)offset_y_scale.get_value ()));
         });
     
         var offset_flow_box = new FlowBox ();
@@ -963,7 +963,7 @@ public class MangoJuice : Adw.Application {
         gpu_color_button.set_rgba (default_gpu_color);
         gpu_color_button.notify["rgba"].connect ( () => {
             var rgba = gpu_color_button.get_rgba ().copy ();
-            LoadStates.update_gpu_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_gpu_color_in_file (rgba_to_hex (rgba));
         });
     
         cpu_color_button = new ColorDialogButton (color_dialog);
@@ -972,7 +972,7 @@ public class MangoJuice : Adw.Application {
         cpu_color_button.set_rgba (default_cpu_color);
         cpu_color_button.notify["rgba"].connect ( () => {
             var rgba = cpu_color_button.get_rgba ().copy ();
-            LoadStates.update_cpu_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_cpu_color_in_file (rgba_to_hex (rgba));
             SaveStates.save_states_to_file (this);
         });
     
@@ -980,7 +980,7 @@ public class MangoJuice : Adw.Application {
         gpu_text_entry.placeholder_text = _("GPU custom name");
         gpu_text_entry.hexpand = true;
         gpu_text_entry.changed.connect ( () => {
-            LoadStates.update_gpu_text_in_file (gpu_text_entry.text);
+            SaveStates.update_gpu_text_in_file (gpu_text_entry.text);
             SaveStates.save_states_to_file (this);
         });
     
@@ -988,7 +988,7 @@ public class MangoJuice : Adw.Application {
         cpu_text_entry.placeholder_text = _("CPU custom name");
         cpu_text_entry.hexpand = true;
         cpu_text_entry.changed.connect ( () => {
-            LoadStates.update_cpu_text_in_file (cpu_text_entry.text);
+            SaveStates.update_cpu_text_in_file (cpu_text_entry.text);
             SaveStates.save_states_to_file (this);
         });
     
@@ -1008,7 +1008,7 @@ public class MangoJuice : Adw.Application {
         fps_value_entry_1.text = "30";
         fps_value_entry_1.hexpand = true;
         fps_value_entry_1.changed.connect ( () => {
-            LoadStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
+            SaveStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
     
@@ -1017,7 +1017,7 @@ public class MangoJuice : Adw.Application {
         fps_value_entry_2.text = "60";
         fps_value_entry_2.hexpand = true;
         fps_value_entry_2.changed.connect ( () => {
-            LoadStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
+            SaveStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
     
@@ -1031,7 +1031,7 @@ public class MangoJuice : Adw.Application {
         fps_color_button_1.set_rgba (default_fps_color_1);
         fps_color_button_1.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_1.get_rgba ().copy ();
-            LoadStates.update_fps_color_in_file (rgba_to_hex (rgba), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (fps_color_button_3.get_rgba ()));
+            SaveStates.update_fps_color_in_file (rgba_to_hex (rgba), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (fps_color_button_3.get_rgba ()));
         });
     
         fps_color_button_2 = new ColorDialogButton (color_dialog_fps);
@@ -1040,7 +1040,7 @@ public class MangoJuice : Adw.Application {
         fps_color_button_2.set_rgba (default_fps_color_2);
         fps_color_button_2.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_2.get_rgba ().copy ();
-            LoadStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (fps_color_button_3.get_rgba ()));
+            SaveStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (fps_color_button_3.get_rgba ()));
         });
     
         fps_color_button_3 = new ColorDialogButton (color_dialog_fps);
@@ -1049,7 +1049,7 @@ public class MangoJuice : Adw.Application {
         fps_color_button_3.set_rgba (default_fps_color_3);
         fps_color_button_3.notify["rgba"].connect ( () => {
             var rgba = fps_color_button_3.get_rgba ().copy ();
-            LoadStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+            SaveStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
     
         var fps_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -1069,7 +1069,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_value_entry_1.text = "60";
         gpu_load_value_entry_1.hexpand = true;
         gpu_load_value_entry_1.changed.connect ( () => {
-            LoadStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
+            SaveStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
     
@@ -1078,7 +1078,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_value_entry_2.text = "90";
         gpu_load_value_entry_2.hexpand = true;
         gpu_load_value_entry_2.changed.connect ( () => {
-            LoadStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
+            SaveStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
     
@@ -1092,7 +1092,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_button_1.set_rgba (default_gpu_load_color_1);
         gpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_1.get_rgba ().copy ();
-            LoadStates.update_gpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
+            SaveStates.update_gpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
         });
     
         gpu_load_color_button_2 = new ColorDialogButton (color_dialog_gpu_load);
@@ -1101,7 +1101,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_button_2.set_rgba (default_gpu_load_color_2);
         gpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_2.get_rgba ().copy ();
-            LoadStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
+            SaveStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
         });
     
         gpu_load_color_button_3 = new ColorDialogButton (color_dialog_gpu_load);
@@ -1110,7 +1110,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_button_3.set_rgba (default_gpu_load_color_3);
         gpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = gpu_load_color_button_3.get_rgba ().copy ();
-            LoadStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+            SaveStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
     
         var gpu_load_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -1130,7 +1130,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_value_entry_1.text = "60";
         cpu_load_value_entry_1.hexpand = true;
         cpu_load_value_entry_1.changed.connect ( () => {
-            LoadStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
+            SaveStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
     
@@ -1139,7 +1139,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_value_entry_2.text = "90";
         cpu_load_value_entry_2.hexpand = true;
         cpu_load_value_entry_2.changed.connect ( () => {
-            LoadStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
+            SaveStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
         });
     
@@ -1150,7 +1150,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_color_button_1.set_rgba (default_cpu_load_color_1);
         cpu_load_color_button_1.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_1.get_rgba ().copy ();
-            LoadStates.update_cpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
+            SaveStates.update_cpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
         });
     
         cpu_load_color_button_2 = new ColorDialogButton (color_dialog_cpu_load);
@@ -1159,7 +1159,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_color_button_2.set_rgba (default_cpu_load_color_2);
         cpu_load_color_button_2.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_2.get_rgba ().copy ();
-            LoadStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
+            SaveStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
         });
     
         cpu_load_color_button_3 = new ColorDialogButton (color_dialog_cpu_load);
@@ -1168,7 +1168,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_color_button_3.set_rgba (default_cpu_load_color_3);
         cpu_load_color_button_3.notify["rgba"].connect ( () => {
             var rgba = cpu_load_color_button_3.get_rgba ().copy ();
-            LoadStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+            SaveStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
     
         var cpu_load_clarge_label = create_label (_("The color of GPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
@@ -1192,7 +1192,7 @@ public class MangoJuice : Adw.Application {
         background_color_button.set_rgba (default_background_color);
         background_color_button.notify["rgba"].connect ( () => {
             var rgba = background_color_button.get_rgba ().copy ();
-            LoadStates.update_background_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_background_color_in_file (rgba_to_hex (rgba));
         });
     
         frametime_color_button = new ColorDialogButton (color_dialog);
@@ -1201,7 +1201,7 @@ public class MangoJuice : Adw.Application {
         frametime_color_button.set_rgba (default_frametime_color);
         frametime_color_button.notify["rgba"].connect ( () => {
             var rgba = frametime_color_button.get_rgba ().copy ();
-            LoadStates.update_frametime_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_frametime_color_in_file (rgba_to_hex (rgba));
         });
     
         vram_color_button = new ColorDialogButton (color_dialog);
@@ -1210,7 +1210,7 @@ public class MangoJuice : Adw.Application {
         vram_color_button.set_rgba (default_vram_color);
         vram_color_button.notify["rgba"].connect ( () => {
             var rgba = vram_color_button.get_rgba ().copy ();
-            LoadStates.update_vram_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_vram_color_in_file (rgba_to_hex (rgba));
         });
     
         ram_color_button = new ColorDialogButton (color_dialog);
@@ -1219,7 +1219,7 @@ public class MangoJuice : Adw.Application {
         ram_color_button.set_rgba (default_ram_color);
         ram_color_button.notify["rgba"].connect ( () => {
             var rgba = ram_color_button.get_rgba ().copy ();
-            LoadStates.update_ram_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_ram_color_in_file (rgba_to_hex (rgba));
         });
     
         wine_color_button = new ColorDialogButton (color_dialog);
@@ -1228,7 +1228,7 @@ public class MangoJuice : Adw.Application {
         wine_color_button.set_rgba (default_wine_color);
         wine_color_button.notify["rgba"].connect ( () => {
             var rgba = wine_color_button.get_rgba ().copy ();
-            LoadStates.update_wine_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_wine_color_in_file (rgba_to_hex (rgba));
         });
     
         engine_color_button = new ColorDialogButton (color_dialog);
@@ -1237,7 +1237,7 @@ public class MangoJuice : Adw.Application {
         engine_color_button.set_rgba (default_engine_color);
         engine_color_button.notify["rgba"].connect ( () => {
             var rgba = engine_color_button.get_rgba ().copy ();
-            LoadStates.update_engine_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_engine_color_in_file (rgba_to_hex (rgba));
         });
     
         text_color_button = new ColorDialogButton (color_dialog);
@@ -1246,7 +1246,7 @@ public class MangoJuice : Adw.Application {
         text_color_button.set_rgba (default_text_color);
         text_color_button.notify["rgba"].connect ( () => {
             var rgba = text_color_button.get_rgba ().copy ();
-            LoadStates.update_text_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_text_color_in_file (rgba_to_hex (rgba));
         });
     
         media_player_color_button = new ColorDialogButton (color_dialog);
@@ -1255,7 +1255,7 @@ public class MangoJuice : Adw.Application {
         media_player_color_button.set_rgba (default_media_player_color);
         media_player_color_button.notify["rgba"].connect ( () => {
             var rgba = media_player_color_button.get_rgba ().copy ();
-            LoadStates.update_media_player_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_media_player_color_in_file (rgba_to_hex (rgba));
         });
     
         network_color_button = new ColorDialogButton (color_dialog);
@@ -1264,7 +1264,7 @@ public class MangoJuice : Adw.Application {
         network_color_button.set_rgba (default_network_color);
         network_color_button.notify["rgba"].connect ( () => {
             var rgba = network_color_button.get_rgba ().copy ();
-            LoadStates.update_network_color_in_file (rgba_to_hex (rgba));
+            SaveStates.update_network_color_in_file (rgba_to_hex (rgba));
         });
     
         ColorDialogButton[] color_buttons = { background_color_button, frametime_color_button, vram_color_button, ram_color_button, wine_color_button, engine_color_button, media_player_color_button, network_color_button, text_color_button };
@@ -1315,7 +1315,7 @@ public class MangoJuice : Adw.Application {
         font_dropdown.notify["selected-item"].connect (() => {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
             var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
-            LoadStates.update_font_file_in_file (selected_font_path);
+            SaveStates.update_font_file_in_file (selected_font_path);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1496,7 +1496,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_1.placeholder_text = _("Limit 1");
         fps_limit_entry_1.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_1, 0, 1000);
-            LoadStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+            SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1504,7 +1504,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_2.placeholder_text = _("Limit 2");
         fps_limit_entry_2.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_2, 0, 1000);
-            LoadStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+            SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1512,7 +1512,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_3.placeholder_text = _("Limit 3");
         fps_limit_entry_3.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_3, 0, 1000);
-            LoadStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
+            SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             SaveStates.save_states_to_file (this);
         });
 
@@ -1629,7 +1629,7 @@ public class MangoJuice : Adw.Application {
                 is_updating = true;
                 int value = (int)fps_sampling_period_scale.get_value ();
                 fps_sampling_period_entry.text = "%d".printf (value);
-                LoadStates.update_fps_sampling_period_in_file ("%d".printf (value));
+                SaveStates.update_fps_sampling_period_in_file ("%d".printf (value));
                 is_updating = false;
             }
         });
@@ -1640,7 +1640,7 @@ public class MangoJuice : Adw.Application {
                 int value = int.parse (fps_sampling_period_entry.text);
                 if (value >= 250 && value <= 2000 && value != (int)fps_sampling_period_scale.get_value ()) {
                     fps_sampling_period_scale.set_value (value);
-                    LoadStates.update_fps_sampling_period_in_file ("%d".printf (value));
+                    SaveStates.update_fps_sampling_period_in_file ("%d".printf (value));
                 }
                 is_updating = false;
             }
