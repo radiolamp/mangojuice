@@ -345,7 +345,7 @@ msgstr "Отображать имя GPU"
 
 #: src/mangojuice.vala:138
 msgid "Display draw in watts"
-msgstr "Отображать потребление Вт"
+msgstr "Потребление Вт"
 
 #: src/mangojuice.vala:138
 msgid "Display voltage"
