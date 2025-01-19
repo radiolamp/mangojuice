@@ -773,6 +773,44 @@ public class MangoJuice : Adw.Application {
         custom_text_box.set_margin_bottom(FLOW_BOX_MARGIN);
         custom_text_box.append(custom_text_center_entry);
         visual_box.append(custom_text_box);
+
+        var button_flow_box = new FlowBox ();
+        button_flow_box.set_max_children_per_line (4);
+        button_flow_box.set_homogeneous (true); // Делаем все кнопки одинакового размера
+        button_flow_box.set_margin_start (10);
+        button_flow_box.set_margin_end (10);
+        button_flow_box.set_selection_mode (SelectionMode.NONE);
+        
+        var button1 = new Button.with_label (_("Profile 1"));
+        button1.set_size_request (160, -1);
+        button1.clicked.connect (() => {
+            set_preset (1);
+            restart_vkcube_or_glxgears ();
+        });
+        
+        var button2 = new Button.with_label (_("Profile 2"));
+        button2.clicked.connect (() => {
+            set_preset (-1);
+            restart_vkcube_or_glxgears ();
+        });
+        
+        var button3 = new Button.with_label (_("Profile 3"));
+        button3.clicked.connect (() => {
+            set_preset (4);
+            restart_vkcube_or_glxgears ();
+        });
+        
+        var button4 = new Button.with_label (_("Restore profile"));
+        button4.clicked.connect (() => {
+            SaveStates.save_states_to_file(this);
+        });
+        
+        button_flow_box.insert (button1, -1);
+        button_flow_box.insert (button2, -1);
+        button_flow_box.insert (button3, -1);
+        button_flow_box.insert (button4, -1);
+        
+        visual_box.append (button_flow_box);
         
         var combined_flow_box = new FlowBox();
         combined_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
@@ -2117,6 +2155,24 @@ public class MangoJuice : Adw.Application {
             } catch (Error e) {
                 stderr.printf ("Error restore MANGOHUD from /etc/environment: %s\n", e.message);
             }
+        }
+    }
+
+    private void set_preset(int preset_value) {
+        if (preset_value < -1 || preset_value > 5) {
+            stderr.printf("Invalid preset value: %d. Allowed range is -1 to 5.\n", preset_value);
+            return;
+        }
+    
+        var file = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud").get_child("MangoHud.conf");
+    
+        try {
+            if (!file.get_parent().query_exists()) file.get_parent().make_directory_with_parents();
+            var output_stream = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
+            output_stream.put_string("preset=%d\n".printf(preset_value));
+            stdout.printf("Preset set to %d in MangoHud.conf\n", preset_value);
+        } catch (Error e) {
+            stderr.printf("Error: %s\n", e.message);
         }
     }
 
