@@ -635,31 +635,61 @@ public class MangoJuice : Adw.Application {
         cpu_switches[0].active = any_cpu_switch_active;
     }
 
+    public Box create_entry_with_clear_button (Entry entry, string placeholder_text, string default_value) {
+        entry.placeholder_text = placeholder_text;
+        entry.text = default_value;
+        entry.hexpand = true;
+    
+        var clear_button = new Button.from_icon_name ("edit-clear-symbolic") {
+            tooltip_text = _("Clear"),
+            visible = false,
+            css_classes = { "flat" }
+        };
+    
+        clear_button.clicked.connect (() => {
+            entry.text = default_value;
+            clear_button.visible = false;
+        });
+    
+        entry.changed.connect (() => {
+            clear_button.visible = entry.text != default_value;
+        });
+    
+        var entry_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        entry_box.append (entry);
+        entry_box.append (clear_button);
+    
+        return entry_box;
+    }
+    
     public void initialize_custom_controls (Box extras_box, Box visual_box) {
         custom_command_entry = new Entry ();
-        custom_command_entry.placeholder_text = _("Mangohud variable");
-        custom_command_entry.hexpand = true;
-    
+        var custom_command_box = create_entry_with_clear_button (custom_command_entry, _("Mangohud variable"), "");
+        custom_command_entry.changed.connect (() => {
+            SaveStates.save_states_to_file (this);
+        });
+
         custom_logs_path_entry = new Entry ();
-        custom_logs_path_entry.placeholder_text = _("Home");
-        custom_logs_path_entry.hexpand = true;
-    
-        logs_path_button = new Button ();
-        logs_path_button.set_icon_name ("folder-symbolic");
-        logs_path_button.clicked.connect ( () => open_folder_chooser_dialog ());
-        logs_path_button.set_tooltip_text (_("The directory for saving the logging"));
-    
-        intel_power_fix_button = new Button ();
-        intel_power_fix_button.hexpand = true;
-    
-        var intel_power_fix_label = new Label (_("Intel Power Fix"));
-        intel_power_fix_label.set_ellipsize (Pango.EllipsizeMode.END);
-        intel_power_fix_label.set_halign (Align.CENTER);
-        intel_power_fix_label.set_hexpand (true);
-    
-        intel_power_fix_button.set_child (intel_power_fix_label);
-    
-        intel_power_fix_button.clicked.connect ( () => {
+        var custom_logs_path_box = create_entry_with_clear_button (custom_logs_path_entry, _("Home"), "");
+        custom_logs_path_entry.changed.connect (() => {
+            SaveStates.save_states_to_file (this);
+        });
+
+        logs_path_button = new Button () {
+            icon_name = "folder-symbolic",
+            tooltip_text = _("The directory for saving the logging")
+        };
+        logs_path_button.clicked.connect (() => open_folder_chooser_dialog ());
+
+        intel_power_fix_button = new Button () {
+            hexpand = true,
+            child = new Label (_("Intel Power Fix")) {
+                ellipsize = Pango.EllipsizeMode.END,
+                halign = Align.CENTER,
+                hexpand = true
+            }
+        };
+        intel_power_fix_button.clicked.connect (() => {
             try {
                 Process.spawn_command_line_sync ("pkexec chmod 0644 /sys/class/powercap/intel-rapl\\:0/energy_uj");
                 check_file_permissions ();
@@ -668,82 +698,76 @@ public class MangoJuice : Adw.Application {
                 stderr.printf ("Error when executing the command: %s\n", e.message);
             }
         });
-    
         check_file_permissions ();
-    
+
         logs_key_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" }) {
             logs_key_model.append (item);
         }
         logs_key_combo = new DropDown (logs_key_model, null);
-        logs_key_combo.notify["selected-item"].connect ( () => {
-            SaveStates.update_logs_key_in_file ( (logs_key_combo.selected_item as StringObject)?.get_string () ?? "");
+        logs_key_combo.notify["selected-item"].connect (() => {
+            SaveStates.update_logs_key_in_file ((logs_key_combo.selected_item as StringObject)?.get_string () ?? "");
         });
-    
-        reset_button = new Button ();
-        reset_button.hexpand = true;
-        reset_button.add_css_class ("destructive-action");
-    
-        var reset_label = new Label (_("Reset Config"));
-        reset_label.set_ellipsize (Pango.EllipsizeMode.END);
-        reset_label.set_halign (Align.CENTER);
-        reset_label.set_hexpand (true);
-        reset_button.set_child (reset_label);
-        reset_button.clicked.connect ( () => {
+
+        reset_button = new Button () {
+            hexpand = true,
+            css_classes = { "destructive-action" },
+            child = new Label (_("Reset Config")) {
+                ellipsize = Pango.EllipsizeMode.END,
+                halign = Align.CENTER,
+                hexpand = true
+            }
+        };
+        reset_button.clicked.connect (() => {
             delete_mangohub_conf ();
             delete_vkbasalt_conf ();
             restart_application ();
         });
-    
+
         blacklist_entry = new Entry ();
-        blacklist_entry.placeholder_text = _("Blacklist: (vkcube,WatchDogs2.exe)");
-        blacklist_entry.hexpand = true;
+        var blacklist_box = create_entry_with_clear_button (blacklist_entry, _("Blacklist: (vkcube,WatchDogs2.exe)"), "");
         blacklist_entry.changed.connect (() => {
             SaveStates.update_blacklist_in_file (blacklist_entry.text);
             SaveStates.save_states_to_file (this);
         });
-    
-        var blacklist_flow_box = new FlowBox ();
-        blacklist_flow_box.set_max_children_per_line (1);
-        blacklist_flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        blacklist_flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        blacklist_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        blacklist_flow_box.set_selection_mode (SelectionMode.NONE);
-    
-        var blacklist_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        blacklist_pair.append (blacklist_entry);
-    
-        mangohud_global_button = new Button.with_label (_("Mangohud Global"));
-        mangohud_global_button.clicked.connect (() => {
-            on_mangohud_global_button_clicked ();
-        });
-    
+
         if (!is_flatpak ()) {
-            blacklist_pair.append (mangohud_global_button);
+            mangohud_global_button = new Button.with_label (_("Mangohud Global"));
+            mangohud_global_button.clicked.connect (on_mangohud_global_button_clicked);
+            blacklist_box.append (mangohud_global_button);
         }
-        blacklist_flow_box.insert (blacklist_pair, -1);
-    
+
+        var blacklist_flow_box = new FlowBox () {
+            max_children_per_line = 1,
+            margin_start = FLOW_BOX_MARGIN,
+            margin_end = FLOW_BOX_MARGIN,
+            margin_bottom = FLOW_BOX_MARGIN,
+            selection_mode = SelectionMode.NONE
+        };
+        blacklist_flow_box.insert (blacklist_box, -1);
         extras_box.append (blacklist_flow_box);
-    
-        var custom_command_flow_box = new FlowBox ();
-        custom_command_flow_box.set_max_children_per_line (3);
-        custom_command_flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        custom_command_flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        custom_command_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        custom_command_flow_box.set_selection_mode (SelectionMode.NONE);
+
+        var custom_command_flow_box = new FlowBox () {
+            max_children_per_line = 3,
+            margin_start = FLOW_BOX_MARGIN,
+            margin_end = FLOW_BOX_MARGIN,
+            margin_bottom = FLOW_BOX_MARGIN,
+            selection_mode = SelectionMode.NONE
+        };
     
         var pair1 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        var logs_key_label = new Label (_("Logs key"));
-        logs_key_label.set_ellipsize (Pango.EllipsizeMode.END);
-        logs_key_label.set_halign (Align.START);
-        logs_key_label.set_hexpand (false);
-        pair1.append (custom_command_entry);
+        var logs_key_label = new Label (_("Logs key")) {
+            ellipsize = Pango.EllipsizeMode.END,
+            halign = Align.START,
+            hexpand = false
+        };
+        pair1.append (custom_command_box);
         pair1.append (logs_key_label);
         pair1.append (logs_key_combo);
         custom_command_flow_box.insert (pair1, -1);
     
         var pair2 = new Box (Orientation.HORIZONTAL, 5);
-        pair2.append (custom_logs_path_entry);
+        pair2.append (custom_logs_path_box);
         pair2.append (logs_path_button);
         custom_command_flow_box.insert (pair2, -1);
     
@@ -755,173 +779,178 @@ public class MangoJuice : Adw.Application {
         custom_command_flow_box.insert (pair3, -1);
     
         extras_box.append (custom_command_flow_box);
-    
-        var customize_label = create_label (_("Customize"), Align.START, { "title-4" }, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN );
+
+        var customize_label = create_label (_("Customize"), Align.START, { "title-4" }, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN);
         visual_box.append (customize_label);
-    
+
         custom_text_center_entry = new Entry ();
-        custom_text_center_entry.placeholder_text = _("Your text");
-        custom_text_center_entry.hexpand = true;
+        var custom_text_center_box = create_entry_with_clear_button (custom_text_center_entry, _("Your text"), "");
         custom_text_center_entry.changed.connect (() => {
             SaveStates.save_states_to_file (this);
         });
-        
-        var custom_text_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        custom_text_box.set_margin_start(FLOW_BOX_MARGIN);
-        custom_text_box.set_margin_end(FLOW_BOX_MARGIN);
-        custom_text_box.set_margin_top(FLOW_BOX_MARGIN);
-        custom_text_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        custom_text_box.append(custom_text_center_entry);
-        visual_box.append(custom_text_box);
+    
+        var custom_text_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
+            margin_start = FLOW_BOX_MARGIN,
+            margin_end = FLOW_BOX_MARGIN,
+            margin_top = FLOW_BOX_MARGIN,
+            margin_bottom = FLOW_BOX_MARGIN
+        };
+        custom_text_box.append (custom_text_center_box);
+        visual_box.append (custom_text_box);
 
-        var button_flow_box = new FlowBox ();
-        button_flow_box.set_max_children_per_line (4);
-        button_flow_box.set_homogeneous (true); // Делаем все кнопки одинакового размера
-        button_flow_box.set_margin_start (10);
-        button_flow_box.set_margin_end (10);
-        button_flow_box.set_selection_mode (SelectionMode.NONE);
-        
+        var button_flow_box = new FlowBox () {
+            max_children_per_line = 4,
+            homogeneous = true,
+            margin_start = 10,
+            margin_end = 10,
+            selection_mode = SelectionMode.NONE
+        };
+    
         var button1 = new Button.with_label (_("Profile 1"));
         button1.set_size_request (160, -1);
         button1.clicked.connect (() => {
             set_preset (1);
             restart_vkcube_or_glxgears ();
         });
-        
+    
         var button2 = new Button.with_label (_("Profile 2"));
         button2.clicked.connect (() => {
             set_preset (-1);
             restart_vkcube_or_glxgears ();
         });
-        
+    
         var button3 = new Button.with_label (_("Profile 3"));
         button3.clicked.connect (() => {
             set_preset (4);
             restart_vkcube_or_glxgears ();
         });
-        
+    
         var button4 = new Button.with_label (_("Restore profile"));
         button4.clicked.connect (() => {
-            SaveStates.save_states_to_file(this);
+            SaveStates.save_states_to_file (this);
         });
-        
+    
         button_flow_box.insert (button1, -1);
         button_flow_box.insert (button2, -1);
         button_flow_box.insert (button3, -1);
         button_flow_box.insert (button4, -1);
-        
+    
         visual_box.append (button_flow_box);
-        
-        var combined_flow_box = new FlowBox();
-        combined_flow_box.set_row_spacing(FLOW_BOX_ROW_SPACING);
-        combined_flow_box.set_column_spacing(FLOW_BOX_COLUMN_SPACING);
-        combined_flow_box.set_max_children_per_line(3);
-        combined_flow_box.set_margin_start(FLOW_BOX_MARGIN);
-        combined_flow_box.set_margin_end(FLOW_BOX_MARGIN);
-        combined_flow_box.set_margin_top(FLOW_BOX_MARGIN);
-        combined_flow_box.set_margin_bottom(FLOW_BOX_MARGIN);
-        combined_flow_box.set_selection_mode(SelectionMode.NONE);
-        
-        var custom_switch_label = new Label(_("Horizontal Hud"));
-        custom_switch_label.set_halign(Align.START);
-        custom_switch_label.set_hexpand(true);
-        
-        custom_switch = new Switch();
-        custom_switch.set_valign(Align.START);
-        custom_switch.set_margin_end(FLOW_BOX_MARGIN);
-        custom_switch.notify["active"].connect(() => {
-            SaveStates.save_states_to_file(this);
+
+        var combined_flow_box = new FlowBox () {
+            row_spacing = FLOW_BOX_ROW_SPACING,
+            column_spacing = FLOW_BOX_COLUMN_SPACING,
+            max_children_per_line = 3,
+            margin_start = FLOW_BOX_MARGIN,
+            margin_end = FLOW_BOX_MARGIN,
+            margin_top = FLOW_BOX_MARGIN,
+            margin_bottom = FLOW_BOX_MARGIN,
+            selection_mode = SelectionMode.NONE
+        };
+
+        var custom_switch_label = new Label (_("Horizontal Hud")) {
+            halign = Align.START,
+            hexpand = true
+        };
+        custom_switch = new Switch () {
+            valign = Align.START,
+            margin_end = FLOW_BOX_MARGIN
+        };
+        custom_switch.notify["active"].connect (() => {
+            SaveStates.save_states_to_file (this);
         });
-        
-        var custom_switch_pair = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        custom_switch_pair.append(custom_switch_label);
-        custom_switch_pair.append(custom_switch);
-        custom_switch_pair.set_size_request(50, -1);
-        combined_flow_box.insert(custom_switch_pair, -1);
-        
-        var borders_widget = create_scale_entry_widget(_("Borders"), _("Round"), 0, 15, 0);
+    
+        var custom_switch_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        custom_switch_pair.append (custom_switch_label);
+        custom_switch_pair.append (custom_switch);
+        custom_switch_pair.set_size_request (50, -1);
+        combined_flow_box.insert (custom_switch_pair, -1);
+
+        var borders_widget = create_scale_entry_widget (_("Borders"), _("Round"), 0, 15, 0);
         borders_scale = borders_widget.scale;
         borders_entry = borders_widget.entry;
-        borders_scale.value_changed.connect(() => {
+        borders_scale.value_changed.connect (() => {
             if (borders_entry != null) {
                 int cursor_position = borders_entry.cursor_position;
-                borders_entry.text = "%d".printf((int)borders_scale.get_value());
-                borders_entry.set_position(cursor_position);
+                borders_entry.text = "%d".printf ((int)borders_scale.get_value ());
+                borders_entry.set_position (cursor_position);
             }
         });
-        combined_flow_box.insert(borders_widget.widget, -1);
-        
-        var alpha_widget = create_scale_entry_widget(_("Alpha"), _("Transparency"), 0, 100, 50);
+        combined_flow_box.insert (borders_widget.widget, -1);
+
+        var alpha_widget = create_scale_entry_widget (_("Alpha"), _("Transparency"), 0, 100, 50);
         alpha_scale = alpha_widget.scale;
         alpha_entry = alpha_widget.entry;
-        alpha_value_label = new Label("50");
-        alpha_value_label.set_width_chars(3);
-        alpha_scale.value_changed.connect(() => {
-            double value = alpha_scale.get_value();
-            alpha_value_label.label = "%.1f".printf(value / 100.0);
-            SaveStates.save_states_to_file(this);
+        alpha_value_label = new Label ("50") {
+            width_chars = 3
+        };
+        alpha_scale.value_changed.connect (() => {
+            double value = alpha_scale.get_value ();
+            alpha_value_label.label = "%.1f".printf (value / 100.0);
+            SaveStates.save_states_to_file (this);
         });
-        combined_flow_box.insert(alpha_widget.widget, -1);
-        
-        var position_model = new Gtk.StringList(null);
+        combined_flow_box.insert (alpha_widget.widget, -1);
+
+        var position_model = new Gtk.StringList (null);
         foreach (var item in new string[] {
             "top-left", "top-center", "top-right",
             "middle-left", "middle-right",
             "bottom-left", "bottom-center", "bottom-right"
         }) {
-            position_model.append(item);
+            position_model.append (item);
         }
-        position_dropdown = new DropDown(position_model, null);
-        position_dropdown.set_size_request(80, -1);
-        position_dropdown.set_valign(Align.CENTER);
-        position_dropdown.set_hexpand(true);
-        position_dropdown.notify["selected-item"].connect(() => {
-            SaveStates.update_position_in_file((position_dropdown.selected_item as StringObject)?.get_string() ?? "");
+        position_dropdown = new DropDown (position_model, null) {
+            valign = Align.CENTER,
+            hexpand = true
+        };
+        position_dropdown.notify["selected-item"].connect (() => {
+            SaveStates.update_position_in_file ((position_dropdown.selected_item as StringObject)?.get_string () ?? "");
         });
-        
-        var position_pair = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        position_pair.append(new Label(_("Position")));
-        position_pair.append(position_dropdown);
-        combined_flow_box.insert(position_pair, -1);
-        
-        var colums_widget = create_scale_entry_widget(_("Columns"), _("Number of columns"), 1, 6, 3);
+    
+        var position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        position_pair.append (new Label (_("Position")));
+        position_pair.append (position_dropdown);
+        combined_flow_box.insert (position_pair, -1);
+
+        var colums_widget = create_scale_entry_widget (_("Columns"), _("Number of columns"), 1, 6, 3);
         colums_scale = colums_widget.scale;
         colums_entry = colums_widget.entry;
-        colums_entry.set_valign(Align.CENTER);
-        colums_scale.value_changed.connect(() => {
+        colums_entry.valign = Align.CENTER;
+        colums_scale.value_changed.connect (() => {
             if (colums_entry != null) {
-                colums_entry.text = "%d".printf((int)colums_scale.get_value());
+                colums_entry.text = "%d".printf ((int)colums_scale.get_value ());
             }
         });
-        combined_flow_box.insert(colums_widget.widget, -1);
-        
-        toggle_hud_entry = new Entry();
-        toggle_hud_entry.placeholder_text = _("Key shortcuts");
-        toggle_hud_entry.text = "Shift_R+F12";
-        toggle_hud_entry.set_hexpand(true);
+        combined_flow_box.insert (colums_widget.widget, -1);
+
+        toggle_hud_entry = new Entry () {
+            placeholder_text = _("Key shortcuts"),
+            text = "Shift_R+F12",
+            hexpand = true,
+            valign = Align.CENTER,
+            margin_top = FLOW_BOX_MARGIN,
+            margin_bottom = FLOW_BOX_MARGIN
+        };
         toggle_hud_entry.set_size_request(20, -1);
-        toggle_hud_entry.set_valign(Align.CENTER);
-        toggle_hud_entry.set_margin_top(FLOW_BOX_MARGIN);
-        toggle_hud_entry.set_margin_bottom(FLOW_BOX_MARGIN);
-        toggle_hud_entry.changed.connect(() => {
-            SaveStates.update_toggle_hud_in_file(toggle_hud_entry.text);
-            SaveStates.save_states_to_file(this);
+        toggle_hud_entry.changed.connect (() => {
+            SaveStates.update_toggle_hud_in_file (toggle_hud_entry.text);
+            SaveStates.save_states_to_file (this);
         });
-        
-        var toggle_hud_pair = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        toggle_hud_pair.append(new Label(_("Hide the HUD")));
-        toggle_hud_pair.set_hexpand(true);
-        toggle_hud_pair.append(toggle_hud_entry);
-        combined_flow_box.insert(toggle_hud_pair, -1);
-        
-        visual_box.append(combined_flow_box);
+    
+        var toggle_hud_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        toggle_hud_pair.append (new Label (_("Hide the HUD")));
+        toggle_hud_pair.append (toggle_hud_entry);
+        combined_flow_box.insert (toggle_hud_pair, -1);
+    
+        visual_box.append (combined_flow_box);
 
         var offset_x_widget = create_scale_entry_widget (_("Offset X"), _("Horizontal offset"), 0, 1500, 0);
         offset_x_scale = offset_x_widget.scale;
         offset_x_entry = offset_x_widget.entry;
-        offset_x_value_label = new Label ("0");
-        offset_x_value_label.set_width_chars (5);
-        offset_x_value_label.set_halign (Align.END);
+        offset_x_value_label = new Label ("0") {
+            width_chars = 5,
+            halign = Align.END
+        };
         offset_x_scale.value_changed.connect (() => {
             offset_x_value_label.label = "%d".printf ((int)offset_x_scale.get_value ());
             SaveStates.update_offset_x_in_file ("%d".printf ((int)offset_x_scale.get_value ()));
@@ -930,21 +959,23 @@ public class MangoJuice : Adw.Application {
         var offset_y_widget = create_scale_entry_widget (_("Offset Y"), _("Vertical offset"), 0, 1500, 0);
         offset_y_scale = offset_y_widget.scale;
         offset_y_entry = offset_y_widget.entry;
-        offset_y_value_label = new Label ("0");
-        offset_y_value_label.set_width_chars (5);
-        offset_y_value_label.set_halign (Align.END);
+        offset_y_value_label = new Label ("0") {
+            width_chars = 5,
+            halign = Align.END
+        };
         offset_y_scale.value_changed.connect (() => {
             offset_y_value_label.label = "%d".printf ((int)offset_y_scale.get_value ());
             SaveStates.update_offset_y_in_file ("%d".printf ((int)offset_y_scale.get_value ()));
         });
     
-        var offset_flow_box = new FlowBox ();
-        offset_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
-        offset_flow_box.set_max_children_per_line (2);
-        offset_flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        offset_flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        offset_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        offset_flow_box.set_selection_mode (SelectionMode.NONE);
+        var offset_flow_box = new FlowBox () {
+            row_spacing = FLOW_BOX_ROW_SPACING,
+            max_children_per_line = 2,
+            margin_start = FLOW_BOX_MARGIN,
+            margin_end = FLOW_BOX_MARGIN,
+            margin_bottom = FLOW_BOX_MARGIN,
+            selection_mode = SelectionMode.NONE
+        };
     
         var offset_x_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         offset_x_pair.append (offset_x_widget.widget);
@@ -955,10 +986,10 @@ public class MangoJuice : Adw.Application {
         offset_flow_box.insert (offset_y_pair, -1);
     
         visual_box.append (offset_flow_box);
-    
+
         var fonts_label = create_label (_("Font"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (fonts_label);
-    
+
         var font_size_widget = create_scale_entry_widget (_("Size"), _("Size in pixels"), 8, 64, 24);
         font_size_scale = font_size_widget.scale;
         font_size_entry = font_size_widget.entry;
@@ -967,18 +998,19 @@ public class MangoJuice : Adw.Application {
                 font_size_entry.text = "%d".printf ((int)font_size_scale.get_value ());
             }
         });
-    
+
         initialize_font_dropdown (visual_box);
     
-        var fonts_flow_box = new FlowBox ();
-        fonts_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
-        fonts_flow_box.set_hexpand (true);
-        fonts_flow_box.set_max_children_per_line (2);
-        fonts_flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        fonts_flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        fonts_flow_box.set_margin_top (FLOW_BOX_MARGIN);
-        fonts_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        fonts_flow_box.set_selection_mode (SelectionMode.NONE);
+        var fonts_flow_box = new FlowBox () {
+            row_spacing = FLOW_BOX_ROW_SPACING,
+            hexpand = true,
+            max_children_per_line = 2,
+            margin_start = FLOW_BOX_MARGIN,
+            margin_end = FLOW_BOX_MARGIN,
+            margin_top = FLOW_BOX_MARGIN,
+            margin_bottom = FLOW_BOX_MARGIN,
+            selection_mode = SelectionMode.NONE
+        };
     
         var font_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         font_pair.append (font_dropdown);
@@ -989,8 +1021,8 @@ public class MangoJuice : Adw.Application {
         fonts_flow_box.insert (size_pair, -1);
     
         visual_box.append (fonts_flow_box);
-    
-        initialize_color_controls(visual_box);
+
+        initialize_color_controls (visual_box);
     }
     
     public void initialize_color_controls (Box visual_box) {
@@ -1028,31 +1060,29 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_cpu_color_in_file (rgba_to_hex (rgba));
             SaveStates.save_states_to_file (this);
         });
-    
+
         gpu_text_entry = new Entry ();
-        gpu_text_entry.placeholder_text = _("GPU custom name");
-        gpu_text_entry.hexpand = true;
+        var gpu_text_entry_box = create_entry_with_clear_button (gpu_text_entry, _("GPU custom name"), "");
         gpu_text_entry.changed.connect ( () => {
             SaveStates.update_gpu_text_in_file (gpu_text_entry.text);
             SaveStates.save_states_to_file (this);
         });
-    
+
         cpu_text_entry = new Entry ();
-        cpu_text_entry.placeholder_text = _("CPU custom name");
-        cpu_text_entry.hexpand = true;
+        var cpu_text_entry_box = create_entry_with_clear_button (cpu_text_entry, _("CPU custom name"), "");
         cpu_text_entry.changed.connect ( () => {
             SaveStates.update_cpu_text_in_file (cpu_text_entry.text);
             SaveStates.save_states_to_file (this);
         });
-    
+
         var color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         color_box.set_margin_start (FLOW_BOX_MARGIN);
         color_box.set_margin_end (FLOW_BOX_MARGIN);
         color_box.set_margin_top (FLOW_BOX_MARGIN);
         color_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        color_box.append (gpu_text_entry);
+        color_box.append (gpu_text_entry_box);
         color_box.append (gpu_color_button);
-        color_box.append (cpu_text_entry);
+        color_box.append (cpu_text_entry_box);
         color_box.append (cpu_color_button);
         visual_box.append (color_box);
     
@@ -1571,7 +1601,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_method = new DropDown (fps_limit_method_model, null);
 
         fps_limit_entry_1 = new Entry ();
-        fps_limit_entry_1.placeholder_text = _("Limit 1");
+        var fps_limit_entry_1_box = create_entry_with_clear_button (fps_limit_entry_1, _("Limit 1"), "");
         fps_limit_entry_1.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_1, 0, 1000);
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
@@ -1579,7 +1609,7 @@ public class MangoJuice : Adw.Application {
         });
 
         fps_limit_entry_2 = new Entry ();
-        fps_limit_entry_2.placeholder_text = _("Limit 2");
+        var fps_limit_entry_2_box = create_entry_with_clear_button (fps_limit_entry_2, _("Limit 2"), "");
         fps_limit_entry_2.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_2, 0, 1000);
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
@@ -1587,7 +1617,7 @@ public class MangoJuice : Adw.Application {
         });
 
         fps_limit_entry_3 = new Entry ();
-        fps_limit_entry_3.placeholder_text = _("Limit 3");
+        var fps_limit_entry_3_box = create_entry_with_clear_button (fps_limit_entry_3, _("Limit 3"), "");
         fps_limit_entry_3.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_3, 0, 1000);
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
@@ -1607,9 +1637,9 @@ public class MangoJuice : Adw.Application {
         limiters_box.set_margin_top (FLOW_BOX_MARGIN);
         limiters_box.set_margin_bottom (FLOW_BOX_MARGIN);
         limiters_box.append (fps_limit_method);
-        limiters_box.append (fps_limit_entry_1);
-        limiters_box.append (fps_limit_entry_2);
-        limiters_box.append (fps_limit_entry_3);
+        limiters_box.append (fps_limit_entry_1_box);
+        limiters_box.append (fps_limit_entry_2_box);
+        limiters_box.append (fps_limit_entry_3_box);
         limiters_box.append (toggle_fps_limit);
         performance_box.append (limiters_box);
 
