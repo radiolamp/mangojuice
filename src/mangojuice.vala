@@ -639,13 +639,11 @@ public class MangoJuice : Adw.Application {
         entry.placeholder_text = placeholder_text;
         entry.text = default_value;
         entry.hexpand = true;
-    
-        // Выносим объявление переменной clear_button за пределы блока инициализации
+
         var clear_button = new Button.from_icon_name ("edit-clear-symbolic");
         clear_button.tooltip_text = _("Clear");
         clear_button.visible = false;
-        clear_button.css_classes = { "flat" }; // Используем массив строк с завершающим null
-    
+        clear_button.add_css_class ("flat");
         clear_button.clicked.connect (() => {
             entry.text = default_value;
             clear_button.visible = false;
@@ -711,13 +709,13 @@ public class MangoJuice : Adw.Application {
 
         reset_button = new Button () {
             hexpand = true,
-            css_classes = { "destructive-action" },
             child = new Label (_("Reset Config")) {
                 ellipsize = Pango.EllipsizeMode.END,
                 halign = Align.CENTER,
                 hexpand = true
             }
         };
+        reset_button.add_css_class ("destructive-action");
         reset_button.clicked.connect (() => {
             delete_mangohub_conf ();
             delete_vkbasalt_conf ();
@@ -1087,9 +1085,9 @@ public class MangoJuice : Adw.Application {
 
         var clear_fps_button = new Button.from_icon_name ("edit-clear-symbolic") {
             tooltip_text = _("Reset to default"),
-            visible = false,
-            css_classes = { "flat" }
+            visible = false
         };
+        clear_fps_button.add_css_class ("flat"); 
 
         clear_fps_button.clicked.connect (() => {
             fps_value_entry_1.text = "30";
@@ -1172,9 +1170,9 @@ public class MangoJuice : Adw.Application {
     
         var clear_gpu_load_button = new Button.from_icon_name ("edit-clear-symbolic") {
             tooltip_text = _("Reset to default"),
-            visible = false,
-            css_classes = { "flat" }
+            visible = false
         };
+        clear_gpu_load_button.add_css_class ("flat");
         clear_gpu_load_button.clicked.connect (() => {
             gpu_load_value_entry_1.text = "60";
             gpu_load_value_entry_2.text = "90";
@@ -1254,8 +1252,8 @@ public class MangoJuice : Adw.Application {
         var clear_cpu_load_button = new Button.from_icon_name ("edit-clear-symbolic") {
             tooltip_text = _("Reset to default"),
             visible = false,
-            css_classes = { "flat" }
         };
+        clear_cpu_load_button.add_css_class ("flat");
         clear_cpu_load_button.clicked.connect (() => {
             cpu_load_value_entry_1.text = "60";
             cpu_load_value_entry_2.text = "90";
@@ -1328,8 +1326,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_color_box.append (cpu_load_color_button_2);
         cpu_load_color_box.append (cpu_load_color_button_3);
         visual_box.append (cpu_load_color_box);
-    
-        // Добавляем color_flow_box только один раз
+
         if (color_flow_box.get_parent () == null) {
             visual_box.append (color_flow_box);
         }
