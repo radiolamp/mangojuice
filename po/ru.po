@@ -604,7 +604,7 @@ msgid "Customize"
 msgstr "Кастомизация"
 
 #: src/mangojuice.vala:745
-msgid "You text"
+msgid "Your text"
 msgstr "Ваш текст"
 
 #: src/mangojuice.vala:769

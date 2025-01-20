@@ -607,7 +607,7 @@ msgid "Customize"
 msgstr ""
 
 #: src/mangojuice.vala:745
-msgid "You text"
+msgid "Your text"
 msgstr ""
 
 #: src/mangojuice.vala:769

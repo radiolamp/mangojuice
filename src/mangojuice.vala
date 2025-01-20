@@ -760,7 +760,7 @@ public class MangoJuice : Adw.Application {
         visual_box.append (customize_label);
     
         custom_text_center_entry = new Entry ();
-        custom_text_center_entry.placeholder_text = _("You text");
+        custom_text_center_entry.placeholder_text = _("Your text");
         custom_text_center_entry.hexpand = true;
         custom_text_center_entry.changed.connect (() => {
             SaveStates.save_states_to_file (this);
