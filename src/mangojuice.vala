@@ -1090,6 +1090,7 @@ public class MangoJuice : Adw.Application {
         fps_value_entry_1.placeholder_text = _("Medium");
         fps_value_entry_1.text = "30";
         fps_value_entry_1.hexpand = true;
+        validate_numeric_entry (fps_value_entry_1, 0, 1000);
         fps_value_entry_1.changed.connect ( () => {
             SaveStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
             SaveStates.save_states_to_file (this);
@@ -1099,6 +1100,7 @@ public class MangoJuice : Adw.Application {
         fps_value_entry_2.placeholder_text = _("High");
         fps_value_entry_2.text = "60";
         fps_value_entry_2.hexpand = true;
+        validate_numeric_entry (fps_value_entry_2, 0, 1000);
         fps_value_entry_2.changed.connect ( () => {
             SaveStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
             SaveStates.save_states_to_file (this);
@@ -1151,6 +1153,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_value_entry_1.placeholder_text = _("Medium");
         gpu_load_value_entry_1.text = "60";
         gpu_load_value_entry_1.hexpand = true;
+        validate_numeric_entry (gpu_load_value_entry_1, 0, 100);
         gpu_load_value_entry_1.changed.connect ( () => {
             SaveStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
@@ -1160,6 +1163,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_value_entry_2.placeholder_text = _("High");
         gpu_load_value_entry_2.text = "90";
         gpu_load_value_entry_2.hexpand = true;
+        validate_numeric_entry (gpu_load_value_entry_2, 0, 100);
         gpu_load_value_entry_2.changed.connect ( () => {
             SaveStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
@@ -1212,6 +1216,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_value_entry_1.placeholder_text = _("Medium");
         cpu_load_value_entry_1.text = "60";
         cpu_load_value_entry_1.hexpand = true;
+        validate_numeric_entry (cpu_load_value_entry_1, 0, 100);
         cpu_load_value_entry_1.changed.connect ( () => {
             SaveStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
@@ -1221,6 +1226,7 @@ public class MangoJuice : Adw.Application {
         cpu_load_value_entry_2.placeholder_text = _("High");
         cpu_load_value_entry_2.text = "90";
         cpu_load_value_entry_2.hexpand = true;
+        validate_numeric_entry (cpu_load_value_entry_2, 0, 100);
         cpu_load_value_entry_2.changed.connect ( () => {
             SaveStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
             SaveStates.save_states_to_file (this);
