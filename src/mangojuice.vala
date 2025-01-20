@@ -1165,7 +1165,7 @@ public class MangoJuice : Adw.Application {
             SaveStates.save_states_to_file (this);
         });
     
-        var gpu_load_clarge_label = create_label (_("The color of CPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        var gpu_load_clarge_label = create_label (_("The color of GPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (gpu_load_clarge_label);
     
         var color_dialog_gpu_load = new ColorDialog ();
@@ -1254,7 +1254,7 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
     
-        var cpu_load_clarge_label = create_label (_("The color of GPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        var cpu_load_clarge_label = create_label (_("The color of CPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (cpu_load_clarge_label); 
     
         var cpu_load_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
