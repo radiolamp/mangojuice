@@ -2,14 +2,21 @@ using Gtk;
 using Gee;
 
 public class SaveStates {
-    // Метод для обновления конкретного параметра в файле конфигурации
     public static void update_parameter (DataOutputStream data_stream, string parameter_name, string parameter_value) throws Error {
-        if (parameter_value != "") {
-            data_stream.put_string ("%s=%s\n".printf (parameter_name, parameter_value));
+        if (parameter_value == "" ||
+            (parameter_name == "round_corners" && parameter_value == "0") ||
+            (parameter_name == "font_size" && parameter_value == "24") ||
+            (parameter_name == "log_duration" && parameter_value == "30") ||
+            (parameter_name == "log_interval" && parameter_value == "100") ||
+            (parameter_name == "table_columns" && parameter_value == "3") ||
+            (parameter_name == "fps_sampling_period" && parameter_value == "500") ||
+            (parameter_name == "offset_x" && parameter_value == "0") ||
+            (parameter_name == "offset_y" && parameter_value == "0")) {
+            return;
         }
+        data_stream.put_string ("%s=%s\n".printf (parameter_name, parameter_value));
     }
 
-    // Методы для обновления параметров
     public static void update_fps_limit_in_file (string fps_limit_1, string fps_limit_2, string fps_limit_3) {
         update_file ("fps_limit=", "%s,%s,%s".printf (fps_limit_1, fps_limit_2, fps_limit_3));
     }
@@ -122,7 +129,6 @@ public class SaveStates {
         update_file ("network_color=", network_color);
     }
 
-    // Вспомогательный метод для обновления файла
     private static void update_file (string prefix, string value) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
