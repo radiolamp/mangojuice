@@ -850,3 +850,9 @@ msgstr ""
 
 msgid "Restore profile"
 msgstr ""
+
+msgid "If you are going to play through wine, then you need to select fonts from the home directory, the system fonts will not work."
+msgstr ""
+
+msgid "Support Wine"
+msgstr ""

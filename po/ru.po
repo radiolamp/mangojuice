@@ -847,3 +847,9 @@ msgstr "Профиль 3"
 
 msgid "Restore profile"
 msgstr "Восстановить"
+
+msgid "If you are going to play through wine, then you need to select fonts from the home directory, the system fonts will not work."
+msgstr "Если вы собираетесь играть через wine, то нужно выбирать шрифты из домашней директории. Системные работать не будут."
+
+msgid "Support Wine"
+msgstr "Для Wine"

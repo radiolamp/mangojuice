@@ -1344,11 +1344,10 @@ public class MangoJuice : Adw.Application {
     public void initialize_font_dropdown (Box visual_box) {
         var font_model = new Gtk.StringList (null);
         font_model.append (_("Default"));
-
+    
         var fonts = find_fonts ();
-
         var font_names = new Gee.ArrayList<string> ();
-
+    
         foreach (var font_path in fonts) {
             var font_name = Path.get_basename (font_path);
             font_names.add (font_name);
@@ -1361,10 +1360,11 @@ public class MangoJuice : Adw.Application {
         foreach (var font_name in font_names) {
             font_model.append (font_name);
         }
-
         font_dropdown = new DropDown (font_model, null);
         font_dropdown.set_hexpand (true);
         font_dropdown.set_size_request (100, -1);
+        font_dropdown.set_tooltip_text (_("If you are going to play through wine, then you need to select fonts from the home directory, the system fonts will not work."));
+
         font_dropdown.notify["selected-item"].connect (() => {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
             var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
@@ -1375,16 +1375,41 @@ public class MangoJuice : Adw.Application {
         var factory = new Gtk.SignalListItemFactory ();
         factory.setup.connect ((item) => {
             var list_item = item as Gtk.ListItem;
-            var label = new Gtk.Label (null);
+            var box = new Box (Orientation.HORIZONTAL, 5);
+            var label = new Label (null);
             label.set_ellipsize (Pango.EllipsizeMode.END);
             label.set_xalign (0.0f);
-            list_item.set_child (label);
+            label.set_ellipsize (Pango.EllipsizeMode.END);
+            label.set_hexpand (true);
+
+            var wine_label = new Label (_("Support Wine"));
+            wine_label.set_halign (Align.END);
+            wine_label.add_css_class ("dim-label");
+            wine_label.set_visible (false);
+            wine_label.set_halign (Align.END);
+    
+            box.append (label);
+            box.append (wine_label);
+            list_item.set_child (box);
         });
+    
         factory.bind.connect ((item) => {
             var list_item = item as Gtk.ListItem;
-            var label = list_item.get_child () as Gtk.Label;
-            label.label = (list_item.get_item () as StringObject)?.get_string () ?? "";
+            var box = list_item.get_child () as Box;
+            var label = box.get_first_child () as Label;
+            var wine_label = label.get_next_sibling () as Label;
+    
+            var font_name = (list_item.get_item () as StringObject)?.get_string () ?? "";
+            label.label = font_name;
+
+            var font_path = find_font_path_by_name (font_name, fonts);
+            if (font_path != null && font_path.has_prefix (Environment.get_home_dir ())) {
+                wine_label.set_visible (true);
+            } else {
+                wine_label.set_visible (false);
+            }
         });
+    
         font_dropdown.set_factory (factory);
     }
 
