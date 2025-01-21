@@ -70,6 +70,9 @@ public class SaveStates {
     }
 
     public static void update_fps_value_in_file (string fps_value_1, string fps_value_2) {
+        if ( fps_value_1 == "" || fps_value_2 == "") {
+            return;
+        }
         update_file ("fps_value=", "%s,%s".printf (fps_value_1, fps_value_2));
     }
 
@@ -77,16 +80,22 @@ public class SaveStates {
         update_file ("fps_color=", "%s,%s,%s".printf (fps_color_1, fps_color_2, fps_color_3));
     }
 
-    public static void update_gpu_load_value_in_file (string gpu_load_value_1, string gpu_load_value_2) {
-        update_file ("gpu_load_value=", "%s,%s".printf (gpu_load_value_1, gpu_load_value_2));
+    public static void update_gpu_load_value_in_file(string gpu_load_value_1, string gpu_load_value_2) {
+        if (gpu_load_value_1 == "" || gpu_load_value_2 == "") {
+            return;
+        }
+        update_file ("gpu_load_value=", "%s,%s".printf(gpu_load_value_1, gpu_load_value_2));
     }
 
     public static void update_gpu_load_color_in_file (string gpu_load_color_1, string gpu_load_color_2, string gpu_load_color_3) {
         update_file ("gpu_load_color=", "%s,%s,%s".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3));
     }
 
-    public static void update_cpu_load_value_in_file (string cpu_load_value_1, string cpu_load_value_2) {
-        update_file ("cpu_load_value=", "%s,%s".printf (cpu_load_value_1, cpu_load_value_2));
+    public static void update_cpu_load_value_in_file(string cpu_load_value_1, string cpu_load_value_2) {
+        if (cpu_load_value_1 == "" || cpu_load_value_2 == "") {
+            return;
+        }
+        update_file ("cpu_load_value=", "%s,%s".printf(cpu_load_value_1, cpu_load_value_2));
     }
 
     public static void update_cpu_load_color_in_file (string cpu_load_color_1, string cpu_load_color_2, string cpu_load_color_3) {
