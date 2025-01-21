@@ -240,6 +240,13 @@ public class MangoJuice : Adw.Application {
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
 
+        var quit_action = new SimpleAction ("quit", null);
+        quit_action.activate.connect (() => {
+            this.quit ();
+        });
+        this.add_action (quit_action);
+        this.set_accels_for_action ("app.quit", { "<Control>Q" });
+
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (run_test);
         this.add_action (test_action_new);
