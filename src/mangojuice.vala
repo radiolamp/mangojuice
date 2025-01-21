@@ -4,9 +4,9 @@ using Gee;
 
 public class MangoJuice : Adw.Application {
     public OtherBox other_box;
-    public Button reset_button;
-    public Button logs_path_button;
-    public Button intel_power_fix_button;
+    private Button reset_button;
+    private Button logs_path_button;
+    private Button intel_power_fix_button;
     public Switch[] gpu_switches;
     public Switch[] cpu_switches;
     public Switch[] other_switches;
@@ -16,15 +16,15 @@ public class MangoJuice : Adw.Application {
     public Switch[] battery_switches;
     public Switch[] other_extra_switches;
     public Switch[] inform_switches;
-    public Label[] gpu_labels;
-    public Label[] cpu_labels;
-    public Label[] other_labels;
-    public Label[] system_labels;
-    public Label[] wine_labels;
-    public Label[] options_labels;
-    public Label[] battery_labels;
-    public Label[] other_extra_labels;
-    public Label[] inform_labels;
+    private Label[] gpu_labels;
+    private Label[] cpu_labels;
+    private Label[] other_labels;
+    private Label[] system_labels;
+    private Label[] wine_labels;
+    private Label[] options_labels;
+    private Label[] battery_labels;
+    private Label[] other_extra_labels;
+    private Label[] inform_labels;
     public Entry custom_command_entry;
     public Entry custom_logs_path_entry;
     public DropDown logs_key_combo;
@@ -48,19 +48,18 @@ public class MangoJuice : Adw.Application {
     public Entry fps_limit_entry_1;
     public Entry fps_limit_entry_2;
     public Entry fps_limit_entry_3;
-    public const string GPU_TITLE = _("GPU");
-    public const string CPU_TITLE = _("CPU");
-    public const string OTHER_TITLE = _("Other");
-    public const string SYSTEM_TITLE = _("System");
-    public const string WINE_TITLE = _("Wine");
-    public const string OPTIONS_TITLE = _("Options");
-    public const string BATTERY_TITLE = _("Battery");
-    public const string OTHER_EXTRA_TITLE = _("Other");
-    public const string INFORM_TITLE = _("Information");
-    public const int MAIN_BOX_SPACING = 12;
-    public const int FLOW_BOX_ROW_SPACING = 12;
-    public const int FLOW_BOX_COLUMN_SPACING = 12;
-    public const int FLOW_BOX_MARGIN = 12;
+    private const string GPU_TITLE = _("GPU");
+    private const string CPU_TITLE = _("CPU");
+    private const string OTHER_TITLE = _("Other");
+    private const string SYSTEM_TITLE = _("System");
+    private const string WINE_TITLE = _("Wine");
+    private const string OPTIONS_TITLE = _("Options");
+    private const string BATTERY_TITLE = _("Battery");
+    private const string INFORM_TITLE = _("Information");
+    private const int MAIN_BOX_SPACING = 12;
+    private const int FLOW_BOX_ROW_SPACING = 12;
+    private const int FLOW_BOX_COLUMN_SPACING = 12;
+    private const int FLOW_BOX_MARGIN = 12;
     public string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
@@ -92,86 +91,86 @@ public class MangoJuice : Adw.Application {
     public string[] options_config_vars = {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display", "text_outline=0"
     };
-    public string[] gpu_label_texts = {
+    private string[] gpu_label_texts = {
         _("Load GPU"), _("Load Color"), _("VRAM"), _("Core Freq"), _("Mem Freq"),
         _("Temp"), _("Memory Temp"), _("Junction"), _("Fans"), _("Model"),
         _("Power"), _("Voltage"), _("Throttling"), _("Throttling GRAPH"), _("Vulkan Driver")
     };
 
-    public string[] cpu_label_texts = {
+    private string[] cpu_label_texts = {
         _("Load CPU"), _("Load Color"), _("Core Load"), _("Core Bars"), _("Core Freq"), _("Temp"),
         _("Power")
     };
 
-    public string[] other_label_texts = {
+    private string[] other_label_texts = {
         _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap"), _("Fan")
     };
 
-    public string[] system_label_texts = {
+    private string[] system_label_texts = {
         _("Refresh rate"), _("Resolution"), _("Session"), _("Time"), _("Arch")
     };
 
-    public string[] wine_label_texts = {
+    private string[] wine_label_texts = {
         _("Version"), _("Engine Ver"), _("Short names"), _("Winesync")
     };
 
-    public string[] options_label_texts = {
+    private string[] options_label_texts = {
         _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"),
         _("Compact API"), _("Hide HUD"), _("Turn off the shadow")
     };
 
-    public string[] battery_label_texts = {
+    private string[] battery_label_texts = {
         _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
     };
 
-    public string[] other_extra_label_texts = {
+    private string[] other_extra_label_texts = {
         _("Media"), _("Network"), _("Full ON"), _("Log Versioning"), _("Upload Results")
     };
 
-    public string[] inform_label_texts = {
+    private string[] inform_label_texts = {
         _("FPS"), _("FPS Color"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
     };
 
-    public string[] gpu_label_texts_2 = {
+    private string[] gpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display system VRAM"), _("Display GPU core"), _("Display GPU memory"),
         _("GPU temperature"), _("GDDR temperatures"), _("Memory Temperature"), _("Fan in rpm"), _("Display GPU name"),
         _("Display draw in watts"), _("Display voltage"), _("GPU is throttling?"), _("Trolling curve"), _("Driver Version")
     };
 
-    public string[] cpu_label_texts_2 = {
+    private string[] cpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display all streams"), _("Streams in the graph"), _("Processor frequency"), _("Processor temperature"), _("CPU consumption watt")
     };
 
-    public string[] other_label_texts_2 = {
+    private string[] other_label_texts_2 = {
         _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory"), _("Steam deck")
     };
 
-    public string[] system_label_texts_2 = {
+    private string[] system_label_texts_2 = {
         _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Watch"), _("Processor")
     };
 
-    public string[] wine_label_texts_2 = {
+    private string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("X11/Wayland"), _("Version used engin"), _("Wine sync method")
     };
 
-    public string[] options_label_texts_2 = {
+    private string[] options_label_texts_2 = {
         _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
         _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Only OpenGL"), _("Hide overlay"), _("Turn off font shadow")
     };
 
-    public string[] battery_label_texts_2 = {
+    private string[] battery_label_texts_2 = {
         _("Check battery"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
     };
 
-    public string[] other_extra_label_texts_2 = {
+    private string[] other_extra_label_texts_2 = {
         _("Show media player"), _("Display network"), _("Excludes histogram"), _("Log information"), _("Auto upload logs")
     };
 
-    public string[] inform_label_texts_2 = {
+    private string[] inform_label_texts_2 = {
         _("Show FPS"), _("Color text"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
         _("Graph to histogram"), _("Display frame count"), _("Show temperature °F"), _("Present mode")
     };
-    public bool test_button_pressed = false;
+    private bool test_button_pressed = false;
     public Entry custom_text_center_entry;
     public Switch custom_switch;
     public Scale borders_scale;
@@ -237,7 +236,7 @@ public class MangoJuice : Adw.Application {
     public Scale fps_sampling_period_scale;
     public Label fps_sampling_period_value_label;
     public Button mangohud_global_button;
-    public bool mangohud_global_enabled = false;
+    private bool mangohud_global_enabled = false;
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -452,7 +451,7 @@ public class MangoJuice : Adw.Application {
         yield LoadStates.load_states_from_file (this);
     }
 
-    private void initialize_rest_of_ui (ViewStack view_stack) {
+    void initialize_rest_of_ui (ViewStack view_stack) {
 
         var save_as_action = new SimpleAction ("save_as", null);
         save_as_action.activate.connect (on_save_as_button_clicked);
@@ -584,7 +583,7 @@ public class MangoJuice : Adw.Application {
         create_switches_and_labels (extras_box, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts, wine_label_texts_2);
         create_switches_and_labels (extras_box, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts, options_label_texts_2);
         create_switches_and_labels (extras_box, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts, battery_label_texts_2);
-        create_switches_and_labels (extras_box, OTHER_EXTRA_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts, other_extra_label_texts_2);
+        create_switches_and_labels (extras_box, OTHER_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts, other_extra_label_texts_2);
         create_scales_and_labels (extras_box);
         create_switches_and_labels (performance_box, INFORM_TITLE, inform_switches, inform_labels, inform_config_vars, inform_label_texts, inform_label_texts_2);
         create_limiters_and_filters (performance_box);
@@ -671,7 +670,7 @@ public class MangoJuice : Adw.Application {
         return entry_box;
     }
     
-    public void initialize_custom_controls (Box extras_box, Box visual_box) {
+    void initialize_custom_controls (Box extras_box, Box visual_box) {
         custom_command_entry = new Entry ();
         var custom_command_box = create_entry_with_clear_button (custom_command_entry, _("Mangohud variable"), "");
         custom_command_entry.changed.connect (() => {
@@ -1034,7 +1033,7 @@ public class MangoJuice : Adw.Application {
         initialize_color_controls (visual_box);
     }
 
-    public void initialize_color_controls (Box visual_box) {
+    void initialize_color_controls (Box visual_box) {
         var color_label = create_label (_("Color"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (color_label);
     
@@ -1442,7 +1441,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void initialize_font_dropdown (Box visual_box) {
+    void initialize_font_dropdown (Box visual_box) {
         var font_model = new Gtk.StringList (null);
         font_model.append (_("Default"));
     
@@ -1556,7 +1555,7 @@ public class MangoJuice : Adw.Application {
         return "";
     }
 
-    public void create_switches_and_labels (Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
+    void create_switches_and_labels (Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
 
         var label = create_label (title, Align.START, { "title-4" }, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN);
         parent_box.append (label);
@@ -1629,7 +1628,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void create_scales_and_labels (Box parent_box) {
+    void create_scales_and_labels (Box parent_box) {
         var logging_label = create_label (_("Logging"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         parent_box.append (logging_label);
 
@@ -1661,7 +1660,7 @@ public class MangoJuice : Adw.Application {
         parent_box.append (scales_flow_box);
     }
 
-    public void create_limiters_and_filters (Box performance_box) {
+    void create_limiters_and_filters (Box performance_box) {
         var limiters_label = create_label (_("Limiters FPS"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         performance_box.append (limiters_label);
 
@@ -1834,7 +1833,7 @@ public class MangoJuice : Adw.Application {
         performance_box.append (fps_sampling_period_box);
     }
 
-    public void restart_vkcube () {
+    void restart_vkcube () {
         try {
             Process.spawn_command_line_sync ("pkill vkcube");
             Process.spawn_command_line_async ("mangohud vkcube");
@@ -1843,7 +1842,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void restart_glxgears () {
+    void restart_glxgears () {
         try {
             Process.spawn_command_line_sync ("pkill glxgears");
             Process.spawn_command_line_async ("mangohud glxgears");
@@ -1852,7 +1851,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void restart_vkcube_or_glxgears () {
+    void restart_vkcube_or_glxgears () {
         if (is_vkcube_running ()) {
             restart_vkcube ();
         } else if (is_glxgears_running ()) {
@@ -1860,12 +1859,12 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void save_and_restart () {
+    void save_and_restart () {
         SaveStates.save_states_to_file (this);
         restart_vkcube_or_glxgears ();
     }
 
-    public bool is_vkcube_running () {
+    private bool is_vkcube_running () {
         try {
             string[] argv = { "pgrep", "vkcube" };
             int exit_status;
@@ -1880,7 +1879,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public bool is_glxgears_running () {
+    private bool is_glxgears_running () {
         try {
             string[] argv = { "pgrep", "glxgears" };
             int exit_status;
@@ -1895,7 +1894,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private void run_test () {
+    void run_test () {
         try {
             var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
             var config_file = config_dir.get_child ("MangoHud.conf");
@@ -1918,7 +1917,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void delete_mangohub_conf () {
+    void delete_mangohub_conf () {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
         if (file.query_exists ()) {
@@ -1933,7 +1932,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void delete_vkbasalt_conf () {
+    void delete_vkbasalt_conf () {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("vkBasalt");
         var file = config_dir.get_child ("vkBasalt.conf");
         if (file.query_exists ()) {
@@ -1948,7 +1947,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void open_folder_chooser_dialog () {
+    void open_folder_chooser_dialog () {
         var dialog = new Gtk.FileDialog ();
         dialog.select_folder.begin (this.active_window, null, (obj, res) => {
             try {
@@ -1996,7 +1995,7 @@ public class MangoJuice : Adw.Application {
         return "Unset";
     }
 
-    public void restart_application () {
+    void restart_application () {
         string mangojuice_path = Environment.find_program_in_path ("mangojuice");
         if (mangojuice_path != null) {
             try {
@@ -2010,7 +2009,7 @@ public class MangoJuice : Adw.Application {
         Process.exit (0);
     }
 
-    public bool is_vkcube_available () {
+    private bool is_vkcube_available () {
         try {
             string[] argv = { "which", "vkcube" };
             int exit_status;
@@ -2027,7 +2026,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public bool is_glxgears_available () {
+    private bool is_glxgears_available () {
         try {
             string[] argv = { "which", "glxgears" };
             int exit_status;
@@ -2044,7 +2043,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void on_save_as_button_clicked () {
+    void on_save_as_button_clicked () {
         var dialog = new Gtk.FileDialog ();
         dialog.set_title ("Save MangoHud.conf As");
         dialog.set_accept_label ("Save");
@@ -2060,7 +2059,7 @@ public class MangoJuice : Adw.Application {
         });
     }
 
-    public void save_config_to_file (string file_path) {
+    void save_config_to_file (string file_path) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
         if (!file.query_exists ()) {
@@ -2083,7 +2082,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void on_restore_config_button_clicked () {
+    void on_restore_config_button_clicked () {
         var dialog = new Gtk.FileDialog ();
         dialog.set_title ("Select Config File to Restore");
         dialog.set_accept_label ("Restore");
@@ -2098,7 +2097,7 @@ public class MangoJuice : Adw.Application {
         });
     }
 
-    public void restore_config_from_file (string file_path) {
+    void restore_config_from_file (string file_path) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
 
@@ -2125,7 +2124,7 @@ public class MangoJuice : Adw.Application {
         public Box widget;
     }
 
-    private void validate_entry_value (Entry entry, int min, int max) {
+    void validate_entry_value (Entry entry, int min, int max) {
         int value = 0;
         if (int.try_parse (entry.text, out value)) {
             if (value < min || value > max) {
@@ -2230,7 +2229,7 @@ public class MangoJuice : Adw.Application {
         return label;
     }
 
-    public void check_file_permissions () {
+    void check_file_permissions () {
         try {
             File file = File.new_for_path ("/sys/class/powercap/intel-rapl:0/energy_uj");
             if (!file.query_exists ()) {
@@ -2260,7 +2259,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void on_mangohud_global_button_clicked () {
+    void on_mangohud_global_button_clicked () {
         if (mangohud_global_enabled) {
             try {
                 Process.spawn_command_line_sync ("pkexec sed -i '/MANGOHUD=1/d' /etc/environment");
@@ -2284,7 +2283,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private void set_preset(int preset_value) {
+    void set_preset(int preset_value) {
         if (preset_value < -1 || preset_value > 5) {
             stderr.printf("Invalid preset value: %d. Allowed range is -1 to 5.\n", preset_value);
             return;
@@ -2302,7 +2301,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private void show_restart_warning () {
+    void show_restart_warning () {
         var dialog = new Adw.AlertDialog (
             _("Warning"),
             _("The changes will take effect only after the system is restarted.")
@@ -2326,7 +2325,7 @@ public class MangoJuice : Adw.Application {
         }); 
     }
 
-    public void check_mangohud_global_status () {
+    void check_mangohud_global_status () {
         try {
             string[] argv = { "grep", "MANGOHUD=1", "/etc/environment" };
             int exit_status;
@@ -2346,7 +2345,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public bool check_vkbasalt_installed () {
+    private bool check_vkbasalt_installed () {
         try {
             string[] argv = { "find", "/usr", "-name", "libvkbasalt.so" };
             int exit_status;
@@ -2365,7 +2364,7 @@ public class MangoJuice : Adw.Application {
         }
     }
  
-    private void validate_numeric_entry (Entry entry, int min_value = int.MIN, int max_value = int.MAX) {
+    void validate_numeric_entry (Entry entry, int min_value = int.MIN, int max_value = int.MAX) {
         entry.input_purpose = Gtk.InputPurpose.NUMBER;
         entry.set_max_length (4);
         entry.insert_text.connect ((new_text, new_text_length, ref position) => {
@@ -2407,11 +2406,11 @@ public class MangoJuice : Adw.Application {
         return "%02x%02x%02x".printf ((int) (rgba.red * 255), (int) (rgba.green * 255), (int) (rgba.blue * 255));
     }
 
-    public bool is_flatpak () {
+    private bool is_flatpak () {
         return Environment.get_variable ("FLATPAK_ID") != null;
     }
 
-    public static int main (string[] args) {
+    private static int main (string[] args) {
         Intl.setlocale (LocaleCategory.ALL, "");
         Intl.textdomain ("mangojuice");
         Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
