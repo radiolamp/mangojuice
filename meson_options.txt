@@ -1,0 +1,5 @@
+option(
+  'is_devel',
+  type: 'boolean',
+  value: false
+)

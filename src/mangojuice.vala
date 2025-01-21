@@ -280,6 +280,11 @@ public class MangoJuice : Adw.Application {
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
 
+
+        if (Config.IS_DEVEL) {
+            window.add_css_class ("devel");
+        }
+
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
 
@@ -426,6 +431,7 @@ public class MangoJuice : Adw.Application {
         });
 
         check_mangohud_global_status ();
+        
         load_config_async.begin ();
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
