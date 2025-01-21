@@ -1172,7 +1172,7 @@ public class MangoJuice : Adw.Application {
         fps_color_box.append (fps_color_button_3);
         visual_box.append (fps_color_box);
     
-        var gpu_load_clarge_label = create_label (_("GPU Load color levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        var gpu_load_clarge_label = create_label (_("The color of GPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (gpu_load_clarge_label);
     
         var clear_gpu_load_button = new Button.from_icon_name ("edit-clear-symbolic") {
@@ -1253,7 +1253,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_box.append (gpu_load_color_button_3);
         visual_box.append (gpu_load_color_box);
     
-        var cpu_load_clarge_label = create_label (_("CPU Load color levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        var cpu_load_clarge_label = create_label (_("The color of CPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (cpu_load_clarge_label);
     
         var clear_cpu_load_button = new Button.from_icon_name ("edit-clear-symbolic") {
