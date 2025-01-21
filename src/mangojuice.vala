@@ -197,7 +197,6 @@ public class MangoJuice : Adw.Application {
     public Entry cpu_text_entry;
     public ColorDialogButton cpu_color_button;
 
-    public Gee.ArrayList<Box> box_pool = new Gee.ArrayList<Box> ();
     public Gee.ArrayList<Label> label_pool = new Gee.ArrayList<Label> ();
 
     public Entry fps_value_entry_1;
@@ -1073,12 +1072,14 @@ public class MangoJuice : Adw.Application {
         var gpu_text_entry_box = create_entry_with_clear_button (gpu_text_entry, _("GPU custom name"), "");
         gpu_text_entry.changed.connect (() => {
             SaveStates.update_gpu_text_in_file (gpu_text_entry.text);
+            SaveStates.save_states_to_file (this);
         });
     
         cpu_text_entry = new Entry ();
         var cpu_text_entry_box = create_entry_with_clear_button (cpu_text_entry, _("CPU custom name"), "");
         cpu_text_entry.changed.connect (() => {
             SaveStates.update_cpu_text_in_file (cpu_text_entry.text);
+            SaveStates.save_states_to_file (this);
         });
     
         var color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
@@ -1610,14 +1611,6 @@ public class MangoJuice : Adw.Application {
         }
 
         parent_box.append (flow_box);
-    }
-
-    public Box get_box () {
-        if (box_pool.size > 0) {
-            return box_pool.remove_at (box_pool.size - 1);
-        } else {
-            return new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        }
     }
 
     public Label get_label () {
