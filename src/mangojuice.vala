@@ -432,7 +432,12 @@ public class MangoJuice : Adw.Application {
 
         check_mangohud_global_status ();
         
-        load_config_async.begin ();
+        new Thread<void> ("load-config-thread", () => {
+            load_config_async.begin ((obj, res) => {
+                load_config_async.end (res);
+                Idle.add (() => false);
+            });
+        });
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
         var style_manager = Adw.StyleManager.get_default ();
