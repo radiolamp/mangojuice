@@ -2254,26 +2254,41 @@ public class MangoJuice : Adw.Application {
     }
 
     void on_mangohud_global_button_clicked () {
+        bool success = false;
+    
         if (mangohud_global_enabled) {
             try {
                 Process.spawn_command_line_sync ("pkexec sed -i '/MANGOHUD=1/d' /etc/environment");
-                mangohud_global_enabled = false;
-                mangohud_global_button.remove_css_class ("suggested-action");
-                check_mangohud_global_status ();
-                show_restart_warning ();
+                string file_contents;
+                FileUtils.get_contents ("/etc/environment", out file_contents);
+                if (!file_contents.contains ("MANGOHUD=1")) {
+                    success = true;
+                    mangohud_global_enabled = false;
+                    mangohud_global_button.remove_css_class ("suggested-action");
+                }
             } catch (Error e) {
                 stderr.printf ("Error deleting MANGOHUD from /etc/environment: %s\n", e.message);
             }
         } else {
             try {
                 Process.spawn_command_line_sync ("pkexec sh -c 'echo \"MANGOHUD=1\" >> /etc/environment'");
-                mangohud_global_enabled = true;
-                mangohud_global_button.add_css_class ("suggested-action");
-                check_mangohud_global_status ();
-                show_restart_warning ();
+                string file_contents;
+                FileUtils.get_contents ("/etc/environment", out file_contents);
+                if (file_contents.contains ("MANGOHUD=1")) {
+                    success = true;
+                    mangohud_global_enabled = true;
+                    mangohud_global_button.add_css_class ("suggested-action");
+                }
             } catch (Error e) {
-                stderr.printf ("Error restore MANGOHUD from /etc/environment: %s\n", e.message);
+                stderr.printf ("Error adding MANGOHUD to /etc/environment: %s\n", e.message);
             }
+        }
+    
+        if (success) {
+            check_mangohud_global_status ();
+            show_restart_warning ();
+        } else {
+            stderr.printf ("Failed to modify /etc/environment.\n");
         }
     }
 

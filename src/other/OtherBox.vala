@@ -284,26 +284,41 @@ public class OtherBox : Box {
     }
 
     private void on_vkbasalt_global_button_clicked () {
+        bool success = false;
+    
         if (vkbasalt_global_enabled) {
             try {
                 Process.spawn_command_line_sync ("pkexec sed -i '/ENABLE_VKBASALT=1/d' /etc/environment");
-                vkbasalt_global_enabled = false;
-                vkbasalt_global_button.remove_css_class ("suggested-action");
-                check_vkbasalt_global_status ();
-                show_restart_warning ();
+                string file_contents;
+                FileUtils.get_contents ("/etc/environment", out file_contents);
+                if (!file_contents.contains ("ENABLE_VKBASALT=1")) {
+                    success = true;
+                    vkbasalt_global_enabled = false;
+                    vkbasalt_global_button.remove_css_class ("suggested-action");
+                }
             } catch (Error e) {
                 stderr.printf ("Error deleting ENABLE_VKBASALT from /etc/environment: %s\n", e.message);
             }
         } else {
             try {
                 Process.spawn_command_line_sync ("pkexec sh -c 'echo \"ENABLE_VKBASALT=1\" >> /etc/environment'");
-                vkbasalt_global_enabled = true;
-                vkbasalt_global_button.add_css_class ("suggested-action");
-                check_vkbasalt_global_status ();
-                show_restart_warning ();
+                string file_contents;
+                FileUtils.get_contents ("/etc/environment", out file_contents);
+                if (file_contents.contains ("ENABLE_VKBASALT=1")) {
+                    success = true;
+                    vkbasalt_global_enabled = true;
+                    vkbasalt_global_button.add_css_class ("suggested-action");
+                }
             } catch (Error e) {
                 stderr.printf ("Error adding ENABLE_VKBASALT to /etc/environment: %s\n", e.message);
             }
+        }
+    
+        if (success) {
+            check_vkbasalt_global_status ();
+            show_restart_warning ();
+        } else {
+            stderr.printf ("Failed to modify /etc/environment.\n");
         }
     }
 
