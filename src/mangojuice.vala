@@ -418,23 +418,20 @@ public class MangoJuice : Adw.Application {
         var content_box = new Box (Orientation.VERTICAL, 0);
         content_box.append (header_bar);
         content_box.append (view_stack);
-        content_box.append (bottom_headerbar);
 
         window.set_content (content_box);
         window.present ();
 
         GLib.Idle.add (() => {
+            content_box.append (bottom_headerbar);
             initialize_rest_of_ui (view_stack);
             return false;
         });
 
         check_mangohud_global_status ();
-        
-        new Thread<void> ("load-config-thread", () => {
-            load_config_async.begin ((obj, res) => {
-                load_config_async.end (res);
-                Idle.add (() => false);
-            });
+
+        new Thread<void>("config-loader", () => {
+            LoadStates.load_states_from_file(this);
         });
 
         toolbar_view_switcher.add_css_class ("viewswitcher");
@@ -444,10 +441,6 @@ public class MangoJuice : Adw.Application {
         if (!is_vkcube_available () && !is_glxgears_available ()) {
             test_button.set_visible (false);
         }
-    }
-
-    private async void load_config_async () {
-        yield LoadStates.load_states_from_file (this);
     }
 
     void initialize_rest_of_ui (ViewStack view_stack) {
@@ -609,10 +602,12 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public void add_switch_handler (Switch[] switches) {
+    void add_switch_handler (Switch[] switches) {
         for (int i = 0; i < switches.length; i++) {
             switches[i].notify["active"].connect (() => {
-                SaveStates.save_states_to_file (this);
+                new Thread<void>("save-config", () => {
+                    SaveStates.save_states_to_file(this);
+                });
             });
         }
     }
@@ -728,6 +723,7 @@ public class MangoJuice : Adw.Application {
         reset_button.clicked.connect (() => {
             delete_mangohub_conf ();
             delete_vkbasalt_conf ();
+            shutdown ();
             restart_application ();
         });
 
@@ -1888,26 +1884,31 @@ public class MangoJuice : Adw.Application {
     }
 
     void run_test () {
-        try {
-            var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-            var config_file = config_dir.get_child ("MangoHud.conf");
+        new Thread<void>("run-test", () => {
+            try {
+                var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+                var config_file = config_dir.get_child ("MangoHud.conf");
     
-            if (!config_file.query_exists ()) {
-                SaveStates.save_states_to_file (this);
+                if (!config_file.query_exists ()) {
+                    SaveStates.save_states_to_file (this);
+                }
+    
+                if (is_vkcube_available ()) {
+                    Process.spawn_command_line_sync ("pkill vkcube");
+                    Process.spawn_command_line_async ("mangohud vkcube");
+                } else if (is_glxgears_available ()) {
+                    Process.spawn_command_line_sync ("pkill glxgears");
+                    Process.spawn_command_line_async ("mangohud glxgears");
+                }
+    
+                Idle.add(() => {
+                    test_button_pressed = true;
+                    return false;
+                });
+            } catch (Error e) {
+                stderr.printf ("Ошибка при выполнении команды: %s\n", e.message);
             }
-    
-            if (is_vkcube_available ()) {
-                Process.spawn_command_line_sync ("pkill vkcube");
-                Process.spawn_command_line_async ("mangohud vkcube");
-            } else if (is_glxgears_available ()) {
-                Process.spawn_command_line_sync ("pkill glxgears");
-                Process.spawn_command_line_async ("mangohud glxgears");
-            }
-    
-            test_button_pressed = true;
-        } catch (Error e) {
-            stderr.printf ("Ошибка при выполнении команды: %s\n", e.message);
-        }
+        });
     }
 
     void delete_mangohub_conf () {
@@ -2108,7 +2109,7 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf ("Error writing to the file: %s\n", e.message);
         }
-        load_config_async.begin ();
+        LoadStates.load_states_from_file (this);
     }
 
     private struct ScaleEntryWidget {
@@ -2319,23 +2320,29 @@ public class MangoJuice : Adw.Application {
     }
 
     void check_mangohud_global_status () {
-        try {
-            string[] argv = { "grep", "MANGOHUD=1", "/etc/environment" };
-            int exit_status;
-            string standard_output;
-            string standard_error;
-            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+        new Thread<void>("check-mangohud-status", () => {
+            try {
+                string[] argv = { "grep", "MANGOHUD=1", "/etc/environment" };
+                int exit_status;
+                string standard_output;
+                string standard_error;
+                Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+    
+                bool enabled = (exit_status == 0);
 
-            if (exit_status == 0) {
-                mangohud_global_enabled = true;
-                mangohud_global_button.add_css_class ("suggested-action");
-            } else {
-                mangohud_global_enabled = false;
-                mangohud_global_button.remove_css_class ("suggested-action");
+                Idle.add(() => {
+                    mangohud_global_enabled = enabled;
+                    if (enabled) {
+                        mangohud_global_button.add_css_class ("suggested-action");
+                    } else {
+                        mangohud_global_button.remove_css_class ("suggested-action");
+                    }
+                    return false;
+                });
+            } catch (Error e) {
+                stderr.printf ("Error checking the MANGOHUD status: %s\n", e.message);
             }
-        } catch (Error e) {
-            stderr.printf ("Error checking the MANGOHUD status: %s\n", e.message);
-        }
+        });
     }
 
     private bool check_vkbasalt_installed () {
