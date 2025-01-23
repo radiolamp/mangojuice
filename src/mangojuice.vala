@@ -582,7 +582,9 @@ public class MangoJuice : Adw.Application {
             cpu_switches[i].notify["active"].connect (() => {
                 if (index == 0 && !cpu_switches[0].active) {
                     for (int j = 1; j < cpu_switches.length; j++) {
-                        cpu_switches[j].active = false;
+                        if (j != 2 && j != 3) {
+                            cpu_switches[j].active = false;
+                        }
                     }
                 }
                 update_cpu_stats_state ();
