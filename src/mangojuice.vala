@@ -3,6 +3,7 @@ using Adw;
 using Gee;
 
 public class MangoJuice : Adw.Application {
+    // UI Elements
     public OtherBox other_box;
     private Button reset_button;
     private Button logs_path_button;
@@ -48,6 +49,63 @@ public class MangoJuice : Adw.Application {
     public Entry fps_limit_entry_1;
     public Entry fps_limit_entry_2;
     public Entry fps_limit_entry_3;
+    public Entry custom_text_center_entry;
+    public Switch custom_switch;
+    public Scale borders_scale;
+    public Scale alpha_scale;
+    public Entry borders_entry;
+    public Entry alpha_entry;
+    public Label alpha_value_label;
+    public DropDown position_dropdown;
+    public Scale colums_scale;
+    public Entry colums_entry;
+    public Entry toggle_hud_entry;
+    public Scale font_size_scale;
+    public Entry font_size_entry;
+    public DropDown font_dropdown;
+    public Entry gpu_text_entry;
+    public ColorDialogButton gpu_color_button;
+    public Entry cpu_text_entry;
+    public ColorDialogButton cpu_color_button;
+    public Entry fps_value_entry_1;
+    public Entry fps_value_entry_2;
+    public ColorDialogButton fps_color_button_1;
+    public ColorDialogButton fps_color_button_2;
+    public ColorDialogButton fps_color_button_3;
+    public Entry gpu_load_value_entry_1;
+    public Entry gpu_load_value_entry_2;
+    public ColorDialogButton gpu_load_color_button_1;
+    public ColorDialogButton gpu_load_color_button_2;
+    public ColorDialogButton gpu_load_color_button_3;
+    public Entry cpu_load_value_entry_1;
+    public Entry cpu_load_value_entry_2;
+    public ColorDialogButton cpu_load_color_button_1;
+    public ColorDialogButton cpu_load_color_button_2;
+    public ColorDialogButton cpu_load_color_button_3;
+    public ColorDialogButton background_color_button;
+    public ColorDialogButton frametime_color_button;
+    public ColorDialogButton vram_color_button;
+    public ColorDialogButton ram_color_button;
+    public ColorDialogButton wine_color_button;
+    public ColorDialogButton engine_color_button;
+    public ColorDialogButton text_color_button;
+    public ColorDialogButton media_player_color_button;
+    public ColorDialogButton network_color_button;
+    public Entry blacklist_entry;
+    public Scale offset_x_scale;
+    public Scale offset_y_scale;
+    public Label offset_x_value_label;
+    public Label offset_y_value_label;
+    public Entry offset_x_entry;
+    public Entry offset_y_entry;
+    public Scale fps_sampling_period_scale;
+    public Label fps_sampling_period_value_label;
+    public Button mangohud_global_button;
+    private bool mangohud_global_enabled = false;
+    private ScrolledWindow other_scrolled_window;
+    private ViewStack view_stack;
+
+    // Constants
     private const string GPU_TITLE = _("GPU");
     private const string CPU_TITLE = _("CPU");
     private const string OTHER_TITLE = _("Other");
@@ -60,6 +118,8 @@ public class MangoJuice : Adw.Application {
     private const int FLOW_BOX_ROW_SPACING = 12;
     private const int FLOW_BOX_COLUMN_SPACING = 12;
     private const int FLOW_BOX_MARGIN = 12;
+
+    // Configuration Variables
     public string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
@@ -91,153 +151,81 @@ public class MangoJuice : Adw.Application {
     public string[] options_config_vars = {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display", "text_outline=0"
     };
+
+    // Label Texts
     private string[] gpu_label_texts = {
         _("Load GPU"), _("Load Color"), _("VRAM"), _("Core Freq"), _("Mem Freq"),
         _("Temp"), _("Memory Temp"), _("Junction"), _("Fans"), _("Model"),
         _("Power"), _("Voltage"), _("Throttling"), _("Throttling GRAPH"), _("Vulkan Driver")
     };
-
     private string[] cpu_label_texts = {
         _("Load CPU"), _("Load Color"), _("Core Load"), _("Core Bars"), _("Core Freq"), _("Temp"),
         _("Power")
     };
-
     private string[] other_label_texts = {
         _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap"), _("Fan")
     };
-
     private string[] system_label_texts = {
         _("Refresh rate"), _("Resolution"), _("Session"), _("Time"), _("Arch")
     };
-
     private string[] wine_label_texts = {
         _("Version"), _("Engine Ver"), _("Short names"), _("Winesync")
     };
-
     private string[] options_label_texts = {
         _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"),
         _("Compact API"), _("Hide HUD"), _("Turn off the shadow")
     };
-
     private string[] battery_label_texts = {
         _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
     };
-
     private string[] other_extra_label_texts = {
         _("Media"), _("Network"), _("Full ON"), _("Log Versioning"), _("Upload Results")
     };
-
     private string[] inform_label_texts = {
         _("FPS"), _("FPS Color"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
     };
-
     private string[] gpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display system VRAM"), _("Display GPU core"), _("Display GPU memory"),
         _("GPU temperature"), _("GDDR temperatures"), _("Memory Temperature"), _("Fan in rpm"), _("Display GPU name"),
         _("Display draw in watts"), _("Display voltage"), _("GPU is throttling?"), _("Trolling curve"), _("Driver Version")
     };
-
     private string[] cpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display all streams"), _("Streams in the graph"), _("Processor frequency"), _("Processor temperature"), _("CPU consumption watt")
     };
-
     private string[] other_label_texts_2 = {
         _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory"), _("Steam deck")
     };
-
     private string[] system_label_texts_2 = {
         _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Watch"), _("Processor")
     };
-
     private string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("X11/Wayland"), _("Version used engin"), _("Wine sync method")
     };
-
     private string[] options_label_texts_2 = {
         _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
         _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Only OpenGL"), _("Hide overlay"), _("Turn off font shadow")
     };
-
     private string[] battery_label_texts_2 = {
         _("Check battery"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
     };
-
     private string[] other_extra_label_texts_2 = {
         _("Show media player"), _("Display network"), _("Excludes histogram"), _("Log information"), _("Auto upload logs")
     };
-
     private string[] inform_label_texts_2 = {
         _("Show FPS"), _("Color text"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
         _("Graph to histogram"), _("Display frame count"), _("Show temperature °F"), _("Present mode")
     };
-    private bool test_button_pressed = false;
-    public Entry custom_text_center_entry;
-    public Switch custom_switch;
-    public Scale borders_scale;
-    public Scale alpha_scale;
-    public Entry borders_entry;
-    public Entry alpha_entry;
-    public Label alpha_value_label;
-    public DropDown position_dropdown;
-    public Scale colums_scale;
-    public Entry colums_entry;
-    public Entry toggle_hud_entry;
-    public Scale font_size_scale;
-    public Entry font_size_entry;
-    public DropDown font_dropdown;
 
+    // Vulkan and OpenGL Values
     public string[] vulkan_values = { "Unset", "Adaptive", "OFF", "ON", "Mailbox" };
     public string[] vulkan_config_values = { "", "0", "1", "3", "2" };
-
     public string[] opengl_values = { "Unset", "Adaptive", "OFF", "ON", "Mailbox" };
     public string[] opengl_config_values = { "", "-1", "0", "1", "n" };
 
-    public Entry gpu_text_entry;
-    public ColorDialogButton gpu_color_button;
-    public Entry cpu_text_entry;
-    public ColorDialogButton cpu_color_button;
-
+    // Other Variables
+    private bool test_button_pressed = false;
     public Gee.ArrayList<Label> label_pool = new Gee.ArrayList<Label> ();
 
-    public Entry fps_value_entry_1;
-    public Entry fps_value_entry_2;
-    public ColorDialogButton fps_color_button_1;
-    public ColorDialogButton fps_color_button_2;
-    public ColorDialogButton fps_color_button_3;
-
-    public Entry gpu_load_value_entry_1;
-    public Entry gpu_load_value_entry_2;
-    public ColorDialogButton gpu_load_color_button_1;
-    public ColorDialogButton gpu_load_color_button_2;
-    public ColorDialogButton gpu_load_color_button_3;
-
-    public Entry cpu_load_value_entry_1;
-    public Entry cpu_load_value_entry_2;
-    public ColorDialogButton cpu_load_color_button_1;
-    public ColorDialogButton cpu_load_color_button_2;
-    public ColorDialogButton cpu_load_color_button_3;
-    public ColorDialogButton background_color_button;
-    public ColorDialogButton frametime_color_button;
-    public ColorDialogButton vram_color_button;
-    public ColorDialogButton ram_color_button;
-    public ColorDialogButton wine_color_button;
-    public ColorDialogButton engine_color_button;
-    public ColorDialogButton text_color_button;
-    public ColorDialogButton media_player_color_button;
-    public ColorDialogButton network_color_button;
-    public Entry blacklist_entry;
-    public Scale offset_x_scale;
-    public Scale offset_y_scale;
-    public Label offset_x_value_label;
-    public Label offset_y_value_label;
-    public Entry offset_x_entry;
-    public Entry offset_y_entry;
-    public Scale fps_sampling_period_scale;
-    public Label fps_sampling_period_value_label;
-    public Button mangohud_global_button;
-    private bool mangohud_global_enabled = false;
-    private ScrolledWindow other_scrolled_window;
-    private ViewStack view_stack;
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
