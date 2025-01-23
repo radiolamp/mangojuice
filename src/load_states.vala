@@ -4,7 +4,7 @@ using Gtk;
 using Gee;
 
 public class LoadStates {
-    public static void load_states_from_file (MangoJuice mango_juice) {
+    public static async void load_states_from_file (MangoJuice mango_juice) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
 
@@ -13,12 +13,12 @@ public class LoadStates {
         }
 
         try {
-            var file_stream = file.read();
+            var file_stream = yield file.read_async ();
 
             var data_stream = new DataInputStream (file_stream);
             string line;
 
-            while ((line = data_stream.read_line()) != null) {
+            while ((line = yield data_stream.read_line_async ()) != null) {
                 load_switch_from_file (line, mango_juice.gpu_switches, mango_juice.gpu_config_vars);
                 load_switch_from_file (line, mango_juice.cpu_switches, mango_juice.cpu_config_vars);
                 load_switch_from_file (line, mango_juice.other_switches, mango_juice.other_config_vars);

@@ -410,7 +410,7 @@ public class MangoJuice : Adw.Application {
         });
 
         check_mangohud_global_status ();
-        LoadStates.load_states_from_file (this);
+        LoadStates.load_states_from_file.begin (this);
 
         if (!is_vkcube_available () && !is_glxgears_available ()) {
             test_button.set_visible (false);
@@ -2086,7 +2086,7 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf ("Error writing to the file: %s\n", e.message);
         }
-        LoadStates.load_states_from_file (this);
+        LoadStates.load_states_from_file.begin (this);
     }
 
     struct ScaleEntryWidget {
