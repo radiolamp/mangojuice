@@ -2127,19 +2127,17 @@ public class MangoJuice : Adw.Application {
 
     ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
         ScaleEntryWidget result = ScaleEntryWidget ();
-
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
         result.scale.set_size_request (140, -1);
         result.scale.set_hexpand (true);
-
+    
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
-
-       validate_numeric_entry (result.entry, min, max);
+        validate_numeric_entry (result.entry, min, max);
 
         bool is_updating = false;
 
@@ -2173,6 +2171,12 @@ public class MangoJuice : Adw.Application {
             }
         });
 
+        result.entry.notify["has-focus"].connect (() => {
+            if (!result.entry.has_focus && result.entry.text.strip () == "") {
+                result.entry.text = "%d".printf ((int)result.scale.get_value ());
+            }
+        });
+
         var text_box = new Box (Orientation.VERTICAL, 0);
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
@@ -2189,7 +2193,7 @@ public class MangoJuice : Adw.Application {
         label2.set_hexpand (false);
         label2.add_css_class ("dim-label");
         label2.set_ellipsize (Pango.EllipsizeMode.END);
-
+    
         text_box.append (label1);
         text_box.append (label2);
 
@@ -2197,7 +2201,7 @@ public class MangoJuice : Adw.Application {
         result.widget.append (text_box);
         result.widget.append (result.scale);
         result.widget.append (result.entry);
-
+    
         return result;
     }
 
@@ -2288,12 +2292,12 @@ public class MangoJuice : Adw.Application {
 
     void set_preset(int preset_value) {
         if (preset_value < -1 || preset_value > 5) {
-            stderr.printf("Invalid preset value: %d. Allowed range is -1 to 5.\n", preset_value);
+            stderr.printf ("Invalid preset value: %d. Allowed range is -1 to 5.\n", preset_value);
             return;
         }
 
         var file = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud").get_child("MangoHud.conf");
-    
+
         try {
             if (!file.get_parent().query_exists()) file.get_parent().make_directory_with_parents();
             var output_stream = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
@@ -2311,7 +2315,7 @@ public class MangoJuice : Adw.Application {
         );
         dialog.add_response ("ok", _("OK"));
         dialog.add_response ("restart", _("Restart"));
-    
+
         dialog.set_default_response ("ok");
         dialog.set_response_appearance ("restart", Adw.ResponseAppearance.SUGGESTED);
         dialog.present (this.active_window);
@@ -2335,7 +2339,7 @@ public class MangoJuice : Adw.Application {
                 int exit_status;
                 string standard_output;
                 string standard_error;
-                Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+                Process.spawn_sync ( null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status );
 
                 bool enabled = (exit_status == 0);
 
