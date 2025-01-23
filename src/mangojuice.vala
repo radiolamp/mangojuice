@@ -713,7 +713,6 @@ public class MangoJuice : Adw.Application {
         reset_button.clicked.connect (() => {
             delete_mangohub_conf ();
             delete_vkbasalt_conf ();
-            shutdown ();
             restart_application ();
         });
 
@@ -1986,6 +1985,7 @@ public class MangoJuice : Adw.Application {
         string mangojuice_path = Environment.find_program_in_path ("mangojuice");
         if (mangojuice_path != null) {
             try {
+                shutdown ();
                 Process.spawn_command_line_async (mangojuice_path);
             } catch (Error e) {
                 stderr.printf ("Ошибка при перезапуске приложения: %s\n", e.message);
@@ -2098,6 +2098,7 @@ public class MangoJuice : Adw.Application {
             }
 
             output_stream.close ();
+            restart_application ();
             stdout.printf ("Configuration restored from %s\n", file_path);
         } catch (Error e) {
             stderr.printf ("Error writing to the file: %s\n", e.message);
