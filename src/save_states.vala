@@ -170,6 +170,7 @@ public class SaveStates {
     public static void save_states_to_file (MangoJuice mango_juice) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
+        bool is_horizontal = mango_juice.custom_switch.active;
 
         try {
             if (!config_dir.query_exists ()) {
@@ -191,7 +192,11 @@ public class SaveStates {
                 update_parameter (data_stream, "offset_y", ((int)mango_juice.offset_y_scale.get_value ()).to_string ());
             }
 
-            update_parameter (data_stream, "custom_text_center", mango_juice.custom_text_center_entry.text);
+            if (is_horizontal) {
+                update_parameter (data_stream, "custom_text", mango_juice.custom_text_center_entry.text);
+            } else {
+                update_parameter (data_stream, "custom_text_center", mango_juice.custom_text_center_entry.text);
+            }
 
             var order_map = new HashMap<string, ArrayList<int>> ();
 
