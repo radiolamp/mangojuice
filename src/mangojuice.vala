@@ -563,14 +563,26 @@ public class MangoJuice : Adw.Application {
         add_switch_handler (other_extra_switches);
         add_switch_handler (inform_switches);
 
-        for (int i = 1; i < gpu_switches.length; i++) {
-            gpu_switches[i].notify["active"].connect ( () => {
+        for (int i = 0; i < gpu_switches.length; i++) {
+            int index = i;
+            gpu_switches[i].notify["active"].connect (() => {
+                if (index == 0 && !gpu_switches[0].active) {
+                    for (int j = 1; j < gpu_switches.length; j++) {
+                        gpu_switches[j].active = false;
+                    }
+                }
                 update_gpu_stats_state ();
             });
         }
 
-        for (int i = 1; i < cpu_switches.length; i++) {
-            cpu_switches[i].notify["active"].connect ( () => {
+        for (int i = 0; i < cpu_switches.length; i++) {
+            int index = i;
+            cpu_switches[i].notify["active"].connect (() => {
+                if (index == 0 && !cpu_switches[0].active) {
+                    for (int j = 1; j < cpu_switches.length; j++) {
+                        cpu_switches[j].active = false;
+                    }
+                }
                 update_cpu_stats_state ();
             });
         }
