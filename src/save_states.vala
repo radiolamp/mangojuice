@@ -138,7 +138,7 @@ public class SaveStates {
         update_file ("network_color=", network_color);
     }
 
-    private static void update_file (string prefix, string value) {
+    static void update_file (string prefix, string value) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
         if (!file.query_exists ()) {

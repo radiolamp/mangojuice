@@ -5,9 +5,9 @@ using Gee;
 public class MangoJuice : Adw.Application {
     // UI Elements
     public OtherBox other_box;
-    private Button reset_button;
-    private Button logs_path_button;
-    private Button intel_power_fix_button;
+    Button reset_button;
+    Button logs_path_button;
+    Button intel_power_fix_button;
     public Switch[] gpu_switches;
     public Switch[] cpu_switches;
     public Switch[] other_switches;
@@ -17,15 +17,15 @@ public class MangoJuice : Adw.Application {
     public Switch[] battery_switches;
     public Switch[] other_extra_switches;
     public Switch[] inform_switches;
-    private Label[] gpu_labels;
-    private Label[] cpu_labels;
-    private Label[] other_labels;
-    private Label[] system_labels;
-    private Label[] wine_labels;
-    private Label[] options_labels;
-    private Label[] battery_labels;
-    private Label[] other_extra_labels;
-    private Label[] inform_labels;
+    Label[] gpu_labels;
+    Label[] cpu_labels;
+    Label[] other_labels;
+    Label[] system_labels;
+    Label[] wine_labels;
+    Label[] options_labels;
+    Label[] battery_labels;
+    Label[] other_extra_labels;
+    Label[] inform_labels;
     public Entry custom_command_entry;
     public Entry custom_logs_path_entry;
     public DropDown logs_key_combo;
@@ -101,23 +101,23 @@ public class MangoJuice : Adw.Application {
     public Scale fps_sampling_period_scale;
     public Label fps_sampling_period_value_label;
     public Button mangohud_global_button;
-    private bool mangohud_global_enabled = false;
-    private ScrolledWindow other_scrolled_window;
-    private ViewStack view_stack;
+    bool mangohud_global_enabled = false;
+    ScrolledWindow other_scrolled_window;
+    ViewStack view_stack;
 
     // Constants
-    private const string GPU_TITLE = _("GPU");
-    private const string CPU_TITLE = _("CPU");
-    private const string OTHER_TITLE = _("Other");
-    private const string SYSTEM_TITLE = _("System");
-    private const string WINE_TITLE = _("Wine");
-    private const string OPTIONS_TITLE = _("Options");
-    private const string BATTERY_TITLE = _("Battery");
-    private const string INFORM_TITLE = _("Information");
-    private const int MAIN_BOX_SPACING = 12;
-    private const int FLOW_BOX_ROW_SPACING = 12;
-    private const int FLOW_BOX_COLUMN_SPACING = 12;
-    private const int FLOW_BOX_MARGIN = 12;
+    const string GPU_TITLE = _("GPU");
+    const string CPU_TITLE = _("CPU");
+    const string OTHER_TITLE = _("Other");
+    const string SYSTEM_TITLE = _("System");
+    const string WINE_TITLE = _("Wine");
+    const string OPTIONS_TITLE = _("Options");
+    const string BATTERY_TITLE = _("Battery");
+    const string INFORM_TITLE = _("Information");
+    const int MAIN_BOX_SPACING = 12;
+    const int FLOW_BOX_ROW_SPACING = 12;
+    const int FLOW_BOX_COLUMN_SPACING = 12;
+    const int FLOW_BOX_MARGIN = 12;
 
     // Configuration Variables
     public string[] gpu_config_vars = {
@@ -153,65 +153,65 @@ public class MangoJuice : Adw.Application {
     };
 
     // Label Texts
-    private string[] gpu_label_texts = {
+    string[] gpu_label_texts = {
         _("Load GPU"), _("Load Color"), _("VRAM"), _("Core Freq"), _("Mem Freq"),
         _("Temp"), _("Memory Temp"), _("Junction"), _("Fans"), _("Model"),
         _("Power"), _("Voltage"), _("Throttling"), _("Throttling GRAPH"), _("Vulkan Driver")
     };
-    private string[] cpu_label_texts = {
+    string[] cpu_label_texts = {
         _("Load CPU"), _("Load Color"), _("Core Load"), _("Core Bars"), _("Core Freq"), _("Temp"),
         _("Power")
     };
-    private string[] other_label_texts = {
+    string[] other_label_texts = {
         _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap"), _("Fan")
     };
-    private string[] system_label_texts = {
+    string[] system_label_texts = {
         _("Refresh rate"), _("Resolution"), _("Session"), _("Time"), _("Arch")
     };
-    private string[] wine_label_texts = {
+    string[] wine_label_texts = {
         _("Version"), _("Engine Ver"), _("Short names"), _("Winesync")
     };
-    private string[] options_label_texts = {
+    string[] options_label_texts = {
         _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"),
         _("Compact API"), _("Hide HUD"), _("Turn off the shadow")
     };
-    private string[] battery_label_texts = {
+    string[] battery_label_texts = {
         _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
     };
-    private string[] other_extra_label_texts = {
+    string[] other_extra_label_texts = {
         _("Media"), _("Network"), _("Full ON"), _("Log Versioning"), _("Upload Results")
     };
-    private string[] inform_label_texts = {
+    string[] inform_label_texts = {
         _("FPS"), _("FPS Color"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
     };
-    private string[] gpu_label_texts_2 = {
+    string[] gpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display system VRAM"), _("Display GPU core"), _("Display GPU memory"),
         _("GPU temperature"), _("GDDR temperatures"), _("Memory Temperature"), _("Fan in rpm"), _("Display GPU name"),
         _("Display draw in watts"), _("Display voltage"), _("GPU is throttling?"), _("Trolling curve"), _("Driver Version")
     };
-    private string[] cpu_label_texts_2 = {
+    string[] cpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display all streams"), _("Streams in the graph"), _("Processor frequency"), _("Processor temperature"), _("CPU consumption watt")
     };
-    private string[] other_label_texts_2 = {
+    string[] other_label_texts_2 = {
         _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory"), _("Steam deck")
     };
-    private string[] system_label_texts_2 = {
+    string[] system_label_texts_2 = {
         _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Watch"), _("Processor")
     };
-    private string[] wine_label_texts_2 = {
+    string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("X11/Wayland"), _("Version used engin"), _("Wine sync method")
     };
-    private string[] options_label_texts_2 = {
+    string[] options_label_texts_2 = {
         _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
         _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Only OpenGL"), _("Hide overlay"), _("Turn off font shadow")
     };
-    private string[] battery_label_texts_2 = {
+    string[] battery_label_texts_2 = {
         _("Check battery"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
     };
-    private string[] other_extra_label_texts_2 = {
+    string[] other_extra_label_texts_2 = {
         _("Show media player"), _("Display network"), _("Excludes histogram"), _("Log information"), _("Auto upload logs")
     };
-    private string[] inform_label_texts_2 = {
+    string[] inform_label_texts_2 = {
         _("Show FPS"), _("Color text"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
         _("Graph to histogram"), _("Display frame count"), _("Show temperature °F"), _("Present mode")
     };
@@ -223,9 +223,8 @@ public class MangoJuice : Adw.Application {
     public string[] opengl_config_values = { "", "-1", "0", "1", "n" };
 
     // Other Variables
-    private bool test_button_pressed = false;
+    bool test_button_pressed = false;
     public Gee.ArrayList<Label> label_pool = new Gee.ArrayList<Label> ();
-
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -512,7 +511,7 @@ public class MangoJuice : Adw.Application {
         scale.set_increments (1, 1);
     }
 
-    private bool ignore_scroll (double dx, double dy) {
+    bool ignore_scroll (double dx, double dy) {
         return true;
     }
 
@@ -755,7 +754,7 @@ public class MangoJuice : Adw.Application {
         }
         pair3.append (reset_button);
         custom_command_flow_box.insert (pair3, -1);
-    
+
         extras_box.append (custom_command_flow_box);
 
         var customize_label = create_label (_("Customize"), Align.START, { "title-4" }, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN);
@@ -766,7 +765,7 @@ public class MangoJuice : Adw.Application {
         custom_text_center_entry.changed.connect (() => {
             SaveStates.save_states_to_file (this);
         });
-    
+
         var custom_text_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
@@ -884,7 +883,7 @@ public class MangoJuice : Adw.Application {
         position_dropdown.notify["selected-item"].connect (() => {
             SaveStates.update_position_in_file ((position_dropdown.selected_item as StringObject)?.get_string () ?? "");
         });
-    
+
         var position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         position_pair.append (new Label (_("Position")));
         position_pair.append (position_dropdown);
@@ -909,17 +908,17 @@ public class MangoJuice : Adw.Application {
             margin_top = FLOW_BOX_MARGIN,
             margin_bottom = FLOW_BOX_MARGIN
         };
-        toggle_hud_entry.set_size_request(20, -1);
+        toggle_hud_entry.set_size_request (20, -1);
         toggle_hud_entry.changed.connect (() => {
             SaveStates.update_toggle_hud_in_file (toggle_hud_entry.text);
             SaveStates.save_states_to_file (this);
         });
-    
+
         var toggle_hud_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         toggle_hud_pair.append (new Label (_("Hide the HUD")));
         toggle_hud_pair.append (toggle_hud_entry);
         combined_flow_box.insert (toggle_hud_pair, -1);
-    
+
         visual_box.append (combined_flow_box);
 
         var offset_x_widget = create_scale_entry_widget (_("Offset X"), _("Horizontal offset"), 0, 1500, 0);
@@ -933,7 +932,7 @@ public class MangoJuice : Adw.Application {
             offset_x_value_label.label = "%d".printf ((int)offset_x_scale.get_value ());
             SaveStates.update_offset_x_in_file ("%d".printf ((int)offset_x_scale.get_value ()));
         });
-    
+
         var offset_y_widget = create_scale_entry_widget (_("Offset Y"), _("Vertical offset"), 0, 1500, 0);
         offset_y_scale = offset_y_widget.scale;
         offset_y_entry = offset_y_widget.entry;
@@ -945,7 +944,7 @@ public class MangoJuice : Adw.Application {
             offset_y_value_label.label = "%d".printf ((int)offset_y_scale.get_value ());
             SaveStates.update_offset_y_in_file ("%d".printf ((int)offset_y_scale.get_value ()));
         });
-    
+
         var offset_flow_box = new FlowBox () {
             row_spacing = FLOW_BOX_ROW_SPACING,
             max_children_per_line = 2,
@@ -954,15 +953,15 @@ public class MangoJuice : Adw.Application {
             margin_bottom = FLOW_BOX_MARGIN,
             selection_mode = SelectionMode.NONE
         };
-    
+
         var offset_x_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         offset_x_pair.append (offset_x_widget.widget);
         offset_flow_box.insert (offset_x_pair, -1);
-    
+
         var offset_y_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         offset_y_pair.append (offset_y_widget.widget);
         offset_flow_box.insert (offset_y_pair, -1);
-    
+
         visual_box.append (offset_flow_box);
 
         var fonts_label = create_label (_("Font"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
@@ -978,7 +977,7 @@ public class MangoJuice : Adw.Application {
         });
 
         initialize_font_dropdown (visual_box);
-    
+
         var fonts_flow_box = new FlowBox () {
             row_spacing = FLOW_BOX_ROW_SPACING,
             hexpand = true,
@@ -989,15 +988,15 @@ public class MangoJuice : Adw.Application {
             margin_bottom = FLOW_BOX_MARGIN,
             selection_mode = SelectionMode.NONE
         };
-    
+
         var font_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         font_pair.append (font_dropdown);
         fonts_flow_box.insert (font_pair, -1);
-    
+
         var size_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         size_pair.append (font_size_widget.widget);
         fonts_flow_box.insert (size_pair, -1);
-    
+
         visual_box.append (fonts_flow_box);
 
         initialize_color_controls (visual_box);
@@ -1006,7 +1005,7 @@ public class MangoJuice : Adw.Application {
     void initialize_color_controls (Box visual_box) {
         var color_label = create_label (_("Color"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (color_label);
-    
+
         var color_flow_box = new FlowBox () {
             homogeneous = true,
             max_children_per_line = 9,
@@ -1018,9 +1017,9 @@ public class MangoJuice : Adw.Application {
             margin_bottom = FLOW_BOX_MARGIN,
             selection_mode = SelectionMode.NONE
         };
-    
+
         var color_dialog = new ColorDialog ();
-    
+
         gpu_color_button = new ColorDialogButton (color_dialog);
         var default_gpu_color = Gdk.RGBA ();
         default_gpu_color.parse ("#2e9762");
@@ -1029,7 +1028,7 @@ public class MangoJuice : Adw.Application {
             var rgba = gpu_color_button.get_rgba ().copy ();
             SaveStates.update_gpu_color_in_file (rgba_to_hex (rgba));
         });
-    
+
         cpu_color_button = new ColorDialogButton (color_dialog);
         var default_cpu_color = Gdk.RGBA ();
         default_cpu_color.parse ("#2e97cb");
@@ -1038,21 +1037,21 @@ public class MangoJuice : Adw.Application {
             var rgba = cpu_color_button.get_rgba ().copy ();
             SaveStates.update_cpu_color_in_file (rgba_to_hex (rgba));
         });
-    
+
         gpu_text_entry = new Entry ();
         var gpu_text_entry_box = create_entry_with_clear_button (gpu_text_entry, _("GPU custom name"), "");
         gpu_text_entry.changed.connect (() => {
             SaveStates.update_gpu_text_in_file (gpu_text_entry.text);
             SaveStates.save_states_to_file (this);
         });
-    
+
         cpu_text_entry = new Entry ();
         var cpu_text_entry_box = create_entry_with_clear_button (cpu_text_entry, _("CPU custom name"), "");
         cpu_text_entry.changed.connect (() => {
             SaveStates.update_cpu_text_in_file (cpu_text_entry.text);
             SaveStates.save_states_to_file (this);
         });
-    
+
         var color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
@@ -1069,14 +1068,14 @@ public class MangoJuice : Adw.Application {
             tooltip_text = _("Reset to default"),
             visible = false
         };
-        clear_fps_button.add_css_class ("flat"); 
+        clear_fps_button.add_css_class ("flat");
 
         clear_fps_button.clicked.connect (() => {
             fps_value_entry_1.text = "30";
             fps_value_entry_2.text = "60";
             clear_fps_button.visible = false;
         });
-    
+
         fps_value_entry_1 = new Entry () {
             placeholder_text = _("Medium"),
             text = "30",
@@ -1087,7 +1086,7 @@ public class MangoJuice : Adw.Application {
             clear_fps_button.visible = (fps_value_entry_1.text != "30" || fps_value_entry_2.text != "60");
             SaveStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
         });
-    
+
         fps_value_entry_2 = new Entry () {
             placeholder_text = _("High"),
             text = "60",
@@ -1098,15 +1097,15 @@ public class MangoJuice : Adw.Application {
             clear_fps_button.visible = (fps_value_entry_1.text != "30" || fps_value_entry_2.text != "60");
             SaveStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
         });
-    
+
         var fps_entry_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         fps_entry_box.append (fps_value_entry_1);
         fps_entry_box.append (fps_value_entry_2);
         fps_entry_box.append (clear_fps_button);
-    
+
         var fps_clarge_label = create_label (_("FPS color levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (fps_clarge_label);
-    
+
         var color_dialog_fps = new ColorDialog ();
         fps_color_button_1 = new ColorDialogButton (color_dialog_fps);
         var default_fps_color_1 = Gdk.RGBA ();
@@ -1116,7 +1115,7 @@ public class MangoJuice : Adw.Application {
             var rgba = fps_color_button_1.get_rgba ().copy ();
             SaveStates.update_fps_color_in_file (rgba_to_hex (rgba), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (fps_color_button_3.get_rgba ()));
         });
-    
+
         fps_color_button_2 = new ColorDialogButton (color_dialog_fps);
         var default_fps_color_2 = Gdk.RGBA ();
         default_fps_color_2.parse ("#ffaa7f");
@@ -1125,7 +1124,7 @@ public class MangoJuice : Adw.Application {
             var rgba = fps_color_button_2.get_rgba ().copy ();
             SaveStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (fps_color_button_3.get_rgba ()));
         });
-    
+
         fps_color_button_3 = new ColorDialogButton (color_dialog_fps);
         var default_fps_color_3 = Gdk.RGBA ();
         default_fps_color_3.parse ("#92e79a");
@@ -1134,7 +1133,7 @@ public class MangoJuice : Adw.Application {
             var rgba = fps_color_button_3.get_rgba ().copy ();
             SaveStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
-    
+
         var fps_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
@@ -1146,10 +1145,10 @@ public class MangoJuice : Adw.Application {
         fps_color_box.append (fps_color_button_2);
         fps_color_box.append (fps_color_button_3);
         visual_box.append (fps_color_box);
-    
+
         var gpu_load_clarge_label = create_label (_("The color of GPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (gpu_load_clarge_label);
-    
+
         var clear_gpu_load_button = new Button.from_icon_name ("edit-clear-symbolic") {
             tooltip_text = _("Reset to default"),
             visible = false
@@ -1160,7 +1159,7 @@ public class MangoJuice : Adw.Application {
             gpu_load_value_entry_2.text = "90";
             clear_gpu_load_button.visible = false;
         });
-    
+
         gpu_load_value_entry_1 = new Entry () {
             placeholder_text = _("Medium"),
             text = "60",
@@ -1187,7 +1186,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_entry_box.append (gpu_load_value_entry_1);
         gpu_load_entry_box.append (gpu_load_value_entry_2);
         gpu_load_entry_box.append (clear_gpu_load_button);
-    
+
         var color_dialog_gpu_load = new ColorDialog ();
         gpu_load_color_button_1 = new ColorDialogButton (color_dialog_gpu_load);
         var default_gpu_load_color_1 = Gdk.RGBA ();
@@ -1197,7 +1196,7 @@ public class MangoJuice : Adw.Application {
             var rgba = gpu_load_color_button_1.get_rgba ().copy ();
             SaveStates.update_gpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
         });
-    
+
         gpu_load_color_button_2 = new ColorDialogButton (color_dialog_gpu_load);
         var default_gpu_load_color_2 = Gdk.RGBA ();
         default_gpu_load_color_2.parse ("#ffaa7f");
@@ -1206,7 +1205,7 @@ public class MangoJuice : Adw.Application {
             var rgba = gpu_load_color_button_2.get_rgba ().copy ();
             SaveStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
         });
-    
+
         gpu_load_color_button_3 = new ColorDialogButton (color_dialog_gpu_load);
         var default_gpu_load_color_3 = Gdk.RGBA ();
         default_gpu_load_color_3.parse ("#cc0000");
@@ -1215,7 +1214,7 @@ public class MangoJuice : Adw.Application {
             var rgba = gpu_load_color_button_3.get_rgba ().copy ();
             SaveStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
-    
+
         var gpu_load_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
@@ -1241,7 +1240,7 @@ public class MangoJuice : Adw.Application {
             cpu_load_value_entry_2.text = "90";
             clear_cpu_load_button.visible = false;
         });
-    
+
         cpu_load_value_entry_1 = new Entry () {
             placeholder_text = _("Medium"),
             text = "60",
@@ -1252,7 +1251,7 @@ public class MangoJuice : Adw.Application {
             clear_cpu_load_button.visible = (cpu_load_value_entry_1.text != "60" || cpu_load_value_entry_2.text != "90");
             SaveStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
         });
-    
+
         cpu_load_value_entry_2 = new Entry () {
             placeholder_text = _("High"),
             text = "90",
@@ -1263,12 +1262,12 @@ public class MangoJuice : Adw.Application {
             clear_cpu_load_button.visible = (cpu_load_value_entry_1.text != "60" || cpu_load_value_entry_2.text != "90");
             SaveStates.update_cpu_load_value_in_file (cpu_load_value_entry_1.text, cpu_load_value_entry_2.text);
         });
-    
+
         var cpu_load_entry_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         cpu_load_entry_box.append (cpu_load_value_entry_1);
         cpu_load_entry_box.append (cpu_load_value_entry_2);
         cpu_load_entry_box.append (clear_cpu_load_button);
-    
+
         var color_dialog_cpu_load = new ColorDialog ();
         cpu_load_color_button_1 = new ColorDialogButton (color_dialog_cpu_load);
         var default_cpu_load_color_1 = Gdk.RGBA ();
@@ -1278,7 +1277,7 @@ public class MangoJuice : Adw.Application {
             var rgba = cpu_load_color_button_1.get_rgba ().copy ();
             SaveStates.update_cpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
         });
-    
+
         cpu_load_color_button_2 = new ColorDialogButton (color_dialog_cpu_load);
         var default_cpu_load_color_2 = Gdk.RGBA ();
         default_cpu_load_color_2.parse ("#ffaa7f");
@@ -1287,7 +1286,7 @@ public class MangoJuice : Adw.Application {
             var rgba = cpu_load_color_button_2.get_rgba ().copy ();
             SaveStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
         });
-    
+
         cpu_load_color_button_3 = new ColorDialogButton (color_dialog_cpu_load);
         var default_cpu_load_color_3 = Gdk.RGBA ();
         default_cpu_load_color_3.parse ("#cc0000");
@@ -1296,7 +1295,7 @@ public class MangoJuice : Adw.Application {
             var rgba = cpu_load_color_button_3.get_rgba ().copy ();
             SaveStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
         });
-    
+
         var cpu_load_color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
@@ -1321,7 +1320,7 @@ public class MangoJuice : Adw.Application {
             var rgba = background_color_button.get_rgba ().copy ();
             SaveStates.update_background_color_in_file (rgba_to_hex (rgba));
         });
-           
+
         frametime_color_button = new ColorDialogButton (color_dialog);
         var default_frametime_color = Gdk.RGBA ();
         default_frametime_color.parse ("#00ff00");
@@ -1330,7 +1329,7 @@ public class MangoJuice : Adw.Application {
             var rgba = frametime_color_button.get_rgba ().copy ();
             SaveStates.update_frametime_color_in_file (rgba_to_hex (rgba));
         });
-           
+
         vram_color_button = new ColorDialogButton (color_dialog);
         var default_vram_color = Gdk.RGBA ();
         default_vram_color.parse ("#ad64c1");
@@ -1339,7 +1338,7 @@ public class MangoJuice : Adw.Application {
             var rgba = vram_color_button.get_rgba ().copy ();
             SaveStates.update_vram_color_in_file (rgba_to_hex (rgba));
         });
-           
+
         ram_color_button = new ColorDialogButton (color_dialog);
         var default_ram_color = Gdk.RGBA ();
         default_ram_color.parse ("#c26693");
@@ -1348,7 +1347,7 @@ public class MangoJuice : Adw.Application {
             var rgba = ram_color_button.get_rgba ().copy ();
             SaveStates.update_ram_color_in_file (rgba_to_hex (rgba));
         });
-           
+
         wine_color_button = new ColorDialogButton (color_dialog);
         var default_wine_color = Gdk.RGBA ();
         default_wine_color.parse ("#eb5b5b");
@@ -1357,7 +1356,7 @@ public class MangoJuice : Adw.Application {
             var rgba = wine_color_button.get_rgba ().copy ();
             SaveStates.update_wine_color_in_file (rgba_to_hex (rgba));
         });
-           
+
         engine_color_button = new ColorDialogButton (color_dialog);
         var default_engine_color = Gdk.RGBA ();
         default_engine_color.parse ("#eb5b5b");
@@ -1366,7 +1365,7 @@ public class MangoJuice : Adw.Application {
             var rgba = engine_color_button.get_rgba ().copy ();
             SaveStates.update_engine_color_in_file (rgba_to_hex (rgba));
         });
-           
+
         text_color_button = new ColorDialogButton (color_dialog);
         var default_text_color = Gdk.RGBA ();
         default_text_color.parse ("#FFFFFF");
@@ -1375,7 +1374,7 @@ public class MangoJuice : Adw.Application {
             var rgba = text_color_button.get_rgba ().copy ();
             SaveStates.update_text_color_in_file (rgba_to_hex (rgba));
         });
-           
+
         media_player_color_button = new ColorDialogButton (color_dialog);
         var default_media_player_color = Gdk.RGBA ();
         default_media_player_color.parse ("#FFFFFF");
@@ -1384,7 +1383,7 @@ public class MangoJuice : Adw.Application {
             var rgba = media_player_color_button.get_rgba ().copy ();
             SaveStates.update_media_player_color_in_file (rgba_to_hex (rgba));
         });
-           
+
         network_color_button = new ColorDialogButton (color_dialog);
         var default_network_color = Gdk.RGBA ();
         default_network_color.parse ("#e07b85");
@@ -1393,12 +1392,12 @@ public class MangoJuice : Adw.Application {
             var rgba = network_color_button.get_rgba ().copy ();
             SaveStates.update_network_color_in_file (rgba_to_hex (rgba));
         });
-           
+
         ColorDialogButton[] color_buttons = { background_color_button, frametime_color_button, vram_color_button, ram_color_button, wine_color_button, engine_color_button, media_player_color_button, network_color_button, text_color_button };
         string[] color_labels = { _("Background"), _("Frametime"), _("VRAM"), _("RAM"), _("Wine"), _("Engine"), _("Media"), _("Network"), _("Text") };
-           
+
         assert (color_buttons.length == color_labels.length);
-           
+
         for (int i = 0; i < color_buttons.length; i++) {
             var label = new Label (color_labels[i]);
             label.set_halign (Align.START);
@@ -1408,7 +1407,7 @@ public class MangoJuice : Adw.Application {
             var box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
             box.append (color_buttons[i]);
             box.append (label);
-           
+
             color_flow_box.insert (box, -1);
         }
     }
@@ -1416,10 +1415,10 @@ public class MangoJuice : Adw.Application {
     void initialize_font_dropdown (Box visual_box) {
         var font_model = new Gtk.StringList (null);
         font_model.append (_("Default"));
-    
+
         var fonts = find_fonts ();
         var font_names = new Gee.ArrayList<string> ();
-    
+
         foreach (var font_path in fonts) {
             var font_name = Path.get_basename (font_path);
             font_names.add (font_name);
@@ -1459,18 +1458,18 @@ public class MangoJuice : Adw.Application {
             wine_label.add_css_class ("dim-label");
             wine_label.set_visible (false);
             wine_label.set_halign (Align.END);
-    
+
             box.append (label);
             box.append (wine_label);
             list_item.set_child (box);
         });
-    
+
         factory.bind.connect ((item) => {
             var list_item = item as Gtk.ListItem;
             var box = list_item.get_child () as Box;
             var label = box.get_first_child () as Label;
             var wine_label = label.get_next_sibling () as Label;
-    
+
             var font_name = (list_item.get_item () as StringObject)?.get_string () ?? "";
             label.label = font_name;
 
@@ -1499,7 +1498,7 @@ public class MangoJuice : Adw.Application {
                 string[] lines = standard_output.split ("\n");
 
                 var regex = new Regex (".*\\.(ttf|otf|ttc)$", RegexCompileFlags.OPTIMIZE);
-    
+
                 foreach (var line in lines) {
                     if (line.strip () != "") {
                         string[] parts = line.split (":");
@@ -1768,7 +1767,7 @@ public class MangoJuice : Adw.Application {
         fps_sampling_period_entry = fps_sampling_period_widget.entry;
         
         bool is_updating = false;
-        
+
         fps_sampling_period_scale.value_changed.connect (() => {
             if (!is_updating) {
                 is_updating = true;
@@ -1778,7 +1777,7 @@ public class MangoJuice : Adw.Application {
                 is_updating = false;
             }
         });
-        
+
         fps_sampling_period_entry.changed.connect (() => {
             if (!is_updating) {
                 is_updating = true;
@@ -1831,7 +1830,7 @@ public class MangoJuice : Adw.Application {
         restart_vkcube_or_glxgears ();
     }
 
-    private bool is_vkcube_running () {
+    bool is_vkcube_running () {
         try {
             string[] argv = { "pgrep", "vkcube" };
             int exit_status;
@@ -1846,7 +1845,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private bool is_glxgears_running () {
+    bool is_glxgears_running () {
         try {
             string[] argv = { "pgrep", "glxgears" };
             int exit_status;
@@ -1866,11 +1865,11 @@ public class MangoJuice : Adw.Application {
             try {
                 var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
                 var config_file = config_dir.get_child ("MangoHud.conf");
-    
+
                 if (!config_file.query_exists ()) {
                     SaveStates.save_states_to_file (this);
                 }
-    
+
                 if (is_vkcube_available ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
                     Process.spawn_command_line_async ("mangohud vkcube");
@@ -1878,8 +1877,8 @@ public class MangoJuice : Adw.Application {
                     Process.spawn_command_line_sync ("pkill glxgears");
                     Process.spawn_command_line_async ("mangohud glxgears");
                 }
-    
-                Idle.add(() => {
+
+                Idle.add (() => {
                     test_button_pressed = true;
                     return false;
                 });
@@ -1981,7 +1980,7 @@ public class MangoJuice : Adw.Application {
         Process.exit (0);
     }
 
-    private bool is_vkcube_available () {
+    bool is_vkcube_available () {
         try {
             string[] argv = { "which", "vkcube" };
             int exit_status;
@@ -1998,7 +1997,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private bool is_glxgears_available () {
+    bool is_glxgears_available () {
         try {
             string[] argv = { "which", "glxgears" };
             int exit_status;
@@ -2090,7 +2089,7 @@ public class MangoJuice : Adw.Application {
         LoadStates.load_states_from_file (this);
     }
 
-    private struct ScaleEntryWidget {
+    struct ScaleEntryWidget {
         public Scale scale;
         public Entry entry;
         public Box widget;
@@ -2109,7 +2108,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
+    ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
         ScaleEntryWidget result = ScaleEntryWidget ();
 
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
@@ -2185,7 +2184,7 @@ public class MangoJuice : Adw.Application {
         return result;
     }
 
-    private Label create_label (string text, Align halign = Align.START, string[] css_classes = {}, int margin_start = 0, int margin_end = 0, int margin_top = 0, int margin_bottom = 0) {
+    Label create_label (string text, Align halign = Align.START, string[] css_classes = {}, int margin_start = 0, int margin_end = 0, int margin_top = 0, int margin_bottom = 0) {
         var label = new Label (text);
         label.set_halign (halign);
 
@@ -2233,7 +2232,7 @@ public class MangoJuice : Adw.Application {
 
     void on_mangohud_global_button_clicked () {
         bool success = false;
-    
+
         if (mangohud_global_enabled) {
             try {
                 Process.spawn_command_line_sync ("pkexec sed -i '/MANGOHUD=1/d' /etc/environment");
@@ -2261,7 +2260,7 @@ public class MangoJuice : Adw.Application {
                 stderr.printf ("Error adding MANGOHUD to /etc/environment: %s\n", e.message);
             }
         }
-    
+
         if (success) {
             check_mangohud_global_status ();
             show_restart_warning ();
@@ -2275,7 +2274,7 @@ public class MangoJuice : Adw.Application {
             stderr.printf("Invalid preset value: %d. Allowed range is -1 to 5.\n", preset_value);
             return;
         }
-    
+
         var file = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud").get_child("MangoHud.conf");
     
         try {
@@ -2320,7 +2319,7 @@ public class MangoJuice : Adw.Application {
                 string standard_output;
                 string standard_error;
                 Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-    
+
                 bool enabled = (exit_status == 0);
 
                 Idle.add(() => {
@@ -2338,13 +2337,13 @@ public class MangoJuice : Adw.Application {
         });
     }
 
-    private async void add_other_box_if_needed () {
+    async void add_other_box_if_needed () {
         if (!is_flatpak () && yield check_vkbasalt_installed_async ()) {
             view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "view-grid-symbolic";
         }
     }
 
-    private async bool check_vkbasalt_installed_async () {
+    async bool check_vkbasalt_installed_async () {
         string[] paths = { "/usr/lib/libvkbasalt.so", "/usr/lib/x86_64-linux-gnu/libvkbasalt.so", "/usr/local/lib/libvkbasalt.so" };
         foreach (var path in paths) {
             if (FileUtils.test (path, FileTest.EXISTS)) {
@@ -2396,11 +2395,11 @@ public class MangoJuice : Adw.Application {
         return "%02x%02x%02x".printf ((int) (rgba.red * 255), (int) (rgba.green * 255), (int) (rgba.blue * 255));
     }
 
-    private bool is_flatpak () {
+    bool is_flatpak () {
         return Environment.get_variable ("FLATPAK_ID") != null;
     }
 
-    private static int main (string[] args) {
+    static int main (string[] args) {
         Intl.setlocale (LocaleCategory.ALL, "");
         Intl.textdomain ("mangojuice");
         Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
