@@ -568,7 +568,9 @@ public class MangoJuice : Adw.Application {
             gpu_switches[i].notify["active"].connect (() => {
                 if (index == 0 && !gpu_switches[0].active) {
                     for (int j = 1; j < gpu_switches.length; j++) {
-                        gpu_switches[j].active = false;
+                        if (j != 2 && j != 14) {
+                            gpu_switches[j].active = false;
+                        }
                     }
                 }
                 update_gpu_stats_state ();
