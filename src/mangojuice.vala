@@ -285,7 +285,6 @@ public class MangoJuice : Adw.Application {
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
 
-
         if (Config.IS_DEVEL) {
             window.add_css_class ("devel");
         }
@@ -506,8 +505,8 @@ public class MangoJuice : Adw.Application {
 
     protected override void shutdown () {
         try {
-            Process.spawn_command_line_sync ("pkill vkcube");
-            Process.spawn_command_line_sync ("pkill glxgears");
+            Process.spawn_command_line_async ("pkill vkcube");
+            Process.spawn_command_line_async ("pkill glxgears");
         } catch (Error e) {
             stderr.printf ("Error closing test apps: %s\n", e.message);
         }
