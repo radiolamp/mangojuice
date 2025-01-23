@@ -236,6 +236,8 @@ public class MangoJuice : Adw.Application {
     public Label fps_sampling_period_value_label;
     public Button mangohud_global_button;
     private bool mangohud_global_enabled = false;
+    private ScrolledWindow other_scrolled_window;
+    private ViewStack view_stack;
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -280,7 +282,6 @@ public class MangoJuice : Adw.Application {
     }
 
     protected override void activate () {
-
         var window = new Adw.ApplicationWindow (this);
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
@@ -292,7 +293,8 @@ public class MangoJuice : Adw.Application {
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
 
-        var view_stack = new ViewStack ();
+        view_stack = new ViewStack ();
+
         var toolbar_view_switcher = new ViewSwitcher ();
         toolbar_view_switcher.stack = view_stack;
         toolbar_view_switcher.policy = ViewSwitcherPolicy.WIDE;
@@ -314,7 +316,6 @@ public class MangoJuice : Adw.Application {
         var breakpoint_550px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 550px"));
 
         breakpoint_800px.add_setter (toolbar_view_switcher, "policy", ViewSwitcherPolicy.NARROW);
-
         breakpoint_550px.add_setter (toolbar_view_switcher, "policy", ViewSwitcherPolicy.NARROW);
         breakpoint_550px.add_setter (bottom_headerbar, "visible", true);
         breakpoint_550px.add_setter (toolbar_view_switcher, "visible", false);
@@ -351,7 +352,7 @@ public class MangoJuice : Adw.Application {
         visual_scrolled_window.set_vexpand (true);
         visual_scrolled_window.set_child (visual_box);
 
-        var other_scrolled_window = new ScrolledWindow ();
+        other_scrolled_window = new ScrolledWindow ();
         other_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         other_scrolled_window.set_vexpand (true);
         other_scrolled_window.set_child (other_box);
@@ -364,18 +365,14 @@ public class MangoJuice : Adw.Application {
             view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "application-x-addon-symbolic";
             view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "emblem-system-symbolic";
             view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "preferences-desktop-appearance-symbolic";
-            if (!is_flatpak () && check_vkbasalt_installed ()) {
-                view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "view-grid-symbolic";
-            }
         } else {
             view_stack.add_titled (metrics_scrolled_window, "metrics_box", _("Metrics")).icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
             view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
             view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
             view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
-            if (!is_flatpak () && check_vkbasalt_installed ()) {
-                view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "io.github.radiolamp.mangojuice-other-symbolic";
-            }
         }
+
+        add_other_box_if_needed.begin ();
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
@@ -426,14 +423,7 @@ public class MangoJuice : Adw.Application {
         });
 
         check_mangohud_global_status ();
-
-        new Thread<void>("config-loader", () => {
-            LoadStates.load_states_from_file(this);
-        });
-
-        toolbar_view_switcher.add_css_class ("viewswitcher");
-        var style_manager = Adw.StyleManager.get_default ();
-        style_manager.set_color_scheme (Adw.ColorScheme.DEFAULT);
+        LoadStates.load_states_from_file (this);
 
         if (!is_vkcube_available () && !is_glxgears_available ()) {
             test_button.set_visible (false);
@@ -602,8 +592,8 @@ public class MangoJuice : Adw.Application {
     void add_switch_handler (Switch[] switches) {
         for (int i = 0; i < switches.length; i++) {
             switches[i].notify["active"].connect (() => {
-                new Thread<void>("save-config", () => {
-                    SaveStates.save_states_to_file(this);
+                new Thread<void> ("save-config", () => {
+                    SaveStates.save_states_to_file (this);
                 });
             });
         }
@@ -653,14 +643,14 @@ public class MangoJuice : Adw.Application {
         entry.changed.connect (() => {
             clear_button.visible = entry.text != default_value;
         });
-    
+
         var entry_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         entry_box.append (entry);
         entry_box.append (clear_button);
-    
+
         return entry_box;
     }
-    
+
     void initialize_custom_controls (Box extras_box, Box visual_box) {
         custom_command_entry = new Entry ();
         var custom_command_box = create_entry_with_clear_button (custom_command_entry, _("Mangohud variable"), "");
@@ -754,7 +744,7 @@ public class MangoJuice : Adw.Application {
             margin_bottom = FLOW_BOX_MARGIN,
             selection_mode = SelectionMode.NONE
         };
-    
+
         var pair1 = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         var logs_key_label = new Label (_("Logs key")) {
             ellipsize = Pango.EllipsizeMode.END,
@@ -770,7 +760,7 @@ public class MangoJuice : Adw.Application {
         pair2.append (custom_logs_path_box);
         pair2.append (logs_path_button);
         custom_command_flow_box.insert (pair2, -1);
-    
+
         var pair3 = new Box (Orientation.HORIZONTAL, 5);
         if (!is_flatpak ()) {
             pair3.append (intel_power_fix_button);
@@ -805,36 +795,36 @@ public class MangoJuice : Adw.Application {
             margin_end = 10,
             selection_mode = SelectionMode.NONE
         };
-    
+
         var button1 = new Button.with_label (_("Profile 1"));
         button1.set_size_request (160, -1);
         button1.clicked.connect (() => {
             set_preset (1);
             restart_vkcube_or_glxgears ();
         });
-    
+
         var button2 = new Button.with_label (_("Profile 2"));
         button2.clicked.connect (() => {
             set_preset (-1);
             restart_vkcube_or_glxgears ();
         });
-    
+
         var button3 = new Button.with_label (_("Profile 3"));
         button3.clicked.connect (() => {
             set_preset (4);
             restart_vkcube_or_glxgears ();
         });
-    
+
         var button4 = new Button.with_label (_("Restore profile"));
         button4.clicked.connect (() => {
             SaveStates.save_states_to_file (this);
         });
-    
+
         button_flow_box.insert (button1, -1);
         button_flow_box.insert (button2, -1);
         button_flow_box.insert (button3, -1);
         button_flow_box.insert (button4, -1);
-    
+
         visual_box.append (button_flow_box);
 
         var combined_flow_box = new FlowBox () {
@@ -1578,7 +1568,7 @@ public class MangoJuice : Adw.Application {
             text_box.set_size_request (160, -1); // Ширина 160 пикселей
 
             var label1 = new Label (null);
-            label1.set_markup ("<b>%s</b>".printf (label_texts[i])); // Жирный текст
+            label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
             label1.set_halign (Align.START);
             label1.set_hexpand (false);
             label1.set_ellipsize (Pango.EllipsizeMode.END);
@@ -1599,7 +1589,7 @@ public class MangoJuice : Adw.Application {
             text_box.append (label2);
 
             row_box.append (switches[i]);
-            row_box.append (text_box); // Добавляем контейнер с двумя строками текста
+            row_box.append (text_box);
             flow_box.insert (row_box, -1);
         }
 
@@ -2357,20 +2347,22 @@ public class MangoJuice : Adw.Application {
         });
     }
 
-    private bool check_vkbasalt_installed () {
-        try {
-            string[] argv = { "ls", "/usr/lib/libvkbasalt.so" };
-            int exit_status;
-            string standard_output;
-            string standard_error;
-            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-            return exit_status == 0;
-        } catch (Error e) {
-            stderr.printf ("Error checking for libvkbasalt.so: %s\n", e.message);
-            return false;
+    private async void add_other_box_if_needed () {
+        if (!is_flatpak () && yield check_vkbasalt_installed_async ()) {
+            view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "view-grid-symbolic";
         }
     }
- 
+
+    private async bool check_vkbasalt_installed_async () {
+        string[] paths = { "/usr/lib/libvkbasalt.so", "/usr/lib/x86_64-linux-gnu/libvkbasalt.so", "/usr/local/lib/libvkbasalt.so" };
+        foreach (var path in paths) {
+            if (FileUtils.test (path, FileTest.EXISTS)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void validate_numeric_entry (Entry entry, int min_value = int.MIN, int max_value = int.MAX) {
         entry.input_purpose = Gtk.InputPurpose.NUMBER;
         entry.set_max_length (4);
