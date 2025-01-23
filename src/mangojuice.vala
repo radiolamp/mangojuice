@@ -364,7 +364,7 @@ public class MangoJuice : Adw.Application {
             view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "application-x-addon-symbolic";
             view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "emblem-system-symbolic";
             view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "preferences-desktop-appearance-symbolic";
-            if (!is_flatpak ()) {
+            if (!is_flatpak () && check_vkbasalt_installed ()) {
                 view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "view-grid-symbolic";
             }
         } else {
@@ -372,18 +372,9 @@ public class MangoJuice : Adw.Application {
             view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
             view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
             view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
-            if (!is_flatpak ()) {
+            if (!is_flatpak () && check_vkbasalt_installed ()) {
                 view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "io.github.radiolamp.mangojuice-other-symbolic";
             }
-        }
-
-        bool is_vkbasalt_installed = check_vkbasalt_installed ();
-        if (is_vkbasalt_installed) {
-            other_box = new OtherBox ();
-            other_scrolled_window = new ScrolledWindow ();
-            other_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
-            other_scrolled_window.set_vexpand (true);
-            other_scrolled_window.set_child (other_box);
         }
 
         var header_bar = new Adw.HeaderBar ();
@@ -2368,17 +2359,12 @@ public class MangoJuice : Adw.Application {
 
     private bool check_vkbasalt_installed () {
         try {
-            string[] argv = { "find", "/usr", "-name", "libvkbasalt.so" };
+            string[] argv = { "ls", "/usr/lib/libvkbasalt.so" };
             int exit_status;
             string standard_output;
             string standard_error;
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-
-            if (standard_output.contains ("/libvkbasalt.so")) {
-                return true;
-            } else {
-                return false;
-            }
+            return exit_status == 0;
         } catch (Error e) {
             stderr.printf ("Error checking for libvkbasalt.so: %s\n", e.message);
             return false;
