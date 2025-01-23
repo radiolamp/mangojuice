@@ -1499,22 +1499,26 @@ public class MangoJuice : Adw.Application {
 
     public Gee.List<string> find_fonts () {
         var fonts = new Gee.ArrayList<string> ();
-
         try {
             string[] argv = { "fc-list", ":", "file" };
             int exit_status;
             string standard_output;
             string standard_error;
-            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
 
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+    
             if (exit_status == 0) {
                 string[] lines = standard_output.split ("\n");
+
+                var regex = new Regex (".*\\.(ttf|otf|ttc)$", RegexCompileFlags.OPTIMIZE);
+    
                 foreach (var line in lines) {
                     if (line.strip () != "") {
                         string[] parts = line.split (":");
                         if (parts.length > 0) {
                             string font_path = parts[0].strip ();
-                            if (font_path.has_suffix (".ttf") || font_path.has_suffix (".otf")) {
+
+                            if (regex.match (font_path)) {
                                 fonts.add (font_path);
                             }
                         }
@@ -1526,7 +1530,6 @@ public class MangoJuice : Adw.Application {
         } catch (Error e) {
             stderr.printf ("Error when searching for fonts: %s\n", e.message);
         }
-
         return fonts;
     }
 
