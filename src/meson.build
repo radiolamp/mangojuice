@@ -12,7 +12,8 @@ sources = files(
     'other/OtherBox.vala',
     'other/other_save.vala',
     'other/other_load.vala',
-    'load_states.vala'
+    'load_states.vala',
+    'reset_manager.vala'
 )
 
 configure_file(output: 'config.h', configuration: conf)

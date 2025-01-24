@@ -224,6 +224,7 @@ public class MangoJuice : Adw.Application {
 
     // Other Variables
     bool test_button_pressed = false;
+    public ResetManager reset_manager;
     public Gee.ArrayList<Label> label_pool = new Gee.ArrayList<Label> ();
 
     public MangoJuice () {
@@ -404,6 +405,7 @@ public class MangoJuice : Adw.Application {
         window.present ();
 
         GLib.Idle.add (() => {
+            reset_manager = new ResetManager (this);
             content_box.append (bottom_headerbar);
             initialize_rest_of_ui (view_stack);
             return false;
@@ -711,9 +713,8 @@ public class MangoJuice : Adw.Application {
         };
         reset_button.add_css_class ("destructive-action");
         reset_button.clicked.connect (() => {
-            delete_mangohub_conf ();
             delete_vkbasalt_conf ();
-            restart_application ();
+            reset_manager.reset_all_widgets ();
         });
 
         blacklist_entry = new Entry ();
@@ -1903,21 +1904,6 @@ public class MangoJuice : Adw.Application {
         });
     }
 
-    void delete_mangohub_conf () {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
-        if (file.query_exists ()) {
-            try {
-                file.delete ();
-                warning ("MangoHud.conf file deleted.");
-            } catch (Error e) {
-                stderr.printf ("Error deleting a file: %s\n", e.message);
-            }
-        } else {
-            warning ("MangoHud.conf file does not exist.");
-        }
-    }
-
     void delete_vkbasalt_conf () {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("vkBasalt");
         var file = config_dir.get_child ("vkBasalt.conf");
@@ -1979,21 +1965,6 @@ public class MangoJuice : Adw.Application {
             }
         }
         return "Unset";
-    }
-
-    void restart_application () {
-        string mangojuice_path = Environment.find_program_in_path ("mangojuice");
-        if (mangojuice_path != null) {
-            try {
-                shutdown ();
-                Process.spawn_command_line_async (mangojuice_path);
-            } catch (Error e) {
-                stderr.printf ("Ошибка при перезапуске приложения: %s\n", e.message);
-            }
-        } else {
-            stderr.printf ("Исполняемый файл mangojuice не найден в PATH.\n");
-        }
-        Process.exit (0);
     }
 
     bool is_vkcube_available () {
@@ -2098,12 +2069,12 @@ public class MangoJuice : Adw.Application {
             }
 
             output_stream.close ();
-            restart_application ();
             stdout.printf ("Configuration restored from %s\n", file_path);
         } catch (Error e) {
             stderr.printf ("Error writing to the file: %s\n", e.message);
         }
         LoadStates.load_states_from_file.begin (this);
+        reset_manager.reset_all_widgets ();
     }
 
     struct ScaleEntryWidget {
