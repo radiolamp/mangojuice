@@ -37,16 +37,16 @@ public class ResetManager {
         app.custom_logs_path_entry.text = "";
         app.blacklist_entry.text = "";
         app.custom_text_center_entry.text = "";
-        app.fps_value_entry_1.text = "30";
-        app.fps_value_entry_2.text = "60";
-        app.gpu_load_value_entry_1.text = "60";
-        app.gpu_load_value_entry_2.text = "90";
-        app.cpu_load_value_entry_1.text = "60";
-        app.cpu_load_value_entry_2.text = "90";
+        app.fps_value_entry_1.text = "";
+        app.fps_value_entry_2.text = "";
+        app.gpu_load_value_entry_1.text = "";
+        app.gpu_load_value_entry_2.text = "";
+        app.cpu_load_value_entry_1.text = "";
+        app.cpu_load_value_entry_2.text = "";
         app.fps_limit_entry_1.text = "";
         app.fps_limit_entry_2.text = "";
         app.fps_limit_entry_3.text = "";
-        app.toggle_hud_entry.text = "Shift_R+F12";
+        app.toggle_hud_entry.text = "";
     }
 
     private void reset_dropdowns () {
