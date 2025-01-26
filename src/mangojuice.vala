@@ -404,19 +404,25 @@ public class MangoJuice : Adw.Application {
         window.set_content (content_box);
         window.present ();
 
-        GLib.Idle.add (() => {
+        Idle.add (() => {
+            bool mangohud_available = is_mangohud_available ();
+            bool vkcube_available = is_vkcube_available ();
+            bool glxgears_available = is_glxgears_available ();
+    
+            if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
+                if (test_button != null) {
+                    test_button.set_visible (false);
+                }
+            }
+    
             reset_manager = new ResetManager (this);
             content_box.append (bottom_headerbar);
             initialize_rest_of_ui (view_stack);
             return false;
-        });
+        });    
 
         check_mangohud_global_status ();
         LoadStates.load_states_from_file.begin (this);
-
-        if (!is_vkcube_available () && !is_glxgears_available ()) {
-            test_button.set_visible (false);
-        }
     }
 
     void initialize_rest_of_ui (ViewStack view_stack) {
@@ -1980,6 +1986,23 @@ public class MangoJuice : Adw.Application {
             return exit_status == 0;
         } catch (Error e) {
             stderr.printf ("Error checking vkcube availability: %s\n", e.message);
+            return false;
+        }
+    }
+
+    bool is_mangohud_available () {
+        try {
+            string[] argv = { "which", "mangohud" };
+            int exit_status;
+            string standard_output;
+            string standard_error;
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
+            if (exit_status != 0) {
+                stderr.printf ("MangoHud not found. Please install MangoHud to use this application.\n");
+            }
+            return exit_status == 0;
+        } catch (Error e) {
+            stderr.printf ("Error checking MangoHud availability: %s\n", e.message);
             return false;
         }
     }
