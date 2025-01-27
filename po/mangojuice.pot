@@ -856,3 +856,119 @@ msgstr ""
 
 msgid "Support Wine"
 msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error closing test apps: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error when executing the command: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error when selecting a folder: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error when searching for fonts: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error executing fc-list: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error checking running processes: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error when restarting vkcube: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error when restarting glxgears: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error deleting vkBasalt.conf: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error writing to the file: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error when selecting a file: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error when getting access rights: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error deleting MANGOHUD from /etc/environment: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error adding MANGOHUD to /etc/environment: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Failed to modify /etc/environment.\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Error checking the MANGOHUD status: %s\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "vkcube not found. If you want a test button, install vulkan-tools.\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "MangoHud not found. Please install MangoHud to use this application.\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "glxgears not found. If you want a test button, install mesa-utils.\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "MangoHud.conf does not exist.\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "Invalid preset value: %d. Allowed range is -1 to 5.\n"
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "vkBasalt.conf file deleted."
+msgstr ""
+
+#: src/mangojuice.vala
+msgid "vkBasalt.conf file does not exist."
+msgstr ""
+
+msgid "top-left"
+msgstr ""
+
+msgid "top-center"
+msgstr ""
+
+msgid "top-right"
+msgstr ""
+
+msgid "middle-left"
+msgstr ""
+
+msgid "middle-right"
+msgstr ""
+
+msgid "bottom-left"
+msgstr ""
+
+msgid "bottom-center"
+msgstr ""
+
+msgid "bottom-right"
+msgstr ""

@@ -484,7 +484,7 @@ public class MangoJuice : Adw.Application {
             Process.spawn_command_line_sync ("pkill vkcube");
             Process.spawn_command_line_sync ("pkill glxgears");
         } catch (Error e) {
-            stderr.printf ("Error closing test apps: %s\n", e.message);
+            stderr.printf (_("Error closing test apps: %s\n"), e.message);
         }
 
         base.shutdown ();
@@ -695,7 +695,7 @@ public class MangoJuice : Adw.Application {
                 check_file_permissions_async.begin ();
                 restart_vkcube_or_glxgears ();
             } catch (Error e) {
-                stderr.printf ("Error when executing the command: %s\n", e.message);
+                stderr.printf (_("Error when executing the command: %s\n"), e.message);
             }
         });
         check_file_permissions_async.begin ();
@@ -891,24 +891,35 @@ public class MangoJuice : Adw.Application {
         combined_flow_box.insert (alpha_widget.widget, -1);
 
         var position_model = new Gtk.StringList (null);
-        foreach (var item in new string[] {
+        var position_mapping = new Gee.HashMap<string, string> ();
+
+        string[] positions = {
             "top-left", "top-center", "top-right",
             "middle-left", "middle-right",
             "bottom-left", "bottom-center", "bottom-right"
-        }) {
-            position_model.append (item);
+        };
+
+        foreach (var item in positions) {
+            string translated = _(item);
+            position_model.append (translated);
+            position_mapping[translated] = item;
         }
+
         position_dropdown = new DropDown (position_model, null) {
             valign = Align.CENTER,
             hexpand = true
         };
+
         position_dropdown.notify["selected-item"].connect (() => {
-            SaveStates.update_position_in_file ((position_dropdown.selected_item as StringObject)?.get_string () ?? "");
+            var selected_translated = (position_dropdown.selected_item as StringObject)?.get_string () ?? "";
+            var selected_english = position_mapping[selected_translated];
+            SaveStates.update_position_in_file (selected_english);
         });
 
         var position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         position_pair.append (new Label (_("Position")));
         position_pair.append (position_dropdown);
+
         combined_flow_box.insert (position_pair, -1);
 
         var colums_widget = create_scale_entry_widget (_("Columns"), _("Number of columns"), 1, 6, 3);
@@ -1534,10 +1545,10 @@ public class MangoJuice : Adw.Application {
                     }
                 }
             } else {
-                stderr.printf ("Error executing fc-list: %s\n", standard_error);
+                stderr.printf (_("Error executing fc-list: %s\n"), standard_error);
             }
         } catch (Error e) {
-            stderr.printf ("Error when searching for fonts: %s\n", e.message);
+            stderr.printf (_("Error when searching for fonts: %s\n"), e.message);
         }
         return fonts;
     }
@@ -1826,7 +1837,7 @@ public class MangoJuice : Adw.Application {
             Process.spawn_command_line_sync ("pkill vkcube");
             Process.spawn_command_line_async ("mangohud vkcube");
         } catch (Error e) {
-            stderr.printf ("Error when restarting vkcube: %s\n", e.message);
+            stderr.printf (_("Error when restarting vkcube: %s\n"), e.message);
         }
     }
 
@@ -1835,7 +1846,7 @@ public class MangoJuice : Adw.Application {
             Process.spawn_command_line_sync ("pkill glxgears");
             Process.spawn_command_line_async ("mangohud glxgears");
         } catch (Error e) {
-            stderr.printf ("Error when restarting glxgears: %s\n", e.message);
+            stderr.printf (_("Error when restarting glxgears: %s\n"), e.message);
         }
     }
 
@@ -1862,7 +1873,7 @@ public class MangoJuice : Adw.Application {
 
             return exit_status == 0;
         } catch (Error e) {
-            stderr.printf ("Error checking running processes: %s\n", e.message);
+            stderr.printf (_("Error checking running processes: %s\n"), e.message);
             return false;
         }
     }
@@ -1877,7 +1888,7 @@ public class MangoJuice : Adw.Application {
 
             return exit_status == 0;
         } catch (Error e) {
-            stderr.printf ("Error checking running processes: %s\n", e.message);
+            stderr.printf (_("Error checking running processes: %s\n"), e.message);
             return false;
         }
     }
@@ -1905,7 +1916,7 @@ public class MangoJuice : Adw.Application {
                     return false;
                 });
             } catch (Error e) {
-                stderr.printf ("Error when executing the command: %s\n", e.message);
+                stderr.printf (_("Error when executing the command: %s\n"), e.message);
             }
         });
     }
@@ -1916,12 +1927,12 @@ public class MangoJuice : Adw.Application {
         if (file.query_exists ()) {
             try {
                 file.delete ();
-                warning ("vkBasalt.conf file deleted.");
+                warning (_("vkBasalt.conf file deleted."));
             } catch (Error e) {
-                stderr.printf ("Error deleting vkBasalt.conf: %s\n", e.message);
+                stderr.printf (_("Error deleting vkBasalt.conf: %s\n"), e.message);
             }
         } else {
-            warning ("vkBasalt.conf file does not exist.");
+            warning (_("vkBasalt.conf file does not exist."));
         }
     }
 
@@ -1932,7 +1943,7 @@ public class MangoJuice : Adw.Application {
                 var folder = dialog.select_folder.end (res);
                 custom_logs_path_entry.text = folder.get_path ();
             } catch (Error e) {
-                stderr.printf ("Error when selecting a folder: %s\n", e.message);
+                stderr.printf (_("Error when selecting a folder: %s\n"), e.message);
             }
         });
     }
@@ -1981,11 +1992,11 @@ public class MangoJuice : Adw.Application {
             string standard_error;
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
             if (exit_status != 0) {
-                stderr.printf ("vkcube not found. If you want a test button, install vulkan-tools.\n");
+                stderr.printf (_("vkcube not found. If you want a test button, install vulkan-tools.\n"));
             }
             return exit_status == 0;
         } catch (Error e) {
-            stderr.printf ("Error checking vkcube availability: %s\n", e.message);
+            stderr.printf (_("Error checking vkcube availability: %s\n"), e.message);
             return false;
         }
     }
@@ -1998,11 +2009,11 @@ public class MangoJuice : Adw.Application {
             string standard_error;
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
             if (exit_status != 0) {
-                stderr.printf ("MangoHud not found. Please install MangoHud to use this application.\n");
+                stderr.printf (_("MangoHud not found. Please install MangoHud to use this application.\n"));
             }
             return exit_status == 0;
         } catch (Error e) {
-            stderr.printf ("Error checking MangoHud availability: %s\n", e.message);
+            stderr.printf (_("Error checking MangoHud availability: %s\n"), e.message);
             return false;
         }
     }
@@ -2015,11 +2026,11 @@ public class MangoJuice : Adw.Application {
             string standard_error;
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
             if (exit_status != 0) {
-                stderr.printf ("glxgears not found. If you want a test button, install mesa-utils.\n");
+                stderr.printf (_("glxgears not found. If you want a test button, install mesa-utils.\n"));
             }
             return exit_status == 0;
         } catch (Error e) {
-            stderr.printf ("Error checking glxgears availability: %s\n", e.message);
+            stderr.printf (_("Error checking glxgears availability: %s\n"), e.message);
             return false;
         }
     }
@@ -2035,7 +2046,7 @@ public class MangoJuice : Adw.Application {
                 var file = dialog.save.end (res);
                 save_config_to_file (file.get_path ());
             } catch (Error e) {
-                stderr.printf ("Error when saving the file: %s\n", e.message);
+                stderr.printf (_("Error when saving the file: %s\n"), e.message);
             }
         });
     }
@@ -2044,7 +2055,7 @@ public class MangoJuice : Adw.Application {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
         if (!file.query_exists ()) {
-            stderr.printf ("MangoHud.conf does not exist.\n");
+            stderr.printf (_("MangoHud.conf does not exist.\n"));
             return;
         }
 
@@ -2059,7 +2070,7 @@ public class MangoJuice : Adw.Application {
 
             output_stream.close ();
         } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
+            stderr.printf (_("Error writing to the file: %s\n"), e.message);
         }
     }
 
@@ -2073,7 +2084,7 @@ public class MangoJuice : Adw.Application {
                 var file = dialog.open.end (res);
                 restore_config_from_file (file.get_path ());
             } catch (Error e) {
-                stderr.printf ("Error when selecting a file: %s\n", e.message);
+                stderr.printf (_("Error when selecting a file: %s\n"), e.message);
             }
         });
     }
@@ -2092,9 +2103,9 @@ public class MangoJuice : Adw.Application {
             }
 
             output_stream.close ();
-            stdout.printf ("Configuration restored from %s\n", file_path);
+            stdout.printf (_("Configuration restored from %s\n"), file_path);
         } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
+            stderr.printf (_("Error writing to the file: %s\n"), e.message);
         }
         LoadStates.load_states_from_file.begin (this);
         reset_manager.reset_all_widgets ();
@@ -2244,11 +2255,11 @@ public class MangoJuice : Adw.Application {
                 string permissions = standard_output.strip ();
                 return permissions == expected_permissions;
             } else {
-                stderr.printf ("Error when getting access rights: %s\n", standard_error);
+                stderr.printf (_("Error when getting access rights: %s\n"), standard_error);
                 return false;
             }
         } catch (Error e) {
-            stderr.printf ("Error when getting access rights: %s\n", e.message);
+            stderr.printf (_("Error when getting access rights: %s\n"), e.message);
             return false;
         }
     }
@@ -2267,7 +2278,7 @@ public class MangoJuice : Adw.Application {
                     mangohud_global_button.remove_css_class ("suggested-action");
                 }
             } catch (Error e) {
-                stderr.printf ("Error deleting MANGOHUD from /etc/environment: %s\n", e.message);
+                stderr.printf (_("Error deleting MANGOHUD from /etc/environment: %s\n"), e.message);
             }
         } else {
             try {
@@ -2280,7 +2291,7 @@ public class MangoJuice : Adw.Application {
                     mangohud_global_button.add_css_class ("suggested-action");
                 }
             } catch (Error e) {
-                stderr.printf ("Error adding MANGOHUD to /etc/environment: %s\n", e.message);
+                stderr.printf (_("Error adding MANGOHUD to /etc/environment: %s\n"), e.message);
             }
         }
 
@@ -2288,13 +2299,13 @@ public class MangoJuice : Adw.Application {
             check_mangohud_global_status ();
             show_restart_warning ();
         } else {
-            stderr.printf ("Failed to modify /etc/environment.\n");
+            stderr.printf (_("Failed to modify /etc/environment.\n"));
         }
     }
 
     void set_preset(int preset_value) {
         if (preset_value < -1 || preset_value > 5) {
-            stderr.printf ("Invalid preset value: %d. Allowed range is -1 to 5.\n", preset_value);
+            stderr.printf (_("Invalid preset value: %d. Allowed range is -1 to 5.\n"), preset_value);
             return;
         }
 
@@ -2355,7 +2366,7 @@ public class MangoJuice : Adw.Application {
                     return false;
                 });
             } catch (Error e) {
-                stderr.printf ("Error checking the MANGOHUD status: %s\n", e.message);
+                stderr.printf (_("Error checking the MANGOHUD status: %s\n"), e.message);
             }
         });
     }

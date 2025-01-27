@@ -836,20 +836,142 @@ msgstr "Субпиксельное морфологическое сглажив
 msgid "Color LookUp Table"
 msgstr "Регулировака цветовой таблицы"
 
+#: src/mangojuice.vala
 msgid "Profile 1"
 msgstr "Профиль 1"
 
+#: src/mangojuice.vala
 msgid "Profile 2"
 msgstr "Профиль 2"
 
+#: src/mangojuice.vala
 msgid "Profile 3"
 msgstr "Профиль 3"
 
+#: src/mangojuice.vala
 msgid "Restore profile"
 msgstr "Восстановить"
 
+#: src/mangojuice.vala
 msgid "If you are going to play through wine, then you need to select fonts from the home directory, the system fonts will not work."
 msgstr "Если вы собираетесь играть через wine, то нужно выбирать шрифты из домашней директории. Системные работать не будут."
 
+#: src/mangojuice.vala
 msgid "Support Wine"
 msgstr "Работает в Wine"
+
+#: src/mangojuice.vala
+msgid "Error closing test apps: %s\n"
+msgstr "Ошибка при закрытии тестовых приложений: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error when executing the command: %s\n"
+msgstr "Ошибка при выполнении команды: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error when selecting a folder: %s\n"
+msgstr "Ошибка при выборе папки: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error when searching for fonts: %s\n"
+msgstr "Ошибка при поиске шрифтов: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error executing fc-list: %s\n"
+msgstr "Ошибка выполнения fc-list: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error checking running processes: %s\n"
+msgstr "Ошибка при проверке запущенных процессов: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error when restarting vkcube: %s\n"
+msgstr "Ошибка при перезапуске vkcube: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error when restarting glxgears: %s\n"
+msgstr "Ошибка при перезапуске glxgears: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error deleting vkBasalt.conf: %s\n"
+msgstr "Ошибка при удалении vkBasalt.conf: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error writing to the file: %s\n"
+msgstr "Ошибка при записи в файл: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error when selecting a file: %s\n"
+msgstr "Ошибка при выборе файла: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error when getting access rights: %s\n"
+msgstr "Ошибка при получении прав доступа: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error deleting MANGOHUD from /etc/environment: %s\n"
+msgstr "Ошибка при удалении MANGOHUD из /etc/environment: %s\n"
+
+#: src/mangojuice.vala
+msgid "Error adding MANGOHUD to /etc/environment: %s\n"
+msgstr "Ошибка при добавлении MANGOHUD в /etc/environment: %s\n"
+
+#: src/mangojuice.vala
+msgid "Failed to modify /etc/environment.\n"
+msgstr "Не удалось изменить /etc/environment.\n"
+
+#: src/mangojuice.vala
+msgid "Error checking the MANGOHUD status: %s\n"
+msgstr "Ошибка при проверке статуса MANGOHUD: %s\n"
+
+#: src/mangojuice.vala
+msgid "vkcube not found. If you want a test button, install vulkan-tools.\n"
+msgstr "vkcube не найден. Если вам нужна кнопка теста, установите vulkan-tools.\n"
+
+#: src/mangojuice.vala
+msgid "MangoHud not found. Please install MangoHud to use this application.\n"
+msgstr "MangoHud не найден. Пожалуйста, установите MangoHud для использования этого приложения.\n"
+
+#: src/mangojuice.vala
+msgid "glxgears not found. If you want a test button, install mesa-utils.\n"
+msgstr "glxgears не найден. Если вам нужна кнопка теста, установите mesa-utils.\n"
+
+#: src/mangojuice.vala
+msgid "MangoHud.conf does not exist.\n"
+msgstr "MangoHud.conf не существует.\n"
+
+#: src/mangojuice.vala
+msgid "Invalid preset value: %d. Allowed range is -1 to 5.\n"
+msgstr "Недопустимое значение предустановки: %d. Допустимый диапазон от -1 до 5.\n"
+
+#: src/mangojuice.vala
+msgid "vkBasalt.conf file deleted."
+msgstr "Файл vkBasalt.conf удален."
+
+#: src/mangojuice.vala
+msgid "vkBasalt.conf file does not exist."
+msgstr "Файл vkBasalt.conf не существует."
+
+msgid "top-left"
+msgstr "Сверху слева"
+
+msgid "top-center"
+msgstr "Сверху по центру"
+
+msgid "top-right"
+msgstr "Сверху справа"
+
+msgid "middle-left"
+msgstr "Посередине слева"
+
+msgid "middle-right"
+msgstr "Посередине справа"
+
+msgid "bottom-left"
+msgstr "Снизу слева"
+
+msgid "bottom-center"
+msgstr "Снизу по центру"
+
+msgid "bottom-right"
+msgstr "Снизу справа"
