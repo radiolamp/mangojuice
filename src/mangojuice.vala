@@ -410,8 +410,10 @@ public class MangoJuice : Adw.Application {
             bool glxgears_available = is_glxgears_available ();
 
             if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
-                if (test_button != null) {
-                    test_button.set_visible (false);
+                test_button?.set_visible(false);
+                if (!vkcube_available && !glxgears_available) {
+                    stderr.printf(_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
+                                  _("glxgears not found. If you want a test button, install mesa-utils.\n"));
                 }
             }
     
@@ -2003,9 +2005,6 @@ public class MangoJuice : Adw.Application {
             string standard_output;
             string standard_error;
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-            if (exit_status != 0) {
-                stderr.printf (_("vkcube not found. If you want a test button, install vulkan-tools.\n"));
-            }
             return exit_status == 0;
         } catch (Error e) {
             stderr.printf (_("Error checking vkcube availability: %s\n"), e.message);
@@ -2037,9 +2036,6 @@ public class MangoJuice : Adw.Application {
             string standard_output;
             string standard_error;
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-            if (exit_status != 0) {
-                stderr.printf (_("glxgears not found. If you want a test button, install mesa-utils.\n"));
-            }
             return exit_status == 0;
         } catch (Error e) {
             stderr.printf (_("Error checking glxgears availability: %s\n"), e.message);
