@@ -408,7 +408,7 @@ public class MangoJuice : Adw.Application {
             bool mangohud_available = is_mangohud_available ();
             bool vkcube_available = is_vkcube_available ();
             bool glxgears_available = is_glxgears_available ();
-    
+
             if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
                 if (test_button != null) {
                     test_button.set_visible (false);
@@ -419,7 +419,7 @@ public class MangoJuice : Adw.Application {
             content_box.append (bottom_headerbar);
             initialize_rest_of_ui (view_stack);
             return false;
-        });    
+        });
 
         check_mangohud_global_status ();
         LoadStates.load_states_from_file.begin (this);
@@ -571,31 +571,43 @@ public class MangoJuice : Adw.Application {
         add_switch_handler (other_extra_switches);
         add_switch_handler (inform_switches);
 
+        bool updating = false;
+
         for (int i = 0; i < gpu_switches.length; i++) {
             int index = i;
             gpu_switches[i].notify["active"].connect (() => {
+                if (updating) return;
+                updating = true;
+
                 if (index == 0 && !gpu_switches[0].active) {
-                    for (int j = 1; j < gpu_switches.length; j++) {
+                    for (int j = 0; j < gpu_switches.length; j++) {
                         if (j != 2 && j != 14) {
                             gpu_switches[j].active = false;
                         }
                     }
                 }
+
                 update_gpu_stats_state ();
+                updating = false;
             });
         }
 
         for (int i = 0; i < cpu_switches.length; i++) {
             int index = i;
             cpu_switches[i].notify["active"].connect (() => {
+                if (updating) return;
+                updating = true;
+
                 if (index == 0 && !cpu_switches[0].active) {
-                    for (int j = 1; j < cpu_switches.length; j++) {
+                    for (int j = 0; j < cpu_switches.length; j++) {
                         if (j != 2 && j != 3) {
                             cpu_switches[j].active = false;
                         }
                     }
                 }
+
                 update_cpu_stats_state ();
+                updating = false;
             });
         }
     }
