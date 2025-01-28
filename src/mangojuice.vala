@@ -1027,7 +1027,6 @@ public class MangoJuice : Adw.Application {
 
         var fonts_flow_box = new FlowBox () {
             row_spacing = FLOW_BOX_ROW_SPACING,
-            hexpand = true,
             max_children_per_line = 2,
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
@@ -1036,13 +1035,9 @@ public class MangoJuice : Adw.Application {
             selection_mode = SelectionMode.NONE
         };
 
-        var font_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        font_pair.append (font_dropdown);
-        fonts_flow_box.insert (font_pair, -1);
+        fonts_flow_box.insert (font_dropdown, -1);
 
-        var size_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        size_pair.append (font_size_widget.widget);
-        fonts_flow_box.insert (size_pair, -1);
+        fonts_flow_box.insert (font_size_widget.widget, -1);
 
         visual_box.append (fonts_flow_box);
 
@@ -1497,7 +1492,6 @@ public class MangoJuice : Adw.Application {
             var label = new Label (null);
             label.set_ellipsize (Pango.EllipsizeMode.END);
             label.set_xalign (0.0f);
-            label.set_ellipsize (Pango.EllipsizeMode.END);
             label.set_hexpand (true);
 
             var wine_label = new Label (_("Support Wine"));
