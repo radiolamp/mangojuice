@@ -183,6 +183,11 @@ public class SaveStates {
 
             update_parameter (data_stream, "blacklist", mango_juice.blacklist_entry.text);
 
+            var custom_command = mango_juice.custom_command_entry.text;
+            if (custom_command != "") {
+                data_stream.put_string ("%s\n".printf (custom_command));
+            }
+
             if (mango_juice.offset_x_scale != null) {
                 update_parameter (data_stream, "offset_x", ((int)mango_juice.offset_x_scale.get_value ()).to_string ());
             }
@@ -273,8 +278,6 @@ public class SaveStates {
 
             int[] wine_order = {0, 1, 2, 3};
             save_switches_to_file (data_stream, mango_juice.wine_switches, mango_juice.wine_config_vars, wine_order);
-
-            update_parameter (data_stream, "custom_command", mango_juice.custom_command_entry.text);
 
             if (mango_juice.logs_key_combo.selected_item != null) {
                 var logs_key = (mango_juice.logs_key_combo.selected_item as StringObject)?.get_string () ?? "";

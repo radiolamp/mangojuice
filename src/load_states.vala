@@ -29,10 +29,6 @@ public class LoadStates {
                 load_switch_from_file (line, mango_juice.inform_switches, mango_juice.inform_config_vars);
                 load_switch_from_file (line, mango_juice.options_switches, mango_juice.options_config_vars);
 
-                if (line.has_prefix ("custom_command=")) {
-                    mango_juice.custom_command_entry.text = line.substring ("custom_command=".length);
-                }
-
                 if (line.has_prefix ("toggle_logging=")) {
                     var logs_key = line.substring ("toggle_logging=".length);
                     for (uint i = 0; i < mango_juice.logs_key_model.get_n_items (); i++) {
@@ -133,7 +129,7 @@ public class LoadStates {
                     }
                 }
 
-                if (line.contains ("#filters")) { // Проверяем, есть ли в строке комментарий "#filters"
+                if (line.contains ("#filters")) {
                     var filter_value = line.split ("#filters")[0].strip ();
                     for (uint i = 0; i < mango_juice.filter_dropdown.model.get_n_items (); i++) {
                         var item = mango_juice.filter_dropdown.model.get_item (i) as StringObject;
