@@ -133,8 +133,8 @@ public class LoadStates {
                     }
                 }
 
-                if (line.has_prefix ("filter=")) {
-                    var filter_value = line.substring ("filter=".length);
+                if (line.contains ("#filters")) { // Проверяем, есть ли в строке комментарий "#filters"
+                    var filter_value = line.split ("#filters")[0].strip ();
                     for (uint i = 0; i < mango_juice.filter_dropdown.model.get_n_items (); i++) {
                         var item = mango_juice.filter_dropdown.model.get_item (i) as StringObject;
                         if (item != null && item.get_string () == filter_value) {

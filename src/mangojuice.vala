@@ -1775,6 +1775,9 @@ public class MangoJuice : Adw.Application {
         filter_dropdown = new DropDown (filter_model, null);
         filter_dropdown.set_valign (Align.START);
         filter_dropdown.set_hexpand (true);
+        filter_dropdown.notify["selected"].connect (() => {
+            SaveStates.save_states_to_file (this);
+        });
 
         var af_widget = create_scale_entry_widget (_("Anisotropic"), _("Filtering"), 0, 16, 0);
         af = af_widget.scale;

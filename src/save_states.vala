@@ -327,7 +327,7 @@ public class SaveStates {
             if (mango_juice.filter_dropdown.selected_item != null) {
                 var filter_value = (mango_juice.filter_dropdown.selected_item as StringObject)?.get_string () ?? "";
                 if (filter_value != "none") {
-                    data_stream.put_string ("%s\n".printf (filter_value));
+                    data_stream.put_string ("%s #filters\n".printf (filter_value));
                 }
             }
 
