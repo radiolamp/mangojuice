@@ -29,6 +29,11 @@ public class LoadStates {
                 load_switch_from_file (line, mango_juice.inform_switches, mango_juice.inform_config_vars);
                 load_switch_from_file (line, mango_juice.options_switches, mango_juice.options_config_vars);
 
+                if (line.contains("#custom_command")) {
+                    var custom_command_value = line.split(" #custom_command")[0].strip();
+                    mango_juice.custom_command_entry.text = custom_command_value;
+                }
+
                 if (line.has_prefix ("toggle_logging=")) {
                     var logs_key = line.substring ("toggle_logging=".length);
                     for (uint i = 0; i < mango_juice.logs_key_model.get_n_items (); i++) {

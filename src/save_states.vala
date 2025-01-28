@@ -185,7 +185,7 @@ public class SaveStates {
 
             var custom_command = mango_juice.custom_command_entry.text;
             if (custom_command != "") {
-                data_stream.put_string ("%s\n".printf (custom_command));
+                data_stream.put_string ("%s #custom_command\n".printf (custom_command));
             }
 
             if (mango_juice.offset_x_scale != null) {
