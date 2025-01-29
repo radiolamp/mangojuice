@@ -905,29 +905,19 @@ public class MangoJuice : Adw.Application {
         combined_flow_box.insert (alpha_widget.widget, -1);
 
         var position_model = new Gtk.StringList (null);
-        var position_mapping = new Gee.HashMap<string, string> ();
-
-        string[] positions = {
+        foreach (var item in new string[] {
             "top-left", "top-center", "top-right",
             "middle-left", "middle-right",
             "bottom-left", "bottom-center", "bottom-right"
-        };
-
-        foreach (var item in positions) {
-            string translated = _(item);
-            position_model.append (translated);
-            position_mapping[translated] = item;
+        }) {
+            position_model.append (item);
         }
-
         position_dropdown = new DropDown (position_model, null) {
             valign = Align.CENTER,
             hexpand = true
         };
-
         position_dropdown.notify["selected-item"].connect (() => {
-            var selected_translated = (position_dropdown.selected_item as StringObject)?.get_string () ?? "";
-            var selected_english = position_mapping[selected_translated];
-            SaveStates.update_position_in_file (selected_english);
+            SaveStates.update_position_in_file ((position_dropdown.selected_item as StringObject)?.get_string () ?? "");
         });
 
         var position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
