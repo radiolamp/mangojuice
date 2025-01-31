@@ -7,7 +7,7 @@
 </div>
 
 Страница 1 | Страница 2 | Страница 3 | Страница 4| Страница 5
-:-:|:-:|:-:|:-:
+:-:|:-:|:-:|:-:|:-:
 ![screen](data/images/screen1.png) | ![screen2](data/images/screen2.png) | ![screen3](data/images/screen3.png) | ![screen4](data/images/screen4.png) | ![screen4](data/images/screen5.png) 
 
 ## Находится в репозиториях:
