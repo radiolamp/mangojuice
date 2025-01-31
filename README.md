@@ -8,9 +8,9 @@
 </p>
 
 
-Page 1 | Page 2 | Page 3 | Page 4
+Page 1 | Page 2 | Page 3 | Page 4| Page 5
 :-:|:-:|:-:|:-:
-![screen](data/images/screen1.png) | ![screen2](data/images/screen2.png) | ![screen3](data/images/screen3.png) | ![screen4](data/images/screen4.png) 
+![screen](data/images/screen1.png) | ![screen2](data/images/screen2.png) | ![screen3](data/images/screen3.png) | ![screen4](data/images/screen4.png) | ![screen4](data/images/screen5.png) 
 
 ## Repositories:
 [![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)
@@ -67,6 +67,8 @@ flatpak-builder --user --install build-dir build-aux/flatpak/io.github.radiolamp
 ## Hotkey:
 - 'Ctrl + Q' - Exit
 - 'Ctrl + S' - Save
+- 'Ctrl + E' - Save As
+- 'Ctrl + R' - Restore
 - 'Ctrl + T' - Test
 
 ## Support:

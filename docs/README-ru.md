@@ -6,9 +6,9 @@
   <img src="/data/images/screen1.png" alt="Preview"/>
 </div>
 
-Вкладка 1 | Вкладка 2 | Вкладка 3 | Вкладка 4
+Страница 1 | Страница 2 | Страница 3 | Страница 4| Страница 5
 :-:|:-:|:-:|:-:
-![screenie1](/data/images/screen1.png) | ![screenie2](/data/images/screen2.png) | ![screenie3](/data/images/screen3.png) | ![screenie4](/data/images/screen4.png) 
+![screen](data/images/screen1.png) | ![screen2](data/images/screen2.png) | ![screen3](data/images/screen3.png) | ![screen4](data/images/screen4.png) | ![screen4](data/images/screen5.png) 
 
 ## Находится в репозиториях:
 [![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)
@@ -61,6 +61,8 @@ flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.y
 ## Горячие клавиши:
 - 'Ctrl + Q' - Выйти
 - 'Ctrl + S' - Сохранить
+- 'Ctrl + E' - Сохранить как
+- 'Ctrl + R' - Востановить
 - 'Ctrl + T' - Test
 
 ## Поддержка
