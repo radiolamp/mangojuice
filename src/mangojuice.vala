@@ -744,9 +744,9 @@ public class MangoJuice : Adw.Application {
             SaveStates.save_states_to_file (this);
         });
 
-        if (!is_flatpak ()) {
             mangohud_global_button = new Button.with_label (_("Mangohud Global"));
             mangohud_global_button.clicked.connect (on_mangohud_global_button_clicked);
+        if (!is_flatpak ()) {
             blacklist_box.append (mangohud_global_button);
         }
 

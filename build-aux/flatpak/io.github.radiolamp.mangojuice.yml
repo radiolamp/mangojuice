@@ -14,13 +14,13 @@ finish-args:
   - --filesystem=xdg-config/MangoHud:create
   - --filesystem=home
 
-app-extensions:
-  - flathub/org.freedesktop.Platform.VulkanLayer.MangoHud
-
+add-extensions:
+  org.freedesktop.Platform.VulkanLayer.MangoHud:
+    version: '24.08'
+    directory: extensions/MangoHud
 modules:
   - name: mangojuice
     buildsystem: meson
-    config-opts:
     sources:
       - type: dir
         path: ../../
