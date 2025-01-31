@@ -984,3 +984,9 @@ msgstr "Убирает малый шрифт"
 
 msgid "Shortens the name"
 msgstr "Сокращает имя API"
+
+msgid "Disable margins"
+msgstr "Убрать отступы"
+
+msgid "Remove margins"
+msgstr "Удалить отступы"

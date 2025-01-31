@@ -143,7 +143,7 @@ public class MangoJuice : Adw.Application {
         "battery", "battery_watt", "battery_time", "device_battery_icon", "device_battery=gamepad,mouse"
     };
     public string[] other_extra_config_vars = {
-        "media_player", "network", "full", "log_versioning", "upload_logs"
+        "media_player", "network", "full", "hud_no_margin", "log_versioning", "upload_logs"
     };
     public string[] inform_config_vars = {
         "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
@@ -179,7 +179,7 @@ public class MangoJuice : Adw.Application {
         _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
     };
     string[] other_extra_label_texts = {
-        _("Media"), _("Network"), _("Full ON"), _("Log Versioning"), _("Upload Results")
+        _("Media"), _("Network"), _("Full ON"), _("Disable margins"), _("Log Versioning"), _("Upload Results")
     };
     string[] inform_label_texts = {
         _("FPS"), _("FPS Color"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
@@ -209,7 +209,7 @@ public class MangoJuice : Adw.Application {
         _("Check battery"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
     };
     string[] other_extra_label_texts_2 = {
-        _("Show media player"), _("Display network"), _("Excludes histogram"), _("Log information"), _("Auto upload logs")
+        _("Show media player"), _("Display network"), _("Excludes histogram"), _("Remove margins"), _("Log information"), _("Auto upload logs")
     };
     string[] inform_label_texts_2 = {
         _("Show FPS"), _("Color text"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),

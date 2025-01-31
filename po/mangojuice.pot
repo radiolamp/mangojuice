@@ -981,3 +981,9 @@ msgstr ""
 
 msgid "Shortens the name"
 msgstr ""
+
+msgid "Disable margins"
+msgstr ""
+
+msgid "Remove margins"
+msgstr ""
