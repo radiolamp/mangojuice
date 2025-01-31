@@ -149,7 +149,7 @@ public class MangoJuice : Adw.Application {
         "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
     };
     public string[] options_config_vars = {
-        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display", "text_outline=0"
+        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display", "text_outline=0", "no_small_font"
     };
 
     // Label Texts
@@ -173,7 +173,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] options_label_texts = {
         _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"),
-        _("Compact API"), _("Hide HUD"), _("Turn off the shadow")
+        _("Compact API"), _("Hide HUD"), _("Turn off the shadow"), _("No small font")
     };
     string[] battery_label_texts = {
         _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
@@ -203,7 +203,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] options_label_texts_2 = {
         _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
-        _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Only OpenGL"), _("Hide overlay"), _("Turn off font shadow")
+        _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Shortens the name"), _("Hide overlay"), _("Turn off font shadow"), _("Disable small fonts")
     };
     string[] battery_label_texts_2 = {
         _("Check battery"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")

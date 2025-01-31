@@ -972,3 +972,12 @@ msgstr ""
 
 msgid "bottom-right"
 msgstr ""
+
+msgid "No small font"
+msgstr ""
+
+msgid "Disable small fonts"
+msgstr ""
+
+msgid "Shortens the name"
+msgstr ""

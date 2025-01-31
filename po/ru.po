@@ -975,3 +975,12 @@ msgstr "Снизу по центру"
 
 msgid "bottom-right"
 msgstr "Снизу справа"
+
+msgid "No small font"
+msgstr "Большой шрифт"
+
+msgid "Disable small fonts"
+msgstr "Убирает малый шрифт"
+
+msgid "Shortens the name"
+msgstr "Сокращает имя API"
