@@ -987,3 +987,9 @@ msgstr ""
 
 msgid "Remove margins"
 msgstr ""
+
+msgid "MangoHud is not installed. Please install it. If you are using flatpak, you need to install the flatpak version."
+msgstr ""
+
+msgid "Test Button Disabled"
+msgstr ""

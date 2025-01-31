@@ -408,15 +408,29 @@ public class MangoJuice : Adw.Application {
             bool mangohud_available = is_mangohud_available ();
             bool vkcube_available = is_vkcube_available ();
             bool glxgears_available = is_glxgears_available ();
-
+        
+            if (!mangohud_available) {
+                stderr.printf(_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
+        
+                var mangohud_notification = new GLib.Notification(_("MangoHud Not Found"));
+                mangohud_notification.set_body(_("MangoHud is not installed. Please install it. If you are using flatpak, you need to install the flatpak version."));
+                mangohud_notification.set_icon(new ThemedIcon("io.github.radiolamp.mangojuice"));
+                GLib.Application.get_default().send_notification("mangohud-not-found", mangohud_notification);
+            }
+        
             if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
                 test_button?.set_visible(false);
                 if (!vkcube_available && !glxgears_available) {
                     stderr.printf(_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
                                   _("glxgears not found. If you want a test button, install mesa-utils.\n"));
+        
+                    var test_button_notification = new GLib.Notification(_("Test Button Disabled"));
+                    test_button_notification.set_body(_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
+                    test_button_notification.set_icon(new ThemedIcon("io.github.radiolamp.mangojuice"));
+                    GLib.Application.get_default().send_notification("test-button-disabled", test_button_notification);
                 }
             }
-    
+        
             reset_manager = new ResetManager (this);
             content_box.append (bottom_headerbar);
             initialize_rest_of_ui (view_stack);

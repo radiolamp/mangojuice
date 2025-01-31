@@ -990,3 +990,15 @@ msgstr "Убрать отступы"
 
 msgid "Remove margins"
 msgstr "Удалить отступы"
+
+msgid "MangoHud is not installed. Please install it. If you are using flatpak, you need to install the flatpak version."
+msgstr "MangoHud не установлен. Пожалуйста, установите его. Если используете flatpak то необходимо установить флатпак версию."
+
+msgid "Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."
+msgstr "Vkcube и glxgears не найдены. Установите vulkan-tools и mesa-utils, чтобы включить кнопку тестирования."
+
+msgid "MangoHud Not Found"
+msgstr "MangoHud не найден"
+
+msgid "Test Button Disabled"
+msgstr "Кнопка теста скрыта"
