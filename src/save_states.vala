@@ -33,6 +33,10 @@ public class SaveStates {
         update_file ("blacklist=", blacklist_value);
     }
 
+    public static void update_gpu_in_file (string gpu_value) {
+        update_file ("gpu_list=", gpu_value);
+    }
+
     public static void update_position_in_file (string position_value) {
         update_file ("position=", position_value);
     }
@@ -182,6 +186,8 @@ public class SaveStates {
             data_stream.put_string ("legacy_layout=false\n");
 
             update_parameter (data_stream, "blacklist", mango_juice.blacklist_entry.text);
+
+            update_parameter (data_stream, "gpu_list", mango_juice.gpu_entry.text);
 
             var custom_command = mango_juice.custom_command_entry.text;
             if (custom_command != "") {

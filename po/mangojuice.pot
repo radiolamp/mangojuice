@@ -993,3 +993,6 @@ msgstr ""
 
 msgid "Test Button Disabled"
 msgstr ""
+
+msgid "Video card display order (0,1,2)"
+msgstr ""

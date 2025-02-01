@@ -92,6 +92,7 @@ public class MangoJuice : Adw.Application {
     public ColorDialogButton media_player_color_button;
     public ColorDialogButton network_color_button;
     public Entry blacklist_entry;
+    public Entry gpu_entry;
     public Scale offset_x_scale;
     public Scale offset_y_scale;
     public Label offset_x_value_label;
@@ -768,11 +769,29 @@ public class MangoJuice : Adw.Application {
             max_children_per_line = 1,
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
-            margin_bottom = FLOW_BOX_MARGIN,
             selection_mode = SelectionMode.NONE
         };
+
         blacklist_flow_box.insert (blacklist_box, -1);
         extras_box.append (blacklist_flow_box);
+
+        gpu_entry = new Entry ();
+        var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
+        gpu_entry.changed.connect (() => {
+            SaveStates.update_gpu_in_file (gpu_entry.text);
+            SaveStates.save_states_to_file (this);
+        });
+
+        var gpu_flow_box = new FlowBox () {
+            max_children_per_line = 1,
+            margin_start = FLOW_BOX_MARGIN,
+            margin_end = FLOW_BOX_MARGIN,
+            selection_mode = SelectionMode.NONE
+        };
+        if (Config.IS_DEVEL) {///
+        gpu_flow_box.insert (gpu_box, -1);
+        extras_box.append (gpu_flow_box);
+        }
 
         var custom_command_flow_box = new FlowBox () {
             max_children_per_line = 3,
