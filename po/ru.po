@@ -1005,3 +1005,6 @@ msgstr "Кнопка теста скрыта"
 
 msgid "Video card display order (0,1,2)"
 msgstr "Порядок отображения видеокарт (0,1,2)"
+
+msgid "List GPUs to display"
+msgstr "Какие видеокарты отображать"

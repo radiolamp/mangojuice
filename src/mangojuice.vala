@@ -587,6 +587,7 @@ public class MangoJuice : Adw.Application {
         add_switch_handler (battery_switches);
         add_switch_handler (other_extra_switches);
         add_switch_handler (inform_switches);
+        initialize_gpu_entry (extras_box);
 
         bool updating = false;
 
@@ -774,24 +775,6 @@ public class MangoJuice : Adw.Application {
 
         blacklist_flow_box.insert (blacklist_box, -1);
         extras_box.append (blacklist_flow_box);
-
-        gpu_entry = new Entry ();
-        var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
-        gpu_entry.changed.connect (() => {
-            SaveStates.update_gpu_in_file (gpu_entry.text);
-            SaveStates.save_states_to_file (this);
-        });
-
-        var gpu_flow_box = new FlowBox () {
-            max_children_per_line = 1,
-            margin_start = FLOW_BOX_MARGIN,
-            margin_end = FLOW_BOX_MARGIN,
-            selection_mode = SelectionMode.NONE
-        };
-        if (Config.IS_DEVEL) {///
-        gpu_flow_box.insert (gpu_box, -1);
-        extras_box.append (gpu_flow_box);
-        }
 
         var custom_command_flow_box = new FlowBox () {
             max_children_per_line = 3,
@@ -2018,6 +2001,63 @@ public class MangoJuice : Adw.Application {
             }
         }
         return "Unset";
+    }
+
+    async bool has_multiple_gpus () {
+        try {
+            string output;
+            string error;
+            int exit_status;
+
+            Process.spawn_command_line_sync ("lspci | grep -i vga", out output, out error, out exit_status);
+
+            string[] gpu_lines = output.split ("\n");
+            int gpu_count = 0;
+            foreach (string line in gpu_lines) {
+                if (line.strip () != "") {
+                    gpu_count++;
+                }
+            }
+
+            return gpu_count > 1;
+        } catch (Error e) {
+            stderr.printf (_("Error checking GPU count: %s\n"), e.message);
+            return false;
+        }
+    }
+
+    void initialize_gpu_entry (Box extras_box) {
+        var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" });
+        gpu_entry = new Entry ();
+        var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
+        gpu_entry.changed.connect (() => {
+            SaveStates.update_gpu_in_file (gpu_entry.text);
+            SaveStates.save_states_to_file (this);
+        });
+    
+        var gpu_flow_box = new FlowBox () {
+            max_children_per_line = 1,
+            margin_start = FLOW_BOX_MARGIN,
+            margin_end = FLOW_BOX_MARGIN,
+            selection_mode = SelectionMode.NONE
+        };
+
+        gpu_flow_box.insert (gpu_list_label, -1);
+        gpu_flow_box.insert (gpu_box, -1);
+        extras_box.append (gpu_flow_box);
+
+        check_gpu_count.begin (gpu_flow_box);
+    }
+
+    async void check_gpu_count (FlowBox gpu_flow_box) {
+        bool multiple_gpus = yield has_multiple_gpus ();
+
+        if (!multiple_gpus) {
+            Idle.add (() => {
+                gpu_flow_box.hide ();
+                return false;
+            });
+        }
     }
 
     bool is_vkcube_available () {
