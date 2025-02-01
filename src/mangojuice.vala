@@ -408,16 +408,16 @@ public class MangoJuice : Adw.Application {
             bool mangohud_available = is_mangohud_available ();
             bool vkcube_available = is_vkcube_available ();
             bool glxgears_available = is_glxgears_available ();
-        
+
             if (!mangohud_available) {
                 stderr.printf(_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
-        
+
                 var mangohud_notification = new GLib.Notification(_("MangoHud Not Found"));
                 mangohud_notification.set_body(_("MangoHud is not installed. Please install it. If you are using flatpak, you need to install the flatpak version."));
                 mangohud_notification.set_icon(new ThemedIcon("io.github.radiolamp.mangojuice"));
                 GLib.Application.get_default().send_notification("mangohud-not-found", mangohud_notification);
             }
-        
+
             if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
                 test_button?.set_visible(false);
                 if (!vkcube_available && !glxgears_available) {
@@ -1717,6 +1717,7 @@ public class MangoJuice : Adw.Application {
         limiters_box.set_margin_end (FLOW_BOX_MARGIN);
         limiters_box.set_margin_top (FLOW_BOX_MARGIN);
         limiters_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        limiters_box.set_selection_mode (SelectionMode.NONE);
         limiters_box.append (fps_limit_method);
         limiters_box.append (fps_limit_entry_1_box);
         limiters_box.append (fps_limit_entry_2_box);
@@ -1757,6 +1758,7 @@ public class MangoJuice : Adw.Application {
         vsync_box.set_margin_end (FLOW_BOX_MARGIN);
         vsync_box.set_margin_top (FLOW_BOX_MARGIN);
         vsync_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        vsync_box.set_selection_mode (SelectionMode.NONE);
         vsync_box.append (vulkan_label);
         vsync_box.append (vulkan_dropdown);
         vsync_box.append (opengl_label);
