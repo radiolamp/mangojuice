@@ -411,7 +411,7 @@ public class MangoJuice : Adw.Application {
             bool glxgears_available = is_glxgears_available ();
 
             if (!mangohud_available) {
-                stderr.printf(_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
+                stderr.printf (_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
 
                 var mangohud_notification = new GLib.Notification(_("MangoHud Not Found"));
                 mangohud_notification.set_body (_("MangoHud is not installed. Please install it. If you are using flatpak, you need to install the flatpak version."));
@@ -422,7 +422,7 @@ public class MangoJuice : Adw.Application {
             if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
                 test_button?.set_visible (false);
                 if (!vkcube_available && !glxgears_available) {
-                    stderr.printf(_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
+                    stderr.printf (_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
                                   _("glxgears not found. If you want a test button, install mesa-utils.\n"));
 
                     var test_button_notification = new GLib.Notification(_("Test Button Disabled"));
@@ -435,10 +435,10 @@ public class MangoJuice : Adw.Application {
             reset_manager = new ResetManager (this);
             content_box.append (bottom_headerbar);
             initialize_rest_of_ui (view_stack);
+            check_mangohud_global_status ();
             return false;
         });
 
-        check_mangohud_global_status ();
         LoadStates.load_states_from_file.begin (this);
     }
 
@@ -2412,7 +2412,7 @@ public class MangoJuice : Adw.Application {
                 }
             }
             dialog.destroy ();
-        }); 
+        });
     }
 
     void check_mangohud_global_status () {
