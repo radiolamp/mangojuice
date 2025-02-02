@@ -8,6 +8,8 @@ public class ProBox : Box {
             spacing: 10
         );
 
+        load_css (); // Загружаем CSS
+
         var group = new Adw.PreferencesGroup ();
         group.title = "Список элементов";
 
@@ -30,7 +32,7 @@ public class ProBox : Box {
             enable_drag_and_drop (drag_button, list_box, action_row);
 
             list_box.append (action_row);
-            action_row.add_prefix (drag_button); // Добавляем кнопку в префикс (левую часть)
+            action_row.add_prefix (drag_button);
         }
 
         var clamp = new Adw.Clamp ();
@@ -41,6 +43,22 @@ public class ProBox : Box {
         this.append (group);
     }
 
+    private void load_css () {
+        var provider = new Gtk.CssProvider ();
+        provider.load_from_string ("""
+            .default {
+                background-color: rgba(128, 128, 128, 0.2);
+                border-radius: 5px;
+            }
+        """);
+
+        Gtk.StyleContext.add_provider_for_display (
+            Gdk.Display.get_default (),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        );
+    }
+
     private void enable_drag_and_drop (Gtk.Button drag_button, ListBox list_box, ListBoxRow row) {
         var drag_source = new Gtk.DragSource ();
         drag_source.set_actions (Gdk.DragAction.MOVE);
@@ -49,13 +67,13 @@ public class ProBox : Box {
             var paintable = new Gtk.WidgetPaintable (row);
             drag_source.set_icon (paintable, 0, 0);
     
-            // Добавляем CSS-класс для стилизации
             row.add_css_class ("dragging");
+            row.add_css_class ("default"); // Добавляем класс "default"
         });
     
         drag_source.drag_end.connect ((source, drag) => {
-            // Удаляем CSS-класс после завершения перетаскивания
             row.remove_css_class ("dragging");
+            row.remove_css_class ("default"); // Удаляем класс "default"
         });
     
         drag_source.prepare.connect ((source, x, y) => {
