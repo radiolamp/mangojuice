@@ -2146,8 +2146,8 @@ public class MangoJuice : Adw.Application {
 
     void on_restore_config_button_clicked () {
         var dialog = new Gtk.FileDialog ();
-        dialog.set_title ("Select Config File to Restore");
-        dialog.set_accept_label ("Restore");
+        dialog.set_title (_("Select Config File to Restore"));
+        dialog.set_accept_label (_("Restore"));
 
         dialog.open.begin (this.active_window, null, (obj, res) => {
             try {

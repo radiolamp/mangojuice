@@ -1008,3 +1008,6 @@ msgstr "Порядок отображения видеокарт (0,1,2)"
 
 msgid "List GPUs to display"
 msgstr "Какие видеокарты отображать"
+
+msgid "Select Config File to Restore"
+msgstr "Выбирите файл"

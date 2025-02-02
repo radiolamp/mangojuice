@@ -999,3 +999,6 @@ msgstr ""
 
 msgid "List GPUs to display"
 msgstr ""
+
+msgid "Select Config File to Restore"
+msgstr ""
