@@ -30,7 +30,7 @@ public class ProBox : Box {
             enable_drag_and_drop (drag_button, list_box, action_row);
 
             list_box.append (action_row);
-            action_row.add_suffix (drag_button);
+            action_row.add_prefix (drag_button); // Добавляем кнопку в префикс (левую часть)
         }
 
         var clamp = new Adw.Clamp ();
@@ -44,31 +44,28 @@ public class ProBox : Box {
     private void enable_drag_and_drop (Gtk.Button drag_button, ListBox list_box, ListBoxRow row) {
         var drag_source = new Gtk.DragSource ();
         drag_source.set_actions (Gdk.DragAction.MOVE);
-
-        /// иконки для перетаскивания
+    
         drag_source.drag_begin.connect ((source, drag) => {
-            var paintable = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ())
-                .lookup_icon ("list-drag-handle-symbolic", null, 24, 1, Gtk.TextDirection.NONE, Gtk.IconLookupFlags.FORCE_SYMBOLIC);
-            if (paintable != null) {
-                drag_source.set_icon (paintable, 0, 0);
-            }
-        });
-
-        drag_source.drag_begin.connect ((source, drag) => {
-
             var paintable = new Gtk.WidgetPaintable (row);
             drag_source.set_icon (paintable, 0, 0);
+    
+            // Добавляем CSS-класс для стилизации
+            row.add_css_class ("dragging");
         });
     
-
+        drag_source.drag_end.connect ((source, drag) => {
+            // Удаляем CSS-класс после завершения перетаскивания
+            row.remove_css_class ("dragging");
+        });
+    
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
             value.set_object (row);
             return new Gdk.ContentProvider.for_value (value);
         });
-
+    
         drag_button.add_controller (drag_source);
-
+    
         var drop_target = new Gtk.DropTarget (typeof (ListBoxRow), Gdk.DragAction.MOVE);
         drop_target.drop.connect ((target, value, x, y) => {
             var source_row = value.get_object () as ListBoxRow;
