@@ -5,6 +5,7 @@ using Gee;
 public class MangoJuice : Adw.Application {
     // UI Elements
     public OtherBox other_box;
+    public ProBox pro_box;
     Button reset_button;
     Button logs_path_button;
     Button intel_power_fix_button;
@@ -104,6 +105,7 @@ public class MangoJuice : Adw.Application {
     public Button mangohud_global_button;
     bool mangohud_global_enabled = false;
     ScrolledWindow other_scrolled_window;
+    ScrolledWindow pro_scrolled_window;
     ViewStack view_stack;
 
     // Constants
@@ -317,6 +319,7 @@ public class MangoJuice : Adw.Application {
         var performance_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var visual_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var other_box = new OtherBox ();
+        var pro_box = new ProBox ();
 
         initialize_switches_and_labels (metrics_box, extras_box, performance_box, visual_box);
         initialize_custom_controls (extras_box, visual_box);
@@ -346,6 +349,11 @@ public class MangoJuice : Adw.Application {
         other_scrolled_window.set_vexpand (true);
         other_scrolled_window.set_child (other_box);
 
+        pro_scrolled_window = new ScrolledWindow ();
+        pro_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+        pro_scrolled_window.set_vexpand (true);
+        pro_scrolled_window.set_child (pro_box);
+
         string? current_desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
         bool is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
 
@@ -354,6 +362,7 @@ public class MangoJuice : Adw.Application {
             view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "application-x-addon-symbolic";
             view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "emblem-system-symbolic";
             view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "preferences-desktop-appearance-symbolic";
+            view_stack.add_titled (pro_scrolled_window, "pro_box", "Advanced").icon_name = "view-grid-symbolic";
         } else {
             view_stack.add_titled (metrics_scrolled_window, "metrics_box", _("Metrics")).icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
             view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
