@@ -17,14 +17,20 @@ finish-args:
 add-extensions:
   org.freedesktop.Platform.VulkanLayer.MangoHud:
     version: '24.08'
-    directory: extensions/MangoHud
+    autodownload: true
+    autodelete: true
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /man
+  - /share/doc
+  - /share/gtk-doc
+  - /share/man
+  - /share/pkgconfig
+  - /share/vala
+  - '*.la'
+  - '*.a'
 modules:
-  - name: mangojuice
-    buildsystem: meson
-    sources:
-      - type: dir
-        path: ../../
-
   - name: vulkan-tools
     buildsystem: cmake-ninja
     config-opts:
@@ -66,3 +72,9 @@ modules:
         sha256: 0ede63515851d85ac0d1ed5f00e355f539968e6d1fd226120a27b2c66c3575de
       - type: patch
         path: patches/libxnvctrl_so_0.patch
+
+  - name: mangojuice
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: ../../
