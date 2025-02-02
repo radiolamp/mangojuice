@@ -54,6 +54,13 @@ public class ProBox : Box {
             }
         });
 
+        drag_source.drag_begin.connect ((source, drag) => {
+
+            var paintable = new Gtk.WidgetPaintable (row);
+            drag_source.set_icon (paintable, 0, 0);
+        });
+    
+
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
             value.set_object (row);
