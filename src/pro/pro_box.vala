@@ -2,11 +2,15 @@ using Gtk;
 using Adw;
 
 public class ProBox : Box {
+    private File config_file;
+
     public ProBox () {
         Object (orientation: Orientation.VERTICAL, spacing: 10);
+
         var group = new Adw.PreferencesGroup ();
-        var group_label = create_label (_("Advansed"), Gtk.Align.START, { "title-4" });
+        var group_label = create_label (_("Advanced"), Gtk.Align.START, { "title-4" });
         group.add (group_label);
+
         var list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
         list_box.set_margin_start (12);
@@ -15,33 +19,26 @@ public class ProBox : Box {
         list_box.set_margin_bottom (12);
         list_box.add_css_class ("boxed-list");
 
-        for (int i = 1; i <= 5; i++) {
-            var action_row = new Adw.ActionRow ();
-            action_row.title = "Заголовок %d".printf (i);
-            action_row.subtitle = "Подзаголовок %d".printf (i);
+        // Загрузка конфигурационного файла
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+        config_file = config_dir.get_child ("MangoHud.conf");
 
-            var drag_button = new Gtk.Button ();
-            drag_button.icon_name = "list-drag-handle-symbolic";
-            drag_button.tooltip_text = "Перетащить";
-            drag_button.has_frame = false;
-            enable_drag_and_drop (drag_button, list_box, action_row);
-            action_row.add_prefix (drag_button);
+        if (config_file.query_exists ()) {
+            try {
+                var input_stream = config_file.read ();
+                var data_stream = new DataInputStream (input_stream);
+                string line;
 
-            var up_button = new Gtk.Button ();
-            up_button.icon_name = "go-up-symbolic";
-            up_button.tooltip_text = "Переместить вверх";
-            up_button.has_frame = false;
-            up_button.clicked.connect (() => move_row_up (list_box, action_row));
-            action_row.add_suffix (up_button);
+                while ((line = data_stream.read_line ()) != null) {
+                    add_config_row (list_box, line);
+                }
 
-            var down_button = new Gtk.Button ();
-            down_button.icon_name = "go-down-symbolic";
-            down_button.tooltip_text = "Переместить вниз";
-            down_button.has_frame = false;
-            down_button.clicked.connect (() => move_row_down (list_box, action_row));
-            action_row.add_suffix (down_button);
-
-            list_box.append (action_row);
+                input_stream.close ();
+            } catch (Error e) {
+                print ("Ошибка при чтении файла: %s\n", e.message);
+            }
+        } else {
+            print ("Файл конфигурации не найден: %s\n", config_file.get_path ());
         }
 
         var clamp = new Adw.Clamp ();
@@ -51,23 +48,59 @@ public class ProBox : Box {
         this.append (group);
     }
 
+    private void add_config_row (ListBox list_box, string line) {
+        var action_row = new Adw.ActionRow ();
+        action_row.title = _("Configuration Line");
+        action_row.subtitle = line; // Подзаголовок - это строка из файла
+
+        // Кнопка для перетаскивания
+        var drag_button = new Gtk.Button ();
+        drag_button.icon_name = "list-drag-handle-symbolic";
+        drag_button.tooltip_text = "Перетащить";
+        drag_button.has_frame = false;
+        enable_drag_and_drop (drag_button, list_box, action_row);
+        action_row.add_prefix (drag_button);
+
+        // Кнопка для перемещения вверх
+        var up_button = new Gtk.Button ();
+        up_button.icon_name = "go-up-symbolic";
+        up_button.tooltip_text = "Переместить вверх";
+        up_button.has_frame = false;
+        up_button.clicked.connect (() => {
+            move_row_up (list_box, action_row);
+            save_config_to_file (list_box);
+        });
+        action_row.add_suffix (up_button);
+
+        // Кнопка для перемещения вниз
+        var down_button = new Gtk.Button ();
+        down_button.icon_name = "go-down-symbolic";
+        down_button.tooltip_text = "Переместить вниз";
+        down_button.has_frame = false;
+        down_button.clicked.connect (() => {
+            move_row_down (list_box, action_row);
+            save_config_to_file (list_box);
+        });
+        action_row.add_suffix (down_button);
+
+        // Добавляем строку в список
+        list_box.append (action_row);
+    }
+
     private void enable_drag_and_drop (Gtk.Button drag_button, ListBox list_box, ListBoxRow row) {
         var drag_source = new Gtk.DragSource ();
         drag_source.set_actions (Gdk.DragAction.MOVE);
-
         drag_source.drag_begin.connect ((source, drag) => {
             row.add_css_class ("card");
             var paintable = new Gtk.WidgetPaintable (row);
             drag_source.set_icon (paintable, 0, 0);
         });
-
         drag_source.drag_end.connect ((source, drag) => row.remove_css_class ("card"));
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
             value.set_object (row);
             return new Gdk.ContentProvider.for_value (value);
         });
-
         drag_button.add_controller (drag_source);
 
         var drop_target = new Gtk.DropTarget (typeof (ListBoxRow), Gdk.DragAction.MOVE);
@@ -78,11 +111,11 @@ public class ProBox : Box {
                 int dest_index = get_row_index (list_box, dest_row);
                 list_box.remove (source_row);
                 list_box.insert (source_row, dest_index);
+                save_config_to_file (list_box); // Сохраняем изменения в файл
                 return true;
             }
             return false;
         });
-
         list_box.add_controller (drop_target);
     }
 
@@ -120,6 +153,31 @@ public class ProBox : Box {
         if (index < get_row_count (list_box) - 1) {
             list_box.remove (row);
             list_box.insert (row, index + 1);
+        }
+    }
+
+    private void save_config_to_file (ListBox list_box) {
+        try {
+            var output_stream = config_file.replace (
+                null, // etag
+                false, // make_backup
+                FileCreateFlags.NONE, // flags
+                null // cancellable
+            );
+            var data_stream = new DataOutputStream (output_stream);
+    
+            var child = list_box.get_first_child ();
+            while (child != null) {
+                var action_row = child as Adw.ActionRow;
+                if (action_row != null) {
+                    data_stream.put_string (action_row.subtitle + "\n", null);
+                }
+                child = child.get_next_sibling ();
+            }
+    
+            output_stream.close ();
+        } catch (Error e) {
+            print ("Ошибка при записи файла: %s\n", e.message);
         }
     }
 
