@@ -3,10 +3,7 @@ using Adw;
 
 public class ProBox : Box {
     public ProBox () {
-        Object (
-            orientation: Orientation.VERTICAL,
-            spacing: 10
-        );
+        Object (orientation: Orientation.VERTICAL, spacing: 10);
         var group = new Adw.PreferencesGroup ();
         var group_label = create_label (_("Advansed"), Gtk.Align.START, { "title-4" });
         group.add (group_label);
@@ -17,12 +14,12 @@ public class ProBox : Box {
         list_box.set_margin_top (12);
         list_box.set_margin_bottom (12);
         list_box.add_css_class ("boxed-list");
+
         for (int i = 1; i <= 5; i++) {
             var action_row = new Adw.ActionRow ();
             action_row.title = "Заголовок %d".printf (i);
             action_row.subtitle = "Подзаголовок %d".printf (i);
 
-            // Кнопка для перетаскивания
             var drag_button = new Gtk.Button ();
             drag_button.icon_name = "list-drag-handle-symbolic";
             drag_button.tooltip_text = "Перетащить";
@@ -30,28 +27,23 @@ public class ProBox : Box {
             enable_drag_and_drop (drag_button, list_box, action_row);
             action_row.add_prefix (drag_button);
 
-            // Кнопка "Вверх"
             var up_button = new Gtk.Button ();
             up_button.icon_name = "go-up-symbolic";
             up_button.tooltip_text = "Переместить вверх";
             up_button.has_frame = false;
-            up_button.clicked.connect (() => {
-                move_row_up (list_box, action_row);
-            });
+            up_button.clicked.connect (() => move_row_up (list_box, action_row));
             action_row.add_suffix (up_button);
 
-            // Кнопка "Вниз"
             var down_button = new Gtk.Button ();
             down_button.icon_name = "go-down-symbolic";
             down_button.tooltip_text = "Переместить вниз";
             down_button.has_frame = false;
-            down_button.clicked.connect (() => {
-                move_row_down (list_box, action_row);
-            });
+            down_button.clicked.connect (() => move_row_down (list_box, action_row));
             action_row.add_suffix (down_button);
 
             list_box.append (action_row);
         }
+
         var clamp = new Adw.Clamp ();
         clamp.set_maximum_size (800);
         clamp.set_child (list_box);
@@ -64,13 +56,12 @@ public class ProBox : Box {
         drag_source.set_actions (Gdk.DragAction.MOVE);
 
         drag_source.drag_begin.connect ((source, drag) => {
+            row.add_css_class ("card");
             var paintable = new Gtk.WidgetPaintable (row);
             drag_source.set_icon (paintable, 0, 0);
         });
 
-        drag_source.drag_end.connect ((source, drag) => {
-        });
-
+        drag_source.drag_end.connect ((source, drag) => row.remove_css_class ("card"));
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
             value.set_object (row);
@@ -84,15 +75,14 @@ public class ProBox : Box {
             var source_row = value.get_object () as ListBoxRow;
             var dest_row = list_box.get_row_at_y ((int)y);
             if (source_row != null && dest_row != null && source_row != dest_row) {
-                int source_index = get_row_index (list_box, source_row);
                 int dest_index = get_row_index (list_box, dest_row);
-                stdout.printf ("Moving row from index %d to index %d\n", source_index, dest_index);
                 list_box.remove (source_row);
                 list_box.insert (source_row, dest_index);
                 return true;
             }
             return false;
         });
+
         list_box.add_controller (drop_target);
     }
 
@@ -100,9 +90,7 @@ public class ProBox : Box {
         int index = 0;
         var child = list_box.get_first_child ();
         while (child != null) {
-            if (child == row) {
-                return index;
-            }
+            if (child == row) return index;
             index++;
             child = child.get_next_sibling ();
         }
