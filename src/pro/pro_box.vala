@@ -2,6 +2,7 @@ using Gtk;
 using Adw;
 
 public class ProBox : Box {
+
     public ProBox () {
         Object (
             orientation: Orientation.VERTICAL,
@@ -11,14 +12,17 @@ public class ProBox : Box {
         load_css (); // Загружаем CSS
 
         var group = new Adw.PreferencesGroup ();
-        group.title = "Список элементов";
+        var group_label = create_label (_("Advansed"), Gtk.Align.START, { "title-4" });
+        group.add (group_label);
 
         var list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
+        list_box.set_margin_start (12);
+        list_box.set_margin_end (12);
+        list_box.set_margin_top (12);
+        list_box.set_margin_bottom (12);
 
         list_box.add_css_class ("boxed-list");
-        list_box.add_css_class ("flat");
-
         for (int i = 1; i <= 5; i++) {
             var action_row = new Adw.ActionRow ();
             action_row.title = "Заголовок %d".printf (i);
@@ -112,5 +116,18 @@ public class ProBox : Box {
             child = child.get_next_sibling ();
         }
         return -1;
+    }
+
+    private Gtk.Label create_label (string text, Gtk.Align align, string[] style_classes) {
+        var label = new Gtk.Label (text);
+        label.set_halign (align);
+        foreach (var style_class in style_classes) {
+            label.add_css_class (style_class);
+            label.set_margin_start (12);
+            label.set_margin_end (12);
+            label.set_margin_top (12);
+            label.set_margin_bottom (12);
+        }
+        return label;
     }
 }
