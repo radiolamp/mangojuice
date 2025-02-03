@@ -2,92 +2,83 @@ using Gtk;
 using Adw;
 
 public class ProBox : Box {
-
     public ProBox () {
         Object (
             orientation: Orientation.VERTICAL,
             spacing: 10
         );
-
-        load_css (); // Загружаем CSS
-
         var group = new Adw.PreferencesGroup ();
         var group_label = create_label (_("Advansed"), Gtk.Align.START, { "title-4" });
         group.add (group_label);
-
         var list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
         list_box.set_margin_start (12);
         list_box.set_margin_end (12);
         list_box.set_margin_top (12);
         list_box.set_margin_bottom (12);
-
         list_box.add_css_class ("boxed-list");
         for (int i = 1; i <= 5; i++) {
             var action_row = new Adw.ActionRow ();
             action_row.title = "Заголовок %d".printf (i);
             action_row.subtitle = "Подзаголовок %d".printf (i);
 
+            // Кнопка для перетаскивания
             var drag_button = new Gtk.Button ();
             drag_button.icon_name = "list-drag-handle-symbolic";
             drag_button.tooltip_text = "Перетащить";
             drag_button.has_frame = false;
-
             enable_drag_and_drop (drag_button, list_box, action_row);
+            action_row.add_prefix (drag_button);
+
+            // Кнопка "Вверх"
+            var up_button = new Gtk.Button ();
+            up_button.icon_name = "go-up-symbolic";
+            up_button.tooltip_text = "Переместить вверх";
+            up_button.has_frame = false;
+            up_button.clicked.connect (() => {
+                move_row_up (list_box, action_row);
+            });
+            action_row.add_suffix (up_button);
+
+            // Кнопка "Вниз"
+            var down_button = new Gtk.Button ();
+            down_button.icon_name = "go-down-symbolic";
+            down_button.tooltip_text = "Переместить вниз";
+            down_button.has_frame = false;
+            down_button.clicked.connect (() => {
+                move_row_down (list_box, action_row);
+            });
+            action_row.add_suffix (down_button);
 
             list_box.append (action_row);
-            action_row.add_prefix (drag_button);
         }
-
         var clamp = new Adw.Clamp ();
-        clamp.set_maximum_size (600);
+        clamp.set_maximum_size (800);
         clamp.set_child (list_box);
-
         group.add (clamp);
         this.append (group);
-    }
-
-    private void load_css () {
-        var provider = new Gtk.CssProvider ();
-        provider.load_from_string ("""
-            .default {
-                background-color: rgba(128, 128, 128, 0.2);
-                border-radius: 5px;
-            }
-        """);
-
-        Gtk.StyleContext.add_provider_for_display (
-            Gdk.Display.get_default (),
-            provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        );
     }
 
     private void enable_drag_and_drop (Gtk.Button drag_button, ListBox list_box, ListBoxRow row) {
         var drag_source = new Gtk.DragSource ();
         drag_source.set_actions (Gdk.DragAction.MOVE);
-    
+
         drag_source.drag_begin.connect ((source, drag) => {
             var paintable = new Gtk.WidgetPaintable (row);
             drag_source.set_icon (paintable, 0, 0);
-    
-            row.add_css_class ("dragging");
-            row.add_css_class ("default"); // Добавляем класс "default"
         });
-    
+
         drag_source.drag_end.connect ((source, drag) => {
-            row.remove_css_class ("dragging");
-            row.remove_css_class ("default"); // Удаляем класс "default"
         });
-    
+
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
             value.set_object (row);
             return new Gdk.ContentProvider.for_value (value);
         });
-    
+
         drag_button.add_controller (drag_source);
-    
+
         var drop_target = new Gtk.DropTarget (typeof (ListBoxRow), Gdk.DragAction.MOVE);
         drop_target.drop.connect ((target, value, x, y) => {
             var source_row = value.get_object () as ListBoxRow;
@@ -116,6 +107,32 @@ public class ProBox : Box {
             child = child.get_next_sibling ();
         }
         return -1;
+    }
+
+    private int get_row_count (ListBox list_box) {
+        int count = 0;
+        var child = list_box.get_first_child ();
+        while (child != null) {
+            count++;
+            child = child.get_next_sibling ();
+        }
+        return count;
+    }
+
+    private void move_row_up (ListBox list_box, ListBoxRow row) {
+        int index = get_row_index (list_box, row);
+        if (index > 0) {
+            list_box.remove (row);
+            list_box.insert (row, index - 1);
+        }
+    }
+
+    private void move_row_down (ListBox list_box, ListBoxRow row) {
+        int index = get_row_index (list_box, row);
+        if (index < get_row_count (list_box) - 1) {
+            list_box.remove (row);
+            list_box.insert (row, index + 1);
+        }
     }
 
     private Gtk.Label create_label (string text, Gtk.Align align, string[] style_classes) {
