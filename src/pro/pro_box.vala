@@ -52,7 +52,7 @@ public class ProBox : Box {
         var action_row = new Adw.ActionRow ();
         action_row.title = _("Configuration Line");
         action_row.subtitle = line; // Подзаголовок - это строка из файла
-
+    
         // Кнопка для перетаскивания
         var drag_button = new Gtk.Button ();
         drag_button.icon_name = "list-drag-handle-symbolic";
@@ -61,48 +61,91 @@ public class ProBox : Box {
         enable_drag_and_drop (drag_button, list_box, action_row);
         action_row.add_prefix (drag_button);
 
-        // Кнопка для перемещения вверх
         var up_button = new Gtk.Button ();
         up_button.icon_name = "go-up-symbolic";
         up_button.tooltip_text = "Переместить вверх";
         up_button.has_frame = false;
         up_button.clicked.connect (() => {
+            // Отключаем скролл
+            disable_scroll (list_box);
+    
             move_row_up (list_box, action_row);
             save_config_to_file (list_box);
+
+            enable_scroll (list_box);
         });
         action_row.add_suffix (up_button);
 
-        // Кнопка для перемещения вниз
         var down_button = new Gtk.Button ();
         down_button.icon_name = "go-down-symbolic";
         down_button.tooltip_text = "Переместить вниз";
         down_button.has_frame = false;
         down_button.clicked.connect (() => {
+            // Отключаем скролл
+            disable_scroll (list_box);
+    
             move_row_down (list_box, action_row);
             save_config_to_file (list_box);
+
+            enable_scroll (list_box);
         });
         action_row.add_suffix (down_button);
 
-        // Добавляем строку в список
         list_box.append (action_row);
+    }
+    
+    private void disable_scroll (ListBox list_box) {
+        var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
+        if (scrolled_window != null) {
+            scrolled_window.get_vadjustment ().set_value (scrolled_window.get_vadjustment ().get_value ());
+            scrolled_window.set_sensitive (false);
+        }
+    }
+    
+    private void enable_scroll (ListBox list_box) {
+        var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
+        if (scrolled_window != null) {
+            scrolled_window.set_sensitive (true);
+        }
     }
 
     private void enable_drag_and_drop (Gtk.Button drag_button, ListBox list_box, ListBoxRow row) {
         var drag_source = new Gtk.DragSource ();
         drag_source.set_actions (Gdk.DragAction.MOVE);
+    
+        // Переменная для сохранения позиции скролла
+        double scroll_position = 0;
+    
         drag_source.drag_begin.connect ((source, drag) => {
             row.add_css_class ("card");
             var paintable = new Gtk.WidgetPaintable (row);
             drag_source.set_icon (paintable, 0, 0);
+    
+            // Сохраняем текущую позицию скролла
+            var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
+            if (scrolled_window != null) {
+                scroll_position = scrolled_window.get_vadjustment ().get_value ();
+            }
         });
-        drag_source.drag_end.connect ((source, drag) => row.remove_css_class ("card"));
+    
+        drag_source.drag_end.connect ((source, drag) => {
+            row.remove_css_class ("card");
+    
+            // Восстанавливаем позицию скролла
+            var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
+            if (scrolled_window != null) {
+                scrolled_window.get_vadjustment ().set_value (scroll_position);
+            }
+        });
+    
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
             value.set_object (row);
             return new Gdk.ContentProvider.for_value (value);
         });
+    
         drag_button.add_controller (drag_source);
-
+    
         var drop_target = new Gtk.DropTarget (typeof (ListBoxRow), Gdk.DragAction.MOVE);
         drop_target.drop.connect ((target, value, x, y) => {
             var source_row = value.get_object () as ListBoxRow;
@@ -116,6 +159,7 @@ public class ProBox : Box {
             }
             return false;
         });
+    
         list_box.add_controller (drop_target);
     }
 
