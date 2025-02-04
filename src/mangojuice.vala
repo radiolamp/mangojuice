@@ -276,87 +276,87 @@ public class MangoJuice : Adw.Application {
         var window = new Adw.ApplicationWindow (this);
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
-
+    
         if (Config.IS_DEVEL) {
             window.add_css_class ("devel");
         }
-
+    
         var main_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
-
+    
         view_stack = new ViewStack ();
-
+    
         var toolbar_view_switcher = new ViewSwitcher ();
         toolbar_view_switcher.stack = view_stack;
         toolbar_view_switcher.policy = ViewSwitcherPolicy.WIDE;
-
+    
         var bottom_headerbar = new Gtk.HeaderBar ();
         bottom_headerbar.show_title_buttons = false;
-
+    
         var bottom_view_switcher = new ViewSwitcher ();
         bottom_view_switcher.stack = view_stack;
-
+    
         var center_box = new Box (Orientation.HORIZONTAL, 0);
         center_box.set_halign (Align.CENTER);
         center_box.append (bottom_view_switcher);
         bottom_headerbar.set_title_widget (center_box);
-
+    
         bottom_headerbar.set_visible (false);
-
+    
         var breakpoint_800px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 800px"));
         var breakpoint_550px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 550px"));
-
+    
         breakpoint_800px.add_setter (toolbar_view_switcher, "policy", ViewSwitcherPolicy.NARROW);
         breakpoint_550px.add_setter (toolbar_view_switcher, "policy", ViewSwitcherPolicy.NARROW);
         breakpoint_550px.add_setter (bottom_headerbar, "visible", true);
         breakpoint_550px.add_setter (toolbar_view_switcher, "visible", false);
-
+    
         window.add_breakpoint (breakpoint_800px);
         window.add_breakpoint (breakpoint_550px);
-
+    
         var metrics_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var extras_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var performance_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var visual_box = new Box (Orientation.VERTICAL, MAIN_BOX_SPACING);
         var other_box = new OtherBox ();
         var pro_box = new ProBox ();
-
+    
         initialize_switches_and_labels (metrics_box, extras_box, performance_box, visual_box);
         initialize_custom_controls (extras_box, visual_box);
-
+    
         var metrics_scrolled_window = new ScrolledWindow ();
         metrics_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         metrics_scrolled_window.set_vexpand (true);
         metrics_scrolled_window.set_child (metrics_box);
-
+    
         var extras_scrolled_window = new ScrolledWindow ();
         extras_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         extras_scrolled_window.set_vexpand (true);
         extras_scrolled_window.set_child (extras_box);
-
+    
         var performance_scrolled_window = new ScrolledWindow ();
         performance_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         performance_scrolled_window.set_vexpand (true);
         performance_scrolled_window.set_child (performance_box);
-
+    
         var visual_scrolled_window = new ScrolledWindow ();
         visual_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         visual_scrolled_window.set_vexpand (true);
         visual_scrolled_window.set_child (visual_box);
-
+    
         other_scrolled_window = new ScrolledWindow ();
         other_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         other_scrolled_window.set_vexpand (true);
         other_scrolled_window.set_child (other_box);
-
+    
         pro_scrolled_window = new ScrolledWindow ();
         pro_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         pro_scrolled_window.set_vexpand (true);
         pro_scrolled_window.set_child (pro_box);
-
+    
         string? current_desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
         bool is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
-
+    
         if (is_gnome) {
             view_stack.add_titled (metrics_scrolled_window, "metrics_box", _("Metrics")).icon_name = "view-continuous-symbolic";
             view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "application-x-addon-symbolic";
@@ -369,16 +369,16 @@ public class MangoJuice : Adw.Application {
             view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
             view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
         }
-
+    
         add_other_box_if_needed.begin ();
-
+    
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
-
+    
         var test_button = new Button.with_label (_("Test"));
         test_button.clicked.connect (run_test);
         header_bar.pack_start (test_button);
-
+    
         var menu_button = new MenuButton ();
         var menu_model = new GLib.Menu ();
         var save_item = new GLib.MenuItem (_("Save"), "app.save");
@@ -387,12 +387,23 @@ public class MangoJuice : Adw.Application {
         menu_model.append_item (save_as_item);
         var restore_config_item = new GLib.MenuItem (_("Restore"), "app.restore_config");
         menu_model.append_item (restore_config_item);
+        var advanced_item = new GLib.MenuItem (_("Advanced"), "app.advanced");
+        menu_model.append_item (advanced_item);
         var about_item = new GLib.MenuItem (_("About"), "app.about");
         menu_model.append_item (about_item);
         menu_button.set_menu_model (menu_model);
         menu_button.set_icon_name ("open-menu-symbolic");
         header_bar.pack_end (menu_button);
+    
+        // Создаем действие для кнопки "Advanced"
+        var advanced_action = new SimpleAction ("advanced", null);
+        advanced_action.activate.connect (() => {
+            var advanced_dialog = new AdvancedDialog (window);
+            advanced_dialog.present (window);
+        });
 
+        this.add_action (advanced_action);
+        
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => {
             SaveStates.save_states_to_file (this);
@@ -404,50 +415,49 @@ public class MangoJuice : Adw.Application {
                 }
             }
         });
-
         this.add_action (save_action);
-
+    
         var content_box = new Box (Orientation.VERTICAL, 0);
         content_box.append (header_bar);
         content_box.append (view_stack);
-
+    
         window.set_content (content_box);
         window.present ();
-
+    
         Idle.add (() => {
             bool mangohud_available = is_mangohud_available ();
             bool vkcube_available = is_vkcube_available ();
             bool glxgears_available = is_glxgears_available ();
-
+    
             if (!mangohud_available) {
                 stderr.printf (_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
-
+    
                 var mangohud_notification = new GLib.Notification(_("MangoHud Not Found"));
                 mangohud_notification.set_body (_("MangoHud is not installed. Please install it. If you are using flatpak, you need to install the flatpak version."));
                 mangohud_notification.set_icon (new ThemedIcon("io.github.radiolamp.mangojuice"));
                 GLib.Application.get_default ().send_notification("mangohud-not-found", mangohud_notification);
             }
-
+    
             if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
                 test_button?.set_visible (false);
                 if (!vkcube_available && !glxgears_available) {
                     stderr.printf (_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
                                   _("glxgears not found. If you want a test button, install mesa-utils.\n"));
-
+    
                     var test_button_notification = new GLib.Notification(_("Test Button Disabled"));
                     test_button_notification.set_body (_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
                     test_button_notification.set_icon (new ThemedIcon("io.github.radiolamp.mangojuice"));
                     GLib.Application.get_default ().send_notification("test-button-disabled", test_button_notification);
                 }
             }
-
+    
             reset_manager = new ResetManager (this);
             content_box.append (bottom_headerbar);
             initialize_rest_of_ui (view_stack);
             check_mangohud_global_status ();
             return false;
         });
-
+    
         LoadStates.load_states_from_file.begin (this);
     }
 

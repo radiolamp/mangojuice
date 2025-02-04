@@ -14,6 +14,7 @@ sources = files(
     'other/other_load.vala',
     'load_states.vala',
     'reset_manager.vala',
+    'advanced.vala',
     'pro/pro_box.vala'
 )
 
