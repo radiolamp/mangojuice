@@ -7,16 +7,30 @@ public class AdvancedDialog : Adw.Dialog {
     public AdvancedDialog (Gtk.Window parent) {
         Object ();
 
-        // Создаем содержимое диалога
-        var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-        content.append (create_advanced_content ());
-        this.set_child (content);
+        var header_bar = new Gtk.HeaderBar ();
+        header_bar.set_show_title_buttons (true);
+        header_bar.add_css_class ("flat");
 
-        // Отображаем диалог относительно родительского окна
+        var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        main_box.set_size_request (320, 480);
+
+        main_box.append (header_bar);
+
+        main_box.append (create_advanced_content ());
+
+        this.set_child (main_box);
+
         this.present (parent);
     }
 
     private Gtk.Widget create_advanced_content () {
+        var scrolled_window = new Gtk.ScrolledWindow ();
+        scrolled_window.set_hexpand (true);
+        scrolled_window.set_vexpand (true);
+
+        var clamp = new Adw.Clamp ();
+        clamp.set_maximum_size (800);
+
         var group = new Adw.PreferencesGroup ();
         var group_label = create_label (_("Advanced"), Gtk.Align.START, { "title-4" });
         group.add (group_label);
@@ -51,12 +65,13 @@ public class AdvancedDialog : Adw.Dialog {
             print ("Файл конфигурации не найден: %s\n", config_file.get_path ());
         }
 
-        var clamp = new Adw.Clamp ();
-        clamp.set_maximum_size (800);
         clamp.set_child (list_box);
         group.add (clamp);
 
-        return group;
+        // Добавляем содержимое в ScrolledWindow
+        scrolled_window.set_child (group);
+
+        return scrolled_window;
     }
 
     private void add_config_row (ListBox list_box, string line) {
