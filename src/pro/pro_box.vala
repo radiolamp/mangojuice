@@ -8,6 +8,8 @@ public class ProBox : Box {
         Object (orientation: Orientation.VERTICAL, spacing: 10);
 
         var group = new Adw.PreferencesGroup ();
+        var group_label = create_label (_("Advanced"), Gtk.Align.START, { "title-4" });
+        group.add (group_label);
 
         var list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
@@ -17,6 +19,7 @@ public class ProBox : Box {
         list_box.set_margin_bottom (12);
         list_box.add_css_class ("boxed-list");
 
+        // Загрузка конфигурационного файла
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         config_file = config_dir.get_child ("MangoHud.conf");
 
@@ -49,17 +52,21 @@ public class ProBox : Box {
         var action_row = new Adw.ActionRow ();
         action_row.title = _("Configuration Line");
         action_row.subtitle = line; // Подзаголовок - это строка из файла
-
+    
+        // Кнопка для перетаскивания
         var drag_button = new Gtk.Button ();
         drag_button.icon_name = "list-drag-handle-symbolic";
+        drag_button.tooltip_text = "Перетащить";
         drag_button.has_frame = false;
         enable_drag_and_drop (drag_button, list_box, action_row);
         action_row.add_prefix (drag_button);
 
         var up_button = new Gtk.Button ();
         up_button.icon_name = "go-up-symbolic";
+        up_button.tooltip_text = "Переместить вверх";
         up_button.has_frame = false;
         up_button.clicked.connect (() => {
+            // Отключаем скролл
             disable_scroll (list_box);
     
             move_row_up (list_box, action_row);
@@ -71,8 +78,10 @@ public class ProBox : Box {
 
         var down_button = new Gtk.Button ();
         down_button.icon_name = "go-down-symbolic";
+        down_button.tooltip_text = "Переместить вниз";
         down_button.has_frame = false;
         down_button.clicked.connect (() => {
+            // Отключаем скролл
             disable_scroll (list_box);
     
             move_row_down (list_box, action_row);
@@ -103,14 +112,16 @@ public class ProBox : Box {
     private void enable_drag_and_drop (Gtk.Button drag_button, ListBox list_box, ListBoxRow row) {
         var drag_source = new Gtk.DragSource ();
         drag_source.set_actions (Gdk.DragAction.MOVE);
-
+    
+        // Переменная для сохранения позиции скролла
         double scroll_position = 0;
     
         drag_source.drag_begin.connect ((source, drag) => {
             row.add_css_class ("card");
             var paintable = new Gtk.WidgetPaintable (row);
             drag_source.set_icon (paintable, 0, 0);
-
+    
+            // Сохраняем текущую позицию скролла
             var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
             if (scrolled_window != null) {
                 scroll_position = scrolled_window.get_vadjustment ().get_value ();
@@ -119,12 +130,14 @@ public class ProBox : Box {
     
         drag_source.drag_end.connect ((source, drag) => {
             row.remove_css_class ("card");
-
+    
+            // Восстанавливаем позицию скролла
             var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
             if (scrolled_window != null) {
                 scrolled_window.get_vadjustment ().set_value (scroll_position);
             }
         });
+        
     
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
@@ -142,7 +155,7 @@ public class ProBox : Box {
                 int dest_index = get_row_index (list_box, dest_row);
                 list_box.remove (source_row);
                 list_box.insert (source_row, dest_index);
-                save_config_to_file (list_box);
+                save_config_to_file (list_box); // Сохраняем изменения в файл
                 return true;
             }
             return false;
@@ -179,6 +192,7 @@ public class ProBox : Box {
             }
             return Gdk.DragAction.MOVE;
         });
+    
         list_box.add_controller (drop_target);
     }
 
@@ -242,5 +256,18 @@ public class ProBox : Box {
         } catch (Error e) {
             print ("Ошибка при записи файла: %s\n", e.message);
         }
+    }
+
+    private Gtk.Label create_label (string text, Gtk.Align align, string[] style_classes) {
+        var label = new Gtk.Label (text);
+        label.set_halign (align);
+        foreach (var style_class in style_classes) {
+            label.add_css_class (style_class);
+            label.set_margin_start (12);
+            label.set_margin_end (12);
+            label.set_margin_top (12);
+            label.set_margin_bottom (12);
+        }
+        return label;
     }
 }
