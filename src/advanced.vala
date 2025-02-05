@@ -12,15 +12,9 @@ public class AdvancedDialog : Adw.Dialog {
         header_bar.add_css_class ("flat");
 
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-        main_box.set_hexpand (true);
-        main_box.set_vexpand (true);
-
         main_box.append (header_bar);
-
         main_box.append (create_advanced_content ());
-
         this.set_child (main_box);
-
         this.present (parent);
     }
 

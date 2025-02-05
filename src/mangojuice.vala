@@ -398,7 +398,7 @@ public class MangoJuice : Adw.Application {
         var advanced_action = new SimpleAction ("advanced", null);
         advanced_action.activate.connect (() => {
             var advanced_dialog = new AdvancedDialog (window);
-            advanced_dialog.set_size_request (600, 600);
+            advanced_dialog.set_size_request ((int) (window.get_width () * 0.8), (int) (window.get_height () * 0.8));
             // Отслеживаем изменения размера основного окна
             window.notify["default-width"].connect (() => {
                 advanced_dialog.set_size_request ((int) (window.get_width () * 0.8), (int) (window.get_height () * 0.8));
