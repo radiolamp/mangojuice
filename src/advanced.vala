@@ -10,6 +10,7 @@ public class AdvancedDialog : Adw.Dialog {
         var header_bar = new Gtk.HeaderBar ();
         header_bar.set_show_title_buttons (true);
         header_bar.add_css_class ("flat");
+        header_bar.set_size_request (320, -1);
 
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         main_box.append (header_bar);
