@@ -12,7 +12,8 @@ public class AdvancedDialog : Adw.Dialog {
         header_bar.add_css_class ("flat");
 
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-        main_box.set_size_request (320, 480);
+        main_box.set_hexpand (true);
+        main_box.set_vexpand (true);
 
         main_box.append (header_bar);
 
@@ -32,8 +33,6 @@ public class AdvancedDialog : Adw.Dialog {
         clamp.set_maximum_size (800);
 
         var group = new Adw.PreferencesGroup ();
-        var group_label = create_label (_("Advanced"), Gtk.Align.START, { "title-4" });
-        group.add (group_label);
 
         var list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
@@ -272,18 +271,5 @@ public class AdvancedDialog : Adw.Dialog {
         } catch (Error e) {
             print ("Ошибка при записи файла: %s\n", e.message);
         }
-    }
-
-    private Gtk.Label create_label (string text, Gtk.Align align, string[] style_classes) {
-        var label = new Gtk.Label (text);
-        label.set_halign (align);
-        foreach (var style_class in style_classes) {
-            label.add_css_class (style_class);
-            label.set_margin_start (12);
-            label.set_margin_end (12);
-            label.set_margin_top (12);
-            label.set_margin_bottom (12);
-        }
-        return label;
     }
 }
