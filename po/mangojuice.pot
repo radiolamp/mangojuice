@@ -1002,3 +1002,6 @@ msgstr ""
 
 msgid "Select Config File to Restore"
 msgstr ""
+
+msgid "Charge order"
+msgstr ""
