@@ -3,6 +3,9 @@ using Adw;
 
 public class AdvancedDialog : Adw.Dialog {
     private File config_file;
+    private List<string> all_config_lines;
+    private List<string> filtered_config_lines;
+    private ListBox list_box;
 
     public AdvancedDialog (Gtk.Window parent) {
         Object ();
@@ -26,10 +29,10 @@ public class AdvancedDialog : Adw.Dialog {
 
         var clamp = new Adw.Clamp ();
         clamp.set_maximum_size (800);
-
+    
         var group = new Adw.PreferencesGroup ();
 
-        var list_box = new ListBox ();
+        list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
         list_box.set_margin_start (12);
         list_box.set_margin_end (12);
@@ -37,7 +40,6 @@ public class AdvancedDialog : Adw.Dialog {
         list_box.set_margin_bottom (12);
         list_box.add_css_class ("boxed-list");
 
-        // Загрузка конфигурационного файла
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         config_file = config_dir.get_child ("MangoHud.conf");
 
@@ -46,11 +48,58 @@ public class AdvancedDialog : Adw.Dialog {
                 var input_stream = config_file.read ();
                 var data_stream = new DataInputStream (input_stream);
                 string line;
+    
+                all_config_lines = new List<string> ();
+                filtered_config_lines = new List<string> ();
 
                 while ((line = data_stream.read_line ()) != null) {
-                    add_config_row (list_box, line);
-                }
+                    all_config_lines.append (line);
 
+                    if (!line.contains ("color")) {
+                        if (line.has_prefix ("custom_text_center=") ||
+                            line.has_prefix ("custom_text=") ||
+                            line.has_prefix ("gpu_stats") ||
+                            line.has_prefix ("vram") ||
+                            line.has_prefix ("cpu_stats") ||
+                            line.has_prefix ("core_load") ||
+                            line.has_prefix ("ram") ||
+                            line.has_prefix ("io_read") ||
+                            line.has_prefix ("io_write") ||
+                            line.has_prefix ("procmem") ||
+                            line.has_prefix ("swap") ||
+                            line.has_prefix ("fan") ||
+                            line.has_prefix ("fps") ||
+                            line.has_prefix ("fps_metrics=avg,0.01") ||
+                            line.has_prefix ("fps_metrics=avg,0.1") ||
+                            line.has_prefix ("version") ||
+                            line.has_prefix ("gamemode") ||
+                            line.has_prefix ("vkbasalt") ||
+                            line.has_prefix ("exec_name") ||
+                            line.has_prefix ("fsr") ||
+                            line.has_prefix ("hdr") ||
+                            line.has_prefix ("engine_version") ||
+                            line.has_prefix ("refresh_rate") ||
+                            line.has_prefix ("resolution") ||
+                            line.has_prefix ("arch") ||
+                            line.has_prefix ("present_mode") ||
+                            line.has_prefix ("show_fps_limit") ||
+                            line.has_prefix ("frame_timing") ||
+                            line.has_prefix ("frame_count") ||
+                            line.has_prefix ("battery") ||
+                            line.has_prefix ("battery_watt") ||
+                            line.has_prefix ("battery_time") ||
+                            line.has_prefix ("device_battery_icon") ||
+                            line.has_prefix ("device_battery=gamepad,mouse") ||
+                            line.has_prefix ("network") ||
+                            line.has_prefix ("media_player") ||
+                            line.has_prefix ("wine") ||
+                            line.has_prefix ("winesync")) {
+                            filtered_config_lines.append (line);
+                            add_config_row (list_box, line);
+                        }
+                    }
+                }
+    
                 input_stream.close ();
             } catch (Error e) {
                 print ("Ошибка при чтении файла: %s\n", e.message);
@@ -62,7 +111,6 @@ public class AdvancedDialog : Adw.Dialog {
         clamp.set_child (list_box);
         group.add (clamp);
 
-        // Добавляем содержимое в ScrolledWindow
         scrolled_window.set_child (group);
 
         return scrolled_window;
@@ -70,20 +118,19 @@ public class AdvancedDialog : Adw.Dialog {
 
     private void add_config_row (ListBox list_box, string line) {
         var action_row = new Adw.ActionRow ();
-        action_row.title = _("Configuration Line");
-        action_row.subtitle = line; // Подзаголовок - это строка из файла
 
-        // Кнопка для перетаскивания
+        string key = line.split ("=")[0];
+        action_row.title = get_localized_title (key);
+        action_row.subtitle = line;
+
         var drag_button = new Gtk.Button ();
         drag_button.icon_name = "list-drag-handle-symbolic";
-        drag_button.tooltip_text = "Перетащить";
         drag_button.has_frame = false;
         enable_drag_and_drop (drag_button, list_box, action_row);
         action_row.add_prefix (drag_button);
-
+    
         var up_button = new Gtk.Button ();
         up_button.icon_name = "go-up-symbolic";
-        up_button.tooltip_text = "Переместить вверх";
         up_button.has_frame = false;
         up_button.clicked.connect (() => {
             disable_scroll (list_box);
@@ -92,10 +139,9 @@ public class AdvancedDialog : Adw.Dialog {
             enable_scroll (list_box);
         });
         action_row.add_suffix (up_button);
-
+    
         var down_button = new Gtk.Button ();
         down_button.icon_name = "go-down-symbolic";
-        down_button.tooltip_text = "Переместить вниз";
         down_button.has_frame = false;
         down_button.clicked.connect (() => {
             disable_scroll (list_box);
@@ -104,7 +150,7 @@ public class AdvancedDialog : Adw.Dialog {
             enable_scroll (list_box);
         });
         action_row.add_suffix (down_button);
-
+    
         list_box.append (action_row);
     }
 
@@ -242,16 +288,19 @@ public class AdvancedDialog : Adw.Dialog {
             list_box.insert (row, index + 1);
         }
     }
-
     private void save_config_to_file (ListBox list_box) {
         try {
             var output_stream = config_file.replace (
-                null, // etag
-                false, // make_backup
-                FileCreateFlags.NONE, // flags
-                null // cancellable
+                null,
+                false,
+                FileCreateFlags.NONE,
+                null
             );
             var data_stream = new DataOutputStream (output_stream);
+    
+            // Записываем неизменяемую часть конфига
+            data_stream.put_string ("# Config Generated by MangoJuice #\n", null);
+            data_stream.put_string ("legacy_layout=false\n", null);
 
             var child = list_box.get_first_child ();
             while (child != null) {
@@ -262,9 +311,98 @@ public class AdvancedDialog : Adw.Dialog {
                 child = child.get_next_sibling ();
             }
 
+            foreach (var line in all_config_lines) {
+                if (filtered_config_lines.find_custom (line, strcmp) == null) {
+                    data_stream.put_string (line + "\n", null);
+                }
+            }
+
             output_stream.close ();
         } catch (Error e) {
             print ("Ошибка при записи файла: %s\n", e.message);
+        }
+    }
+
+    private string get_localized_title (string key) {
+        switch (key) {
+            case "custom_text_center":
+                return _("Your text");
+            case "custom_text":
+                return _("Your text");
+            case "gpu_stats":
+                return _("Load GPU");
+            case "engine_version":
+                return _("Vulkan Driver");
+            case "vram":
+                return _("VRAM");
+            case "cpu_stats":
+                return _("Load CPU");
+            case "core_load":
+                return _("Core Load");
+            case "ram":
+                return _("RAM");
+            case "io_read":
+                return _("Disk IO");
+            case "io_write":
+                return _("Disk IO");
+            case "procmem":
+                return _("Resident mem");
+            case "swap":
+                return _("Swap");
+            case "fan":
+                return _("Fan");
+            case "fps":
+                return _("FPS");
+            case "fps_metrics=avg,0.01":
+                return _("FPS low 0.1%");
+            case "fps_metrics=avg,0.1":
+                return _("FPS low 1%");
+            case "version":
+                return _("Version");
+            case "gamemode":
+                return _("Gamemode");
+            case "vkbasalt":
+                return _("VKbasalt");
+            case "exec_name":
+                return _("Name");
+            case "fsr":
+                return _("FSR");
+            case "hdr":
+                return _("HDR");
+            case "refresh_rate":
+                return _("Refresh rate");
+            case "resolution":
+                return _("Resolution");
+            case "arch":
+                return _("Arch");
+            case "present_mode":
+                return _("VPS");
+            case "show_fps_limit":
+                return _("Frame limit");
+            case "frame_timing":
+                return _("Frame time");
+            case "frame_count":
+                return _("Frame");
+            case "battery":
+                return _("Percentage");
+            case "battery_watt":
+                return _("Wattage");
+            case "battery_time":
+                return _("Time remain");
+            case "device_battery_icon":
+                return _("Battery icon");
+            case "device_battery=gamepad,mouse":
+                return _("Device");
+            case "network":
+                return _("Network");
+            case "media_player":
+                return _("Media");
+            case "wine":
+                return _("Version");
+            case "winesync":
+                return _("Winesync");
+            default:
+                return _("Other");
         }
     }
 }

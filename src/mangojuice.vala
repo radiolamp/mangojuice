@@ -138,7 +138,7 @@ public class MangoJuice : Adw.Application {
         "time", "arch"
     };
     public string[] wine_config_vars = {
-        "wine", "engine_version", "engine_short_names", "winesync"
+        "wine", "exec=wineserver -v", "engine_short_names", "winesync"
     };
     public string[] battery_config_vars = {
         "battery", "battery_watt", "battery_time", "device_battery_icon", "device_battery=gamepad,mouse"
