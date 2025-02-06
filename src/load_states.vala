@@ -8,6 +8,8 @@ public class LoadStates {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
 
+        mango_juice.is_loading = true;
+
         if (!file.query_exists ()) {
             return;
         }
@@ -439,6 +441,7 @@ public class LoadStates {
         } catch (Error e) {
             stderr.printf ("Error reading the file: %s\n", e.message);
         }
+        mango_juice.is_loading = false;
     }
     public static void load_switch_from_file (string line, Switch[] switches, string[] config_vars) {
         for (int i = 0; i < config_vars.length; i++) {

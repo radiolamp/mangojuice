@@ -103,6 +103,7 @@ public class MangoJuice : Adw.Application {
     public Label fps_sampling_period_value_label;
     public Button mangohud_global_button;
     bool mangohud_global_enabled = false;
+    public bool is_loading = false;
     ScrolledWindow other_scrolled_window;
     ViewStack view_stack;
 
@@ -257,7 +258,7 @@ public class MangoJuice : Adw.Application {
 
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => {
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
         this.add_action (save_action);
         this.set_accels_for_action ("app.save", new string[] { "<Primary>S" });
@@ -388,7 +389,7 @@ public class MangoJuice : Adw.Application {
         
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => {
-            SaveStates.save_states_to_file (this);
+            save_config ();
             if (test_button_pressed) {
                 if (is_vkcube_available ()) {
                     restart_vkcube ();
@@ -573,7 +574,7 @@ public class MangoJuice : Adw.Application {
 
     public void add_value_changed_handler (Scale scale) {
         scale.value_changed.connect (() => {
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
     }
 
@@ -665,7 +666,7 @@ public class MangoJuice : Adw.Application {
         for (int i = 0; i < switches.length; i++) {
             switches[i].notify["active"].connect (() => {
                 new Thread<void> ("save-config", () => {
-                    SaveStates.save_states_to_file (this);
+                    save_config ();
                 });
             });
         }
@@ -727,13 +728,13 @@ public class MangoJuice : Adw.Application {
         custom_command_entry = new Entry ();
         var custom_command_box = create_entry_with_clear_button (custom_command_entry, _("Mangohud variable"), "");
         custom_command_entry.changed.connect (() => {
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         custom_logs_path_entry = new Entry ();
         var custom_logs_path_box = create_entry_with_clear_button (custom_logs_path_entry, _("Home"), "");
         custom_logs_path_entry.changed.connect (() => {
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         logs_path_button = new Button () {
@@ -788,7 +789,7 @@ public class MangoJuice : Adw.Application {
         var blacklist_box = create_entry_with_clear_button (blacklist_entry, _("Blacklist: (vkcube,WatchDogs2.exe)"), "");
         blacklist_entry.changed.connect (() => {
             SaveStates.update_blacklist_in_file (blacklist_entry.text);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
             mangohud_global_button = new Button.with_label (_("Mangohud Global"));
@@ -846,7 +847,7 @@ public class MangoJuice : Adw.Application {
         custom_text_center_entry = new Entry ();
         var custom_text_center_box = create_entry_with_clear_button (custom_text_center_entry, _("Your text"), "");
         custom_text_center_entry.changed.connect (() => {
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         var custom_text_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
@@ -887,7 +888,7 @@ public class MangoJuice : Adw.Application {
 
         var button4 = new Button.with_label (_("Restore profile"));
         button4.clicked.connect (() => {
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         button_flow_box.insert (button1, -1);
@@ -917,7 +918,7 @@ public class MangoJuice : Adw.Application {
             margin_end = FLOW_BOX_MARGIN
         };
         custom_switch.notify["active"].connect (() => {
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
     
         var custom_switch_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -947,7 +948,7 @@ public class MangoJuice : Adw.Application {
         alpha_scale.value_changed.connect (() => {
             double value = alpha_scale.get_value ();
             alpha_value_label.label = "%.1f".printf (value / 100.0);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
         combined_flow_box.insert (alpha_widget.widget, -1);
 
@@ -995,7 +996,7 @@ public class MangoJuice : Adw.Application {
         toggle_hud_entry.set_size_request (20, -1);
         toggle_hud_entry.changed.connect (() => {
             SaveStates.update_toggle_hud_in_file (toggle_hud_entry.text);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         var toggle_hud_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -1121,14 +1122,14 @@ public class MangoJuice : Adw.Application {
         var gpu_text_entry_box = create_entry_with_clear_button (gpu_text_entry, _("GPU custom name"), "");
         gpu_text_entry.changed.connect (() => {
             SaveStates.update_gpu_text_in_file (gpu_text_entry.text);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         cpu_text_entry = new Entry ();
         var cpu_text_entry_box = create_entry_with_clear_button (cpu_text_entry, _("CPU custom name"), "");
         cpu_text_entry.changed.connect (() => {
             SaveStates.update_cpu_text_in_file (cpu_text_entry.text);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         var color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
@@ -1519,7 +1520,7 @@ public class MangoJuice : Adw.Application {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
             var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
             SaveStates.update_font_file_in_file (selected_font_path);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         var factory = new Gtk.SignalListItemFactory ();
@@ -1719,7 +1720,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_1.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_1, 0, 1000);
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         fps_limit_entry_2 = new Entry ();
@@ -1727,7 +1728,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_2.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_2, 0, 1000);
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         fps_limit_entry_3 = new Entry ();
@@ -1735,7 +1736,7 @@ public class MangoJuice : Adw.Application {
         fps_limit_entry_3.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_3, 0, 1000);
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         var toggle_fps_limit_model = new Gtk.StringList (null);
@@ -1809,7 +1810,7 @@ public class MangoJuice : Adw.Application {
         filter_dropdown.set_valign (Align.START);
         filter_dropdown.set_hexpand (true);
         filter_dropdown.notify["selected"].connect (() => {
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
 
         var af_widget = create_scale_entry_widget (_("Anisotropic"), _("Filtering"), 0, 16, 0);
@@ -1909,7 +1910,7 @@ public class MangoJuice : Adw.Application {
     }
 
     void save_and_restart () {
-        SaveStates.save_states_to_file (this);
+        save_config ();
         restart_vkcube_or_glxgears ();
     }
 
@@ -1950,7 +1951,7 @@ public class MangoJuice : Adw.Application {
                 var config_file = config_dir.get_child ("MangoHud.conf");
 
                 if (!config_file.query_exists ()) {
-                    SaveStates.save_states_to_file (this);
+                    save_config ();
                 }
 
                 if (is_vkcube_available ()) {
@@ -2063,7 +2064,7 @@ public class MangoJuice : Adw.Application {
         var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
         gpu_entry.changed.connect (() => {
             SaveStates.update_gpu_in_file (gpu_entry.text);
-            SaveStates.save_states_to_file (this);
+            save_config ();
         });
     
         var gpu_flow_box = new FlowBox () {
@@ -2400,6 +2401,12 @@ public class MangoJuice : Adw.Application {
             show_restart_warning ();
         } else {
             stderr.printf (_("Failed to modify /etc/environment.\n"));
+        }
+    }
+
+    void save_config () {
+        if (!is_loading) {
+            SaveStates.save_states_to_file (this);
         }
     }
 
