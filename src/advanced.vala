@@ -28,12 +28,11 @@ public class AdvancedDialog : Adw.Dialog {
         scrolled_window.set_vexpand (true);
 
         var clamp = new Adw.Clamp ();
-        clamp.set_maximum_size (800);
-
         var group = new Adw.PreferencesGroup ();
 
         list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
+        list_box.set_hexpand (true);
         list_box.set_margin_start (12);
         list_box.set_margin_end (12);
         list_box.set_margin_top (12);
