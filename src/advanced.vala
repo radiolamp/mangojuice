@@ -288,8 +288,10 @@ public class AdvancedDialog : Adw.Dialog {
             list_box.insert (row, index + 1);
         }
     }
+
     private void save_config_to_file (ListBox list_box) {
         try {
+            // Открываем файл для записи (перезаписываем файл)
             var output_stream = config_file.replace (
                 null,
                 false,
@@ -297,10 +299,11 @@ public class AdvancedDialog : Adw.Dialog {
                 null
             );
             var data_stream = new DataOutputStream (output_stream);
-
-            // Записываем неизменяемую часть конфига
+    
+            // Всегда записываем заголовок в начало файла
             data_stream.put_string ("#Charge order by MangoJuice #\n", null);
-
+    
+            // Записываем данные из ListBox
             var child = list_box.get_first_child ();
             while (child != null) {
                 var action_row = child as Adw.ActionRow;
@@ -309,13 +312,15 @@ public class AdvancedDialog : Adw.Dialog {
                 }
                 child = child.get_next_sibling ();
             }
-
-            foreach (var line in all_config_lines) {
-                if (filtered_config_lines.find_custom (line, strcmp) == null) {
-                    data_stream.put_string (line + "\n", null);
+    
+            // Записываем остальные строки конфигурации
+            foreach (var config_line in all_config_lines) {
+                if (filtered_config_lines.find_custom (config_line, strcmp) == null) {
+                    data_stream.put_string (config_line + "\n", null);
                 }
             }
-
+    
+            // Закрываем поток
             output_stream.close ();
         } catch (Error e) {
             print (_("Error writing to the file: %s\n"), e.message);
