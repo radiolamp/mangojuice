@@ -29,7 +29,7 @@ public class AdvancedDialog : Adw.Dialog {
 
         var clamp = new Adw.Clamp ();
         clamp.set_maximum_size (800);
-    
+
         var group = new Adw.PreferencesGroup ();
 
         list_box = new ListBox ();
@@ -48,7 +48,7 @@ public class AdvancedDialog : Adw.Dialog {
                 var input_stream = config_file.read ();
                 var data_stream = new DataInputStream (input_stream);
                 string line;
-    
+
                 all_config_lines = new List<string> ();
                 filtered_config_lines = new List<string> ();
 
@@ -99,7 +99,7 @@ public class AdvancedDialog : Adw.Dialog {
                         }
                     }
                 }
-    
+
                 input_stream.close ();
             } catch (Error e) {
                 print (_("Error when selecting a file: %s\n"), e.message);
@@ -128,7 +128,7 @@ public class AdvancedDialog : Adw.Dialog {
         drag_button.has_frame = false;
         enable_drag_and_drop (drag_button, list_box, action_row);
         action_row.add_prefix (drag_button);
-    
+
         var up_button = new Gtk.Button ();
         up_button.icon_name = "go-up-symbolic";
         up_button.has_frame = false;
@@ -139,7 +139,7 @@ public class AdvancedDialog : Adw.Dialog {
             enable_scroll (list_box);
         });
         action_row.add_suffix (up_button);
-    
+
         var down_button = new Gtk.Button ();
         down_button.icon_name = "go-down-symbolic";
         down_button.has_frame = false;
@@ -173,31 +173,23 @@ public class AdvancedDialog : Adw.Dialog {
         var drag_source = new Gtk.DragSource ();
         drag_source.set_actions (Gdk.DragAction.MOVE);
 
-        double scroll_position = 0;
-
         drag_source.drag_begin.connect ((source, drag) => {
             row.add_css_class ("card");
             var paintable = new Gtk.WidgetPaintable (row);
             drag_source.set_icon (paintable, 0, 0);
 
-            var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
-            if (scrolled_window != null) {
-                scroll_position = scrolled_window.get_vadjustment ().get_value ();
-            }
         });
 
         drag_source.drag_end.connect ((source, drag) => {
             row.remove_css_class ("card");
 
-            var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
-            if (scrolled_window != null) {
-                scrolled_window.get_vadjustment ().set_value (scroll_position);
-            }
         });
 
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
+            disable_scroll (list_box); 
             value.set_object (row);
+            enable_scroll (list_box);
             return new Gdk.ContentProvider.for_value (value);
         });
 
@@ -227,11 +219,6 @@ public class AdvancedDialog : Adw.Dialog {
 
         drag_source.drag_end.connect ((source, drag) => {
             row.remove_css_class ("card");
-        
-            var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
-            if (scrolled_window != null) {
-                scrolled_window.get_vadjustment ().set_value (scroll_position);
-            }
 
             var child = list_box.get_first_child ();
             while (child != null) {
