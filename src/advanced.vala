@@ -225,7 +225,14 @@ public class AdvancedDialog : Adw.Dialog {
             return Gdk.DragAction.MOVE;
         });
 
-        drop_target.leave.connect ((target) => {
+        drag_source.drag_end.connect ((source, drag) => {
+            row.remove_css_class ("card");
+        
+            var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
+            if (scrolled_window != null) {
+                scrolled_window.get_vadjustment ().set_value (scroll_position);
+            }
+
             var child = list_box.get_first_child ();
             while (child != null) {
                 child.remove_css_class ("accent");
