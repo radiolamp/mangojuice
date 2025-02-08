@@ -3,7 +3,7 @@ using Adw;
 using Gee;
 
 public class ResetManager {
-    private MangoJuice app;
+    MangoJuice app;
 
     public ResetManager (MangoJuice app) {
         this.app = app;
@@ -24,15 +24,16 @@ public class ResetManager {
         reset_dropdowns ();
         reset_scales ();
         reset_color_buttons ();
+        reset_custom_switch ();
     }
 
-    private void reset_switches (Switch[] switches) {
+    void reset_switches (Switch[] switches) {
         foreach (var sw in switches) {
             sw.active = false;
         }
     }
 
-    private void reset_entries () {
+    void reset_entries () {
         app.custom_command_entry.text = "";
         app.custom_logs_path_entry.text = "";
         app.blacklist_entry.text = "";
@@ -49,7 +50,11 @@ public class ResetManager {
         app.toggle_hud_entry.text = "";
     }
 
-    private void reset_dropdowns () {
+    void reset_custom_switch () {
+        app.custom_switch.active = false;
+    }
+
+    void reset_dropdowns () {
         app.logs_key_combo.selected = 0;
         app.fps_limit_method.selected = 0;
         app.toggle_fps_limit.selected = 0;
@@ -60,7 +65,7 @@ public class ResetManager {
         app.font_dropdown.selected = 0;
     }
 
-    private void reset_scales () {
+    void reset_scales () {
         app.duracion_scale.set_value (30);
         app.autostart_scale.set_value (0);
         app.interval_scale.set_value (100);
@@ -75,7 +80,7 @@ public class ResetManager {
         app.fps_sampling_period_scale.set_value (500);
     }
 
-    private void reset_color_buttons () {
+    void reset_color_buttons () {
         var default_gpu_color = Gdk.RGBA ();
         default_gpu_color.parse ("#2e9762");
         app.gpu_color_button.set_rgba (default_gpu_color);
