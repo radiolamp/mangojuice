@@ -170,7 +170,6 @@ public class SaveStates {
         }
     }
 
-    // Основной метод для сохранения состояний в файл
     public static void save_states_to_file (MangoJuice mango_juice) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
@@ -217,8 +216,8 @@ public class SaveStates {
             order_map.set ("inform_start", inform_start);
 
             var inform_end = new ArrayList<int> ();
-            inform_end.add (9);
-            for (int i = 4; i < 9; i++) {
+            inform_end.add (10);
+            for (int i = 4; i < 10; i++) {
                 inform_end.add (i);
             }
             order_map.set ("inform_end", inform_end);

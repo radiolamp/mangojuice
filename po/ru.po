@@ -1014,3 +1014,9 @@ msgstr "Выбирите файл"
 
 msgid "Charge order"
 msgstr "Изменить порядок"
+
+msgid "only displays fps"
+msgstr "Отображает сам fps"
+
+msgid "FPS Only"
+msgstr "Только FPS"

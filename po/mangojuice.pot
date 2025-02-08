@@ -1005,3 +1005,9 @@ msgstr ""
 
 msgid "Charge order"
 msgstr ""
+
+msgid "Only displays fps"
+msgstr ""
+
+msgid "FPS Only"
+msgstr ""

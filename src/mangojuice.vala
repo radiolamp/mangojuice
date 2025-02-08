@@ -148,7 +148,7 @@ public class MangoJuice : Adw.Application {
         "media_player", "network", "full", "hud_no_margin", "log_versioning", "upload_logs"
     };
     public string[] inform_config_vars = {
-        "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
+        "fps", "fps_color_change", "fps_only", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
     };
     public string[] options_config_vars = {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display", "text_outline=0", "no_small_font"
@@ -184,7 +184,7 @@ public class MangoJuice : Adw.Application {
         _("Media"), _("Network"), _("Full ON"), _("Disable margins"), _("Log Versioning"), _("Upload Results")
     };
     string[] inform_label_texts = {
-        _("FPS"), _("FPS Color"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
+        _("FPS"), _("FPS Color"), _("FPS Only"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
     };
     string[] gpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display system VRAM"), _("Display GPU core"), _("Display GPU memory"),
@@ -214,7 +214,7 @@ public class MangoJuice : Adw.Application {
         _("Show media player"), _("Display network"), _("Excludes histogram"), _("Remove margins"), _("Log information"), _("Auto upload logs")
     };
     string[] inform_label_texts_2 = {
-        _("Show FPS"), _("Color text"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
+        _("Show FPS"), _("Color text"), _("Only displays fps"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
         _("Graph to histogram"), _("Display frame count"), _("Show temperature °F"), _("Present mode")
     };
 
@@ -496,11 +496,11 @@ public class MangoJuice : Adw.Application {
             add_value_changed_handler (scale);
         }
 
-        inform_switches[2].notify["active"].connect (() => {
-            if (inform_switches[2].active) inform_switches[3].active = false;
-        });
         inform_switches[3].notify["active"].connect (() => {
-            if (inform_switches[3].active) inform_switches[2].active = false;
+            if (inform_switches[3].active) inform_switches[4].active = false;
+        });
+        inform_switches[4].notify["active"].connect (() => {
+            if (inform_switches[4].active) inform_switches[3].active = false;
         });
         inform_switches[1].notify["active"].connect (() => {
             if (inform_switches[1].active) inform_switches[0].active = true;
@@ -508,11 +508,11 @@ public class MangoJuice : Adw.Application {
         inform_switches[0].notify["active"].connect (() => {
             if (!inform_switches[0].active) inform_switches[1].active = false;
         });
-        inform_switches[6].notify["active"].connect (() => {
-            if (inform_switches[6].active) inform_switches[5].active = true;
+        inform_switches[7].notify["active"].connect (() => {
+            if (inform_switches[7].active) inform_switches[6].active = true;
         });
-        inform_switches[5].notify["active"].connect (() => {
-            if (!inform_switches[5].active) inform_switches[6].active = false;
+        inform_switches[6].notify["active"].connect (() => {
+            if (!inform_switches[6].active) inform_switches[7].active = false;
         });
         cpu_switches[3].notify["active"].connect (() => {
             if (cpu_switches[3].active) cpu_switches[2].active = true;
@@ -866,24 +866,38 @@ public class MangoJuice : Adw.Application {
             margin_end = 10,
             selection_mode = SelectionMode.NONE
         };
-
+        
         var button1 = new Button.with_label (_("Profile 1"));
         button1.set_size_request (160, -1);
         button1.clicked.connect (() => {
-            set_preset (1);
-            restart_vkcube_or_glxgears ();
+            string[] profile1_vars = { "legacy_layout=false", "fps_only", "background_alpha=0" };
+            set_preset (profile1_vars);
+            LoadStates.load_states_from_file.begin (this);
+            reset_manager.reset_all_widgets ();
         });
 
         var button2 = new Button.with_label (_("Profile 2"));
         button2.clicked.connect (() => {
-            set_preset (-1);
-            restart_vkcube_or_glxgears ();
+            string[] profile2_vars = {"legacy_layout=false", "horizontal", "horizontal_stretch=0" , "gpu_stats", "position=top-center",
+            "gpu_load_change" ,"cpu_stats" , "cpu_load_change" ,"ram", "fps", "fps_color_change" , "round_corners=8" };
+            set_preset (profile2_vars);
+            LoadStates.load_states_from_file.begin (this);
+            reset_manager.reset_all_widgets ();
         });
 
         var button3 = new Button.with_label (_("Profile 3"));
         button3.clicked.connect (() => {
-            set_preset (4);
-            restart_vkcube_or_glxgears ();
+            string[] profile3_vars = { "legacy_layout=false", "hud_compact", "gpu_stats", "gpu_load_change", "gpu_voltage", "throttling_status",
+            "gpu_core_clock", "gpu_mem_clock", "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_power", "cpu_stats", "core_load",
+            "cpu_load_change", "cpu_mhz", "cpu_temp", "cpu_power", "io_stats", "io_read", "io_write", "swap", "vram", "ram", "procmem", "battery",
+            "battery_watt", "battery_time", "fps", "fps_metrics=avg,0.01", "engine_version", "gpu_name", "vulkan_driver", "arch", "wine",
+            "frame_timing", "throttling_status_graph", "frame_count", "fps_limit_method=late", "show_fps_limit", "fps_limit=0", "resolution",
+            "fsr", "hdr", "winesync", "present_mode", "refresh_rate", "gamemode", "vkbasalt", "device_battery=gamepad,mouse", "device_battery_icon",
+            "exec=lsb_release -a | grep Release | uniq | cut -c 10-26", "custom_text=Kernel", "exec=uname -r", "custom_text=Session:",
+            "exec=echo $XDG_SESSION_TYPE", "fps_color_change", "time#", "version", "media_player", "media_player_color=FFFF00" };
+            set_preset (profile3_vars);
+            LoadStates.load_states_from_file.begin (this);
+            reset_manager.reset_all_widgets ();
         });
 
         var button4 = new Button.with_label (_("Restore profile"));
@@ -2410,21 +2424,16 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    void set_preset(int preset_value) {
-        if (preset_value < -1 || preset_value > 5) {
-            stderr.printf (_("Invalid preset value: %d. Allowed range is -1 to 5.\n"), preset_value);
-            return;
-        }
-
+    void set_preset(string[] preset_values) {
         var file = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud").get_child("MangoHud.conf");
-
         try {
             if (!file.get_parent().query_exists()) file.get_parent().make_directory_with_parents();
-            var output_stream = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
-            output_stream.put_string("preset=%d\n".printf(preset_value));
-            stdout.printf("Preset set to %d in MangoHud.conf\n", preset_value);
+            var output_stream = new DataOutputStream (file.replace(null, false, FileCreateFlags.NONE));
+            foreach (string value in preset_values) {
+                output_stream.put_string("%s\n".printf(value));
+            }
         } catch (Error e) {
-            stderr.printf("Error: %s\n", e.message);
+            stderr.printf ("Error: %s\n", e.message);
         }
     }
 
