@@ -492,7 +492,6 @@ public class MangoJuice : Adw.Application {
             duracion_scale, autostart_scale, interval_scale, af, picmip, borders_scale, colums_scale, font_size_scale,
             offset_x_scale, offset_y_scale };
         foreach (var scale in scales) {
-            add_scroll_event_handler (scale);
             add_value_changed_handler (scale);
         }
 
@@ -538,40 +537,7 @@ public class MangoJuice : Adw.Application {
 
         base.shutdown ();
     }
-
-    public void add_scroll_event_handler (Scale scale) {
-        var controller = new EventControllerScroll (EventControllerScrollFlags.VERTICAL);
-        var motion_controller = new EventControllerMotion ();
-        uint timeout_id = 0;
-
-        motion_controller.enter.connect ( () => {
-            timeout_id = Timeout.add (300, () => {
-                controller.scroll.disconnect (ignore_scroll);
-                timeout_id = 0;
-                return false;
-            });
-        });
-
-        motion_controller.leave.connect ( () => {
-            if (timeout_id != 0) {
-                Source.remove (timeout_id);
-                timeout_id = 0;
-            }
-            controller.scroll.connect (ignore_scroll);
-        });
-
-        controller.scroll.connect (ignore_scroll);
-
-        scale.add_controller (controller);
-        scale.add_controller (motion_controller);
-
-        scale.set_increments (1, 1);
-    }
-
-    bool ignore_scroll (double dx, double dy) {
-        return true;
-    }
-
+    
     public void add_value_changed_handler (Scale scale) {
         scale.value_changed.connect (() => {
             save_config ();
@@ -2251,6 +2217,8 @@ public class MangoJuice : Adw.Application {
         result.scale.set_value (initial_value);
         result.scale.set_size_request (140, -1);
         result.scale.set_hexpand (true);
+        result.scale.adjustment.step_increment = 1;
+        result.scale.adjustment.page_increment = 1;
     
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
@@ -2262,6 +2230,7 @@ public class MangoJuice : Adw.Application {
         bool is_updating = false;
 
         result.scale.value_changed.connect (() => {
+            validate_entry_value (result.entry, min, max);
             if (!is_updating) {
                 is_updating = true;
                 GLib.Idle.add (() => {
