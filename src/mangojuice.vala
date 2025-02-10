@@ -341,7 +341,7 @@ public class MangoJuice : Adw.Application {
         visual_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         visual_scrolled_window.set_vexpand (true);
         visual_scrolled_window.set_child (visual_box);
-    
+
         other_scrolled_window = new ScrolledWindow ();
         other_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         other_scrolled_window.set_vexpand (true);
@@ -361,7 +361,7 @@ public class MangoJuice : Adw.Application {
             view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
             view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
         }
-    
+
         add_other_box_if_needed.begin ();
 
         var header_bar = new Adw.HeaderBar ();
@@ -386,7 +386,7 @@ public class MangoJuice : Adw.Application {
         menu_button.set_menu_model (menu_model);
         menu_button.set_icon_name ("open-menu-symbolic");
         header_bar.pack_end (menu_button);
-        
+
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => {
             save_config ();
@@ -414,11 +414,11 @@ public class MangoJuice : Adw.Application {
 
             if (!mangohud_available) {
                 stderr.printf (_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
-    
+
                 var mangohud_notification = new GLib.Notification(_("MangoHud Not Found"));
                 mangohud_notification.set_body (_("MangoHud is not installed. Please install it. If you are using flatpak, you need to install the flatpak version."));
                 mangohud_notification.set_icon (new ThemedIcon("io.github.radiolamp.mangojuice"));
-                GLib.Application.get_default ().send_notification("mangohud-not-found", mangohud_notification);
+                GLib.Application.get_default ().send_notification ("mangohud-not-found", mangohud_notification);
             }
 
             if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
@@ -427,9 +427,9 @@ public class MangoJuice : Adw.Application {
                     stderr.printf (_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
                                   _("glxgears not found. If you want a test button, install mesa-utils.\n"));
     
-                    var test_button_notification = new GLib.Notification(_("Test Button Disabled"));
+                    var test_button_notification = new GLib.Notification (_("Test Button Disabled"));
                     test_button_notification.set_body (_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
-                    test_button_notification.set_icon (new ThemedIcon("io.github.radiolamp.mangojuice"));
+                    test_button_notification.set_icon (new ThemedIcon ("io.github.radiolamp.mangojuice"));
                     GLib.Application.get_default ().send_notification("test-button-disabled", test_button_notification);
                 }
             }
@@ -449,7 +449,7 @@ public class MangoJuice : Adw.Application {
                     int updated_height = (int) (window.get_height () * 0.8);
 
                     if (updated_width > max_width) updated_width = max_width;
-                    if (updated_height > max_height) updated_height = max_height; 
+                    if (updated_height > max_height) updated_height = max_height;
                     advanced_dialog.set_size_request (updated_width, updated_height);
                 });
                 window.notify["default-height"].connect (() => {
@@ -537,7 +537,7 @@ public class MangoJuice : Adw.Application {
 
         base.shutdown ();
     }
-    
+
     public void add_value_changed_handler (Scale scale) {
         scale.value_changed.connect (() => {
             save_config ();
@@ -678,7 +678,7 @@ public class MangoJuice : Adw.Application {
             entry.text = default_value;
             clear_button.visible = false;
         });
-    
+
         entry.changed.connect (() => {
             clear_button.visible = entry.text != default_value;
         });
@@ -792,7 +792,7 @@ public class MangoJuice : Adw.Application {
         pair1.append (logs_key_label);
         pair1.append (logs_key_combo);
         custom_command_flow_box.insert (pair1, -1);
-    
+
         var pair2 = new Box (Orientation.HORIZONTAL, 5);
         pair2.append (custom_logs_path_box);
         pair2.append (logs_path_button);
@@ -832,7 +832,7 @@ public class MangoJuice : Adw.Application {
             margin_end = 10,
             selection_mode = SelectionMode.NONE
         };
-        
+
         var button1 = new Button.with_label (_("Profile 1"));
         button1.set_size_request (160, -1);
         button1.clicked.connect (() => {
@@ -845,7 +845,7 @@ public class MangoJuice : Adw.Application {
         var button2 = new Button.with_label (_("Profile 2"));
         button2.clicked.connect (() => {
             string[] profile2_vars = {"horizontal", "horizontal_stretch=0" , "gpu_stats", "position=top-center",
-            "gpu_load_change" ,"cpu_stats" , "cpu_load_change" ,"ram", "fps", "fps_color_change" , "round_corners=8" };
+            "gpu_load_change" ,"cpu_stats" , "cpu_load_change" , "ram", "fps", "fps_color_change" , "round_corners=8" };
             set_preset (profile2_vars);
             LoadStates.load_states_from_file.begin (this);
             reset_manager.reset_all_widgets ();
@@ -867,17 +867,16 @@ public class MangoJuice : Adw.Application {
         });
 
         var button4 = new Button.with_label(_("Restore profile"));
-        button4.clicked.connect(() => {
+        button4.clicked.connect (() => {
             try {
-                var backup_file = File.new_for_path(Environment.get_home_dir())
+                var backup_file = File.new_for_path (Environment.get_home_dir())
                                       .get_child (".config")
                                       .get_child ("MangoHud")
                                       .get_child (".MangoHud.backup");
-                restore_config_from_file(backup_file.get_path());
+                restore_config_from_file(backup_file.get_path ());
                 backup_file.delete();
-                stdout.printf("Конфигурация восстановлена, файл удалён.\n");
             } catch (Error e) {
-                stderr.printf("Ошибка: %s\n", e.message);
+                stderr.printf ("Error: %s\n", e.message);
             }
         });
 
@@ -2229,7 +2228,7 @@ public class MangoJuice : Adw.Application {
         result.scale.set_hexpand (true);
         result.scale.set_vexpand (true);
         result.scale.adjustment.page_increment = 1;
-        
+
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
@@ -2238,7 +2237,7 @@ public class MangoJuice : Adw.Application {
         validate_numeric_entry (result.entry, min, max);
     
         bool is_updating = false;
-    
+
         result.scale.value_changed.connect (() => {
             validate_entry_value (result.entry, min, max);
             if (!is_updating) {
@@ -2269,7 +2268,7 @@ public class MangoJuice : Adw.Application {
                 validate_entry_value (result.entry, min, max);
             }
         });
-    
+
         result.entry.notify["has-focus"].connect (() => {
             if (!result.entry.has_focus && result.entry.text.strip () == "") {
                 result.entry.text = "%d".printf ((int)result.scale.get_value ());
@@ -2279,7 +2278,7 @@ public class MangoJuice : Adw.Application {
         var text_box = new Box (Orientation.VERTICAL, 0);
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
-    
+
         var label1 = new Label (null);
         label1.set_markup ("<b>%s</b>".printf (title));
         label1.set_halign (Align.START);
@@ -2292,7 +2291,7 @@ public class MangoJuice : Adw.Application {
         label2.set_hexpand (false);
         label2.add_css_class ("dim-label");
         label2.set_ellipsize (Pango.EllipsizeMode.END);
-        
+
         text_box.append (label1);
         text_box.append (label2);
     
@@ -2315,7 +2314,7 @@ public class MangoJuice : Adw.Application {
         });
 
         result.scale.add_controller (gesture_drag);
-        
+
         return result;
     }
 
@@ -2331,7 +2330,7 @@ public class MangoJuice : Adw.Application {
         label.set_margin_end (margin_end);
         label.set_margin_top (margin_top);
         label.set_margin_bottom (margin_bottom);
-    
+
         return label;
     }
 
@@ -2419,20 +2418,20 @@ public class MangoJuice : Adw.Application {
     }
 
     void set_preset (string[] preset_values) {
-        var file = File.new_for_path (Environment.get_home_dir()).get_child (".config").get_child("MangoHud").get_child ("MangoHud.conf");
-        var backup_file = File.new_for_path (Environment.get_home_dir()).get_child (".config").get_child("MangoHud").get_child(".MangoHud.backup");
+        var file = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child("MangoHud").get_child ("MangoHud.conf");
+        var backup_file = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud").get_child (".MangoHud.backup");
         try {
-            if (file.query_exists () && !backup_file.query_exists()) {
+            if (file.query_exists () && !backup_file.query_exists ()) {
                 file.copy (backup_file, FileCopyFlags.OVERWRITE);
             }
-            var output_stream = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
+            var output_stream = new DataOutputStream (file.replace(null, false, FileCreateFlags.NONE));
             output_stream.put_string ("#Preset config by MangoJuice #\n");
             output_stream.put_string ("legacy_layout=false\n");
             foreach (string value in preset_values) {
-                output_stream.put_string ("%s\n".printf(value));
+                output_stream.put_string ("%s\n".printf (value));
             }
         } catch (Error e) {
-            stderr.printf("Error: %s\n", e.message);
+            stderr.printf ("Error: %s\n", e.message);
         }
     }
 
@@ -2447,7 +2446,7 @@ public class MangoJuice : Adw.Application {
         dialog.set_default_response ("ok");
         dialog.set_response_appearance ("restart", Adw.ResponseAppearance.SUGGESTED);
         dialog.present (this.active_window);
-    
+
         dialog.response.connect ((response) => {
             if (response == "restart") {
                 try {
