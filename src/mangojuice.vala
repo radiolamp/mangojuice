@@ -1642,7 +1642,7 @@ public class MangoJuice : Adw.Application {
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
-            label2.set_ellipsize (Pango.EllipsizeMode.END); 
+            label2.set_ellipsize (Pango.EllipsizeMode.END);
 
             text_box.append (label1);
             text_box.append (label2);

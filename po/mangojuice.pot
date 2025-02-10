@@ -1011,3 +1011,6 @@ msgstr ""
 
 msgid "FPS Only"
 msgstr ""
+
+msgid "The setting is reset when the configuration is changed"
+msgstr ""
