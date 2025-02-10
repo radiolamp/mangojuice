@@ -291,6 +291,9 @@ public class AdvancedDialog : Adw.Dialog {
                 null
             );
             var data_stream = new DataOutputStream (output_stream);
+    
+            data_stream.put_string ("# PRO MangoJuice #\n");
+    
             var child = list_box.get_first_child ();
             while (child != null) {
                 var action_row = child as Adw.ActionRow;
@@ -299,13 +302,13 @@ public class AdvancedDialog : Adw.Dialog {
                 }
                 child = child.get_next_sibling ();
             }
-
+    
             foreach (var config_line in all_config_lines) {
                 if (filtered_config_lines.find_custom (config_line, strcmp) == null) {
                     data_stream.put_string (config_line + "\n", null);
                 }
             }
-
+    
             output_stream.close ();
         } catch (Error e) {
             print (_("Error writing to the file: %s\n"), e.message);

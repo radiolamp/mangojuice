@@ -748,6 +748,7 @@ public class MangoJuice : Adw.Application {
         reset_button.add_css_class ("destructive-action");
         reset_button.clicked.connect (() => {
             delete_vkbasalt_conf ();
+            delete_mangohud_backup ();
             reset_manager.reset_all_widgets ();
         });
 
@@ -1973,6 +1974,24 @@ public class MangoJuice : Adw.Application {
             }
         } else {
             warning (_("vkBasalt.conf file does not exist."));
+        }
+    }
+
+    void delete_mangohud_backup () {
+        var file = File.new_for_path (Environment.get_home_dir ())
+                      .get_child (".config")
+                      .get_child ("MangoHud")
+                      .get_child (".MangoHud.backup");
+    
+        if (file.query_exists ()) {
+            try {
+                file.delete ();
+                warning (_(".MangoHud.backup file deleted."));
+            } catch (Error e) {
+                stderr.printf (_("Error deleting .MangoHud.backup: %s\n"), e.message);
+            }
+        } else {
+            warning (_(".MangoHud.backup file does not exist."));
         }
     }
 
