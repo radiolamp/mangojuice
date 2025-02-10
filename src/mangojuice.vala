@@ -836,7 +836,7 @@ public class MangoJuice : Adw.Application {
         var button1 = new Button.with_label (_("Profile 1"));
         button1.set_size_request (160, -1);
         button1.clicked.connect (() => {
-            string[] profile1_vars = { "legacy_layout=false", "fps_only", "background_alpha=0" };
+            string[] profile1_vars = { "fps_only", "background_alpha=0" };
             set_preset (profile1_vars);
             LoadStates.load_states_from_file.begin (this);
             reset_manager.reset_all_widgets ();
@@ -844,7 +844,7 @@ public class MangoJuice : Adw.Application {
 
         var button2 = new Button.with_label (_("Profile 2"));
         button2.clicked.connect (() => {
-            string[] profile2_vars = {"legacy_layout=false", "horizontal", "horizontal_stretch=0" , "gpu_stats", "position=top-center",
+            string[] profile2_vars = {"horizontal", "horizontal_stretch=0" , "gpu_stats", "position=top-center",
             "gpu_load_change" ,"cpu_stats" , "cpu_load_change" ,"ram", "fps", "fps_color_change" , "round_corners=8" };
             set_preset (profile2_vars);
             LoadStates.load_states_from_file.begin (this);
@@ -853,7 +853,7 @@ public class MangoJuice : Adw.Application {
 
         var button3 = new Button.with_label (_("Profile 3"));
         button3.clicked.connect (() => {
-            string[] profile3_vars = { "legacy_layout=false", "hud_compact", "gpu_stats", "gpu_load_change", "gpu_voltage", "throttling_status",
+            string[] profile3_vars = { "hud_compact", "gpu_stats", "gpu_load_change", "gpu_voltage", "throttling_status",
             "gpu_core_clock", "gpu_mem_clock", "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_power", "cpu_stats", "core_load",
             "cpu_load_change", "cpu_mhz", "cpu_temp", "cpu_power", "io_stats", "io_read", "io_write", "swap", "vram", "ram", "procmem", "battery",
             "battery_watt", "battery_time", "fps", "fps_metrics=avg,0.01", "engine_version", "gpu_name", "vulkan_driver", "arch", "wine",
@@ -866,9 +866,19 @@ public class MangoJuice : Adw.Application {
             reset_manager.reset_all_widgets ();
         });
 
-        var button4 = new Button.with_label (_("Restore profile"));
-        button4.clicked.connect (() => {
-            save_config ();
+        var button4 = new Button.with_label(_("Restore profile"));
+        button4.clicked.connect(() => {
+            try {
+                var backup_file = File.new_for_path(Environment.get_home_dir())
+                                      .get_child (".config")
+                                      .get_child ("MangoHud")
+                                      .get_child (".MangoHud.backup");
+                restore_config_from_file(backup_file.get_path());
+                backup_file.delete();
+                stdout.printf("Конфигурация восстановлена, файл удалён.\n");
+            } catch (Error e) {
+                stderr.printf("Ошибка: %s\n", e.message);
+            }
         });
 
         button_flow_box.insert (button1, -1);
@@ -2408,16 +2418,21 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    void set_preset(string[] preset_values) {
-        var file = File.new_for_path(Environment.get_home_dir()).get_child(".config").get_child("MangoHud").get_child("MangoHud.conf");
+    void set_preset (string[] preset_values) {
+        var file = File.new_for_path (Environment.get_home_dir()).get_child (".config").get_child("MangoHud").get_child ("MangoHud.conf");
+        var backup_file = File.new_for_path (Environment.get_home_dir()).get_child (".config").get_child("MangoHud").get_child(".MangoHud.backup");
         try {
-            if (!file.get_parent().query_exists()) file.get_parent().make_directory_with_parents();
-            var output_stream = new DataOutputStream (file.replace(null, false, FileCreateFlags.NONE));
+            if (file.query_exists () && !backup_file.query_exists()) {
+                file.copy (backup_file, FileCopyFlags.OVERWRITE);
+            }
+            var output_stream = new DataOutputStream(file.replace(null, false, FileCreateFlags.NONE));
+            output_stream.put_string ("#Preset config by MangoJuice #\n");
+            output_stream.put_string ("legacy_layout=false\n");
             foreach (string value in preset_values) {
-                output_stream.put_string("%s\n".printf(value));
+                output_stream.put_string ("%s\n".printf(value));
             }
         } catch (Error e) {
-            stderr.printf ("Error: %s\n", e.message);
+            stderr.printf("Error: %s\n", e.message);
         }
     }
 
