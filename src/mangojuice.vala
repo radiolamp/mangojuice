@@ -379,7 +379,7 @@ public class MangoJuice : Adw.Application {
         menu_model.append_item (save_as_item);
         var restore_config_item = new GLib.MenuItem (_("Restore"), "app.restore_config");
         menu_model.append_item (restore_config_item);
-        var advanced_item = new GLib.MenuItem (_("Charge order"), "app.advanced");
+        var advanced_item = new GLib.MenuItem (_("Change order"), "app.advanced");
         menu_model.append_item (advanced_item);
         var about_item = new GLib.MenuItem (_("About"), "app.about");
         menu_model.append_item (about_item);

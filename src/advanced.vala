@@ -9,7 +9,7 @@ public class AdvancedDialog : Adw.Dialog {
 
     public AdvancedDialog (Gtk.Window parent) {
         Object ();
-        this.title = _("Charge order");
+        this.title = _("Change order");
         var header_bar = new Adw.HeaderBar ();
         header_bar.add_css_class ("flat");
         header_bar.set_size_request (320, -1);

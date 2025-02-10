@@ -1012,7 +1012,7 @@ msgstr "Какие видеокарты отображать"
 msgid "Select Config File to Restore"
 msgstr "Выбирите файл"
 
-msgid "Charge order"
+msgid "Change order"
 msgstr "Изменить порядок"
 
 msgid "only displays fps"
