@@ -167,10 +167,6 @@ msgid "Version"
 msgstr ""
 
 #: src/mangojuice.vala:115
-msgid "Short names"
-msgstr ""
-
-#: src/mangojuice.vala:115
 msgid "Winesync"
 msgstr ""
 
@@ -412,10 +408,6 @@ msgstr ""
 
 #: src/mangojuice.vala:154
 msgid "Wine or Proton version"
-msgstr ""
-
-#: src/mangojuice.vala:154
-msgid "Version used engin"
 msgstr ""
 
 #: src/mangojuice.vala:154

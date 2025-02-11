@@ -107,6 +107,7 @@ public class AdvancedDialog : Adw.Dialog {
                             line.has_prefix ("network") ||
                             line.has_prefix ("media_player") ||
                             line.has_prefix ("wine") ||
+                            line.has_suffix ("#custom_command") ||
                             line.has_prefix ("winesync")) {
                             filtered_config_lines.append (line);
                             add_config_row (list_box, line);

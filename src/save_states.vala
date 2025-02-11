@@ -252,7 +252,6 @@ public class SaveStates {
 
             var system_end = new ArrayList<int> ();
             system_end.add (3);
-            system_end.add (5);
             order_map.set ("system_end", system_end);
 
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());

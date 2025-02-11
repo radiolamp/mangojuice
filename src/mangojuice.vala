@@ -135,7 +135,7 @@ public class MangoJuice : Adw.Application {
         "ram", "io_read \n io_write", "procmem", "swap", "fan"
     };
     public string[] system_config_vars = {
-        "refresh_rate", "resolution", "engine_short_names", "exec=echo \n exec=echo $XDG_SESSION_TYPE",
+        "refresh_rate", "resolution", "exec=echo \n exec=echo $XDG_SESSION_TYPE",
         "time", "arch"
     };
     public string[] wine_config_vars = {
@@ -168,7 +168,7 @@ public class MangoJuice : Adw.Application {
         _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap"), _("Fan")
     };
     string[] system_label_texts = {
-        _("Refresh rate"), _("Resolution"), _("Short names"), _("Session"), _("Time"), _("Arch")
+        _("Refresh rate"), _("Resolution"), _("Session"), _("Time"), _("Arch")
     };
     string[] wine_label_texts = {
         _("Version"), _("Winesync")
@@ -198,7 +198,7 @@ public class MangoJuice : Adw.Application {
         _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory"), _("Steam deck")
     };
     string[] system_label_texts_2 = {
-        _("Only gamescope"), _("Window"), _("Version used engin"), _("X11/Wayland"), _("Watch"), _("Processor")
+        _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Watch"), _("Processor")
     };
     string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("Wine sync method")
