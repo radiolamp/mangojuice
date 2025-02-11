@@ -9,28 +9,28 @@ public class AdvancedDialog : Adw.Dialog {
 
     public AdvancedDialog (Gtk.Window parent) {
         Object ();
-        this.title = _("Change order");
-
+        
         var header_bar = new Adw.HeaderBar ();
         header_bar.add_css_class ("flat");
         header_bar.set_size_request (320, -1);
 
+        var warning_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+        warning_box.set_halign(Gtk.Align.CENTER);
+        warning_box.set_margin_start(12);
+        warning_box.set_margin_end(12);
+        
+        var warning_icon = new Gtk.Image.from_icon_name("dialog-warning-symbolic");
+        var warning_label = new Gtk.Label(_("The setting is reset when the configuration is changed"));
+        warning_label.set_ellipsize(Pango.EllipsizeMode.END);
+        warning_label.add_css_class("warning");
+        
+        warning_box.append(warning_icon);
+        warning_box.append(warning_label);
+        header_bar.set_title_widget(warning_box);
+        
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         main_box.append (header_bar);
-
-        var warning_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-        warning_box.set_halign (Gtk.Align.CENTER);
-        warning_box.set_margin_start (12);
-        warning_box.set_margin_end (12);
-        var warning_icon = new Gtk.Image.from_icon_name ("dialog-warning-symbolic");
-        var warning_label = new Gtk.Label (_("The setting is reset when the configuration is changed"));
-        warning_label.set_ellipsize (Pango.EllipsizeMode.END);
-        warning_label.add_css_class ("warning");
-
-        warning_box.append (warning_icon);
-        warning_box.append (warning_label);
-        main_box.append (warning_box);
-
+        
         main_box.append (create_advanced_content ());
 
         this.set_child (main_box);
