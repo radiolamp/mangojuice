@@ -11,7 +11,16 @@ public class LoadStates {
         mango_juice.is_loading = true;
 
         if (!file.query_exists ()) {
-            return;
+            try {
+                if (!config_dir.query_exists ()) {
+                    config_dir.make_directory_with_parents ();
+                }
+                file.create (FileCreateFlags.NONE);
+            } catch (Error e) {
+                stderr.printf ("Error creating the file: %s\n", e.message);
+                mango_juice.is_loading = false;
+                return;
+            }
         }
 
         try {
