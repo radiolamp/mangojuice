@@ -2245,7 +2245,6 @@ public class MangoJuice : Adw.Application {
         result.scale.set_value (initial_value);
         result.scale.set_size_request (140, -1);
         result.scale.set_hexpand (true);
-        result.scale.set_vexpand (true);
         result.scale.adjustment.page_increment = 1;
 
         result.entry = new Entry ();
