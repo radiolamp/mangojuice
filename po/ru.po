@@ -1023,3 +1023,6 @@ msgstr "Только FPS"
 
 msgid "The setting is reset when the configuration is changed"
 msgstr "Настройка сбрасывается при изменении конфигурации"
+
+msgid "Add new parameter"
+msgstr "Добавить новый параметр"
