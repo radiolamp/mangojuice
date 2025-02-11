@@ -135,11 +135,11 @@ public class MangoJuice : Adw.Application {
         "ram", "io_read \n io_write", "procmem", "swap", "fan"
     };
     public string[] system_config_vars = {
-        "refresh_rate", "resolution", "exec=echo \n exec=echo $XDG_SESSION_TYPE",
+        "refresh_rate", "resolution", "engine_short_names", "exec=echo \n exec=echo $XDG_SESSION_TYPE",
         "time", "arch"
     };
     public string[] wine_config_vars = {
-        "wine", "exec=wineserver -v", "engine_short_names", "winesync"
+        "wine", "winesync"
     };
     public string[] battery_config_vars = {
         "battery", "battery_watt", "battery_time", "device_battery_icon", "device_battery=gamepad,mouse"
@@ -168,10 +168,10 @@ public class MangoJuice : Adw.Application {
         _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap"), _("Fan")
     };
     string[] system_label_texts = {
-        _("Refresh rate"), _("Resolution"), _("Session"), _("Time"), _("Arch")
+        _("Refresh rate"), _("Resolution"), _("Short names"), _("Session"), _("Time"), _("Arch")
     };
     string[] wine_label_texts = {
-        _("Version"), _("Engine Ver"), _("Short names"), _("Winesync")
+        _("Version"), _("Winesync")
     };
     string[] options_label_texts = {
         _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"),
@@ -198,10 +198,10 @@ public class MangoJuice : Adw.Application {
         _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory"), _("Steam deck")
     };
     string[] system_label_texts_2 = {
-        _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Watch"), _("Processor")
+        _("Only gamescope"), _("Window"), _("Version used engin"), _("X11/Wayland"), _("Watch"), _("Processor")
     };
     string[] wine_label_texts_2 = {
-        _("Wine or Proton version"), _("X11/Wayland"), _("Version used engin"), _("Wine sync method")
+        _("Wine or Proton version"), _("Wine sync method")
     };
     string[] options_label_texts_2 = {
         _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
@@ -569,9 +569,9 @@ public class MangoJuice : Adw.Application {
         create_switches_and_labels (metrics_box, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts, cpu_label_texts_2);
         create_switches_and_labels (metrics_box, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts, other_label_texts_2);
         create_switches_and_labels (extras_box, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts, system_label_texts_2);
-        create_switches_and_labels (extras_box, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts, wine_label_texts_2);
         create_switches_and_labels (extras_box, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts, options_label_texts_2);
         create_switches_and_labels (extras_box, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts, battery_label_texts_2);
+        create_switches_and_labels (extras_box, WINE_TITLE, wine_switches, wine_labels, wine_config_vars, wine_label_texts, wine_label_texts_2);
         create_switches_and_labels (extras_box, OTHER_TITLE, other_extra_switches, other_extra_labels, other_extra_config_vars, other_extra_label_texts, other_extra_label_texts_2);
         create_scales_and_labels (extras_box);
         create_switches_and_labels (performance_box, INFORM_TITLE, inform_switches, inform_labels, inform_config_vars, inform_label_texts, inform_label_texts_2);
@@ -580,9 +580,9 @@ public class MangoJuice : Adw.Application {
         add_switch_handler (cpu_switches);
         add_switch_handler (other_switches);
         add_switch_handler (system_switches);
-        add_switch_handler (wine_switches);
         add_switch_handler (options_switches);
         add_switch_handler (battery_switches);
+        add_switch_handler (wine_switches);
         add_switch_handler (other_extra_switches);
         add_switch_handler (inform_switches);
         initialize_gpu_entry (extras_box);

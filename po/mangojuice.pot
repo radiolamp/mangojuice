@@ -167,10 +167,6 @@ msgid "Version"
 msgstr ""
 
 #: src/mangojuice.vala:115
-msgid "Engine Ver"
-msgstr ""
-
-#: src/mangojuice.vala:115
 msgid "Short names"
 msgstr ""
 

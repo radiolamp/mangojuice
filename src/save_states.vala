@@ -252,6 +252,7 @@ public class SaveStates {
 
             var system_end = new ArrayList<int> ();
             system_end.add (3);
+            system_end.add (5);
             order_map.set ("system_end", system_end);
 
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
@@ -281,7 +282,7 @@ public class SaveStates {
             int[] other_extra_order = {1, 2, 0, 3, 4, 5};
             save_switches_to_file (data_stream, mango_juice.other_extra_switches, mango_juice.other_extra_config_vars, other_extra_order);
 
-            int[] wine_order = {0, 1, 2, 3};
+            int[] wine_order = {0, 1};
             save_switches_to_file (data_stream, mango_juice.wine_switches, mango_juice.wine_config_vars, wine_order);
 
             if (mango_juice.logs_key_combo.selected_item != null) {

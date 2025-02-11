@@ -132,17 +132,17 @@ public class AdvancedDialog : Adw.Dialog {
 
     private void add_config_row (ListBox list_box, string line) {
         var action_row = new Adw.ActionRow ();
-
+    
         string key = line.split ("=")[0];
         action_row.title = get_localized_title (key);
         action_row.subtitle = line;
-
+    
         var drag_button = new Gtk.Button ();
         drag_button.icon_name = "list-drag-handle-symbolic";
         drag_button.has_frame = false;
         enable_drag_and_drop (drag_button, list_box, action_row);
         action_row.add_prefix (drag_button);
-
+    
         var up_button = new Gtk.Button ();
         up_button.icon_name = "go-up-symbolic";
         up_button.has_frame = false;
@@ -153,7 +153,7 @@ public class AdvancedDialog : Adw.Dialog {
             enable_scroll (list_box);
         });
         action_row.add_suffix (up_button);
-
+    
         var down_button = new Gtk.Button ();
         down_button.icon_name = "go-down-symbolic";
         down_button.has_frame = false;
@@ -164,6 +164,19 @@ public class AdvancedDialog : Adw.Dialog {
             enable_scroll (list_box);
         });
         action_row.add_suffix (down_button);
+
+        var delete_button = new Gtk.Button ();
+        delete_button.icon_name = "edit-delete-symbolic";
+        delete_button.add_css_class ("destructive-action");
+        delete_button.has_frame = false;
+        delete_button.clicked.connect (() => {
+            disable_scroll (list_box);
+            list_box.remove (action_row);
+            filtered_config_lines.remove (line);
+            save_config_to_file (list_box);
+            enable_scroll (list_box);
+        });
+        action_row.add_suffix (delete_button);
     
         list_box.append (action_row);
     }
