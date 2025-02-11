@@ -81,6 +81,9 @@ You can support in several ways:
 <br>
 
 <div align="center">
+  <a href="https://www.donationalerts.com/r/radiolamp">
+  <img height="200" src="data/assets/donationalerts_qrcode.png" alt="Donationalerts">
+  </a>
   <a href="https://boosty.to/radiolamp/donate">
     <img height="200" src="data/assets/boosty_qrcode.png" alt="Boosty">
   </a>
