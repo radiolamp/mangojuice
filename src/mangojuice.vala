@@ -387,6 +387,20 @@ public class MangoJuice : Adw.Application {
         menu_button.set_icon_name ("open-menu-symbolic");
         header_bar.pack_end (menu_button);
 
+        var heart_button = new Button ();
+        heart_button.set_icon_name ("emblem-favorite-symbolic");
+        heart_button.set_tooltip_text (_("Heart"));
+        heart_button.add_css_class ("flat");
+        heart_button.add_css_class ("Donate");
+        heart_button.clicked.connect (() => {
+            try {
+                Process.spawn_async (null, {"xdg-open", "https://google.com"}, null, SpawnFlags.SEARCH_PATH, null, null);
+            } catch (Error e) {
+                stderr.printf ("Error when opening the site: %s\n", e.message);
+            }
+        });
+        header_bar.pack_end (heart_button); 
+
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => {
             save_config ();

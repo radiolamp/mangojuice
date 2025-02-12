@@ -1026,3 +1026,6 @@ msgstr "Настройка сбрасывается при изменении к
 
 msgid "Add new parameter"
 msgstr "Добавить новый параметр"
+
+msgid "Donate"
+msgstr "Пожертвовать"
