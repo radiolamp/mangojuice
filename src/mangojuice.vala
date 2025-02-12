@@ -389,12 +389,12 @@ public class MangoJuice : Adw.Application {
 
         var heart_button = new Button ();
         heart_button.set_icon_name ("emblem-favorite-symbolic");
-        heart_button.set_tooltip_text (_("Heart"));
+        heart_button.set_tooltip_text (_("Donate"));
         heart_button.add_css_class ("flat");
-        heart_button.add_css_class ("Donate");
+        heart_button.add_css_class ("destructive-action");
         heart_button.clicked.connect (() => {
             try {
-                Process.spawn_async (null, {"xdg-open", "https://google.com"}, null, SpawnFlags.SEARCH_PATH, null, null);
+                Process.spawn_async (null, {"xdg-open", "https://www.donationalerts.com/r/radiolamp"}, null, SpawnFlags.SEARCH_PATH, null, null);
             } catch (Error e) {
                 stderr.printf ("Error when opening the site: %s\n", e.message);
             }
