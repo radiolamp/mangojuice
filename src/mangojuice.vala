@@ -391,7 +391,15 @@ public class MangoJuice : Adw.Application {
         heart_button.set_icon_name ("emblem-favorite-symbolic");
         heart_button.set_tooltip_text (_("Donate"));
         heart_button.add_css_class ("flat");
-        heart_button.add_css_class ("destructive-action");
+
+        var motion_controller = new EventControllerMotion ();
+        motion_controller.enter.connect (() => {
+            heart_button.add_css_class ("destructive-action");
+        });
+        motion_controller.leave.connect (() => {
+            heart_button.remove_css_class ("destructive-action");
+        });
+        heart_button.add_controller (motion_controller);
         heart_button.clicked.connect (() => {
             try {
                 Process.spawn_async (null, {"xdg-open", "https://www.donationalerts.com/r/radiolamp"}, null, SpawnFlags.SEARCH_PATH, null, null);
@@ -399,7 +407,7 @@ public class MangoJuice : Adw.Application {
                 stderr.printf ("Error when opening the site: %s\n", e.message);
             }
         });
-        header_bar.pack_end (heart_button); 
+        header_bar.pack_end (heart_button);
 
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => {
