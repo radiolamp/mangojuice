@@ -390,7 +390,6 @@ public class MangoJuice : Adw.Application {
         var heart_button = new Button ();
         heart_button.set_icon_name ("emblem-favorite-symbolic");
         heart_button.set_tooltip_text (_("Donate"));
-        heart_button.add_css_class ("flat");
 
         var motion_controller = new EventControllerMotion ();
         motion_controller.enter.connect (() => {
