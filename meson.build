@@ -1,6 +1,6 @@
 project(
     'mangojuice', 'vala',
-    version: '0.8.1',
+    version: '0.8.2',
     default_options: [
         'warning_level=0',
     ]
@@ -33,12 +33,11 @@ conf.set_quoted('DATADIR', join_paths(get_option('prefix'), get_option('datadir'
 conf.set_quoted('GNOMELOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set_quoted('VERSION', meson.project_version() + version_suffix)
 
-# Добавляем аргументы для компилятора C
 add_project_arguments(
     '-Wno-discarded-qualifiers',
     language: 'c'
 )
 
-subdir('data')  # Каталог для ресурсов (например, .gresource.xml)
-subdir('src')   # Каталог с исходным кодом
-subdir('po')    # Каталог для локализации (файлы .po, .pot)
+subdir('data')
+subdir('src')
+subdir('po')

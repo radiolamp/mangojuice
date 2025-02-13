@@ -135,8 +135,7 @@ public class MangoJuice : Adw.Application {
         "ram", "io_read \n io_write", "procmem", "swap", "fan"
     };
     public string[] system_config_vars = {
-        "refresh_rate", "resolution", "exec=echo \n exec=echo $XDG_SESSION_TYPE",
-        "time", "arch"
+        "refresh_rate", "resolution", "display_server", "engine_short_names", "time", "arch"
     };
     public string[] wine_config_vars = {
         "wine", "winesync"
@@ -151,7 +150,7 @@ public class MangoJuice : Adw.Application {
         "fps", "fps_color_change", "fps_only", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
     };
     public string[] options_config_vars = {
-        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "engine_short_names", "no_display", "text_outline=0", "no_small_font"
+        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "no_display", "text_outline=0", "no_small_font"
     };
 
     // Label Texts
@@ -168,14 +167,14 @@ public class MangoJuice : Adw.Application {
         _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap"), _("Fan")
     };
     string[] system_label_texts = {
-        _("Refresh rate"), _("Resolution"), _("Session"), _("Time"), _("Arch")
+        _("Refresh rate"), _("Resolution"), _("Session"), _("Compact API"), _("Time"), _("Arch")
     };
     string[] wine_label_texts = {
         _("Version"), _("Winesync")
     };
     string[] options_label_texts = {
         _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"),
-        _("Compact API"), _("Hide HUD"), _("Turn off the shadow"), _("No small font")
+        _("Hide HUD"), _("Turn off the shadow"), _("No small font")
     };
     string[] battery_label_texts = {
         _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
@@ -198,14 +197,14 @@ public class MangoJuice : Adw.Application {
         _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory"), _("Steam deck")
     };
     string[] system_label_texts_2 = {
-        _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Watch"), _("Processor")
+        _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Shortens the name"), _("Watch"), _("Processor")
     };
     string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("Wine sync method")
     };
     string[] options_label_texts_2 = {
         _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
-        _("Only gamescope"), _("Only gamescope"), _("Removes fields"), _("Shortens the name"), _("Hide overlay"), _("Turn off font shadow"), _("Disable small fonts")
+        _("Only gamescope"), _("Only gamescope"), _("Removes fields"),  _("Hide overlay"), _("Turn off font shadow"), _("Disable small fonts")
     };
     string[] battery_label_texts_2 = {
         _("Check battery"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
