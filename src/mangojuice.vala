@@ -401,7 +401,7 @@ public class MangoJuice : Adw.Application {
         heart_button.add_controller (motion_controller);
         heart_button.clicked.connect (() => {
             try {
-                Process.spawn_async (null, {"xdg-open", "https://www.donationalerts.com/r/radiolamp"}, null, SpawnFlags.SEARCH_PATH, null, null);
+                Process.spawn_async (null, {"xdg-open", "https://radiolamp.github.io/mangojuice-donate/"}, null, SpawnFlags.SEARCH_PATH, null, null);
             } catch (Error e) {
                 stderr.printf ("Error when opening the site: %s\n", e.message);
             }
