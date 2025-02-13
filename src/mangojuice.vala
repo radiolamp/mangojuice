@@ -10,7 +10,7 @@ public class MangoJuice : Adw.Application {
     Button intel_power_fix_button;
     public Switch[] gpu_switches;
     public Switch[] cpu_switches;
-    public Switch[] other_switches;
+    public Switch[] memory_switches;
     public Switch[] system_switches;
     public Switch[] wine_switches;
     public Switch[] options_switches;
@@ -19,7 +19,7 @@ public class MangoJuice : Adw.Application {
     public Switch[] inform_switches;
     Label[] gpu_labels;
     Label[] cpu_labels;
-    Label[] other_labels;
+    Label[] memory_labels;
     Label[] system_labels;
     Label[] wine_labels;
     Label[] options_labels;
@@ -110,6 +110,7 @@ public class MangoJuice : Adw.Application {
     // Constants
     const string GPU_TITLE = _("GPU");
     const string CPU_TITLE = _("CPU");
+    const string MEMORY_TITLE = _("Memory");
     const string OTHER_TITLE = _("Other");
     const string SYSTEM_TITLE = _("System");
     const string WINE_TITLE = _("Wine");
@@ -131,11 +132,11 @@ public class MangoJuice : Adw.Application {
         "cpu_stats", "cpu_load_change", "core_load", "core_bars", "cpu_mhz", "cpu_temp",
         "cpu_power"
     };
-    public string[] other_config_vars = {
-        "ram", "io_read \n io_write", "procmem", "swap", "fan"
+    public string[] memory_config_vars = {
+        "ram", "io_read \n io_write", "procmem", "swap"
     };
     public string[] system_config_vars = {
-        "refresh_rate", "resolution", "display_server", "engine_short_names", "time", "arch"
+        "refresh_rate", "fan", "resolution", "display_server", "engine_short_names", "time", "arch", "network"
     };
     public string[] wine_config_vars = {
         "wine", "winesync"
@@ -144,13 +145,13 @@ public class MangoJuice : Adw.Application {
         "battery", "battery_watt", "battery_time", "device_battery_icon", "device_battery=gamepad,mouse"
     };
     public string[] other_extra_config_vars = {
-        "media_player", "network", "full", "hud_no_margin", "log_versioning", "upload_logs"
+        "media_player", "full", "log_versioning", "upload_logs"
     };
     public string[] inform_config_vars = {
         "fps", "fps_color_change", "fps_only", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
     };
     public string[] options_config_vars = {
-        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "no_display", "text_outline=0", "no_small_font"
+        "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "no_display", "text_outline=0", "no_small_font", "hud_no_margin"
     };
 
     // Label Texts
@@ -163,24 +164,24 @@ public class MangoJuice : Adw.Application {
         _("Load CPU"), _("Load Color"), _("Core Load"), _("Core Bars"), _("Core Freq"), _("Temp"),
         _("Power")
     };
-    string[] other_label_texts = {
-        _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap"), _("Fan")
+    string[] memory_label_texts = {
+        _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap")
     };
     string[] system_label_texts = {
-        _("Refresh rate"), _("Resolution"), _("Session"), _("Compact API"), _("Time"), _("Arch")
+        _("Refresh rate"), _("Fan"), _("Resolution"), _("Session"), _("Compact API"), _("Time"), _("Arch"), _("Network")
     };
     string[] wine_label_texts = {
         _("Version"), _("Winesync")
     };
     string[] options_label_texts = {
         _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"),
-        _("Hide HUD"), _("Turn off the shadow"), _("No small font")
+        _("Hide HUD"), _("Turn off the shadow"), _("No small font"), _("Disable margins")
     };
     string[] battery_label_texts = {
         _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
     };
     string[] other_extra_label_texts = {
-        _("Media"), _("Network"), _("Full ON"), _("Disable margins"), _("Log Versioning"), _("Upload Results")
+        _("Media"), _("Full ON"), _("Log Versioning"), _("Upload Results")
     };
     string[] inform_label_texts = {
         _("FPS"), _("FPS Color"), _("FPS Only"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
@@ -193,24 +194,24 @@ public class MangoJuice : Adw.Application {
     string[] cpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display all streams"), _("Streams in the graph"), _("Processor frequency"), _("Processor temperature"), _("CPU consumption watt")
     };
-    string[] other_label_texts_2 = {
-        _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory"), _("Steam deck")
+    string[] memory_label_texts_2 = {
+        _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory")
     };
     string[] system_label_texts_2 = {
-        _("Only gamescope"), _("Window"), _("X11/Wayland"), _("Shortens the name"), _("Watch"), _("Processor")
+        _("Only gamescope"), _("Steam deck"), _("Window"), _("X11/Wayland"), _("Shortens the name"), _("Watch"), _("Processor"), _("Display network")
     };
     string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("Wine sync method")
     };
     string[] options_label_texts_2 = {
         _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
-        _("Only gamescope"), _("Only gamescope"), _("Removes fields"),  _("Hide overlay"), _("Turn off font shadow"), _("Disable small fonts")
+        _("Only gamescope"), _("Only gamescope"), _("Removes fields"),  _("Hide overlay"), _("Turn off font shadow"), _("Disable small fonts"), _("Remove margins")
     };
     string[] battery_label_texts_2 = {
         _("Check battery"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
     };
     string[] other_extra_label_texts_2 = {
-        _("Show media player"), _("Display network"), _("Excludes histogram"), _("Remove margins"), _("Log information"), _("Auto upload logs")
+        _("Show media player"), _("Excludes histogram"), _("Log information"), _("Auto upload logs")
     };
     string[] inform_label_texts_2 = {
         _("Show FPS"), _("Color text"), _("Only displays fps"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
@@ -567,7 +568,7 @@ public class MangoJuice : Adw.Application {
     public void initialize_switches_and_labels (Box metrics_box, Box extras_box, Box performance_box, Box visual_box) {
         gpu_switches = new Switch[gpu_config_vars.length];
         cpu_switches = new Switch[cpu_config_vars.length];
-        other_switches = new Switch[other_config_vars.length];
+        memory_switches = new Switch[memory_config_vars.length];
         system_switches = new Switch[system_config_vars.length];
         wine_switches = new Switch[wine_config_vars.length];
         options_switches = new Switch[options_config_vars.length];
@@ -577,7 +578,7 @@ public class MangoJuice : Adw.Application {
 
         gpu_labels = new Label[gpu_label_texts.length];
         cpu_labels = new Label[cpu_label_texts.length];
-        other_labels = new Label[other_label_texts.length];
+        memory_labels = new Label[memory_label_texts.length];
         system_labels = new Label[system_label_texts.length];
         wine_labels = new Label[wine_label_texts.length];
         options_labels = new Label[options_label_texts.length];
@@ -587,7 +588,7 @@ public class MangoJuice : Adw.Application {
 
         create_switches_and_labels (metrics_box, GPU_TITLE, gpu_switches, gpu_labels, gpu_config_vars, gpu_label_texts, gpu_label_texts_2);
         create_switches_and_labels (metrics_box, CPU_TITLE, cpu_switches, cpu_labels, cpu_config_vars, cpu_label_texts, cpu_label_texts_2);
-        create_switches_and_labels (metrics_box, OTHER_TITLE, other_switches, other_labels, other_config_vars, other_label_texts, other_label_texts_2);
+        create_switches_and_labels (metrics_box, MEMORY_TITLE, memory_switches, memory_labels, memory_config_vars, memory_label_texts, memory_label_texts_2);
         create_switches_and_labels (extras_box, SYSTEM_TITLE, system_switches, system_labels, system_config_vars, system_label_texts, system_label_texts_2);
         create_switches_and_labels (extras_box, OPTIONS_TITLE, options_switches, options_labels, options_config_vars, options_label_texts, options_label_texts_2);
         create_switches_and_labels (extras_box, BATTERY_TITLE, battery_switches, battery_labels, battery_config_vars, battery_label_texts, battery_label_texts_2);
@@ -598,7 +599,7 @@ public class MangoJuice : Adw.Application {
         create_limiters_and_filters (performance_box);
         add_switch_handler (gpu_switches);
         add_switch_handler (cpu_switches);
-        add_switch_handler (other_switches);
+        add_switch_handler (memory_switches);
         add_switch_handler (system_switches);
         add_switch_handler (options_switches);
         add_switch_handler (battery_switches);

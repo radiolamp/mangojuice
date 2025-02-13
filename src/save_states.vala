@@ -247,12 +247,14 @@ public class SaveStates {
             system_start.add (0);
             system_start.add (1);
             system_start.add (2);
+            system_start.add (3);
             system_start.add (4);
-            system_start.add (5);
+            system_start.add (6);
             order_map.set ("system_start", system_start);
 
             var system_end = new ArrayList<int> ();
-            system_end.add (3);
+            system_end.add (7);
+            system_end.add (5);
             order_map.set ("system_end", system_end);
 
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
@@ -260,14 +262,14 @@ public class SaveStates {
             int[] cpu_order = {0, 1, 2, 3, 4, 5, 6};
             save_switches_to_file (data_stream, mango_juice.cpu_switches, mango_juice.cpu_config_vars, cpu_order);
 
-            int[] other_order = {0, 1, 2, 3, 4};
-            save_switches_to_file (data_stream, mango_juice.other_switches, mango_juice.other_config_vars, other_order);
+            int[] memory_order = {0, 1, 2, 3};
+            save_switches_to_file (data_stream, mango_juice.memory_switches, mango_juice.memory_config_vars, memory_order);
 
             save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_start").to_array ());
 
             save_switches_to_file (data_stream, mango_juice.system_switches, mango_juice.system_config_vars, (int[]) order_map.get ("system_end").to_array ());
 
-            int[] options_order = {0 ,1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            int[] options_order = {0 ,1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10, 11};
             save_switches_to_file (data_stream, mango_juice.options_switches, mango_juice.options_config_vars, options_order);
 
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_end").to_array ());
@@ -279,7 +281,7 @@ public class SaveStates {
             int[] battery_order = {0, 1, 2, 3, 4};
             save_switches_to_file (data_stream, mango_juice.battery_switches, mango_juice.battery_config_vars, battery_order);
 
-            int[] other_extra_order = {1, 2, 0, 3, 4, 5};
+            int[] other_extra_order = {1, 2, 0, 3};
             save_switches_to_file (data_stream, mango_juice.other_extra_switches, mango_juice.other_extra_config_vars, other_extra_order);
 
             int[] wine_order = {0, 1};

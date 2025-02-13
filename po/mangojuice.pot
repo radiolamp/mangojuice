@@ -1008,3 +1008,6 @@ msgstr ""
 
 msgid "Donate"
 msgstr ""
+
+msgid "Memory"
+msgstr ""

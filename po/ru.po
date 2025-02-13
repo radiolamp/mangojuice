@@ -1029,3 +1029,6 @@ msgstr "Добавить новый параметр"
 
 msgid "Donate"
 msgstr "Пожертвовать"
+
+msgid "Memory"
+msgstr "Память"

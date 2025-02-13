@@ -69,7 +69,9 @@ public class AdvancedDialog : Adw.Dialog {
                 while ((line = data_stream.read_line ()) != null) {
                     all_config_lines.append (line);
 
-                    if (!line.contains ("color")) {
+                    if (!line.contains ("color") && 
+                    !line.contains ("fps_limit_method=") &&
+                    !line.contains ("fps_value=")) {
                         if (line.has_prefix ("custom_text_center=") ||
                             line.has_prefix ("custom_text=") ||
                             line.has_prefix ("gpu_stats") ||
@@ -96,6 +98,8 @@ public class AdvancedDialog : Adw.Dialog {
                             line.has_prefix ("resolution") ||
                             line.has_prefix ("arch") ||
                             line.has_prefix ("present_mode") ||
+                            line.has_prefix ("display_server") ||
+                            line.has_prefix ("display_server") ||
                             line.has_prefix ("show_fps_limit") ||
                             line.has_prefix ("frame_timing") ||
                             line.has_prefix ("frame_count") ||
@@ -385,6 +389,8 @@ public class AdvancedDialog : Adw.Dialog {
                 return _("Arch");
             case "present_mode":
                 return _("VPS");
+            case "display_server":
+                return _("Session");
             case "show_fps_limit":
                 return _("Frame limit");
             case "frame_timing":
