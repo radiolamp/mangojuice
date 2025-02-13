@@ -394,10 +394,10 @@ public class MangoJuice : Adw.Application {
 
         var motion_controller = new EventControllerMotion ();
         motion_controller.enter.connect (() => {
-            heart_button.add_css_class ("destructive-action");
+            heart_button.add_css_class ("pink-on-hover");
         });
         motion_controller.leave.connect (() => {
-            heart_button.remove_css_class ("destructive-action");
+            heart_button.remove_css_class ("pink-on-hover");
         });
         heart_button.add_controller (motion_controller);
         heart_button.clicked.connect (() => {
