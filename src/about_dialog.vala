@@ -28,7 +28,7 @@ namespace AboutDialog {
 
         dialog.add_link ("MangoJuice на GitHub", "https://github.com/radiolamp/mangojuice");
         dialog.add_link ("Financial support (Donationalerts)", "https://www.donationalerts.com/r/radiolamp");
-        dialog.add_link ("Financial support (Tinkoff)", "https://www.tbank.ru/cf/1J1DvYNesgD");
+        dialog.add_link ("Financial support (Tinkoff)", "https://www.tbank.ru/cf/3PPTstulqEq");
         dialog.add_link ("Financial support (Boosty)", "https://boosty.to/radiolamp");
         dialog.present (parent_window);
     }
