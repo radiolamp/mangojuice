@@ -1077,6 +1077,7 @@ public class MangoJuice : Adw.Application {
         var fonts_flow_box = new FlowBox () {
             row_spacing = FLOW_BOX_ROW_SPACING,
             max_children_per_line = 2,
+            homogeneous = true,
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
             margin_top = FLOW_BOX_MARGIN,
