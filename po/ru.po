@@ -193,7 +193,7 @@ msgstr "VKbasalt"
 
 #: src/mangojuice.vala:119
 msgid "Name"
-msgstr "Название"
+msgstr "Имя процесса"
 
 #: src/mangojuice.vala:119
 msgid "Fcat"
@@ -221,7 +221,7 @@ msgstr "Скрыть HUD"
 
 #: src/mangojuice.vala:120
 msgid "Turn off the shadow"
-msgstr "Отключить тень"
+msgstr "Убрать тень"
 
 #: src/mangojuice.vala:124
 msgid "Percentage"
@@ -241,7 +241,7 @@ msgstr "Значёк батареи"
 
 #: src/mangojuice.vala:124
 msgid "Device"
-msgstr "Устройство"
+msgstr "Устройства"
 
 #: src/mangojuice.vala:128 src/mangojuice.vala:1268
 msgid "Media"
@@ -293,7 +293,7 @@ msgstr "Гистограмма"
 
 #: src/mangojuice.vala:132
 msgid "Frame"
-msgstr "Кадры"
+msgstr "Счётчик"
 
 #: src/mangojuice.vala:132
 msgid "Temt °F"
@@ -413,15 +413,11 @@ msgstr "Отобразить часы"
 
 #: src/mangojuice.vala:150
 msgid "Processor"
-msgstr "Процессор"
+msgstr "Процессора"
 
 #: src/mangojuice.vala:154
 msgid "Wine or Proton version"
 msgstr "Версия Wine или Proton"
-
-#: src/mangojuice.vala:154
-msgid "Version used engin"
-msgstr "Версия движка"
 
 #: src/mangojuice.vala:154
 msgid "Wine sync method"
@@ -461,11 +457,11 @@ msgstr "Скрыть оверлей"
 
 #: src/mangojuice.vala:159
 msgid "Turn off font shadow"
-msgstr "Отключить тень шрифта"
+msgstr "Отключает тень шрифта"
 
 #: src/mangojuice.vala:163
-msgid "Check battery"
-msgstr "Проверить батарею"
+msgid "Battery charge"
+msgstr "Заряда батареи"
 
 #: src/mangojuice.vala:163
 msgid "Show battery wattage"
@@ -488,8 +484,8 @@ msgid "Show media player"
 msgstr "Показать что играет"
 
 #: src/mangojuice.vala:167
-msgid "Display network"
-msgstr "Отображать сеть"
+msgid "Speed network"
+msgstr "Скорость сети"
 
 #: src/mangojuice.vala:167
 msgid "Excludes histogram"
@@ -525,7 +521,7 @@ msgstr "График в гистограмму"
 
 #: src/mangojuice.vala:172
 msgid "Display frame count"
-msgstr "Счет кадров"
+msgstr "Отрисованные кадры"
 
 #: src/mangojuice.vala:172
 msgid "Show temperature °F"
@@ -983,13 +979,13 @@ msgid "Disable small fonts"
 msgstr "Убирает малый шрифт"
 
 msgid "Shortens the name"
-msgstr "Сокращает имя API"
+msgstr "Сокращает имя VK/GL"
 
 msgid "Disable margins"
 msgstr "Убрать отступы"
 
-msgid "Remove margins"
-msgstr "Удалить отступы"
+msgid "Edge of the screen"
+msgstr "От края экрана"
 
 msgid "MangoHud is not installed. Please install it. If you are using flatpak, you need to install the flatpak version."
 msgstr "MangoHud не установлен. Пожалуйста, установите его. Если используете flatpak то необходимо установить флатпак версию."
@@ -1015,8 +1011,8 @@ msgstr "Выбирите файл"
 msgid "Change order"
 msgstr "Изменить порядок"
 
-msgid "only displays fps"
-msgstr "Отображает сам fps"
+msgid "Disable other opts."
+msgstr "Выключи другие опции"
 
 msgid "FPS Only"
 msgstr "Только FPS"

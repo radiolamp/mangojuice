@@ -198,23 +198,23 @@ public class MangoJuice : Adw.Application {
         _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory")
     };
     string[] system_label_texts_2 = {
-        _("Only gamescope"), _("Steam deck"), _("Window"), _("X11/Wayland"), _("Shortens the name"), _("Watch"), _("Processor"), _("Display network")
+        _("Only gamescope"), _("Steam deck"), _("Window"), _("X11/Wayland"), _("Shortens the name"), _("Watch"), _("Processor"), _("Speed network")
     };
     string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("Wine sync method")
     };
     string[] options_label_texts_2 = {
         _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
-        _("Only gamescope"), _("Only gamescope"), _("Removes fields"),  _("Hide overlay"), _("Turn off font shadow"), _("Disable small fonts"), _("Remove margins")
+        _("Only gamescope"), _("Only gamescope"), _("Removes fields"),  _("Hide overlay"), _("Turn off font shadow"), _("Disable small fonts"), _("Edge of the screen")
     };
     string[] battery_label_texts_2 = {
-        _("Check battery"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
+        _("Battery charge"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
     };
     string[] other_extra_label_texts_2 = {
         _("Show media player"), _("Excludes histogram"), _("Log information"), _("Auto upload logs")
     };
     string[] inform_label_texts_2 = {
-        _("Show FPS"), _("Color text"), _("Only displays fps"), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
+        _("Show FPS"), _("Color text"), _("Disable other opts."), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
         _("Graph to histogram"), _("Display frame count"), _("Show temperature °F"), _("Present mode")
     };
 
@@ -2065,7 +2065,7 @@ public class MangoJuice : Adw.Application {
         return "Unset";
     }
 
-    async bool has_multiple_gpus () {
+    public async bool has_multiple_gpus () {
         try {
             string output;
             string error;
@@ -2088,35 +2088,89 @@ public class MangoJuice : Adw.Application {
         }
     }
 
+    void update_gpu_dropdown (DropDown gpu_dropdown, Gtk.StringList gpu_string_list) {
+        gpu_string_list.splice (0, gpu_string_list.get_n_items (), {});
+        
+        try {
+            string output;
+            Process.spawn_command_line_sync ("lspci -nn", out output);
+        
+            foreach (var line in output.split ("\n")) {
+                if (line.strip () == "") continue;
+
+                if (line.contains ("VGA") || line.contains ("3D controller")) {
+                    var name = line.substring (line.index_of (": ") + 2);
+                    gpu_string_list.append (name);
+                }
+            }
+        } catch (Error e) {
+            stderr.printf ("Error: %s\n", e.message);
+        }
+    }
+
     void initialize_gpu_entry (Box extras_box) {
-        var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" });
+        var label_box = new Box (Orientation.VERTICAL, 0);
+        var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        label_box.append (gpu_list_label);
+        
         gpu_entry = new Entry ();
         var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
         gpu_entry.changed.connect (() => {
             SaveStates.update_gpu_in_file (gpu_entry.text);
             save_config ();
         });
-    
+        var gpu_string_list = new Gtk.StringList (null);
+        var gpu_dropdown = new DropDown (gpu_string_list, null);
+        var factory = new Gtk.SignalListItemFactory ();
+        factory.setup.connect ((item) => {
+            var list_item = item as Gtk.ListItem;
+            if (list_item != null) {
+                var label = new Gtk.Label ("") {
+                    ellipsize = Pango.EllipsizeMode.END
+                };
+                list_item.set_child (label);
+            }
+        });
+        factory.bind.connect ((item) => {
+            var list_item = item as Gtk.ListItem;
+            if (list_item != null) {
+                var label = list_item.get_child () as Gtk.Label;
+                var string_object = list_item.get_item () as Gtk.StringObject;
+                if (label != null && string_object != null) {
+                    label.set_text (string_object.get_string ());
+                }
+            }
+        });
+        
+        gpu_dropdown.set_factory (factory);
+        update_gpu_dropdown (gpu_dropdown, gpu_string_list);
+        gpu_dropdown.notify["selected-item"].connect (() => {
+            var selected_item = gpu_dropdown.get_selected_item ();
+            if (selected_item != null) {
+                gpu_entry.text = (string) selected_item;
+            }
+        });
         var gpu_flow_box = new FlowBox () {
-            max_children_per_line = 1,
+            min_children_per_line = 2,
+            homogeneous = true,
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
             selection_mode = SelectionMode.NONE
         };
-
-        gpu_flow_box.insert (gpu_list_label, -1);
         gpu_flow_box.insert (gpu_box, -1);
+        gpu_flow_box.insert (gpu_dropdown, -1);
+        extras_box.append (label_box);
         extras_box.append (gpu_flow_box);
 
-        check_gpu_count.begin (gpu_flow_box);
+        check_gpu_count.begin (gpu_flow_box, label_box);
     }
-
-    async void check_gpu_count (FlowBox gpu_flow_box) {
+    
+    async void check_gpu_count (FlowBox gpu_flow_box, Box label_box) {
         bool multiple_gpus = yield has_multiple_gpus ();
-
         if (!multiple_gpus) {
             Idle.add (() => {
                 gpu_flow_box.set_visible (false);
+                label_box.set_visible (false);
                 return false;
             });
         }

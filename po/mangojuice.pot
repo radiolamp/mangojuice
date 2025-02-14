@@ -451,7 +451,7 @@ msgid "Turn off font shadow"
 msgstr ""
 
 #: src/mangojuice.vala:163
-msgid "Check battery"
+msgid "Battery charge"
 msgstr ""
 
 #: src/mangojuice.vala:163
@@ -475,7 +475,7 @@ msgid "Show media player"
 msgstr ""
 
 #: src/mangojuice.vala:167
-msgid "Display network"
+msgid "Speed network"
 msgstr ""
 
 #: src/mangojuice.vala:167
@@ -973,7 +973,7 @@ msgstr ""
 msgid "Disable margins"
 msgstr ""
 
-msgid "Remove margins"
+msgid "Edge of the screen"
 msgstr ""
 
 msgid "MangoHud is not installed. Please install it. If you are using flatpak, you need to install the flatpak version."
@@ -994,7 +994,7 @@ msgstr ""
 msgid "Change order"
 msgstr ""
 
-msgid "Only displays fps"
+msgid "Disable other opts."
 msgstr ""
 
 msgid "FPS Only"
