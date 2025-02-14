@@ -17,6 +17,10 @@ public class SaveStates {
         data_stream.put_string ("%s=%s\n".printf (parameter_name, parameter_value));
     }
 
+    public static void update_pci_dev_in_file (string pci_dev_value) {
+        update_file ("pci_dev=", pci_dev_value);
+    }
+
     public static void update_fps_limit_in_file (string fps_limit_1, string fps_limit_2, string fps_limit_3) {
         update_file ("fps_limit=", "%s,%s,%s".printf (fps_limit_1, fps_limit_2, fps_limit_3));
     }
@@ -187,6 +191,14 @@ public class SaveStates {
             update_parameter (data_stream, "blacklist", mango_juice.blacklist_entry.text);
 
             update_parameter (data_stream, "gpu_list", mango_juice.gpu_entry.text);
+
+            if (mango_juice.gpu_dropdown.selected_item != null) {
+                var selected_item = mango_juice.gpu_dropdown.selected_item as StringObject;
+                if (selected_item != null) {
+                    string selected_pci_address = selected_item.get_string ();
+                    data_stream.put_string ("pci_dev=%s\n".printf (selected_pci_address));
+                }
+            }
 
             var custom_command = mango_juice.custom_command_entry.text;
             if (custom_command != "") {

@@ -56,6 +56,26 @@ public class LoadStates {
                     }
                 }
 
+                if (line.has_prefix ("pci_dev=")) {
+                    if (mango_juice.gpu_dropdown != null) {
+                        string selected_pci_address = line.substring ("pci_dev=".length);
+                        var model = mango_juice.gpu_dropdown.model;
+                        uint index = 0;
+                        bool found = false;
+                        for (uint i = 0; i < model.get_n_items (); i++) {
+                            var item = model.get_item (i) as StringObject;
+                            if (item != null && item.get_string () == selected_pci_address) {
+                                index = i;
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            mango_juice.gpu_dropdown.set_selected (index);
+                        }
+                    }
+                }
+
                 if (line.has_prefix ("log_duration=")) {
                     if (mango_juice.duracion_scale != null) {
                         int duracion_value = int.parse (line.substring ("log_duration=".length));

@@ -2065,61 +2065,70 @@ public class MangoJuice : Adw.Application {
         return "Unset";
     }
 
-    void initialize_gpu_entry (Box extras_box) {
-        var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" });
+    public Gtk.DropDown gpu_dropdown; 
+    public void initialize_gpu_entry (Box extras_box) {
+        var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         gpu_entry = new Entry ();
         var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
         gpu_entry.changed.connect (() => {
             SaveStates.update_gpu_in_file (gpu_entry.text);
             save_config ();
         });
+        
+        var string_list = new Gtk.StringList (null);
+        gpu_dropdown = new Gtk.DropDown (string_list, null);
     
-        var gpu_flow_box = new FlowBox () {
-            max_children_per_line = 1,
-            margin_start = FLOW_BOX_MARGIN,
-            margin_end = FLOW_BOX_MARGIN,
-            selection_mode = SelectionMode.NONE
-        };
+        string[] pci_addresses = get_gpu_pci_addresses ();
 
-        gpu_flow_box.insert (gpu_list_label, -1);
-        gpu_flow_box.insert (gpu_box, -1);
-        extras_box.append (gpu_flow_box);
+        if (pci_addresses.length == 1) {
+            gpu_list_label.visible = false;
+            gpu_box.visible = false;
+            gpu_dropdown.visible = false;
+        } else {
+            foreach (var pci_address in pci_addresses) {
+                string_list.append (pci_address);
+            }
+    
+            gpu_dropdown.notify["selected-item"].connect (() => {
+                var selected_item = gpu_dropdown.selected_item as StringObject;
+                if (selected_item != null) {
+                    string selected_pci_address = selected_item.get_string ();
+                    SaveStates.update_pci_dev_in_file (selected_pci_address);
+                    save_config ();
+                }
+            });
+            
+            var gpu_flow_box = new FlowBox () {
+                max_children_per_line = 2,
+                homogeneous = true,
+                margin_start = FLOW_BOX_MARGIN,
+                margin_end = FLOW_BOX_MARGIN,
+                selection_mode = SelectionMode.NONE
+            };
 
-        check_gpu_count.begin (gpu_flow_box);
+            gpu_flow_box.insert (gpu_box, -1);
+            gpu_flow_box.insert (gpu_dropdown, -1);
+            extras_box.append (gpu_list_label);
+            extras_box.append (gpu_flow_box);
+        }
     }
 
-    async bool has_multiple_gpus () {
+    private string[] get_gpu_pci_addresses () {
+        string[] pci_addresses = {};
         try {
             string output;
-            string error;
-            int exit_status;
-
-            Process.spawn_command_line_sync ("lspci | grep -i vga", out output, out error, out exit_status);
-
-            string[] gpu_lines = output.split ("\n");
-            int gpu_count = 0;
-            foreach (string line in gpu_lines) {
-                if (line.strip () != "") {
-                    gpu_count++;
+            Process.spawn_command_line_sync ("lspci", out output);
+            string[] lines = output.split ("\n");
+            foreach (var line in lines) {
+                if ("VGA compatible controller" in line) {
+                    string pci_address = line[0:7].strip ();
+                    pci_addresses += pci_address;
                 }
             }
-
-            return gpu_count > 1;
         } catch (Error e) {
-            stderr.printf (_("Error checking GPU count: %s\n"), e.message);
-            return false;
+            stderr.printf ("Error getting GPU PCI addresses: %s\n", e.message);
         }
-    }
-
-    async void check_gpu_count (FlowBox gpu_flow_box) {
-        bool multiple_gpus = yield has_multiple_gpus ();
-
-        if (!multiple_gpus) {
-            Idle.add (() => {
-                gpu_flow_box.set_visible (false);
-                return false;
-            });
-        }
+        return pci_addresses;
     }
 
     bool is_vkcube_available () {
