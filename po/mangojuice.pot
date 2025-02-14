@@ -323,7 +323,7 @@ msgid "GDDR temperatures"
 msgstr ""
 
 #: src/mangojuice.vala:137
-msgid "Memory Temperature"
+msgid "GPU core temperature"
 msgstr ""
 
 #: src/mangojuice.vala:137
@@ -827,13 +827,13 @@ msgstr ""
 msgid "Color LookUp Table"
 msgstr ""
 
-msgid "Profile 1"
+msgid "Only FPS"
 msgstr ""
 
-msgid "Profile 2"
+msgid "Horizontal"
 msgstr ""
 
-msgid "Profile 3"
+msgid "Full"
 msgstr ""
 
 msgid "Restore profile"

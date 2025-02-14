@@ -81,7 +81,7 @@ msgstr "Температура памяти"
 
 #: src/mangojuice.vala:97
 msgid "Junction"
-msgstr "Температура перехода"
+msgstr "Переход"
 
 #: src/mangojuice.vala:97
 msgid "Fans"
@@ -332,8 +332,8 @@ msgid "GDDR temperatures"
 msgstr "Температуры GDDR"
 
 #: src/mangojuice.vala:137
-msgid "Memory Temperature"
-msgstr "Температура памяти"
+msgid "GPU core temperature"
+msgstr "Самая горячая точка"
 
 #: src/mangojuice.vala:137
 msgid "Fan in rpm"
@@ -832,17 +832,14 @@ msgstr "Субпиксельное морфологическое сглажив
 msgid "Color LookUp Table"
 msgstr "Регулировака цветовой таблицы"
 
-#: src/mangojuice.vala
-msgid "Profile 1"
-msgstr "Профиль 1"
+msgid "Only FPS"
+msgstr "Только FPS"
 
-#: src/mangojuice.vala
-msgid "Profile 2"
-msgstr "Профиль 2"
+msgid "Horizontal"
+msgstr "Горизонтальный"
 
-#: src/mangojuice.vala
-msgid "Profile 3"
-msgstr "Профиль 3"
+msgid "Full"
+msgstr "Полный"
 
 #: src/mangojuice.vala
 msgid "Restore profile"

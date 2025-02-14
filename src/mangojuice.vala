@@ -188,7 +188,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] gpu_label_texts_2 = {
         _("Percentage load"), _("Color text"), _("Display system VRAM"), _("Display GPU core"), _("Display GPU memory"),
-        _("GPU temperature"), _("GDDR temperatures"), _("Memory Temperature"), _("Fan in rpm"), _("Display GPU name"),
+        _("GPU temperature"), _("GDDR temperatures"), _("GPU core temperature"), _("Fan in rpm"), _("Display GPU name"),
         _("Display draw in watts"), _("Display voltage"), _("GPU is throttling?"), _("Trolling curve"), _("Driver Version")
     };
     string[] cpu_label_texts_2 = {
@@ -855,7 +855,7 @@ public class MangoJuice : Adw.Application {
             selection_mode = SelectionMode.NONE
         };
 
-        var button1 = new Button.with_label (_("Profile 1"));
+        var button1 = new Button.with_label (_("Only FPS"));
         button1.set_size_request (160, -1);
         button1.clicked.connect (() => {
             string[] profile1_vars = { "fps_only", "background_alpha=0" };
@@ -864,7 +864,7 @@ public class MangoJuice : Adw.Application {
             reset_manager.reset_all_widgets ();
         });
 
-        var button2 = new Button.with_label (_("Profile 2"));
+        var button2 = new Button.with_label (_("Horizontal"));
         button2.clicked.connect (() => {
             string[] profile2_vars = {"horizontal", "horizontal_stretch=0" , "gpu_stats", "position=top-center",
             "gpu_load_change" ,"cpu_stats" , "cpu_load_change" , "ram", "fps", "fps_color_change" , "round_corners=8" };
@@ -873,7 +873,7 @@ public class MangoJuice : Adw.Application {
             reset_manager.reset_all_widgets ();
         });
 
-        var button3 = new Button.with_label (_("Profile 3"));
+        var button3 = new Button.with_label (_("Full"));
         button3.clicked.connect (() => {
             string[] profile3_vars = { "hud_compact", "gpu_stats", "gpu_load_change", "gpu_voltage", "throttling_status",
             "gpu_core_clock", "gpu_mem_clock", "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_power", "cpu_stats", "core_load",
