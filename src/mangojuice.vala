@@ -2120,7 +2120,7 @@ public class MangoJuice : Adw.Application {
             Process.spawn_command_line_sync ("lspci", out output);
             string[] lines = output.split ("\n");
             foreach (var line in lines) {
-                if ("VGA compatible controller" in line) {
+                if ("VGA compatible controller" in line || "Display controller" in line) {
                     string pci_address = line[0:7].strip ();
                     pci_addresses += pci_address;
                 }

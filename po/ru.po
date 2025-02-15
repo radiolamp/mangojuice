@@ -57,7 +57,7 @@ msgstr "Загрузка GPU"
 
 #: src/mangojuice.vala:96 src/mangojuice.vala:102
 msgid "Load Color"
-msgstr "Отобразить цветом"
+msgstr "Окрасить загрузку"
 
 #: src/mangojuice.vala:96 src/mangojuice.vala:1268
 msgid "VRAM"
