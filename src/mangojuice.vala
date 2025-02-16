@@ -2120,9 +2120,12 @@ public class MangoJuice : Adw.Application {
             Process.spawn_command_line_sync ("lspci", out output);
             string[] lines = output.split ("\n");
             foreach (var line in lines) {
-                if ("VGA compatible controller" in line || "Display controller" in line) {
+                if ("VGA compatible controller" in line || "3D controller" in line || "Display controller" in line) {
                     string pci_address = line[0:7].strip ();
-                    pci_addresses += pci_address;
+                    string detailed_output;
+                    Process.spawn_command_line_sync ("lspci -D -s " + pci_address, out detailed_output);
+                    string full_pci_address = detailed_output[0:12].strip ();
+                    pci_addresses += full_pci_address;
                 }
             }
         } catch (Error e) {
