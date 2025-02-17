@@ -62,6 +62,11 @@ sudo ninja -C build uninstall
 ## Download Flatpak:
 [`Nightly build (Main)`](https://github.com/radiolamp/mangojuice/actions/)
 
+## Install Flatpak build
+```shell
+flatpak install --user io.github.radiolamp.mangojuice-x86_64.flatpak
+```
+
 ## Initial Flatpak support:
 ```shell
 flatpak-builder --user --install build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml
