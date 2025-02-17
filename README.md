@@ -63,6 +63,7 @@ sudo ninja -C build uninstall
 [`Nightly build (Main)`](https://github.com/radiolamp/mangojuice/actions/)
 
 ## Install Flatpak build
+<strong><span style="color: yellow;">Attention, for full functionality, install mangohud from flatpak</span></strong>
 ```shell
 flatpak install --user io.github.radiolamp.mangojuice-x86_64.flatpak
 ```

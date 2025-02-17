@@ -58,6 +58,7 @@ sudo ninja -C build uninstall
 [`Ночная сборка (Main)`](https://github.com/radiolamp/mangojuice/actions/)
 
 ## Установка Flatpak сборки
+<strong><span style="color: yellow;">Внимение для полноценной работы установите mangohud из flatpak</span></strong>
 ```shell
 flatpak install --user io.github.radiolamp.mangojuice-x86_64.flatpak
 ```
