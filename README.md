@@ -96,7 +96,7 @@ You can support in several ways:
   <a href="https://www.donationalerts.com/r/radiolamp">
   <img height="200" src="data/assets/donationalerts_qrcode.png" alt="Donationalerts">
   </a>
-  <a href="https://www.tbank.ru/cf/1J1DvYNesgD">
+  <a href="https://www.tbank.ru/cf/3PPTstulqEq">
     <img height="200" src="data/assets/tbank_qrcode.png" alt="TBank">
   </a>
 </div>
