@@ -1,47 +1,73 @@
-name: Build Flatpak
-
 on:
   push:
-    branches:
-      - main
+    branches: [ "master" ]
+    paths-ignore:
+      - '**/README.md'
   pull_request:
-    branches:
-      - main
+    branches: [ "master" ]
+    types: [ "review_requested", "ready_for_review" ]
+  workflow_dispatch:
+
+name: Flatpak
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
-  build:
+  flatpak:
+    name: "Flatpak"
     runs-on: ubuntu-latest
-
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:gnome-47  # Используем GNOME 47
+      options: --privileged
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
+      # Не завершать весь workflow, если одна архитектура не удалась
+      fail-fast: false
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Flatpak
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y flatpak flatpak-builder
-        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      # Установка Docker для QEMU (требуется для aarch64)
+      - name: Install Docker
+        if: ${{ matrix.arch != 'x86_64' }}
+        run: |
+          dnf -y install docker
 
-    - name: Install Flatpak runtime and SDK
-      run: |
-        flatpak install -y flathub org.gnome.Platform//47
-        flatpak install -y flathub org.gnome.Sdk//47
+      # Настройка QEMU для эмуляции aarch64
+      - name: Set up QEMU
+        if: ${{ matrix.arch != 'x86_64' }}
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: arm64
 
-    - name: Install MangoHud extension
-      run: |
-        flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
+      # Установка runtime и SDK
+      - name: Install Flatpak runtime and SDK
+        run: |
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install -y flathub org.gnome.Platform//47
+          flatpak install -y flathub org.gnome.Sdk//47
 
-    - name: Build Flatpak
-      run: |
-        flatpak-builder build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml --force-clean --install
+      # Установка расширения MangoHud
+      - name: Install MangoHud extension
+        run: |
+          flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
 
-    - name: Export Flatpak bundle
-      run: |
-        flatpak build-export repo build-dir
-        flatpak build-bundle repo io.github.radiolamp.mangojuice.flatpak io.github.radiolamp.mangojuice
+      # Сборка Flatpak
+      - name: Build Flatpak
+        run: |
+          flatpak-builder build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml --force-clean --arch=${{ matrix.arch }}
 
-    - name: Upload Flatpak bundle as artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: io.github.radiolamp.mangojuice.flatpak
-        path: io.github.radiolamp.mangojuice.flatpak
+      # Экспорт Flatpak bundle
+      - name: Export Flatpak bundle
+        run: |
+          flatpak build-export repo build-dir
+          flatpak build-bundle repo io.github.radiolamp.mangojuice-${{ matrix.arch }}.flatpak io.github.radiolamp.mangojuice
+
+      # Загрузка артефакта
+      - name: Upload Flatpak bundle as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: io.github.radiolamp.mangojuice-${{ matrix.arch }}.flatpak
+          path: io.github.radiolamp.mangojuice-${{ matrix.arch }}.flatpak
