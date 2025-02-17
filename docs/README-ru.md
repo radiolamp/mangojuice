@@ -99,7 +99,7 @@ flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.y
 ## Благодарность
 Thank you [Rirusha](https://gitlab.gnome.org/Rirusha). For important clarifications about Vala and GTK4.
 
-### Ссылки на проэкты которыми был вдохновлен.
+### Ссылки на проекты которыми был вдохновлен.
  - [`Mangohud`](https://github.com/flightlessmango/MangoHud)
  - [`Goverlay`](https://github.com/benjamimgois/goverlay)
  - [`Colloid`](https://github.com/vinceliuice/Colloid-icon-theme/)
