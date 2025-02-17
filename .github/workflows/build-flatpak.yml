@@ -1,0 +1,47 @@
+name: Build Flatpak
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Flatpak
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y flatpak flatpak-builder
+        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+    - name: Install Flatpak runtime and SDK
+      run: |
+        flatpak install -y flathub org.gnome.Platform//47
+        flatpak install -y flathub org.gnome.Sdk//47
+
+    - name: Install MangoHud extension
+      run: |
+        flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
+
+    - name: Build Flatpak
+      run: |
+        flatpak-builder build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml --force-clean --install
+
+    - name: Export Flatpak bundle
+      run: |
+        flatpak build-export repo build-dir
+        flatpak build-bundle repo io.github.radiolamp.mangojuice.flatpak io.github.radiolamp.mangojuice
+
+    - name: Upload Flatpak bundle as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: io.github.radiolamp.mangojuice.flatpak
+        path: io.github.radiolamp.mangojuice.flatpak
