@@ -36,8 +36,8 @@ jobs:
       - name: Install Flatpak runtime and SDK
         run: |
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          flatpak install --user -y flathub org.gnome.Platform//47
-          flatpak install --user -y flathub org.gnome.Sdk//47
+          flatpak install --user -y flathub org.gnome.Platform/${{ matrix.arch }}/47
+          flatpak install --user -y flathub org.gnome.Sdk/${{ matrix.arch }}/47
 
       - name: Install MangoHud extension
         run: |
