@@ -1011,3 +1011,6 @@ msgstr ""
 
 msgid "Memory"
 msgstr ""
+
+msgid "Toggle position"
+msgstr ""

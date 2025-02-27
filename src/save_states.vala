@@ -33,6 +33,10 @@ public class SaveStates {
         update_file ("toggle_logging=", logs_key);
     }
 
+    public static void update_toggle_hud_key_in_file (string toggle_hud_position) {
+        update_file ("toggle_hud_position=", toggle_hud_position);
+    }
+
     public static void update_blacklist_in_file (string blacklist_value) {
         update_file ("blacklist=", blacklist_value);
     }
@@ -302,6 +306,11 @@ public class SaveStates {
             if (mango_juice.logs_key_combo.selected_item != null) {
                 var logs_key = (mango_juice.logs_key_combo.selected_item as StringObject)?.get_string () ?? "";
                 update_parameter (data_stream, "toggle_logging", logs_key);
+            }
+
+            if (mango_juice.toggle_hud_key_combo.selected_item != null) {
+                var toggle_hud_position = (mango_juice.toggle_hud_key_combo.selected_item as StringObject)?.get_string () ?? "";
+                update_parameter (data_stream, "toggle_hud_position", toggle_hud_position);
             }
 
             if (mango_juice.duracion_scale != null && (int)mango_juice.duracion_scale.get_value () != 0) {

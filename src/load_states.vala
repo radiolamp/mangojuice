@@ -56,6 +56,18 @@ public class LoadStates {
                     }
                 }
 
+                if (line.has_prefix ("toggle_hud_position=")) {
+                    var toggle_hud_position = line.substring ("toggle_hud_position=".length);
+                    for (uint i = 0; i < mango_juice.toggle_hud_key_model.get_n_items (); i++) {
+                        var item = mango_juice.toggle_hud_key_model.get_item (i) as StringObject;
+                        if (item != null && item.get_string () == toggle_hud_position) {
+                            mango_juice.toggle_hud_key_combo.selected = i;
+                            break;
+                        }
+                    }
+                }
+                
+
                 if (line.has_prefix ("pci_dev=")) {
                     if (mango_juice.gpu_dropdown != null) {
                         string selected_pci_address = line.substring ("pci_dev=".length);

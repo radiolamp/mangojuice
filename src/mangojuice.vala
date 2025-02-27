@@ -29,6 +29,7 @@ public class MangoJuice : Adw.Application {
     public Entry custom_command_entry;
     public Entry custom_logs_path_entry;
     public DropDown logs_key_combo;
+    public DropDown toggle_hud_key_combo;
     public DropDown fps_limit_method;
     public DropDown toggle_fps_limit;
     public DropDown vulkan_dropdown;
@@ -224,10 +225,12 @@ public class MangoJuice : Adw.Application {
     public string[] opengl_values = { "Unset", "Adaptive", "OFF", "ON", "Mailbox" };
     public string[] opengl_config_values = { "", "-1", "0", "1", "n" };
 
+
     // Other Variables
     bool test_button_pressed = false;
     public ResetManager reset_manager;
     public Gee.ArrayList<Label> label_pool = new Gee.ArrayList<Label> ();
+    public Gtk.StringList toggle_hud_key_model;
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -1004,6 +1007,12 @@ public class MangoJuice : Adw.Application {
             margin_top = FLOW_BOX_MARGIN,
             margin_bottom = FLOW_BOX_MARGIN
         };
+
+        var attrs = new Pango.AttrList ();
+        attrs.insert (Pango.attr_weight_new (Pango.Weight.BOLD));
+
+        toggle_hud_entry.attributes = attrs;
+        
         toggle_hud_entry.set_size_request (20, -1);
         toggle_hud_entry.changed.connect (() => {
             SaveStates.update_toggle_hud_in_file (toggle_hud_entry.text);
@@ -1041,24 +1050,37 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_offset_y_in_file ("%d".printf ((int)offset_y_scale.get_value ()));
         });
 
-        var offset_flow_box = new FlowBox () {
-            row_spacing = FLOW_BOX_ROW_SPACING,
-            max_children_per_line = 2,
-            margin_start = FLOW_BOX_MARGIN,
-            margin_end = FLOW_BOX_MARGIN,
-            margin_bottom = FLOW_BOX_MARGIN,
-            selection_mode = SelectionMode.NONE
+        toggle_hud_key_model = new Gtk.StringList (null);
+        foreach (var item in new string[] { "Shift_R+F11", "Shift_R+F10", "Shift_R+F9", "Shift_R+F8" }) {
+            toggle_hud_key_model.append (item);
+        }
+        
+        toggle_hud_key_combo = new DropDown (toggle_hud_key_model, null) {
+            hexpand = true
         };
+        
+        toggle_hud_key_combo.notify["selected-item"].connect (() => {
+            SaveStates.update_toggle_hud_key_in_file ((toggle_hud_key_combo.selected_item as StringObject)?.get_string () ?? "");
+            save_config ();
+        });
+        
+        var toggle_position_label = new Label (_("Toggle position")) {
+            halign = Align.START
+        };
+        
+        var toggle_position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        toggle_position_pair.append (toggle_position_label);
+        toggle_position_pair.append (toggle_hud_key_combo);
+        
+        combined_flow_box.insert (toggle_position_pair, -1);
 
         var offset_x_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         offset_x_pair.append (offset_x_widget.widget);
-        offset_flow_box.insert (offset_x_pair, -1);
+        combined_flow_box.insert (offset_x_pair, -1);
 
         var offset_y_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         offset_y_pair.append (offset_y_widget.widget);
-        offset_flow_box.insert (offset_y_pair, -1);
-
-        visual_box.append (offset_flow_box);
+        combined_flow_box.insert (offset_y_pair, -1);
 
         var fonts_label = create_label (_("Font"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (fonts_label);

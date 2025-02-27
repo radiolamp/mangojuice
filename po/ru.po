@@ -1025,3 +1025,6 @@ msgstr "Пожертвовать"
 
 msgid "Memory"
 msgstr "Память"
+
+msgid "Toggle position"
+msgstr "Смена позиции"
