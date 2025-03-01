@@ -2118,6 +2118,7 @@ public class MangoJuice : Adw.Application {
             var list_item = item as Gtk.ListItem;
             var label = new Gtk.Label ("");
             label.set_ellipsize (Pango.EllipsizeMode.END);
+            label.set_halign (Align.START);
             list_item.set_child (label);
         });
         factory.bind.connect ((item) => {
