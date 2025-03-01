@@ -2182,7 +2182,13 @@ public class MangoJuice : Adw.Application {
                     string detailed_output;
                     Process.spawn_command_line_sync ("lspci -D -s " + pci_address, out detailed_output);
                     string full_pci_address = detailed_output[0:12].strip ();
-                    gpu_infos += new GpuInfo (line, full_pci_address);
+
+                    string description = line.replace ("VGA compatible controller: ", "")
+                                            .replace ("Display controller: ", "")
+                                            .replace ("3D controller: ", "")
+                                            .strip ();
+    
+                    gpu_infos += new GpuInfo (description, full_pci_address);
                 }
             }
         } catch (Error e) {
