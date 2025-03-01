@@ -66,24 +66,31 @@ public class LoadStates {
                         }
                     }
                 }
-                
 
                 if (line.has_prefix ("pci_dev=")) {
                     if (mango_juice.gpu_dropdown != null) {
-                        string selected_pci_address = line.substring ("pci_dev=".length);
+                        string selected_pci_address = line.substring ("pci_dev=".length).strip ();
+                        
+                        selected_pci_address = selected_pci_address.replace ("0000:", "");
+                
                         var model = mango_juice.gpu_dropdown.model;
+                
                         uint index = 0;
                         bool found = false;
                         for (uint i = 0; i < model.get_n_items (); i++) {
-                            var item = model.get_item (i) as StringObject;
-                            if (item != null && item.get_string () == selected_pci_address) {
-                                index = i;
-                                found = true;
-                                break;
+                            var item = model.get_item (i) as Gtk.StringObject;
+                            if (item != null) {
+                                string item_text = item.get_string ();
+                                if (item_text.contains (selected_pci_address)) {
+                                    index = i;
+                                    found = true;
+                                    break;
+                                }
                             }
                         }
+                
                         if (found) {
-                            mango_juice.gpu_dropdown.set_selected (index);
+                            mango_juice.gpu_dropdown.selected = index;
                         }
                     }
                 }

@@ -2087,9 +2087,22 @@ public class MangoJuice : Adw.Application {
         return "Unset";
     }
 
-    public Gtk.DropDown gpu_dropdown; 
+    public Gtk.DropDown gpu_dropdown;
+    private GpuInfo[] gpu_infos = {};
+    
+    public class GpuInfo : Object {
+        public string description { get; set; }
+        public string pci_address { get; set; }
+    
+        public GpuInfo (string description, string pci_address) {
+            this.description = description;
+            this.pci_address = pci_address;
+        }
+    }
+    
     public void initialize_gpu_entry (Box extras_box) {
         var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        
         gpu_entry = new Entry ();
         var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
         gpu_entry.changed.connect (() => {
@@ -2099,62 +2112,85 @@ public class MangoJuice : Adw.Application {
         
         var string_list = new Gtk.StringList (null);
         gpu_dropdown = new Gtk.DropDown (string_list, null);
-    
-        string[] pci_addresses = get_gpu_pci_addresses ();
 
-        if (pci_addresses.length == 1) {
+        var factory = new Gtk.SignalListItemFactory ();
+        factory.setup.connect ((item) => {
+            var list_item = item as Gtk.ListItem;
+            var label = new Gtk.Label ("");
+            label.set_ellipsize (Pango.EllipsizeMode.END);
+            list_item.set_child (label);
+        });
+        factory.bind.connect ((item) => {
+            var list_item = item as Gtk.ListItem;
+            var label = list_item.get_child () as Gtk.Label;
+            var string_object = list_item.get_item () as Gtk.StringObject;
+            if (label != null && string_object != null) {
+                string full_text = string_object.get_string ();
+                string truncated_text = full_text.length > 12 ? full_text[8:] : full_text;
+                label.set_text (truncated_text);
+            }
+        });
+        
+        gpu_dropdown.factory = factory;
+        
+        gpu_infos = get_gpu_infos ();
+        
+        if (gpu_infos.length == 1) {
             gpu_list_label.visible = false;
             gpu_box.visible = false;
             gpu_dropdown.visible = false;
         } else {
-            foreach (var pci_address in pci_addresses) {
-                string_list.append (pci_address);
+            foreach (var gpu_info in gpu_infos) {
+                string_list.append (gpu_info.description);
             }
-    
-            gpu_dropdown.notify["selected-item"].connect (() => {
-                var selected_item = gpu_dropdown.selected_item as StringObject;
-                if (selected_item != null) {
-                    string selected_pci_address = selected_item.get_string ();
+        
+            gpu_dropdown.notify["selected"].connect (() => {
+                uint selected_index = gpu_dropdown.selected;
+                if (selected_index < gpu_infos.length) {
+                    string selected_pci_address = gpu_infos[selected_index].pci_address;
+                    stdout.printf ("Selected PCI address: %s\n", selected_pci_address);
                     SaveStates.update_pci_dev_in_file (selected_pci_address);
-                    save_config ();
                 }
             });
-            
+        
             var gpu_flow_box = new FlowBox () {
-                max_children_per_line = 2,
+                min_children_per_line = 2,
                 homogeneous = true,
                 margin_start = FLOW_BOX_MARGIN,
                 margin_end = FLOW_BOX_MARGIN,
                 selection_mode = SelectionMode.NONE
             };
-
+        
             gpu_flow_box.insert (gpu_box, -1);
             gpu_flow_box.insert (gpu_dropdown, -1);
+        
             extras_box.append (gpu_list_label);
             extras_box.append (gpu_flow_box);
         }
     }
-
-    private string[] get_gpu_pci_addresses () {
-        string[] pci_addresses = {};
+    
+    private GpuInfo[] get_gpu_infos () {
+        GpuInfo[] gpu_infos = {};
         try {
             string output;
             Process.spawn_command_line_sync ("lspci", out output);
             string[] lines = output.split ("\n");
+    
             foreach (var line in lines) {
                 if ("VGA compatible controller" in line || "3D controller" in line || "Display controller" in line) {
                     string pci_address = line[0:7].strip ();
                     string detailed_output;
                     Process.spawn_command_line_sync ("lspci -D -s " + pci_address, out detailed_output);
                     string full_pci_address = detailed_output[0:12].strip ();
-                    pci_addresses += full_pci_address;
+                    gpu_infos += new GpuInfo (line, full_pci_address);
                 }
             }
         } catch (Error e) {
             stderr.printf ("Error getting GPU PCI addresses: %s\n", e.message);
         }
-        return pci_addresses;
+        return gpu_infos;
     }
+    
 
     bool is_vkcube_available () {
         try {
