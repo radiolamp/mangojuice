@@ -2345,16 +2345,16 @@ public class MangoJuice : Adw.Application {
         result.scale.set_size_request (140, -1);
         result.scale.set_hexpand (true);
         result.scale.adjustment.page_increment = 1;
-
+    
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
         validate_numeric_entry (result.entry, min, max);
-    
+        
         bool is_updating = false;
-
+    
         result.scale.value_changed.connect (() => {
             validate_entry_value (result.entry, min, max);
             if (!is_updating) {
@@ -2367,7 +2367,7 @@ public class MangoJuice : Adw.Application {
                 });
             }
         });
-    
+        
         result.entry.changed.connect (() => {
             if (!is_updating) {
                 int value = 0;
@@ -2381,57 +2381,66 @@ public class MangoJuice : Adw.Application {
                             return false;
                         });
                     }
+                } else if (result.entry.text.strip () == "") {
+                    is_updating = true;
+                    GLib.Idle.add (() => {
+                        result.scale.set_value (initial_value);
+                        result.entry.text = "%d".printf (initial_value);
+                        is_updating = false;
+                        return false;
+                    });
                 }
                 validate_entry_value (result.entry, min, max);
             }
         });
-
+    
         result.entry.notify["has-focus"].connect (() => {
             if (!result.entry.has_focus && result.entry.text.strip () == "") {
-                result.entry.text = "%d".printf ((int)result.scale.get_value ());
+                result.entry.text = "%d".printf (initial_value);
+                result.scale.set_value (initial_value);
             }
         });
-    
+        
         var text_box = new Box (Orientation.VERTICAL, 0);
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
-
+    
         var label1 = new Label (null);
         label1.set_markup ("<b>%s</b>".printf (title));
         label1.set_halign (Align.START);
         label1.set_hexpand (false);
         label1.set_ellipsize (Pango.EllipsizeMode.END);
-    
+        
         var label2 = new Label (null);
         label2.set_markup ("<span size='9000'>%s</span>".printf (description));
         label2.set_halign (Align.START);
         label2.set_hexpand (false);
         label2.add_css_class ("dim-label");
         label2.set_ellipsize (Pango.EllipsizeMode.END);
-
+    
         text_box.append (label1);
         text_box.append (label2);
-    
+        
         result.widget = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         result.widget.append (text_box);
         result.widget.append (result.scale);
         result.widget.append (result.entry);
-
+    
         var gesture_drag = new Gtk.GestureDrag ();
         gesture_drag.drag_update.connect ((offset_x, offset_y) => {
             double current_value = result.scale.get_value ();
-
+    
             int scale_width = result.scale.get_width ();
-
+    
             double new_value = current_value + (offset_x / scale_width) * (max - min);
-
+    
             new_value = new_value.clamp (min, max);
-
+    
             result.scale.set_value (new_value);
         });
-
+    
         result.scale.add_controller (gesture_drag);
-
+    
         return result;
     }
 
