@@ -2108,7 +2108,7 @@ public class MangoJuice : Adw.Application {
         gpu_entry.changed.connect (() => { SaveStates.update_gpu_in_file (gpu_entry.text); save_config (); });
         
         var string_list = new Gtk.StringList (null);
-        string_list.append ("Default");///(_("Default"));
+        string_list.append (_("Default"));
         
         gpu_dropdown = new Gtk.DropDown (string_list, null) { hexpand = true, halign = Align.FILL };
         
@@ -2119,12 +2119,16 @@ public class MangoJuice : Adw.Application {
             list_item.set_child (label);
         });
         factory.bind.connect ((item) => {
-            var list_item = item as Gtk.ListItem;
-            var label = list_item.get_child () as Gtk.Label;
-            var string_object = list_item.get_item () as Gtk.StringObject;
-            if (label != null && string_object != null) {
-                string full_text = string_object.get_string ();
+        var list_item = item as Gtk.ListItem;
+        var label = list_item.get_child () as Gtk.Label;
+        var string_object = list_item.get_item () as Gtk.StringObject;
+        if (label != null && string_object != null) {
+        string full_text = string_object.get_string ();
+        if (full_text == _("Default")) {
+            label.set_text (full_text);
+                } else {
                 label.set_text (full_text.length > 12 ? full_text[8:] : full_text);
+                }
             }
         });
         
@@ -2186,7 +2190,6 @@ public class MangoJuice : Adw.Application {
         }
         return gpu_infos;
     }
-    
 
     bool is_vkcube_available () {
         try {
