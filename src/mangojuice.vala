@@ -2135,7 +2135,7 @@ public class MangoJuice : Adw.Application {
         gpu_dropdown.factory = factory;
         gpu_infos = get_gpu_infos ();
         
-        if (gpu_infos.length == 1) {
+        if (gpu_infos.length == 1 && !Config.IS_DEVEL) {
             gpu_list_label.visible = gpu_box.visible = gpu_dropdown.visible = false;
         } else {
             foreach (var gpu_info in gpu_infos) string_list.append (gpu_info.description);
