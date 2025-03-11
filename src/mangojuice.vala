@@ -1,3 +1,4 @@
+/* Mangojuice.vala // Licence:  GPL-v3.0 */
 using Gtk;
 using Adw;
 using Gee;
@@ -2604,7 +2605,7 @@ public class MangoJuice : Adw.Application {
     }
 
     async void add_other_box_if_needed () {
-        if (!is_flatpak () && yield check_vkbasalt_installed_async ()) {
+        if (Config.IS_DEVEL || (!is_flatpak () && yield check_vkbasalt_installed_async ())) {
             view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "view-grid-symbolic";
         }
     }

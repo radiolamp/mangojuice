@@ -1,3 +1,4 @@
+/* reset_manager.vala // Licence:  GPL-v3.0 */
 using Gtk;
 using Adw;
 using Gee;

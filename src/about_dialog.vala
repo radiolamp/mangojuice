@@ -1,3 +1,4 @@
+/* about_dialog  // Licence:  GPL-v3.0 */
 using Gtk;
 
 namespace AboutDialog {

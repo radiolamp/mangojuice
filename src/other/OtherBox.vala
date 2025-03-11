@@ -1,27 +1,27 @@
-//other/OtherBox.vala
+/* OtherBox.vala // Licence:  GPL-v3.0 */
 using Gtk;
 using Gee;
 
 public class OtherBox : Box {
 
-    private const int MAX_WIDTH_CHARS = 6;
-    private const int WIDTH_CHARS = 4;
-    private const int FLOW_BOX_MARGIN = 12;
-    private const int FLOW_BOX_ROW_SPACING = 6;
-    private const int FLOW_BOX_COLUMN_SPACING = 6;
-    private const int MAIN_BOX_SPACING = 6;
+    const int MAX_WIDTH_CHARS = 6;
+    const int WIDTH_CHARS = 4;
+    const int FLOW_BOX_MARGIN = 12;
+    const int FLOW_BOX_ROW_SPACING = 6;
+    const int FLOW_BOX_COLUMN_SPACING = 6;
+    const int MAIN_BOX_SPACING = 6;
 
-    public ArrayList<Scale> scales { get; private set; }
-    public ArrayList<Entry> entries { get; private set; }
-    public ArrayList<Label> scale_labels { get; private set; }
-    public ArrayList<Switch> switches { get; private set; }
-    public ArrayList<Label> labels { get; private set; }
-    public Button vkbasalt_global_button { get; private set; }
-    public bool vkbasalt_global_enabled { get; private set; }
+    public ArrayList<Scale> scales { get; set; }
+    public ArrayList<Entry> entries { get; set; }
+    public ArrayList<Label> scale_labels { get; set; }
+    public ArrayList<Switch> switches { get; set; }
+    public ArrayList<Label> labels { get; set; }
+    public Button vkbasalt_global_button { get; set; }
+    public bool vkbasalt_global_enabled { get; set; }
 
-    private HashMap<string, ArrayList<Scale>> switch_scale_map;
-    private HashMap<string, ArrayList<Entry>> switch_entry_map;
-    private HashMap<string, ArrayList<Button>> switch_reset_map;
+    HashMap<string, ArrayList<Scale>> switch_scale_map;
+    HashMap<string, ArrayList<Entry>> switch_entry_map;
+    HashMap<string, ArrayList<Button>> switch_reset_map;
 
     public OtherBox () {
         Object (orientation: Orientation.VERTICAL, spacing: 12);
@@ -56,7 +56,6 @@ public class OtherBox : Box {
             });
         }
 
-        // Создаем FlowBox для размещения элементов в два столбца
         var flow_box = new FlowBox ();
         flow_box.set_homogeneous (true);
         flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
@@ -66,7 +65,7 @@ public class OtherBox : Box {
         flow_box.set_margin_start (FLOW_BOX_MARGIN);
         flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
-        flow_box.set_max_children_per_line (2); // Устанавливаем два столбца
+        flow_box.set_max_children_per_line (2);
         this.append (flow_box);
 
         create_scale_with_entry (flow_box, "CAS Sharpness", -1.0, 1.0, 0.01, 0.0, "%.2f", "cas");
@@ -109,7 +108,7 @@ public class OtherBox : Box {
         return is_switch_active (switch_name);
     }
 
-    private void create_scale_with_entry (FlowBox flow_box, string label_text, double min, double max, double step, double initial_value, string format, string switch_name) {
+    void create_scale_with_entry (FlowBox flow_box, string label_text, double min, double max, double step, double initial_value, string format, string switch_name) {
         var main_box = new Box (Orientation.VERTICAL, 6);
 
         var label = new Label (label_text);
@@ -179,7 +178,7 @@ public class OtherBox : Box {
         flow_box.insert (main_box, -1);
     }
 
-    private void update_scale_entry_reset_state (Switch switch_widget) {
+    void update_scale_entry_reset_state (Switch switch_widget) {
         string switch_name = switch_widget.get_name ();
         if (switch_scale_map.has_key (switch_name)) {
             var scales = switch_scale_map[switch_name];
@@ -199,7 +198,7 @@ public class OtherBox : Box {
         }
     }
 
-    private void update_entry_from_scale (Scale scale, Entry entry, string format) {
+    void update_entry_from_scale (Scale scale, Entry entry, string format) {
         double value = scale.get_value ();
         if (format == "%d") {
             entry.set_text ("%d".printf ((int) value));
@@ -208,7 +207,7 @@ public class OtherBox : Box {
         }
     }
 
-    private void update_scale_from_entry (Scale scale, Entry entry, double min, double max, string format) {
+    void update_scale_from_entry (Scale scale, Entry entry, double min, double max, string format) {
         string text = entry.get_text ();
         double value = 0;
 
@@ -223,15 +222,14 @@ public class OtherBox : Box {
         }
     }
 
-    private void create_switches_and_labels (Box parent_box, string title, ArrayList<Switch> switches, ArrayList<Label> labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
+    void create_switches_and_labels (Box parent_box, string title, ArrayList<Switch> switches, ArrayList<Label> labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
         var label = new Label (title);
-        label.add_css_class ("bold-label");
+        label.add_css_class("title-3");
         label.set_margin_top (FLOW_BOX_MARGIN);
         label.set_margin_start (FLOW_BOX_MARGIN);
         label.set_margin_end (FLOW_BOX_MARGIN);
         label.set_halign (Align.START);
-        label.set_markup ("<span size='14000'>%s</span>".printf (title));
-
+        label.set_markup ("%s".printf (title));
         parent_box.append (label);
 
         var flow_box = new FlowBox ();
@@ -283,7 +281,7 @@ public class OtherBox : Box {
         parent_box.append (flow_box);
     }
 
-    private void on_vkbasalt_global_button_clicked () {
+    void on_vkbasalt_global_button_clicked () {
         bool success = false;
     
         if (vkbasalt_global_enabled) {
@@ -322,7 +320,7 @@ public class OtherBox : Box {
         }
     }
 
-    private void check_vkbasalt_global_status () {
+    void check_vkbasalt_global_status () {
         try {
             string[] argv = { "grep", "ENABLE_VKBASALT=1", "/etc/environment" };
             int exit_status;
@@ -342,7 +340,7 @@ public class OtherBox : Box {
         }
     }
 
-    private void show_restart_warning () {
+    void show_restart_warning () {
         var dialog = new Adw.AlertDialog ("Warning", "The changes will take effect only after the system is restarted.");
         dialog.add_response ("ok", "OK");
         dialog.add_response ("restart", "Restart");

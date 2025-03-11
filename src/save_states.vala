@@ -1,3 +1,4 @@
+/* save_states.vala // Licence:  GPL-v3.0 */
 using Gtk;
 using Gee;
 

@@ -1,11 +1,12 @@
+/* advanced.vala // Licence:  GPL-v3.0 */
 using Gtk;
 using Adw;
 
 public class AdvancedDialog : Adw.Dialog {
-    private File config_file;
-    private List<string> all_config_lines;
-    private List<string> filtered_config_lines;
-    private ListBox list_box;
+    File config_file;
+    List<string> all_config_lines;
+    List<string> filtered_config_lines;
+    ListBox list_box;
 
     public AdvancedDialog (Gtk.Window parent) {
         Object ();
@@ -37,7 +38,7 @@ public class AdvancedDialog : Adw.Dialog {
         this.present (parent);
     }
 
-    private Gtk.Widget create_advanced_content () {
+    Gtk.Widget create_advanced_content () {
         var scrolled_window = new Gtk.ScrolledWindow ();
         scrolled_window.set_hexpand (true);
         scrolled_window.set_vexpand (true);
@@ -135,7 +136,7 @@ public class AdvancedDialog : Adw.Dialog {
         return scrolled_window;
     }
 
-    private void add_config_row (ListBox list_box, string line) {
+    void add_config_row (ListBox list_box, string line) {
         var action_row = new Adw.ActionRow ();
 
         string key = line.split ("=")[0];
@@ -173,7 +174,7 @@ public class AdvancedDialog : Adw.Dialog {
         list_box.append (action_row);
     }
 
-    private void disable_scroll (ListBox list_box) {
+    void disable_scroll (ListBox list_box) {
         var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
         if (scrolled_window != null) {
             scrolled_window.get_vadjustment ().set_value (scrolled_window.get_vadjustment ().get_value ());
@@ -181,14 +182,14 @@ public class AdvancedDialog : Adw.Dialog {
         }
     }
 
-    private void enable_scroll (ListBox list_box) {
+    void enable_scroll (ListBox list_box) {
         var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
         if (scrolled_window != null) {
             scrolled_window.set_sensitive (true);
         }
     }
 
-    private void enable_drag_and_drop (Gtk.Button drag_button, ListBox list_box, ListBoxRow row) {
+    void enable_drag_and_drop (Gtk.Button drag_button, ListBox list_box, ListBoxRow row) {
         var drag_source = new Gtk.DragSource ();
         drag_source.set_actions (Gdk.DragAction.MOVE);
 
@@ -265,7 +266,7 @@ public class AdvancedDialog : Adw.Dialog {
         list_box.add_controller (drop_target);
     }
 
-    private int get_row_index (ListBox list_box, ListBoxRow row) {
+    int get_row_index (ListBox list_box, ListBoxRow row) {
         int index = 0;
         var child = list_box.get_first_child ();
         while (child != null) {
@@ -276,7 +277,7 @@ public class AdvancedDialog : Adw.Dialog {
         return -1;
     }
 
-    private int get_row_count (ListBox list_box) {
+    int get_row_count (ListBox list_box) {
         int count = 0;
         var child = list_box.get_first_child ();
         while (child != null) {
@@ -286,7 +287,7 @@ public class AdvancedDialog : Adw.Dialog {
         return count;
     }
 
-    private void move_row_up (ListBox list_box, ListBoxRow row) {
+    void move_row_up (ListBox list_box, ListBoxRow row) {
         int index = get_row_index (list_box, row);
         if (index > 0) {
             list_box.remove (row);
@@ -294,7 +295,7 @@ public class AdvancedDialog : Adw.Dialog {
         }
     }
 
-    private void move_row_down (ListBox list_box, ListBoxRow row) {
+    void move_row_down (ListBox list_box, ListBoxRow row) {
         int index = get_row_index (list_box, row);
         if (index < get_row_count (list_box) - 1) {
             list_box.remove (row);
@@ -302,7 +303,7 @@ public class AdvancedDialog : Adw.Dialog {
         }
     }
 
-    private void save_config_to_file (ListBox list_box) {
+    void save_config_to_file (ListBox list_box) {
         try {
             var output_stream = config_file.replace (
                 null,
@@ -335,7 +336,7 @@ public class AdvancedDialog : Adw.Dialog {
         }
     }
 
-    private string get_localized_title (string key) {
+    string get_localized_title (string key) {
         switch (key) {
             case "custom_text_center":
                 return _("Your text");
