@@ -197,9 +197,8 @@ public class SaveStates {
             update_parameter (data_stream, "gpu_list", mango_juice.gpu_entry.text);
 
             if (mango_juice.gpu_dropdown.selected_item != null) {
-                var selected_item = mango_juice.gpu_dropdown.selected_item as StringObject;
-                if (selected_item != null) {
-                    string selected_pci_address = selected_item.get_string ();
+                var selected_pci_address = (mango_juice.gpu_dropdown.selected_item as StringObject)?.get_string () ?? "";
+                if (selected_pci_address != "Default") {
                     data_stream.put_string ("pci_dev=%s\n".printf (selected_pci_address));
                 }
             }

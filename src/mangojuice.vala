@@ -2103,22 +2103,19 @@ public class MangoJuice : Adw.Application {
     public void initialize_gpu_entry (Box extras_box) {
         var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         
-        gpu_entry = new Entry ();
+        gpu_entry = new Entry () { hexpand = true, halign = Align.FILL };
         var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
-        gpu_entry.changed.connect (() => {
-            SaveStates.update_gpu_in_file (gpu_entry.text);
-            save_config ();
-        });
+        gpu_entry.changed.connect (() => { SaveStates.update_gpu_in_file (gpu_entry.text); save_config (); });
         
         var string_list = new Gtk.StringList (null);
-        gpu_dropdown = new Gtk.DropDown (string_list, null);
-
+        string_list.append ("Default");///(_("Default"));
+        
+        gpu_dropdown = new Gtk.DropDown (string_list, null) { hexpand = true, halign = Align.FILL };
+        
         var factory = new Gtk.SignalListItemFactory ();
         factory.setup.connect ((item) => {
             var list_item = item as Gtk.ListItem;
-            var label = new Gtk.Label ("");
-            label.set_ellipsize (Pango.EllipsizeMode.END);
-            label.set_halign (Align.START);
+            var label = new Gtk.Label ("") { ellipsize = Pango.EllipsizeMode.END, halign = Align.START };
             list_item.set_child (label);
         });
         factory.bind.connect ((item) => {
@@ -2127,46 +2124,38 @@ public class MangoJuice : Adw.Application {
             var string_object = list_item.get_item () as Gtk.StringObject;
             if (label != null && string_object != null) {
                 string full_text = string_object.get_string ();
-                string truncated_text = full_text.length > 12 ? full_text[8:] : full_text;
-                label.set_text (truncated_text);
+                label.set_text (full_text.length > 12 ? full_text[8:] : full_text);
             }
         });
         
         gpu_dropdown.factory = factory;
-        
         gpu_infos = get_gpu_infos ();
         
         if (gpu_infos.length == 1) {
-            gpu_list_label.visible = false;
-            gpu_box.visible = false;
-            gpu_dropdown.visible = false;
+            gpu_list_label.visible = gpu_box.visible = gpu_dropdown.visible = false;
         } else {
-            foreach (var gpu_info in gpu_infos) {
-                string_list.append (gpu_info.description);
-            }
-        
+            foreach (var gpu_info in gpu_infos) string_list.append (gpu_info.description);
+            
             gpu_dropdown.notify["selected"].connect (() => {
                 uint selected_index = gpu_dropdown.selected;
-                if (selected_index < gpu_infos.length) {
-                    string selected_pci_address = gpu_infos[selected_index].pci_address;
-                    stdout.printf ("Selected PCI address: %s\n", selected_pci_address);
-                    SaveStates.update_pci_dev_in_file (selected_pci_address);
+                if (selected_index == 0) {
+                    SaveStates.update_pci_dev_in_file ("default");
+                } else if (selected_index - 1 < gpu_infos.length) {
+                    SaveStates.update_pci_dev_in_file (gpu_infos[selected_index - 1].pci_address);
                 }
+                save_config ();
             });
-        
-            var gpu_flow_box = new FlowBox () {
-                min_children_per_line = 2,
-                homogeneous = true,
-                margin_start = FLOW_BOX_MARGIN,
-                margin_end = FLOW_BOX_MARGIN,
-                selection_mode = SelectionMode.NONE
+            
+            var gpu_hbox = new Box (Orientation.HORIZONTAL,  MAIN_BOX_SPACING) {
+                margin_start = FLOW_BOX_MARGIN, 
+                margin_end = FLOW_BOX_MARGIN, 
+                hexpand = true 
             };
-        
-            gpu_flow_box.insert (gpu_box, -1);
-            gpu_flow_box.insert (gpu_dropdown, -1);
-        
+            gpu_hbox.append (gpu_box);
+            gpu_hbox.append (gpu_dropdown);
+            
             extras_box.append (gpu_list_label);
-            extras_box.append (gpu_flow_box);
+            extras_box.append (gpu_hbox);
         }
     }
     
