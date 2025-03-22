@@ -392,7 +392,7 @@ public class MangoJuice : Adw.Application {
         header_bar.pack_end (menu_button);
 
         var heart_button = new Button ();
-        heart_button.set_icon_name ("emblem-favorite-symbolic");
+        heart_button.set_icon_name ("io.github.radiolamp.mangojuice.donade.svg");
         heart_button.set_tooltip_text (_("Donate"));
 
         var motion_controller = new EventControllerMotion ();
