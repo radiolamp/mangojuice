@@ -10,7 +10,7 @@ public class AdvancedDialog : Adw.Dialog {
 
     public AdvancedDialog (Gtk.Window parent) {
         Object ();
-        
+
         var header_bar = new Adw.HeaderBar ();
         header_bar.add_css_class ("flat");
         header_bar.set_size_request (320, -1);
@@ -19,19 +19,19 @@ public class AdvancedDialog : Adw.Dialog {
         warning_box.set_halign(Gtk.Align.CENTER);
         warning_box.set_margin_start(12);
         warning_box.set_margin_end(12);
-        
+
         var warning_icon = new Gtk.Image.from_icon_name("dialog-warning-symbolic");
         var warning_label = new Gtk.Label(_("The setting is reset when the configuration is changed"));
         warning_label.set_ellipsize(Pango.EllipsizeMode.END);
         warning_label.add_css_class("warning");
-        
+
         warning_box.append(warning_icon);
         warning_box.append(warning_label);
         header_bar.set_title_widget(warning_box);
-        
+
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         main_box.append (header_bar);
-        
+
         main_box.append (create_advanced_content ());
 
         this.set_child (main_box);
@@ -70,7 +70,7 @@ public class AdvancedDialog : Adw.Dialog {
                 while ((line = data_stream.read_line ()) != null) {
                     all_config_lines.append (line);
 
-                    if (!line.contains ("color") && 
+                    if (!line.contains ("color") &&
                     !line.contains ("fps_limit_method=") &&
                     !line.contains ("fps_value=")) {
                         if (line.has_prefix ("custom_text_center=") ||
@@ -170,7 +170,7 @@ public class AdvancedDialog : Adw.Dialog {
             enable_scroll (list_box);
         });
         action_row.add_suffix (down_button);
-    
+
         list_box.append (action_row);
     }
 
@@ -207,7 +207,7 @@ public class AdvancedDialog : Adw.Dialog {
 
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
-            disable_scroll (list_box); 
+            disable_scroll (list_box);
             value.set_object (row);
             enable_scroll (list_box);
             return new Gdk.ContentProvider.for_value (value);
@@ -312,9 +312,9 @@ public class AdvancedDialog : Adw.Dialog {
                 null
             );
             var data_stream = new DataOutputStream (output_stream);
-    
+
             data_stream.put_string ("# PRO MangoJuice #\n");
-    
+
             var child = list_box.get_first_child ();
             while (child != null) {
                 var action_row = child as Adw.ActionRow;
@@ -323,13 +323,13 @@ public class AdvancedDialog : Adw.Dialog {
                 }
                 child = child.get_next_sibling ();
             }
-    
+
             foreach (var config_line in all_config_lines) {
                 if (filtered_config_lines.find_custom (config_line, strcmp) == null) {
                     data_stream.put_string (config_line + "\n", null);
                 }
             }
-    
+
             output_stream.close ();
         } catch (Error e) {
             print (_("Error writing to the file: %s\n"), e.message);
@@ -351,15 +351,15 @@ public class AdvancedDialog : Adw.Dialog {
             case "cpu_stats":
                 return _("Load CPU");
             case "core_load":
-                return _("Core Load");
+                return _("Load per core");
             case "ram":
                 return _("RAM");
             case "io_read":
-                return _("Disk IO");
+                return _("Disk");
             case "io_write":
-                return _("Disk IO");
+                return _("Disk");
             case "procmem":
-                return _("Resident mem");
+                return _("Resident memory");
             case "swap":
                 return _("Swap");
             case "fan":
@@ -367,17 +367,17 @@ public class AdvancedDialog : Adw.Dialog {
             case "fps":
                 return _("FPS");
             case "fps_metrics=avg,0.01":
-                return _("FPS low 0.1%");
+                return _("Lowest 0.1%");
             case "fps_metrics=avg,0.1":
-                return _("FPS low 1%");
+                return _("Lowest 1%");
             case "version":
                 return _("Version");
             case "gamemode":
                 return _("Gamemode");
             case "vkbasalt":
-                return _("VKbasalt");
+                return _("vkBasalt");
             case "exec_name":
-                return _("Name");
+                return _("Exe name");
             case "fsr":
                 return _("FSR");
             case "hdr":
@@ -387,27 +387,27 @@ public class AdvancedDialog : Adw.Dialog {
             case "resolution":
                 return _("Resolution");
             case "arch":
-                return _("Arch");
+                return _("Architecture");
             case "present_mode":
                 return _("VPS");
             case "display_server":
-                return _("Session");
+                return _("Session type");
             case "show_fps_limit":
                 return _("Frame limit");
             case "frame_timing":
-                return _("Frame time");
+                return _("Frame graph");
             case "frame_count":
                 return _("Frame");
             case "battery":
-                return _("Percentage");
+                return _("Battery charge");
             case "battery_watt":
-                return _("Wattage");
+                return _("Battery power");
             case "battery_time":
                 return _("Time remain");
             case "device_battery_icon":
                 return _("Battery icon");
             case "device_battery=gamepad,mouse":
-                return _("Device");
+                return _("Other batteries");
             case "network":
                 return _("Network");
             case "media_player":

@@ -5,19 +5,19 @@ using Gee;
 
 public class MangoJuice : Adw.Application {
     // UI Elements
-    public OtherBox other_box;
-    Button reset_button;
-    Button logs_path_button;
-    Button intel_power_fix_button;
-    public Switch[] gpu_switches;
-    public Switch[] cpu_switches;
-    public Switch[] memory_switches;
-    public Switch[] system_switches;
-    public Switch[] wine_switches;
-    public Switch[] options_switches;
-    public Switch[] battery_switches;
-    public Switch[] other_extra_switches;
-    public Switch[] inform_switches;
+    public  OtherBox other_box;
+    Button  reset_button;
+    Button  logs_path_button;
+    Button  intel_power_fix_button;
+    public  Switch[] gpu_switches;
+    public  Switch[] cpu_switches;
+    public  Switch[] memory_switches;
+    public  Switch[] system_switches;
+    public  Switch[] wine_switches;
+    public  Switch[] options_switches;
+    public  Switch[] battery_switches;
+    public  Switch[] other_extra_switches;
+    public  Switch[] inform_switches;
     Label[] gpu_labels;
     Label[] cpu_labels;
     Label[] memory_labels;
@@ -27,102 +27,104 @@ public class MangoJuice : Adw.Application {
     Label[] battery_labels;
     Label[] other_extra_labels;
     Label[] inform_labels;
-    public Entry custom_command_entry;
-    public Entry custom_logs_path_entry;
-    public DropDown logs_key_combo;
-    public DropDown toggle_hud_key_combo;
-    public DropDown fps_limit_method;
-    public DropDown toggle_fps_limit;
-    public DropDown vulkan_dropdown;
-    public DropDown opengl_dropdown;
-    public Scale duracion_scale;
-    public Scale autostart_scale;
-    public Scale interval_scale;
-    public Entry duracion_entry;
-    public Entry autostart_entry;
-    public Entry interval_entry;
-    public Gtk.StringList logs_key_model;
-    public DropDown filter_dropdown;
-    public Scale af;
-    public Scale picmip;
-    public Entry picmip_entry;
-    public Entry af_entry;
-    public Entry fps_sampling_period_entry;
-    public Entry fps_limit_entry_1;
-    public Entry fps_limit_entry_2;
-    public Entry fps_limit_entry_3;
-    public Entry custom_text_center_entry;
-    public Switch custom_switch;
-    public Scale borders_scale;
-    public Scale alpha_scale;
-    public Entry borders_entry;
-    public Entry alpha_entry;
-    public Label alpha_value_label;
-    public DropDown position_dropdown;
-    public Scale colums_scale;
-    public Entry colums_entry;
-    public Entry toggle_hud_entry;
-    public Scale font_size_scale;
-    public Entry font_size_entry;
-    public DropDown font_dropdown;
-    public Entry gpu_text_entry;
-    public ColorDialogButton gpu_color_button;
-    public Entry cpu_text_entry;
-    public ColorDialogButton cpu_color_button;
-    public Entry fps_value_entry_1;
-    public Entry fps_value_entry_2;
-    public ColorDialogButton fps_color_button_1;
-    public ColorDialogButton fps_color_button_2;
-    public ColorDialogButton fps_color_button_3;
-    public Entry gpu_load_value_entry_1;
-    public Entry gpu_load_value_entry_2;
-    public ColorDialogButton gpu_load_color_button_1;
-    public ColorDialogButton gpu_load_color_button_2;
-    public ColorDialogButton gpu_load_color_button_3;
-    public Entry cpu_load_value_entry_1;
-    public Entry cpu_load_value_entry_2;
-    public ColorDialogButton cpu_load_color_button_1;
-    public ColorDialogButton cpu_load_color_button_2;
-    public ColorDialogButton cpu_load_color_button_3;
-    public ColorDialogButton background_color_button;
-    public ColorDialogButton frametime_color_button;
-    public ColorDialogButton vram_color_button;
-    public ColorDialogButton ram_color_button;
-    public ColorDialogButton wine_color_button;
-    public ColorDialogButton engine_color_button;
-    public ColorDialogButton text_color_button;
-    public ColorDialogButton media_player_color_button;
-    public ColorDialogButton network_color_button;
-    public Entry blacklist_entry;
-    public Entry gpu_entry;
-    public Scale offset_x_scale;
-    public Scale offset_y_scale;
-    public Label offset_x_value_label;
-    public Label offset_y_value_label;
-    public Entry offset_x_entry;
-    public Entry offset_y_entry;
-    public Scale fps_sampling_period_scale;
-    public Label fps_sampling_period_value_label;
-    public Button mangohud_global_button;
-    bool mangohud_global_enabled = false;
-    public bool is_loading = false;
-    ScrolledWindow other_scrolled_window;
-    ViewStack view_stack;
+    public  Entry             custom_command_entry;
+    public  Entry             custom_logs_path_entry;
+    public  DropDown          logs_key_combo;
+    public  DropDown          toggle_hud_key_combo;
+    public  DropDown          fps_limit_method;
+    public  DropDown          toggle_fps_limit;
+    public  DropDown          vulkan_dropdown;
+    public  DropDown          opengl_dropdown;
+    public  Scale             duracion_scale;
+    public  Scale             autostart_scale;
+    public  Scale             interval_scale;
+    public  Entry             duracion_entry;
+    public  Entry             autostart_entry;
+    public  Entry             interval_entry;
+    public  Gtk.StringList    logs_key_model;
+    public  DropDown          filter_dropdown;
+    public  Scale             af;
+    public  Scale             picmip;
+    public  Entry             picmip_entry;
+    public  Entry             af_entry;
+    public  Entry             fps_sampling_period_entry;
+    public  Entry             fps_limit_entry_1;
+    public  Entry             fps_limit_entry_2;
+    public  Entry             fps_limit_entry_3;
+    public  Entry             custom_text_center_entry;
+    public  Switch            custom_switch;
+    public  Scale             borders_scale;
+    public  Scale             alpha_scale;
+    public  Entry             borders_entry;
+    public  Entry             alpha_entry;
+    public  Label             alpha_value_label;
+    public  DropDown          position_dropdown;
+    public  Scale             colums_scale;
+    public  Entry             colums_entry;
+    public  Entry             toggle_hud_entry;
+    public  Scale             font_size_scale;
+    public  Entry             font_size_entry;
+    public  DropDown          font_dropdown;
+    public  Entry             gpu_text_entry;
+    public  ColorDialogButton gpu_color_button;
+    public  Entry             cpu_text_entry;
+    public  ColorDialogButton cpu_color_button;
+    public  Entry             fps_value_entry_1;
+    public  Entry             fps_value_entry_2;
+    public  ColorDialogButton fps_color_button_1;
+    public  ColorDialogButton fps_color_button_2;
+    public  ColorDialogButton fps_color_button_3;
+    public  Entry             gpu_load_value_entry_1;
+    public  Entry             gpu_load_value_entry_2;
+    public  ColorDialogButton gpu_load_color_button_1;
+    public  ColorDialogButton gpu_load_color_button_2;
+    public  ColorDialogButton gpu_load_color_button_3;
+    public  Entry             cpu_load_value_entry_1;
+    public  Entry             cpu_load_value_entry_2;
+    public  ColorDialogButton cpu_load_color_button_1;
+    public  ColorDialogButton cpu_load_color_button_2;
+    public  ColorDialogButton cpu_load_color_button_3;
+    public  ColorDialogButton background_color_button;
+    public  ColorDialogButton frametime_color_button;
+    public  ColorDialogButton vram_color_button;
+    public  ColorDialogButton ram_color_button;
+    public  ColorDialogButton wine_color_button;
+    public  ColorDialogButton engine_color_button;
+    public  ColorDialogButton text_color_button;
+    public  ColorDialogButton media_player_color_button;
+    public  ColorDialogButton network_color_button;
+    public  Entry             blacklist_entry;
+    public  Entry             gpu_entry;
+    public  Scale             offset_x_scale;
+    public  Scale             offset_y_scale;
+    public  Label             offset_x_value_label;
+    public  Label             offset_y_value_label;
+    public  Entry             offset_x_entry;
+    public  Entry             offset_y_entry;
+    public  Scale             fps_sampling_period_scale;
+    public  Label             fps_sampling_period_value_label;
+    public  Button            mangohud_global_button;
+
+    bool        mangohud_global_enabled = false;
+    public bool is_loading              = false;
+
+    ScrolledWindow  other_scrolled_window;
+    ViewStack       view_stack;
 
     // Constants
-    const string GPU_TITLE = _("GPU");
-    const string CPU_TITLE = _("CPU");
-    const string MEMORY_TITLE = _("Memory");
-    const string OTHER_TITLE = _("Other");
-    const string SYSTEM_TITLE = _("System");
-    const string WINE_TITLE = _("Wine");
-    const string OPTIONS_TITLE = _("Options");
-    const string BATTERY_TITLE = _("Battery");
-    const string INFORM_TITLE = _("Information");
-    const int MAIN_BOX_SPACING = 12;
-    const int FLOW_BOX_ROW_SPACING = 12;
-    const int FLOW_BOX_COLUMN_SPACING = 12;
-    const int FLOW_BOX_MARGIN = 12;
+    const string GPU_TITLE               = _("GPU");
+    const string CPU_TITLE               = _("CPU");
+    const string MEMORY_TITLE            = _("Memory");
+    const string OTHER_TITLE             = _("Other");
+    const string SYSTEM_TITLE            = _("System");
+    const string WINE_TITLE              = _("Wine");
+    const string OPTIONS_TITLE           = _("Options");
+    const string BATTERY_TITLE           = _("Battery");
+    const string INFORM_TITLE            = _("Information");
+    const int    MAIN_BOX_SPACING        = 12;
+    const int    FLOW_BOX_ROW_SPACING    = 12;
+    const int    FLOW_BOX_COLUMN_SPACING = 12;
+    const int    FLOW_BOX_MARGIN         = 12;
 
     // Configuration Variables
     public string[] gpu_config_vars = {
@@ -156,68 +158,102 @@ public class MangoJuice : Adw.Application {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "no_display", "text_outline=0", "no_small_font", "hud_no_margin"
     };
 
-    // Label Texts
+    /*
+     * Labels
+     */
+
+    // Metrics
     string[] gpu_label_texts = {
-        _("Load GPU"), _("Load Color"), _("VRAM"), _("Core Freq"), _("Mem Freq"),
-        _("Temp"), _("Memory Temp"), _("Junction"), _("Fans"), _("Model"),
-        _("Power"), _("Voltage"), _("Throttling"), _("Throttling GRAPH"), _("Vulkan Driver")
+        _("Load GPU"),         _("Color load"),       _("VRAM"),               _("Core frequency"),
+        _("Memory frequency"), _("Temperature"),      _("Memory temperature"), _("Maximum temperature"),
+        _("Fans"),             _("Model"),            _("Power"),              _("Voltage"),
+        _("Throttling"),       _("Throttling graph"), _("Vulkan Driver")
     };
     string[] cpu_label_texts = {
-        _("Load CPU"), _("Load Color"), _("Core Load"), _("Core Bars"), _("Core Freq"), _("Temp"),
-        _("Power")
+        _("Load CPU"),          _("Color load"),  _("Load per core"), _("Diagram"),
+        _("Maximum frequency"), _("Temperature"), _("Power")
     };
     string[] memory_label_texts = {
-        _("RAM"), _("Disk IO"), _("Resident mem"), _("Swap")
+        _("RAM"),             _("Disk"),
+        _("Resident memory"), _("Swap")
     };
+
+    // Extras
     string[] system_label_texts = {
-        _("Refresh rate"), _("Fan"), _("Resolution"), _("Session"), _("Compact API"), _("Time"), _("Arch"), _("Network")
+        _("Refresh rate"), _("Fan"),   _("Resolution"),   _("Session type"),
+        _("Compact API"),  _("Watch"), _("Architecture"), _("Network")
+    };
+    string[] options_label_texts = {
+        _("HUD Version"), _("Gamemode"),       _("vkBasalt"),           _("Exe name"),
+        _("Fcat"),        _("FSR"),            _("HDR"),                _("Remove paddings"),
+        _("Hide HUD"),    _("Remove shadows"), _("Font normalization"), _("Remove margins")
+    };
+    string[] battery_label_texts = {
+        _("Battery charge"), _("Battery power"),  _("Time remain"),
+        _("Battery icon"),   _("Other batteries")
     };
     string[] wine_label_texts = {
         _("Version"), _("Winesync")
     };
-    string[] options_label_texts = {
-        _("HUD Version"), _("Gamemode"), _("VKbasalt"), _("Name"), _("Fcat"), _("FSR"), _("HDR"), _("Compact HUD"),
-        _("Hide HUD"), _("Turn off the shadow"), _("No small font"), _("Disable margins")
-    };
-    string[] battery_label_texts = {
-        _("Percentage"), _("Wattage"), _("Time remain"), _("Battery icon"), _("Device")
-    };
     string[] other_extra_label_texts = {
-        _("Media"), _("Full ON"), _("Log Versioning"), _("Upload Results")
+        _("Media"),    _("Full ON"),
+        _("Full log"), _("Upload logs")
     };
+
+    // Performance
     string[] inform_label_texts = {
-        _("FPS"), _("FPS Color"), _("FPS Only"), _("FPS low 1%"), _("FPS low 0.1%"), _("Frame limit"), _("Frame time"), _("Histogram"), _("Frame"), _("Temt °F"), _("VPS")
+        _("FPS"),           _("Color FPS"),   _("FPS Only"),    _("Lowest 1%"),
+        _("Lowest 0.1%"),   _("Frame limit"), _("Frame graph"), _("Histogram"),
+        _("Frame Counter"), _("°C to °F"),    _("VPS")
     };
+
+    /*
+     * Descriptions
+     */
+
+    // Metrics
     string[] gpu_label_texts_2 = {
-        _("Percentage load"), _("Color text"), _("Display system VRAM"), _("Display GPU core"), _("Display GPU memory"),
-        _("GPU temperature"), _("GDDR temperatures"), _("GPU core temperature"), _("Fan in rpm"), _("Display GPU name"),
-        _("Display draw in watts"), _("Display voltage"), _("GPU is throttling?"), _("Trolling curve"), _("Driver Version")
+        _("Percentage load"),    _("Color text"),      _("Amount of video memory"), _("Frequency, MHz"),
+        _("Frequency, MHz"),     _("GPU temperature"), _("GDDR temperature"),       _("Termperature peak"),
+        _("Fan speed, RPM"),     _("GPU name"),        _("Consumption, W" ),        _("Consumption, V"),
+        _("Trolling parametrs"), _("Curve"),           _("Driver Version")
     };
     string[] cpu_label_texts_2 = {
-        _("Percentage load"), _("Color text"), _("Display all streams"), _("Streams in the graph"), _("Processor frequency"), _("Processor temperature"), _("CPU consumption watt")
+        _("Percentage load"),      _("Color text"),      _("All cores"),     _("Load per core"),
+        _("Peak among all cores"), _("CPU temperature"), _("Consumption, W")
     };
     string[] memory_label_texts_2 = {
-        _("RAM Memory"), _("Input/Output"), _("RAM Memory"), _("RAM Memory")
+        _("Size, GiB"), _("Input/Output, MiB/s"),
+        _("Size, GiB"), _("Size, GiB")
     };
+
+    // Extras
     string[] system_label_texts_2 = {
-        _("Only gamescope"), _("Steam deck"), _("Window"), _("X11/Wayland"), _("Shortens the name"), _("Watch"), _("Processor"), _("Speed network")
+        _("Gamescope only"),    _("Steam deck only"), _("Window size"),    _("X11/Wayland"),
+        _("Shortens the name"), _("Current time"),    _("Processor base"), _("Adapters speed")
+    };
+    string[] options_label_texts_2 = {
+        _("MangoHud version"),       _("Gamemode state"),     _("vkBasalt state"), _("Proccess name"),
+        _("Updating visualization"), _("Gamescope only"),     _("Gamescope only"), _("Internal offsets"),
+        _("Hide overlay"),           _("Shadows under text"), _("Same font size"), _("External offsets")
+    };
+    string[] battery_label_texts_2 = {
+        _("Power level, %"),  _("Consumption, W"), _("Battery life"),
+        _("Icon of percent"), _("Wireless batt")
     };
     string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("Wine sync method")
     };
-    string[] options_label_texts_2 = {
-        _("Mangohud"), _("Game process priority"), _("Improve graphics"), _("Launched process"), _("Visual updating frames"),
-        _("Only gamescope"), _("Only gamescope"), _("Removes fields"),  _("Hide overlay"), _("Turn off font shadow"), _("Disable small fonts"), _("Edge of the screen")
-    };
-    string[] battery_label_texts_2 = {
-        _("Battery charge"), _("Show battery wattage"), _("Time for battery"), _("Icon of percent"), _("Wireless batt")
-    };
     string[] other_extra_label_texts_2 = {
-        _("Show media player"), _("Excludes histogram"), _("Log information"), _("Auto upload logs")
+        _("Current playback"), _("All but histograms"),
+        _("Log information"),  _("flightlessmango.com")
     };
+
+    // Performance
     string[] inform_label_texts_2 = {
-        _("Show FPS"), _("Color text"), _("Disable other opts."), _("Average worst frame"), _("Average worst frame"), _("Display FPS limit"), _("Display frametime"),
-        _("Graph to histogram"), _("Display frame count"), _("Show temperature °F"), _("Present mode")
+        _("Frames per second"),   _("Color text"),        _("Disable all but FPS"), _("1% is lower then"),
+        _("0.1% is lower then"),  _("FPS limitation"),    _("Frametime"),           _("Graph to histogram"),
+        _("Display frame count"), _("Temperature in °F"), _("Present mode")
     };
 
     // Vulkan and OpenGL Values
@@ -350,7 +386,7 @@ public class MangoJuice : Adw.Application {
         other_scrolled_window.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         other_scrolled_window.set_vexpand (true);
         other_scrolled_window.set_child (other_box);
-    
+
         string? current_desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
         bool is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
 
@@ -370,7 +406,7 @@ public class MangoJuice : Adw.Application {
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
-    
+
         var test_button = new Button.with_label (_("Test"));
         test_button.clicked.connect (run_test);
         header_bar.pack_start (test_button);
@@ -428,7 +464,7 @@ public class MangoJuice : Adw.Application {
         var content_box = new Box (Orientation.VERTICAL, 0);
         content_box.append (header_bar);
         content_box.append (view_stack);
-    
+
         window.set_content (content_box);
         window.present ();
 
@@ -451,7 +487,7 @@ public class MangoJuice : Adw.Application {
                 if (!vkcube_available && !glxgears_available) {
                     stderr.printf (_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
                                   _("glxgears not found. If you want a test button, install mesa-utils.\n"));
-    
+
                     var test_button_notification = new GLib.Notification (_("Test Button Disabled"));
                     test_button_notification.set_body (_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
                     test_button_notification.set_icon (new ThemedIcon ("io.github.radiolamp.mangojuice"));
@@ -495,7 +531,7 @@ public class MangoJuice : Adw.Application {
             check_mangohud_global_status ();
             return false;
         });
-    
+
         LoadStates.load_states_from_file.begin (this);
     }
 
@@ -717,7 +753,7 @@ public class MangoJuice : Adw.Application {
 
     void initialize_custom_controls (Box extras_box, Box visual_box) {
         custom_command_entry = new Entry ();
-        var custom_command_box = create_entry_with_clear_button (custom_command_entry, _("Mangohud variable"), "");
+        var custom_command_box = create_entry_with_clear_button (custom_command_entry, _("MangoHud variable"), "");
         custom_command_entry.changed.connect (() => {
             save_config ();
         });
@@ -778,13 +814,13 @@ public class MangoJuice : Adw.Application {
         });
 
         blacklist_entry = new Entry ();
-        var blacklist_box = create_entry_with_clear_button (blacklist_entry, _("Blacklist: (vkcube,WatchDogs2.exe)"), "");
+        var blacklist_box = create_entry_with_clear_button (blacklist_entry, _("Blacklist: (vkcube, WatchDogs2.exe)"), "");
         blacklist_entry.changed.connect (() => {
             SaveStates.update_blacklist_in_file (blacklist_entry.text);
             save_config ();
         });
 
-            mangohud_global_button = new Button.with_label (_("Mangohud Global"));
+            mangohud_global_button = new Button.with_label (_("MangoHud Global"));
             mangohud_global_button.clicked.connect (on_mangohud_global_button_clicked);
         if (!is_flatpak ()) {
             blacklist_box.append (mangohud_global_button);
@@ -935,7 +971,7 @@ public class MangoJuice : Adw.Application {
         custom_switch.notify["active"].connect (() => {
             save_config ();
         });
-    
+
         var custom_switch_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         custom_switch_pair.append (custom_switch_label);
         custom_switch_pair.append (custom_switch);
@@ -1013,7 +1049,7 @@ public class MangoJuice : Adw.Application {
         attrs.insert (Pango.attr_weight_new (Pango.Weight.BOLD));
 
         toggle_hud_entry.attributes = attrs;
-        
+
         toggle_hud_entry.set_size_request (20, -1);
         toggle_hud_entry.changed.connect (() => {
             SaveStates.update_toggle_hud_in_file (toggle_hud_entry.text);
@@ -1055,24 +1091,24 @@ public class MangoJuice : Adw.Application {
         foreach (var item in new string[] { "Shift_R+F11", "Shift_R+F10", "Shift_R+F9", "Shift_R+F8" }) {
             toggle_hud_key_model.append (item);
         }
-        
+
         toggle_hud_key_combo = new DropDown (toggle_hud_key_model, null) {
             hexpand = true
         };
-        
+
         toggle_hud_key_combo.notify["selected-item"].connect (() => {
             SaveStates.update_toggle_hud_key_in_file ((toggle_hud_key_combo.selected_item as StringObject)?.get_string () ?? "");
             save_config ();
         });
-        
+
         var toggle_position_label = new Label (_("Toggle position")) {
             halign = Align.START
         };
-        
+
         var toggle_position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         toggle_position_pair.append (toggle_position_label);
         toggle_position_pair.append (toggle_hud_key_combo);
-        
+
         combined_flow_box.insert (toggle_position_pair, -1);
 
         var offset_x_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
@@ -1285,7 +1321,7 @@ public class MangoJuice : Adw.Application {
             clear_gpu_load_button.visible = (gpu_load_value_entry_1.text != "60" || gpu_load_value_entry_2.text != "90");
             SaveStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
         });
-    
+
         gpu_load_value_entry_2 = new Entry () {
             placeholder_text = _("High"),
             text = "90",
@@ -1296,7 +1332,7 @@ public class MangoJuice : Adw.Application {
             clear_gpu_load_button.visible = (gpu_load_value_entry_1.text != "60" || gpu_load_value_entry_2.text != "90");
             SaveStates.update_gpu_load_value_in_file (gpu_load_value_entry_1.text, gpu_load_value_entry_2.text);
         });
-    
+
         var gpu_load_entry_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         gpu_load_entry_box.append (gpu_load_value_entry_1);
         gpu_load_entry_box.append (gpu_load_value_entry_2);
@@ -1341,10 +1377,10 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_box.append (gpu_load_color_button_2);
         gpu_load_color_box.append (gpu_load_color_button_3);
         visual_box.append (gpu_load_color_box);
-    
+
         var cpu_load_clarge_label = create_label (_("The color of CPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (cpu_load_clarge_label);
-    
+
         var clear_cpu_load_button = new Button.from_icon_name ("edit-clear-symbolic") {
             tooltip_text = _("Reset to default"),
             visible = false,
@@ -1518,7 +1554,7 @@ public class MangoJuice : Adw.Application {
             label.set_halign (Align.START);
             label.set_ellipsize (Pango.EllipsizeMode.END);
             label.hexpand = true;
-           
+
             var box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
             box.append (color_buttons[i]);
             box.append (label);
@@ -1594,7 +1630,7 @@ public class MangoJuice : Adw.Application {
                 wine_label.set_visible (false);
             }
         });
-    
+
         font_dropdown.set_factory (factory);
     }
 
@@ -1607,7 +1643,7 @@ public class MangoJuice : Adw.Application {
             string standard_error;
 
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-    
+
             if (exit_status == 0) {
                 string[] lines = standard_output.split ("\n");
 
@@ -1832,7 +1868,7 @@ public class MangoJuice : Adw.Application {
         vsync_box.append (vulkan_dropdown);
         vsync_box.append (opengl_label);
         vsync_box.append (opengl_dropdown);
-        performance_box.append (vsync_box); 
+        performance_box.append (vsync_box);
 
         var filters_label = create_label (_("Filters"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         performance_box.append (filters_label);
@@ -2027,7 +2063,7 @@ public class MangoJuice : Adw.Application {
                       .get_child (".config")
                       .get_child ("MangoHud")
                       .get_child (".MangoHud.backup");
-    
+
         if (file.query_exists ()) {
             try {
                 file.delete ();
@@ -2090,29 +2126,29 @@ public class MangoJuice : Adw.Application {
 
     public Gtk.DropDown gpu_dropdown;
     private GpuInfo[] gpu_infos = {};
-    
+
     public class GpuInfo : Object {
         public string description { get; set; }
         public string pci_address { get; set; }
-    
+
         public GpuInfo (string description, string pci_address) {
             this.description = description;
             this.pci_address = pci_address;
         }
     }
-    
+
     public void initialize_gpu_entry (Box extras_box) {
         var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
-        
+
         gpu_entry = new Entry () { hexpand = true, halign = Align.FILL };
         var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
         gpu_entry.changed.connect (() => { SaveStates.update_gpu_in_file (gpu_entry.text); save_config (); });
-        
+
         var string_list = new Gtk.StringList (null);
         string_list.append (_("Default"));
-        
+
         gpu_dropdown = new Gtk.DropDown (string_list, null) { hexpand = true, halign = Align.FILL };
-        
+
         var factory = new Gtk.SignalListItemFactory ();
         factory.setup.connect ((item) => {
             var list_item = item as Gtk.ListItem;
@@ -2132,15 +2168,15 @@ public class MangoJuice : Adw.Application {
                 }
             }
         });
-        
+
         gpu_dropdown.factory = factory;
         gpu_infos = get_gpu_infos ();
-        
+
         if (gpu_infos.length == 1 && !Config.IS_DEVEL) {
             gpu_list_label.visible = gpu_box.visible = gpu_dropdown.visible = false;
         } else {
             foreach (var gpu_info in gpu_infos) string_list.append (gpu_info.description);
-            
+
             gpu_dropdown.notify["selected"].connect (() => {
                 uint selected_index = gpu_dropdown.selected;
                 if (selected_index == 0) {
@@ -2150,27 +2186,27 @@ public class MangoJuice : Adw.Application {
                 }
                 save_config ();
             });
-            
+
             var gpu_hbox = new Box (Orientation.HORIZONTAL,  MAIN_BOX_SPACING) {
-                margin_start = FLOW_BOX_MARGIN, 
-                margin_end = FLOW_BOX_MARGIN, 
-                hexpand = true 
+                margin_start = FLOW_BOX_MARGIN,
+                margin_end = FLOW_BOX_MARGIN,
+                hexpand = true
             };
             gpu_hbox.append (gpu_box);
             gpu_hbox.append (gpu_dropdown);
-            
+
             extras_box.append (gpu_list_label);
             extras_box.append (gpu_hbox);
         }
     }
-    
+
     private GpuInfo[] get_gpu_infos () {
         GpuInfo[] gpu_infos = {};
         try {
             string output;
             Process.spawn_command_line_sync ("lspci", out output);
             string[] lines = output.split ("\n");
-    
+
             foreach (var line in lines) {
                 if ("VGA compatible controller" in line || "3D controller" in line || "Display controller" in line) {
                     string pci_address = line[0:7].strip ();
@@ -2182,7 +2218,7 @@ public class MangoJuice : Adw.Application {
                                             .replace ("Display controller: ", "")
                                             .replace ("3D controller: ", "")
                                             .strip ();
-    
+
                     gpu_infos += new GpuInfo (description, full_pci_address);
                 }
             }
@@ -2338,16 +2374,16 @@ public class MangoJuice : Adw.Application {
         result.scale.set_size_request (140, -1);
         result.scale.set_hexpand (true);
         result.scale.adjustment.page_increment = 1;
-    
+
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
         validate_numeric_entry (result.entry, min, max);
-        
+
         bool is_updating = false;
-    
+
         result.scale.value_changed.connect (() => {
             validate_entry_value (result.entry, min, max);
             if (!is_updating) {
@@ -2360,7 +2396,7 @@ public class MangoJuice : Adw.Application {
                 });
             }
         });
-        
+
         result.entry.changed.connect (() => {
             if (!is_updating) {
                 int value = 0;
@@ -2386,54 +2422,54 @@ public class MangoJuice : Adw.Application {
                 validate_entry_value (result.entry, min, max);
             }
         });
-    
+
         result.entry.notify["has-focus"].connect (() => {
             if (!result.entry.has_focus && result.entry.text.strip () == "") {
                 result.entry.text = "%d".printf (initial_value);
                 result.scale.set_value (initial_value);
             }
         });
-        
+
         var text_box = new Box (Orientation.VERTICAL, 0);
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
-    
+
         var label1 = new Label (null);
         label1.set_markup ("<b>%s</b>".printf (title));
         label1.set_halign (Align.START);
         label1.set_hexpand (false);
         label1.set_ellipsize (Pango.EllipsizeMode.END);
-        
+
         var label2 = new Label (null);
         label2.set_markup ("<span size='9000'>%s</span>".printf (description));
         label2.set_halign (Align.START);
         label2.set_hexpand (false);
         label2.add_css_class ("dim-label");
         label2.set_ellipsize (Pango.EllipsizeMode.END);
-    
+
         text_box.append (label1);
         text_box.append (label2);
-        
+
         result.widget = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         result.widget.append (text_box);
         result.widget.append (result.scale);
         result.widget.append (result.entry);
-    
+
         var gesture_drag = new Gtk.GestureDrag ();
         gesture_drag.drag_update.connect ((offset_x, offset_y) => {
             double current_value = result.scale.get_value ();
-    
+
             int scale_width = result.scale.get_width ();
-    
+
             double new_value = current_value + (offset_x / scale_width) * (max - min);
-    
+
             new_value = new_value.clamp (min, max);
-    
+
             result.scale.set_value (new_value);
         });
-    
+
         result.scale.add_controller (gesture_drag);
-    
+
         return result;
     }
 
@@ -2468,7 +2504,7 @@ public class MangoJuice : Adw.Application {
             return false;
         });
     }
-    
+
     async bool check_file_permission_async (string file_path, string expected_permissions) {
         try {
             string[] argv = { "stat", "-c", "%a", file_path };
@@ -2477,7 +2513,7 @@ public class MangoJuice : Adw.Application {
             int exit_status;
 
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-    
+
             if (exit_status == 0) {
                 string permissions = standard_output.strip ();
                 return permissions == expected_permissions;

@@ -77,13 +77,13 @@ public class OtherLoad {
             }
 
             // Устанавливаем значения по умолчанию, если параметры не найдены
-            if (!found[0]) set_default_scale_value (other_box.scales[0], other_box.entries[0], 0, "%.2f");
-            if (!found[1]) set_default_scale_value (other_box.scales[1], other_box.entries[1], 0, "%.2f");
-            if (!found[2]) set_default_scale_value (other_box.scales[2], other_box.entries[2], 0, "%.2f");
-            if (!found[3]) set_default_scale_value (other_box.scales[3], other_box.entries[3], 0.75, "%.2f");
-            if (!found[4]) set_default_scale_value (other_box.scales[4], other_box.entries[4], 0.125, "%.3f");
-            if (!found[5]) set_default_scale_value (other_box.scales[5], other_box.entries[5], 0.0833, "%.4f");
-            if (!found[6]) set_default_scale_value (other_box.scales[6], other_box.entries[6], 0.05, "%.2f");
+            if (!found[0]) set_default_scale_value     (other_box.scales[0], other_box.entries[0], 0,      "%.2f");
+            if (!found[1]) set_default_scale_value     (other_box.scales[1], other_box.entries[1], 0,      "%.2f");
+            if (!found[2]) set_default_scale_value     (other_box.scales[2], other_box.entries[2], 0,      "%.2f");
+            if (!found[3]) set_default_scale_value     (other_box.scales[3], other_box.entries[3], 0.75,   "%.2f");
+            if (!found[4]) set_default_scale_value     (other_box.scales[4], other_box.entries[4], 0.125,  "%.3f");
+            if (!found[5]) set_default_scale_value     (other_box.scales[5], other_box.entries[5], 0.0833, "%.4f");
+            if (!found[6]) set_default_scale_value     (other_box.scales[6], other_box.entries[6], 0.05,   "%.2f");
             if (!found[7]) set_default_int_scale_value (other_box.scales[7], other_box.entries[7], 8);
             if (!found[8]) set_default_int_scale_value (other_box.scales[8], other_box.entries[8], 0);
             if (!found[9]) set_default_int_scale_value (other_box.scales[9], other_box.entries[9], 25);
