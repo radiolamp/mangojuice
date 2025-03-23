@@ -2109,7 +2109,7 @@ public class MangoJuice : Adw.Application {
         gpu_entry.changed.connect (() => { SaveStates.update_gpu_in_file (gpu_entry.text); save_config (); });
         
         var string_list = new Gtk.StringList (null);
-        string_list.append (_("Default"));
+        string_list.append ("Default");
         
         gpu_dropdown = new Gtk.DropDown (string_list, null) { hexpand = true, halign = Align.FILL };
         
@@ -2125,7 +2125,7 @@ public class MangoJuice : Adw.Application {
         var string_object = list_item.get_item () as Gtk.StringObject;
         if (label != null && string_object != null) {
         string full_text = string_object.get_string ();
-        if (full_text == _("Default")) {
+        if (full_text == "Default") {
             label.set_text (full_text);
                 } else {
                 label.set_text (full_text.length > 12 ? full_text[8:] : full_text);
