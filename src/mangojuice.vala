@@ -428,7 +428,7 @@ public class MangoJuice : Adw.Application {
         header_bar.pack_end (menu_button);
 
         var heart_button = new Button ();
-        heart_button.set_icon_name ("emblem-favorite-symbolic");
+        heart_button.set_icon_name ("io.github.radiolamp.mangojuice.donate-symbolic");
         heart_button.set_tooltip_text (_("Donate"));
 
         var motion_controller = new EventControllerMotion ();
@@ -2161,7 +2161,7 @@ public class MangoJuice : Adw.Application {
         var string_object = list_item.get_item () as Gtk.StringObject;
         if (label != null && string_object != null) {
         string full_text = string_object.get_string ();
-        if (full_text == _("Default")) {
+        if (full_text == "Default") {
             label.set_text (full_text);
                 } else {
                 label.set_text (full_text.length > 12 ? full_text[8:] : full_text);
