@@ -214,8 +214,8 @@ public class MangoJuice : Adw.Application {
     // Metrics
     string[] gpu_label_texts_2 = {
         _("Percentage load"),    _("Color text"),      _("Amount of video memory"), _("Frequency, MHz"),
-        _("Frequency, MHz"),     _("GPU temperature"), _("GDDR temperature"),       _("Termperature peak"),
-        _("Fan speed, RPM"),     _("GPU name"),        _("Consumption, W" ),        _("Consumption, V"),
+        _("Frequency, MHz"),     _("GPU temperature"), _("GDDR temperature"),       _("Temperature peak"),
+        _("Speed, RPM"),     _("GPU name"),        _("Consumption, W" ),        _("Consumption, V"),
         _("Trolling parametrs"), _("Curve"),           _("Driver Version")
     };
     string[] cpu_label_texts_2 = {
@@ -229,7 +229,7 @@ public class MangoJuice : Adw.Application {
 
     // Extras
     string[] system_label_texts_2 = {
-        _("Gamescope only"),    _("Steam deck only"), _("Window size"),    _("X11/Wayland"),
+        _("Gamescope only"),    _("Steam Deck only"), _("Window size"),    _("X11/Wayland"),
         _("Shortens the name"), _("Current time"),    _("Processor base"), _("Adapters speed")
     };
     string[] options_label_texts_2 = {
@@ -239,7 +239,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] battery_label_texts_2 = {
         _("Power level, %"),  _("Consumption, W"), _("Battery life"),
-        _("Icon of percent"), _("Wireless batt")
+        _("Icon of percent"), _("Wireless battries")
     };
     string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("Wine sync method")
@@ -251,7 +251,7 @@ public class MangoJuice : Adw.Application {
 
     // Performance
     string[] inform_label_texts_2 = {
-        _("Frames per second"),   _("Color text"),        _("Disable all but FPS"), _("1% is lower then"),
+        _("Frames per second"),   _("Color text"),        _("Disable unnecessary"), _("1% is lower then"),
         _("0.1% is lower then"),  _("FPS limitation"),    _("Frametime"),           _("Graph to histogram"),
         _("Display frame count"), _("Temperature in °F"), _("Present mode")
     };
@@ -960,7 +960,7 @@ public class MangoJuice : Adw.Application {
             selection_mode = SelectionMode.NONE
         };
 
-        var custom_switch_label = new Label (_("Horizontal Hud")) {
+        var custom_switch_label = new Label (_("Horizontal HUD")) {
             halign = Align.START,
             hexpand = true
         };
@@ -1297,7 +1297,7 @@ public class MangoJuice : Adw.Application {
         fps_color_box.append (fps_color_button_3);
         visual_box.append (fps_color_box);
 
-        var gpu_load_clarge_label = create_label (_("The color of GPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        var gpu_load_clarge_label = create_label (_("GPU level colors"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (gpu_load_clarge_label);
 
         var clear_gpu_load_button = new Button.from_icon_name ("edit-clear-symbolic") {
@@ -1378,7 +1378,7 @@ public class MangoJuice : Adw.Application {
         gpu_load_color_box.append (gpu_load_color_button_3);
         visual_box.append (gpu_load_color_box);
 
-        var cpu_load_clarge_label = create_label (_("The color of CPU levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        var cpu_load_clarge_label = create_label (_("CPU level colors"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (cpu_load_clarge_label);
 
         var clear_cpu_load_button = new Button.from_icon_name ("edit-clear-symbolic") {
@@ -1585,7 +1585,7 @@ public class MangoJuice : Adw.Application {
         font_dropdown = new DropDown (font_model, null);
         font_dropdown.set_hexpand (true);
         font_dropdown.set_size_request (100, -1);
-        font_dropdown.set_tooltip_text (_("If you are going to play through wine, then you need to select fonts from the home directory, the system fonts will not work."));
+        font_dropdown.set_tooltip_text (_("If you are going to play through Wine, then you need to select fonts from the home directory, the system fonts will not work."));
 
         font_dropdown.notify["selected-item"].connect (() => {
             var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
@@ -1758,7 +1758,7 @@ public class MangoJuice : Adw.Application {
         scales_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         scales_flow_box.set_selection_mode (SelectionMode.NONE);
 
-        string[] label_texts = { _("Duracion"), _("Autostart"), _("Interval") };
+        string[] label_texts = { _("Duration"), _("Autostart"), _("Interval") };
         string[] label_texts_2 = { _("Seconds"), _("Seconds"), _("Milliseconds") };
 
         var duracion_widget = create_scale_entry_widget (label_texts[0], label_texts_2[0], 0, 200, 30);
@@ -2313,7 +2313,7 @@ public class MangoJuice : Adw.Application {
 
     void on_restore_config_button_clicked () {
         var dialog = new Gtk.FileDialog ();
-        dialog.set_title (_("Select Config File to Restore"));
+        dialog.set_title (_("Select config file to restore"));
         dialog.set_accept_label (_("Restore"));
 
         dialog.open.begin (this.active_window, null, (obj, res) => {
