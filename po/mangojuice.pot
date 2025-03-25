@@ -87,7 +87,7 @@ msgid "Memory temperature"
 msgstr ""
 
 #: src/mangojuice.vala:168
-msgid "Maximum temperature"
+msgid "Max temperature"
 msgstr ""
 
 #: src/mangojuice.vala:169

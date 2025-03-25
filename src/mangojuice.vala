@@ -165,7 +165,7 @@ public class MangoJuice : Adw.Application {
     // Metrics
     string[] gpu_label_texts = {
         _("Load GPU"),         _("Color load"),       _("VRAM"),               _("Core frequency"),
-        _("Memory frequency"), _("Temperature"),      _("Memory temperature"), _("Maximum temperature"),
+        _("Memory frequency"), _("Temperature"),      _("Memory temperature"), _("Max temperature"),
         _("Fans"),             _("Model"),            _("Power"),              _("Voltage"),
         _("Throttling"),       _("Throttling graph"), _("Vulkan Driver")
     };

@@ -90,7 +90,7 @@ msgid "Memory temperature"
 msgstr "Температура памяти"
 
 #: src/mangojuice.vala:168
-msgid "Maximum temperature"
+msgid "Max temperature"
 msgstr "Пик температур"
 
 #: src/mangojuice.vala:169
@@ -353,7 +353,7 @@ msgstr "Температура GDDR"
 
 #: src/mangojuice.vala:217
 msgid "Temperature peak"
-msgstr "Пиковая температура"
+msgstr "Максимальный нагрев"
 
 #: src/mangojuice.vala:218
 msgid "Speed, RPM"
