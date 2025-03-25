@@ -30,15 +30,15 @@ public class LoadStates {
             string line;
 
             while ((line = yield data_stream.read_line_async ()) != null) {
-                load_switch_from_file (line, mango_juice.gpu_switches, mango_juice.gpu_config_vars);
-                load_switch_from_file (line, mango_juice.cpu_switches, mango_juice.cpu_config_vars);
-                load_switch_from_file (line, mango_juice.memory_switches, mango_juice.memory_config_vars);
-                load_switch_from_file (line, mango_juice.system_switches, mango_juice.system_config_vars);
-                load_switch_from_file (line, mango_juice.wine_switches, mango_juice.wine_config_vars);
-                load_switch_from_file (line, mango_juice.battery_switches, mango_juice.battery_config_vars);
+                load_switch_from_file (line, mango_juice.gpu_switches,         mango_juice.gpu_config_vars);
+                load_switch_from_file (line, mango_juice.cpu_switches,         mango_juice.cpu_config_vars);
+                load_switch_from_file (line, mango_juice.memory_switches,      mango_juice.memory_config_vars);
+                load_switch_from_file (line, mango_juice.system_switches,      mango_juice.system_config_vars);
+                load_switch_from_file (line, mango_juice.wine_switches,        mango_juice.wine_config_vars);
+                load_switch_from_file (line, mango_juice.battery_switches,     mango_juice.battery_config_vars);
                 load_switch_from_file (line, mango_juice.other_extra_switches, mango_juice.other_extra_config_vars);
-                load_switch_from_file (line, mango_juice.inform_switches, mango_juice.inform_config_vars);
-                load_switch_from_file (line, mango_juice.options_switches, mango_juice.options_config_vars);
+                load_switch_from_file (line, mango_juice.inform_switches,      mango_juice.inform_config_vars);
+                load_switch_from_file (line, mango_juice.options_switches,     mango_juice.options_config_vars);
 
                 if (line.contains("#custom_command")) {
                     var custom_command_value = line.split(" #custom_command")[0].strip();
@@ -70,11 +70,11 @@ public class LoadStates {
                 if (line.has_prefix ("pci_dev=")) {
                     if (mango_juice.gpu_dropdown != null) {
                         string selected_pci_address = line.substring ("pci_dev=".length).strip ();
-                        
+
                         selected_pci_address = selected_pci_address.replace ("0000:", "");
-                
+
                         var model = mango_juice.gpu_dropdown.model;
-                
+
                         uint index = 0;
                         bool found = false;
                         for (uint i = 0; i < model.get_n_items (); i++) {
@@ -88,7 +88,7 @@ public class LoadStates {
                                 }
                             }
                         }
-                
+
                         if (found) {
                             mango_juice.gpu_dropdown.selected = index;
                         }
@@ -104,7 +104,7 @@ public class LoadStates {
                         }
                     }
                 }
-                
+
                 if (line.has_prefix ("autostart_log=")) {
                     if (mango_juice.autostart_scale != null) {
                         int autostart_value = int.parse (line.substring ("autostart_log=".length));
@@ -114,7 +114,7 @@ public class LoadStates {
                         }
                     }
                 }
-                
+
                 if (line.has_prefix ("log_interval=")) {
                     if (mango_juice.interval_scale != null) {
                         int interval_value = int.parse (line.substring ("log_interval=".length));

@@ -1,107 +1,128 @@
-## MangoJuice   [![En](https://img.shields.io/badge/en-gray)](/README.md) [![Ru](https://img.shields.io/badge/ru-green)](/docs/README-ru.md)
+## MangoJuice [![En](https://img.shields.io/badge/en-gray)](/README.md) [![Ru](https://img.shields.io/badge/ru-green)](/docs/README-ru.md)
 
-### Данная программа стремится стать удобной альтернативой Goverlay, для настройки Mangohud.
+### Эта программа станет удобной альтернативой GOverlay для настройки MangoHud
 
-<div align="center">
-  <img src="/data/images/screen1.png" alt="Preview"/>
-</div>
+<p align="center">
+    <img src="data/images/screen1.png" alt="Скриншот"/>
+</p>
 
-Страница 1 | Страница 2 | Страница 3 | Страница 4| Страница 5
-:-:|:-:|:-:|:-:|:-:
-![screen](/data/images/screen1.png) | ![screen2](/data/images/screen2.png) | ![screen3](/data/images/screen3.png) | ![screen4](/data/images/screen4.png) | ![screen4](/data/images/screen5.png) 
+|             Страница 1              |             Страница 2              |             Страница 3              |             Страница 4              |             Страница 5              |
+| :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: |
+| ![screen1](data/images/screen1.png) | ![screen2](data/images/screen2.png) | ![screen3](data/images/screen3.png) | ![screen4](data/images/screen4.png) | ![screen5](data/images/screen5.png) |
 
-## Находится в репозиториях:
-[![Packaging status](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)
+## Репозитории
 
-## Сборка из исходного кода
+[![Статус сборки](https://repology.org/badge/vertical-allrepos/mangojuice.svg)](https://repology.org/project/mangojuice/versions)
 
-#### Зависимости:
-* `gtk4`
-* `libadwaita-1`
-* `gio-2.0`
-* `fontconfig`
-* `mangohud`
+Также доступен в репозитории для [`openSUSE`](https://software.opensuse.org/package/mangojuice).
 
-#### Опциональные Зависимости:
-* `mesa-demos`
-* `vulkan-tools`
-* `vkbasalt`
+## Сборка исходного кода
 
+### Зависимости
 
-#### Утилиты для сборки:
-* `meson`
-* `ninja`
-* `cmake`
-* `gcc`
-* `valac`
+#### Инструменты сборки
 
-### Сборка:
+- `meson`
+- `ninja`
+- `cmake`
+- `gcc`
+- `valac`
 
-#### Последняя версия
+#### Требования для сборки
+
+- `gtk4`
+- `libadwaita-1`
+- `gio-2.0`
+- `fontconfig`
+- `mangohud`
+
+#### Опциональные зависимости
+
+- `mesa-demos`
+- `vulkan-tools`
+- `vkbasalt`
+
+### Сборка
+
 > [!NOTE]
-> На данный момент функционал активно дописывается.
+> Функционал программы пока находится в стадии улучшения.
+
 ```shell
 meson setup build
 ```
 
-### Установка:
+### Установка
+
 ```shell
 sudo ninja -C build install
 ```
 
-### Удаление:
+### Удаление
+
 ```shell
 sudo ninja -C build uninstall
 ```
 
-## Скачать Flatpak:
-[`Ночная сборка (Main)`](https://github.com/radiolamp/mangojuice/actions/)
+## Flatpak
 
-## Установка Flatpak сборки
-<strong><span style="color: yellow;">Внимение для полноценной работы установите mangohud из flatpak</span></strong>
+### Скачать Flatpak
+
+[`Сборка Nightly (Основная)`](https://github.com/radiolamp/mangojuice/actions/)
+
+### Установить сборку Flatpak
+
+> [ВНИМАНИЕ] Обратите внимание: для полной функциональности установите MangoHud через Flatpak</span></strong>
+
 ```shell
 flatpak install --user io.github.radiolamp.mangojuice-x86_64.flatpak
 ```
 
-## Начальная поддержка Flatpak:
+### Первоначальная поддержка Flatpak
+
 ```shell
-flatpak-builder --user --install build-dir data/io.github.radiolamp.mangojuice.yml
+flatpak-builder --user --install build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml
 ```
-## Горячие клавиши:
-- 'Ctrl + Q' - Выйти
-- 'Ctrl + S' - Сохранить
-- 'Ctrl + E' - Сохранить как
-- 'Ctrl + R' - Востановить
-- 'Ctrl + T' - Test
 
-## Поддержка
+## Горячие клавиши
 
-Вы можете оказать поддержку несколькими способами:
+| Горячая клавиша  |   Описание    |
+| :--------------: | :-----------: |
+| [[Ctrl]] + [[Q]] |     Выход     |
+| [[Ctrl]] + [[S]] |   Сохранить   |
+| [[Ctrl]] + [[E]] | Сохранить как |
+| [[Ctrl]] + [[R]] | Восстановить  |
+| [[Ctrl]] + [[T]] | Тестирование  |
 
-- Создайте запрос с проблемой или предложением по улучшению
-- Отправьте запрос на слияние с исправлением или новой функциональностью
--Поддержите финансово (Пожалуйста, укажите свой ник в «Сообщении получателю» при отправке через T-Bank)
+## Поддержка проекта
+
+Вы можете поддержать проект несколькими способами:
+
+- Создать задачу с проблемой или предложением по улучшению;
+- Отправить запрос на слияние с исправлениями или новой функциональностью;
+- Оказать финансовую поддержку (укажите ваш ник в сообщении при отправке через Т-Банк).
 
 <br>
 
 <div align="center">
   <a href="https://boosty.to/radiolamp/donate">
-    <img height="200" src="/data/assets/boosty_qrcode.png" alt="Boosty">
+    <img height="200" src="data/assets/boosty_qrcode.png" alt="Boosty">
   </a>
   <a href="https://www.donationalerts.com/r/radiolamp">
-  <img height="200" src="/data/assets/donationalerts_qrcode.png" alt="Donationalerts">
+    <img height="200" src="data/assets/donationalerts_qrcode.png" alt="Donation Alerts">
   </a>
-  <a href="https://www.tbank.ru/cf/1J1DvYNesgD">
-    <img height="200" src="/data/assets/tbank_qrcode.png" alt="TBank">
+  <a href="https://www.tbank.ru/cf/3PPTstulqEq">
+    <img height="200" src="data/assets/tbank_qrcode.png" alt="Т-Банк">
   </a>
 </div>
 
 ## Благодарность
-Thank you [Rirusha](https://gitlab.gnome.org/Rirusha). For important clarifications about Vala and GTK4.
 
-### Ссылки на проекты которыми был вдохновлен.
- - [`Mangohud`](https://github.com/flightlessmango/MangoHud)
- - [`Goverlay`](https://github.com/benjamimgois/goverlay)
- - [`Colloid`](https://github.com/vinceliuice/Colloid-icon-theme/)
+Благодарю [Rirusha](https://gitlab.gnome.org/Rirusha) за важные разъяснения по Vala и GTK4.
 
-### Внимание это мой первый проэкт на GTK4 + Vala, по этому прошу относится с понимаем.
+### Проекты, ставшие вдохновлением
+
+- [`MangoHud`](https://github.com/flightlessmango/MangoHud)
+- [`Goverlay`](https://github.com/benjamimgois/goverlay)
+- [`Colloid`](https://github.com/vinceliuice/Colloid-icon-theme/)
+
+### Обращаю ваше внимание, что это мой первый проект на GTK4 + Vala, прошу отнестись с пониманием.

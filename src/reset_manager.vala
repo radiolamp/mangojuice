@@ -35,20 +35,20 @@ public class ResetManager {
     }
 
     void reset_entries () {
-        app.custom_command_entry.text = "";
-        app.custom_logs_path_entry.text = "";
-        app.blacklist_entry.text = "";
+        app.custom_command_entry.text     = "";
+        app.custom_logs_path_entry.text   = "";
+        app.blacklist_entry.text          = "";
         app.custom_text_center_entry.text = "";
-        app.fps_value_entry_1.text = "";
-        app.fps_value_entry_2.text = "";
-        app.gpu_load_value_entry_1.text = "";
-        app.gpu_load_value_entry_2.text = "";
-        app.cpu_load_value_entry_1.text = "";
-        app.cpu_load_value_entry_2.text = "";
-        app.fps_limit_entry_1.text = "";
-        app.fps_limit_entry_2.text = "";
-        app.fps_limit_entry_3.text = "";
-        app.toggle_hud_entry.text = "";
+        app.fps_value_entry_1.text        = "";
+        app.fps_value_entry_2.text        = "";
+        app.gpu_load_value_entry_1.text   = "";
+        app.gpu_load_value_entry_2.text   = "";
+        app.cpu_load_value_entry_1.text   = "";
+        app.cpu_load_value_entry_2.text   = "";
+        app.fps_limit_entry_1.text        = "";
+        app.fps_limit_entry_2.text        = "";
+        app.fps_limit_entry_3.text        = "";
+        app.toggle_hud_entry.text         = "";
     }
 
     void reset_custom_switch () {

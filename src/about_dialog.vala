@@ -9,13 +9,13 @@ namespace AboutDialog {
             "Rirusha https://rirusha.space",
             "Boria138 https://github.com/Boria138",
             "SpikedPaladin https://github.com/SpikedPaladin",
-            "slserg https://github.com/slserg"
+            "slserg https://github.com/slserg",
+            "x1z53 https://gitverse.ru/x1z53"
         };
 
         const string[] designers = {
             "Radiolamp https://github.com/radiolamp/",
         };
-
 
         var dialog = new Adw.AboutDialog () {
             application_icon = "io.github.radiolamp.mangojuice",

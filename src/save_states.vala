@@ -4,15 +4,17 @@ using Gee;
 
 public class SaveStates {
     public static void update_parameter (DataOutputStream data_stream, string parameter_name, string parameter_value) throws Error {
-        if (parameter_value == "" ||
-            (parameter_name == "round_corners" && parameter_value == "0") ||
-            (parameter_name == "font_size" && parameter_value == "24") ||
-            (parameter_name == "log_duration" && parameter_value == "30") ||
-            (parameter_name == "log_interval" && parameter_value == "100") ||
-            (parameter_name == "table_columns" && parameter_value == "3") ||
-            (parameter_name == "fps_sampling_period" && parameter_value == "500") ||
-            (parameter_name == "offset_x" && parameter_value == "0") ||
-            (parameter_name == "offset_y" && parameter_value == "0")) {
+        if (
+          parameter_value == "" ||
+          (parameter_name  == "round_corners"       && parameter_value == "0")   ||
+          (parameter_name  == "font_size"           && parameter_value == "24")  ||
+          (parameter_name  == "log_duration"        && parameter_value == "30")  ||
+          (parameter_name  == "log_interval"        && parameter_value == "100") ||
+          (parameter_name  == "table_columns"       && parameter_value == "3")   ||
+          (parameter_name  == "fps_sampling_period" && parameter_value == "500") ||
+          (parameter_name  == "offset_x"            && parameter_value == "0")   ||
+          (parameter_name  == "offset_y"            && parameter_value == "0")
+        ) {
             return;
         }
         data_stream.put_string ("%s=%s\n".printf (parameter_name, parameter_value));

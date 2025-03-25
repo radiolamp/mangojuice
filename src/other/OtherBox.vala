@@ -68,16 +68,16 @@ public class OtherBox : Box {
         flow_box.set_max_children_per_line (2);
         this.append (flow_box);
 
-        create_scale_with_entry (flow_box, "CAS Sharpness", -1.0, 1.0, 0.01, 0.0, "%.2f", "cas");
-        create_scale_with_entry (flow_box, "DLS Sharpness", 0.0, 1.0, 0.01, 0.5, "%.2f", "dls");
-        create_scale_with_entry (flow_box, "FXAA Quality Subpix", 0.0, 1.0, 0.01, 0.75, "%.2f", "fxaa");
-        create_scale_with_entry (flow_box, "DLS Denoise", 0.0, 1.0, 0.01, 0.17, "%.2f", "dls");
-        create_scale_with_entry (flow_box, "FXAA Edge Threshold", 0.0, 0.333, 0.01, 0.125, "%.3f", "fxaa");
-        create_scale_with_entry (flow_box, "FXAA Threshold Min", 0.0, 0.0833, 0.001, 0.0833, "%.4f", "fxaa");
-        create_scale_with_entry (flow_box, "SMAA Threshold", 0.0, 0.5, 0.01, 0.05, "%.2f", "smaa");
-        create_scale_with_entry (flow_box, "SMAA Max Search Steps", 0, 112, 1, 8, "%d", "smaa");
-        create_scale_with_entry (flow_box, "SMAA Max Steps Diag", 0, 20, 1, 0, "%d", "smaa");
-        create_scale_with_entry (flow_box, "SMAA Corner Rounding", 0, 100, 1, 25, "%d", "smaa");
+        create_scale_with_entry (flow_box, "CAS Sharpness",         -1.0, 1.0,    0.01,  0.0,    "%.2f", "cas");
+        create_scale_with_entry (flow_box, "DLS Sharpness",         0.0,  1.0,    0.01,  0.5,    "%.2f", "dls");
+        create_scale_with_entry (flow_box, "FXAA Quality Subpix",   0.0,  1.0,    0.01,  0.75,   "%.2f", "fxaa");
+        create_scale_with_entry (flow_box, "DLS Denoise",           0.0,  1.0,    0.01,  0.17,   "%.2f", "dls");
+        create_scale_with_entry (flow_box, "FXAA Edge Threshold",   0.0,  0.333,  0.01,  0.125,  "%.3f", "fxaa");
+        create_scale_with_entry (flow_box, "FXAA Threshold Min",    0.0,  0.0833, 0.001, 0.0833, "%.4f", "fxaa");
+        create_scale_with_entry (flow_box, "SMAA Threshold",        0.0,  0.5,    0.01,  0.05,   "%.2f", "smaa");
+        create_scale_with_entry (flow_box, "SMAA Max Search Steps", 0,    112,    1,     8,      "%d",   "smaa");
+        create_scale_with_entry (flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
+        create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
 
         vkbasalt_global_button = new Button.with_label ("Global VkBasalt");
         vkbasalt_global_button.set_margin_top (FLOW_BOX_MARGIN);
@@ -283,7 +283,7 @@ public class OtherBox : Box {
 
     void on_vkbasalt_global_button_clicked () {
         bool success = false;
-    
+
         if (vkbasalt_global_enabled) {
             try {
                 Process.spawn_command_line_sync ("pkexec sed -i '/ENABLE_VKBASALT=1/d' /etc/environment");
@@ -311,7 +311,7 @@ public class OtherBox : Box {
                 stderr.printf ("Error adding ENABLE_VKBASALT to /etc/environment: %s\n", e.message);
             }
         }
-    
+
         if (success) {
             check_vkbasalt_global_status ();
             show_restart_warning ();
