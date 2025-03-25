@@ -423,11 +423,7 @@ public class MangoJuice : Adw.Application {
         header_bar.pack_end (menu_button);
 
         var heart_button = new Button ();
-        if (is_gnome) {
-            heart_button.set_icon_name ("emote-love-symbolic");
-        } else {
-            heart_button.set_icon_name ("io.github.radiolamp.mangojuice.donate-symbolic");
-        }
+        heart_button.set_icon_name ("io.github.radiolamp.mangojuice.donate-symbolic");
         heart_button.set_tooltip_text (_("Donate"));
 
         var motion_controller = new EventControllerMotion ();
@@ -921,7 +917,7 @@ public class MangoJuice : Adw.Application {
             "frame_timing", "throttling_status_graph", "frame_count", "fps_limit_method=late", "show_fps_limit", "fps_limit=0", "resolution",
             "fsr", "hdr", "winesync", "present_mode", "refresh_rate", "gamemode", "vkbasalt", "device_battery=gamepad,mouse", "device_battery_icon",
             "exec=lsb_release -a | grep Release | uniq | cut -c 10-26", "custom_text=Kernel", "exec=uname -r", "custom_text=Session:",
-            "exec=echo $XDG_SESSION_TYPE", "fps_color_change", "time#", "version", "media_player", "media_player_color=FFFF00" };
+            "display_server", "fps_color_change", "time#", "version", "media_player", "media_player_color=FFFF00" };
             set_preset (profile3_vars);
             LoadStates.load_states_from_file.begin (this);
             reset_manager.reset_all_widgets ();
