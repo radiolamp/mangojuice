@@ -482,7 +482,7 @@ msgid "Battery life"
 msgstr ""
 
 #: src/mangojuice.vala:242
-msgid "Icon of percent"
+msgid "Wireless devices"
 msgstr ""
 
 #: src/mangojuice.vala:242

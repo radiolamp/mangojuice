@@ -63,7 +63,7 @@ msgstr "Информация"
 #. Metrics
 #: src/mangojuice.vala:167
 msgid "Load GPU"
-msgstr "Загрузка GPU"
+msgstr "Загрузка ГПУ"
 
 #: src/mangojuice.vala:167 src/mangojuice.vala:173
 msgid "Color load"
@@ -123,7 +123,7 @@ msgstr "Драйвер Vulkan"
 
 #: src/mangojuice.vala:173
 msgid "Load CPU"
-msgstr "Загрузка CPU"
+msgstr "Загрузка ЦПУ"
 
 #: src/mangojuice.vala:173 src/mangojuice.vala:222
 msgid "Load per core"
@@ -485,8 +485,8 @@ msgid "Battery life"
 msgstr "Время жизни"
 
 #: src/mangojuice.vala:242
-msgid "Icon of percent"
-msgstr "Значок процентов"
+msgid "Wireless devices"
+msgstr "Беспроводные девайсы"
 
 #: src/mangojuice.vala:242
 msgid "Wireless battries"

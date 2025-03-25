@@ -239,7 +239,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] battery_label_texts_2 = {
         _("Power level, %"),  _("Consumption, W"), _("Battery life"),
-        _("Icon of percent"), _("Wireless battries")
+        _("Wireless devices"), _("Wireless battries")
     };
     string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("Wine sync method")
