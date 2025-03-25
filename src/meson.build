@@ -18,7 +18,7 @@ sources = files(
 )
 
 configure_file(output: 'config.h', configuration: conf)
-config_h_dir = include_directories('.')
+#config_h_dir = include_directories('.')
 
 executable(
     'mangojuice',

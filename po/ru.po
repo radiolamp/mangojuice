@@ -91,7 +91,7 @@ msgstr "Температура памяти"
 
 #: src/mangojuice.vala:168
 msgid "Maximum temperature"
-msgstr "Максимальная температура"
+msgstr "Пик температур"
 
 #: src/mangojuice.vala:169
 msgid "Fans"
@@ -135,7 +135,7 @@ msgstr "Диаграма"
 
 #: src/mangojuice.vala:174
 msgid "Maximum frequency"
-msgstr "Максимальная частота"
+msgstr "Пиковая частота"
 
 #: src/mangojuice.vala:177 src/mangojuice.vala:1548
 msgid "RAM"
@@ -228,7 +228,7 @@ msgstr "Удалить тени"
 
 #: src/mangojuice.vala:189
 msgid "Font normalization"
-msgstr "Нормализация шрифта"
+msgstr "Одинаковый размер"
 
 #: src/mangojuice.vala:189
 msgid "Remove margins"
@@ -389,7 +389,7 @@ msgstr "Все ядра"
 
 #: src/mangojuice.vala:223
 msgid "Peak among all cores"
-msgstr "Пиковая из всех ядер"
+msgstr "Максимум из всех ядер"
 
 #: src/mangojuice.vala:223
 msgid "CPU temperature"
