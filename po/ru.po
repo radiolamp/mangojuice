@@ -345,7 +345,7 @@ msgstr "Частота, МГц"
 
 #: src/mangojuice.vala:217
 msgid "GPU temperature"
-msgstr "Температура GPU"
+msgstr "Температура ГПУ"
 
 #: src/mangojuice.vala:217
 msgid "GDDR temperature"
@@ -486,7 +486,7 @@ msgstr "Время жизни"
 
 #: src/mangojuice.vala:242
 msgid "Wireless devices"
-msgstr "Беспроводные девайсы"
+msgstr "Беспроводные геймпады"
 
 #: src/mangojuice.vala:242
 msgid "Wireless battries"
@@ -1098,15 +1098,3 @@ msgstr "Таблица поиска цветов"
 
 msgid "All video cards"
 msgstr "Все видеокарты"
-
-msgid " # Intel Videocard"
-msgstr " Intel Видеокарта"
-
-msgid " # AMD Videocard"
-msgstr " AMD Видеокарта"
-
-msgid " # Nvidia Videocard"
-msgstr " Nvidia Видеокарта"
-
-msgid " # Unknown Videocard"
-msgstr " Неизвестная Видеокарта"

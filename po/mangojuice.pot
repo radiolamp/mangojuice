@@ -1083,15 +1083,3 @@ msgstr ""
 
 msgid "All video cards"
 msgstr ""
-
-msgid " # Intel Videocard"
-msgstr ""
-
-msgid " # AMD Videocard"
-msgstr ""
-
-msgid " # Nvidia Videocard"
-msgstr ""
-
-msgid " # Unknown Videocard"
-msgstr " Неизвестная Видеокарта"

@@ -2194,37 +2194,48 @@ public class MangoJuice : Adw.Application {
             extras_box.append (gpu_hbox);
         }
     }
-    
-    private string[] get_gpu_pci_addresses () {
+
+    private string[] get_gpu_pci_addresses() {
         string[] addresses = {};
         try {
             string output;
-            Process.spawn_command_line_sync ("lspci", out output);
-            string[] lines = output.split ("\n");
+            Process.spawn_command_line_sync("lspci", out output);
+            string[] lines = output.split("\n");
         
             foreach (var line in lines) {
                 if ("VGA compatible controller" in line || "3D controller" in line || "Display controller" in line) {
-                    string pci_address = line[0:7].strip ();
+                    string pci_address = line[0:7].strip();
                     string detailed_output;
-                    Process.spawn_command_line_sync ("lspci -D -s " + pci_address, out detailed_output);
-                    string full_pci_address = detailed_output[0:12].strip ();
+                    Process.spawn_command_line_sync("lspci -D -s " + pci_address, out detailed_output);
+                    string full_pci_address = detailed_output[0:12].strip();
         
-                    string vendor_comment = "";
+                    string vendor_info = "";
                     if ("Intel" in line) {
-                        vendor_comment = _(" # Intel Videocard");
-                    } else if ("AMD" in line || "ATI" in line) {
-                        vendor_comment = _(" # AMD Videocard");
-                    } else if ("NVIDIA" in line || "Nvidia" in line) {
-                        vendor_comment = _(" # Nvidia Videocard");
+                        vendor_info = line.substring(line.index_of("Intel")).strip();
+                    } else if ("AMD" in line) {
+                        vendor_info = line.substring(line.index_of("AMD")).strip();
+                    } else if ("ATI" in line) {
+                        vendor_info = line.substring(line.index_of("ATI")).strip();
+                    } else if ("NVIDIA" in line) {
+                        vendor_info = line.substring(line.index_of("NVIDIA")).strip();
+                    } else if ("Nvidia" in line) {
+                        vendor_info = line.substring(line.index_of("Nvidia")).strip();
                     } else {
-                        vendor_comment = _(" # Unknown Videocard");
+                        vendor_info = _("Unknown Videocard");
                     }
+    
+                    // Удаляем содержимое в [] и ()
+                    vendor_info = vendor_info.replace(" [", " ").replace("[", " ")
+                                           .replace(" ]", " ").replace("]", " ")
+                                           .replace(" (", " ").replace("(", " ")
+                                           .replace(" )", " ").replace(")", " ")
+                                           .replace("  ", " ").strip();
                     
-                    addresses += full_pci_address + vendor_comment;
+                    addresses += full_pci_address + " # " + vendor_info;
                 }
             }
         } catch (Error e) {
-            stderr.printf ("Error getting GPU PCI addresses: %s\n", e.message);
+            stderr.printf("Error getting GPU PCI addresses: %s\n", e.message);
         }
         return addresses;
     }
