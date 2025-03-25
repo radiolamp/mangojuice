@@ -23,11 +23,11 @@ msgstr ""
 #. Constants
 #: src/mangojuice.vala:115
 msgid "GPU"
-msgstr "ГПУ"
+msgstr "Видеокарта"
 
 #: src/mangojuice.vala:116
 msgid "CPU"
-msgstr "ЦПУ"
+msgstr "Процессор"
 
 #: src/mangojuice.vala:117
 msgid "Memory"
@@ -1107,3 +1107,6 @@ msgstr " AMD Видеокарта"
 
 msgid " # Nvidia Videocard"
 msgstr " Nvidia Видеокарта"
+
+msgid " # Unknown Videocard"
+msgstr " Неизвестная Видеокарта"

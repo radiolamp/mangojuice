@@ -2122,29 +2122,53 @@ public class MangoJuice : Adw.Application {
 
     public Gtk.DropDown gpu_dropdown;
     private string[] gpu_pci_addresses = {};
-    
+        
     public void initialize_gpu_entry (Box extras_box) {
         var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
-    
+        
         gpu_entry = new Entry () { hexpand = true, halign = Align.FILL };
         var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
         gpu_entry.changed.connect (() => { SaveStates.update_gpu_in_file (gpu_entry.text); save_config (); });
-    
+        
         var string_list = new Gtk.StringList (null);
         string_list.append (_("All video cards"));
-    
+        
         gpu_dropdown = new Gtk.DropDown (string_list, null) { hexpand = true, halign = Align.FILL };
-    
+        
+        var factory = new Gtk.SignalListItemFactory();
+        factory.setup.connect((item) => {
+            var label = new Gtk.Label("") {
+                halign = Gtk.Align.START,
+                ellipsize = Pango.EllipsizeMode.END
+            };
+            var list_item = item as Gtk.ListItem;
+            if (list_item != null) {
+                list_item.set_child(label);
+            }
+        });
+        
+        factory.bind.connect((item) => {
+            var list_item = item as Gtk.ListItem;
+            if (list_item != null) {
+                var label = list_item.get_child() as Gtk.Label;
+                var string_object = list_item.get_item() as Gtk.StringObject;
+                if (label != null && string_object != null) {
+                    label.set_label(string_object.get_string());
+                }
+            }
+        });
+        
+        gpu_dropdown.factory = factory;
+        
         gpu_pci_addresses = get_gpu_pci_addresses ();
-    
+        
         if (gpu_pci_addresses.length == 1 && !Config.IS_DEVEL) {
             gpu_list_label.visible = gpu_box.visible = gpu_dropdown.visible = false;
         } else {
             foreach (var pci_address in gpu_pci_addresses) {
                 string_list.append (pci_address);
             }
-    
-            
+        
             gpu_dropdown.notify["selected"].connect (() => {
                 uint selected_index = gpu_dropdown.selected;
                 if (selected_index == 0) {
@@ -2154,7 +2178,7 @@ public class MangoJuice : Adw.Application {
                 }
                 save_config ();
             });
-
+    
             var gpu_hbox = new FlowBox () {
                 margin_start = FLOW_BOX_MARGIN,
                 margin_end = FLOW_BOX_MARGIN,
@@ -2165,26 +2189,26 @@ public class MangoJuice : Adw.Application {
             
             gpu_hbox.append (gpu_box);
             gpu_hbox.append (gpu_dropdown);
-    
+        
             extras_box.append (gpu_list_label);
             extras_box.append (gpu_hbox);
         }
     }
-
+    
     private string[] get_gpu_pci_addresses () {
         string[] addresses = {};
         try {
             string output;
             Process.spawn_command_line_sync ("lspci", out output);
             string[] lines = output.split ("\n");
-    
+        
             foreach (var line in lines) {
                 if ("VGA compatible controller" in line || "3D controller" in line || "Display controller" in line) {
                     string pci_address = line[0:7].strip ();
                     string detailed_output;
                     Process.spawn_command_line_sync ("lspci -D -s " + pci_address, out detailed_output);
                     string full_pci_address = detailed_output[0:12].strip ();
-
+        
                     string vendor_comment = "";
                     if ("Intel" in line) {
                         vendor_comment = _(" # Intel Videocard");
@@ -2192,6 +2216,8 @@ public class MangoJuice : Adw.Application {
                         vendor_comment = _(" # AMD Videocard");
                     } else if ("NVIDIA" in line || "Nvidia" in line) {
                         vendor_comment = _(" # Nvidia Videocard");
+                    } else {
+                        vendor_comment = _(" # Unknown Videocard");
                     }
                     
                     addresses += full_pci_address + vendor_comment;

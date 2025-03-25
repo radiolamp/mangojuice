@@ -1092,3 +1092,6 @@ msgstr ""
 
 msgid " # Nvidia Videocard"
 msgstr ""
+
+msgid " # Unknown Videocard"
+msgstr " Неизвестная Видеокарта"
