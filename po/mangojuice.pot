@@ -1080,3 +1080,15 @@ msgstr ""
 #: src/other/OtherBox.vala:46
 msgid "Color LookUp Table"
 msgstr ""
+
+msgid "All video cards"
+msgstr ""
+
+msgid " # Intel Videocard"
+msgstr ""
+
+msgid " # AMD Videocard"
+msgstr ""
+
+msgid " # Nvidia Videocard"
+msgstr ""

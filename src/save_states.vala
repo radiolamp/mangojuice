@@ -201,7 +201,7 @@ public class SaveStates {
 
             if (mango_juice.gpu_dropdown.selected_item != null) {
                 var selected_pci_address = (mango_juice.gpu_dropdown.selected_item as StringObject)?.get_string () ?? "";
-                if (selected_pci_address != "Default") {
+                if (selected_pci_address != _("All video cards")) {
                     data_stream.put_string ("pci_dev=%s\n".printf (selected_pci_address));
                 }
             }
