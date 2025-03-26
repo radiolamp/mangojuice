@@ -1151,7 +1151,7 @@ public class MangoJuice : Adw.Application {
         visual_box.append (media_label);
     
         media_entry = new Entry ();
-        var media_entry_box = create_entry_with_clear_button (media_entry, _("Media player format"), "{title};{artist};{album}");
+        var media_entry_box = create_entry_with_clear_button (media_entry, _("Media player format"), "title,artist,album");
         media_entry.changed.connect (() => {
             SaveStates.update_media_player_in_file (media_entry.text);
             save_config ();

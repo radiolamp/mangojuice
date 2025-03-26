@@ -49,7 +49,7 @@ public class ResetManager {
         app.fps_limit_entry_2.text        = "";
         app.fps_limit_entry_3.text        = "";
         app.toggle_hud_entry.text         = "";
-        app.media_entry.text              = "{title};{artist};{album}"; 
+        app.media_entry.text              = "title,artist,album"; 
     }
 
     void reset_custom_switch () {

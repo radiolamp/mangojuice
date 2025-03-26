@@ -486,8 +486,14 @@ public class LoadStates {
                     mango_juice.gpu_entry.text = line.substring ("gpu_list=".length);
                 }
 
-                if (line.has_prefix ("media_player_format=")) {
-                    mango_juice.media_entry.text = line.substring ("media_player_format=".length);
+                if (line.has_prefix("media_player_format=")) {
+                    string saved_value = line.substring("media_player_format=".length).strip();
+                    
+                    if (saved_value.has_prefix("{") && saved_value.has_suffix("}")) {
+                        saved_value = saved_value.substring(1, saved_value.length - 2);
+                        saved_value = saved_value.replace("};{", ", ");
+                    }
+                    mango_juice.media_entry.text = saved_value;
                 }
             }
         } catch (Error e) {

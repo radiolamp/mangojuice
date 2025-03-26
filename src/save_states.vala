@@ -536,8 +536,16 @@ public class SaveStates {
                 update_parameter (data_stream, "network_color", network_color);
             }
 
-            if (mango_juice.media_entry != null && mango_juice.media_entry.text != "{title};{artist};{album}") {
-                update_parameter (data_stream, "media_player_format", mango_juice.media_entry.text);
+            if (mango_juice.media_entry != null && mango_juice.media_entry.text != "title,artist,album") {
+                string text = mango_juice.media_entry.text.replace(" ", "");
+            
+                if (text.length > 0) {
+                    text = text.replace(",", "};{");
+                    if (text.has_prefix("{") && text.has_suffix("}")) {
+                        text = text.substring(1, text.length - 2);
+                    }
+                    update_parameter(data_stream, "media_player_format", "{" + text + "}");
+                }
             }
 
             data_stream.close ();
