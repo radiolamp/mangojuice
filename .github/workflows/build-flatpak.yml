@@ -19,7 +19,7 @@ jobs:
     name: "Flatpak"
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-47
+      image: bilelmoussaoui/flatpak-github-actions:gnome-48
       options: --privileged
     steps:
       - uses: actions/checkout@v4
@@ -28,8 +28,8 @@ jobs:
       - name: Install Flatpak runtime and SDK
         run: |
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          flatpak install --user -y flathub org.gnome.Platform//47
-          flatpak install --user -y flathub org.gnome.Sdk//47
+          flatpak install --user -y flathub org.gnome.Platform//48
+          flatpak install --user -y flathub org.gnome.Sdk//48
 
       # Установка расширения MangoHud
       - name: Install MangoHud extension
