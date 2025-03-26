@@ -2223,8 +2223,7 @@ public class MangoJuice : Adw.Application {
                     } else {
                         vendor_info = _("Unknown Videocard");
                     }
-    
-                    // Удаляем содержимое в [] и ()
+
                     vendor_info = vendor_info.replace(" [", " ").replace("[", " ")
                                            .replace(" ]", " ").replace("]", " ")
                                            .replace(" (", " ").replace("(", " ")
