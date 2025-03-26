@@ -13,7 +13,8 @@ public class SaveStates {
           (parameter_name  == "table_columns"       && parameter_value == "3")   ||
           (parameter_name  == "fps_sampling_period" && parameter_value == "500") ||
           (parameter_name  == "offset_x"            && parameter_value == "0")   ||
-          (parameter_name  == "offset_y"            && parameter_value == "0")
+          (parameter_name  == "offset_y"            && parameter_value == "0")   ||
+          (parameter_name  == "media_player_format" && parameter_value == "{title};{artist};{album}")
         ) {
             return;
         }
@@ -151,6 +152,10 @@ public class SaveStates {
 
     public static void update_network_color_in_file (string network_color) {
         update_file ("network_color=", network_color);
+    }
+
+    public static void update_media_player_in_file (string media_player_format) {
+        update_file ("media_player_format=", media_player_format);
     }
 
     static void update_file (string prefix, string value) {
@@ -529,6 +534,10 @@ public class SaveStates {
             if (mango_juice.network_color_button != null) {
                 var network_color = mango_juice.rgba_to_hex (mango_juice.network_color_button.get_rgba ());
                 update_parameter (data_stream, "network_color", network_color);
+            }
+
+            if (mango_juice.media_entry != null && mango_juice.media_entry.text != "{title};{artist};{album}") {
+                update_parameter (data_stream, "media_player_format", mango_juice.media_entry.text);
             }
 
             data_stream.close ();

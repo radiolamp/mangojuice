@@ -104,6 +104,7 @@ public class MangoJuice : Adw.Application {
     public  Scale             fps_sampling_period_scale;
     public  Label             fps_sampling_period_value_label;
     public  Button            mangohud_global_button;
+    public  Entry             media_entry;
 
     bool        mangohud_global_enabled = false;
     public bool is_loading              = false;
@@ -1145,6 +1146,27 @@ public class MangoJuice : Adw.Application {
         fonts_flow_box.insert (font_size_widget.widget, -1);
 
         visual_box.append (fonts_flow_box);
+
+        var media_label = create_label (_("Media"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        visual_box.append (media_label);
+    
+        media_entry = new Entry ();
+        var media_entry_box = create_entry_with_clear_button (media_entry, _("Media player format"), "{title};{artist};{album}");
+        media_entry.changed.connect (() => {
+            SaveStates.update_media_player_in_file (media_entry.text);
+            save_config ();
+        });
+    
+        var media_flow_box = new FlowBox () {
+            max_children_per_line = 1,
+            margin_start = FLOW_BOX_MARGIN,
+            margin_end = FLOW_BOX_MARGIN,
+            margin_top = FLOW_BOX_MARGIN,
+            margin_bottom = FLOW_BOX_MARGIN,
+            selection_mode = SelectionMode.NONE
+        };
+        media_flow_box.insert (media_entry_box, -1);
+        visual_box.append (media_flow_box);
 
         initialize_color_controls (visual_box);
     }

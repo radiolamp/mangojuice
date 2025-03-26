@@ -485,6 +485,10 @@ public class LoadStates {
                 if (line.has_prefix ("gpu_list=")) {
                     mango_juice.gpu_entry.text = line.substring ("gpu_list=".length);
                 }
+
+                if (line.has_prefix ("media_player_format=")) {
+                    mango_juice.media_entry.text = line.substring ("media_player_format=".length);
+                }
             }
         } catch (Error e) {
             stderr.printf ("Error reading the file: %s\n", e.message);
