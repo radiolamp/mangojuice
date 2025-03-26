@@ -2153,11 +2153,15 @@ public class MangoJuice : Adw.Application {
                 var label = list_item.get_child() as Gtk.Label;
                 var string_object = list_item.get_item() as Gtk.StringObject;
                 if (label != null && string_object != null) {
-                    label.set_label(string_object.get_string());
+                    string display_text = string_object.get_string();
+                    if (list_item.get_position() != 0 && display_text.length > 15) {
+                        display_text = display_text.substring(15);
+                    }
+                    label.set_label(display_text);
                 }
             }
         });
-        
+
         gpu_dropdown.factory = factory;
         
         gpu_pci_addresses = get_gpu_pci_addresses ();
@@ -2178,13 +2182,12 @@ public class MangoJuice : Adw.Application {
                 }
                 save_config ();
             });
-    
+        
             var gpu_hbox = new FlowBox () {
                 margin_start = FLOW_BOX_MARGIN,
                 margin_end = FLOW_BOX_MARGIN,
                 hexpand = true,
-                max_children_per_line = 2,
-                homogeneous = true
+                max_children_per_line = 2
             };
             
             gpu_hbox.append (gpu_box);
