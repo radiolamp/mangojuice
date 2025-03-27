@@ -1104,3 +1104,9 @@ msgstr "Тип ядра"
 
 msgid "For new Intel and ARM"
 msgstr "Для новых Intel и ARM"
+
+msgid "Detailed Frametime"
+msgstr "Детальный график"
+
+msgid "Detailed frame time"
+msgstr "Подробное время кадра"

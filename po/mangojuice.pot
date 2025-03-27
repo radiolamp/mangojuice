@@ -1089,3 +1089,9 @@ msgstr ""
 
 msgid "For new Intel and ARM"
 msgstr ""
+
+msgid "Detailed Frametime"
+msgstr ""
+
+msgid "Full frametime"
+msgstr ""
