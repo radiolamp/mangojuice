@@ -13,8 +13,7 @@ public class SaveStates {
           (parameter_name  == "table_columns"       && parameter_value == "3")   ||
           (parameter_name  == "fps_sampling_period" && parameter_value == "500") ||
           (parameter_name  == "offset_x"            && parameter_value == "0")   ||
-          (parameter_name  == "offset_y"            && parameter_value == "0")   ||
-          (parameter_name  == "media_player_format" && parameter_value == "{title};{artist};{album}")
+          (parameter_name  == "offset_y"            && parameter_value == "0")   
         ) {
             return;
         }
@@ -154,8 +153,8 @@ public class SaveStates {
         update_file ("network_color=", network_color);
     }
 
-    public static void update_media_player_in_file (string media_player_format) {
-        update_file ("media_player_format=", media_player_format);
+    public static void update_media_player_format_in_file (string format_value) {
+        update_file ("media_player_format=", format_value);
     }
 
     static void update_file (string prefix, string value) {
@@ -536,16 +535,31 @@ public class SaveStates {
                 update_parameter (data_stream, "network_color", network_color);
             }
 
-            if (mango_juice.media_entry != null && mango_juice.media_entry.text != "title,artist,album") {
-                string text = mango_juice.media_entry.text.replace(" ", "");
-            
-                if (text.length > 0) {
-                    text = text.replace(",", "};{");
-                    if (text.has_prefix("{") && text.has_suffix("}")) {
-                        text = text.substring(1, text.length - 2);
+            if (mango_juice.media_format_dropdowns != null) {
+                var active_values = new Gee.ArrayList<string>();
+
+                foreach (var dropdown in mango_juice.media_format_dropdowns) {
+                    var selected_item = dropdown.selected_item as StringObject;
+                    string? value = selected_item?.get_string();
+                    if (value != null && value != "" && value != "none") {
+                        active_values.add(value);
                     }
-                    update_parameter(data_stream, "media_player_format", "{" + text + "}");
                 }
+                
+                string media_format = "";
+                if (active_values.size > 0) {
+                    var sb = new StringBuilder();
+                    sb.append("{");
+                    bool first = true;
+                    foreach (string val in active_values) {
+                        if (!first) sb.append("};{");
+                        sb.append(val);
+                        first = false;
+                    }
+                    sb.append("}");
+                    media_format = sb.str;
+                }
+                update_parameter(data_stream, "media_player_format", media_format);
             }
 
             data_stream.close ();

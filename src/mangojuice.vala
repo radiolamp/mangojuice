@@ -104,7 +104,7 @@ public class MangoJuice : Adw.Application {
     public  Scale             fps_sampling_period_scale;
     public  Label             fps_sampling_period_value_label;
     public  Button            mangohud_global_button;
-    public  Entry             media_entry;
+    public  Gee.ArrayList<DropDown> media_format_dropdowns { get; private set; }
 
     bool        mangohud_global_enabled = false;
     public bool is_loading              = false;
@@ -1149,23 +1149,49 @@ public class MangoJuice : Adw.Application {
 
         var media_label = create_label (_("Media"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (media_label);
-    
-        media_entry = new Entry ();
-        var media_entry_box = create_entry_with_clear_button (media_entry, _("Media player format"), "title,artist,album");
-        media_entry.changed.connect (() => {
-            SaveStates.update_media_player_in_file (media_entry.text);
-            save_config ();
-        });
-    
+        
+        var format_options = new Gtk.StringList (null);
+        string[] options = { "title", "artist", "album", "none" };
+        foreach (var option in options) {
+            format_options.append (option);
+        }
+        
+        media_format_dropdowns = new Gee.ArrayList<DropDown>();
+
+        for (int i = 0; i < 3; i++) {
+            var dropdown = new DropDown (format_options, null) {
+                hexpand = true,
+                selected = i < options.length - 1 ? i : 0
+            };
+            dropdown.notify["selected"].connect (() => {
+                var values = new string[3];
+                for (int j = 0; j < 3 && j < media_format_dropdowns.size; j++) {
+                    values[j] = (media_format_dropdowns.get(j).selected_item as StringObject)?.get_string() ?? "";
+                }
+
+                string media_format = "{%s};{%s};{%s}".printf(values[0], values[1], values[2]);
+                SaveStates.update_media_player_format_in_file(media_format);
+                save_config();
+            });
+            
+            media_format_dropdowns.add(dropdown);
+        }
+        
         var media_flow_box = new FlowBox () {
-            max_children_per_line = 1,
+            max_children_per_line = 3,
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
             margin_top = FLOW_BOX_MARGIN,
             margin_bottom = FLOW_BOX_MARGIN,
-            selection_mode = SelectionMode.NONE
+            selection_mode = SelectionMode.NONE,
+            hexpand = true,
+            homogeneous = true
         };
-        media_flow_box.insert (media_entry_box, -1);
+
+        foreach (var dropdown in media_format_dropdowns) {
+            media_flow_box.insert (dropdown, -1);
+        }
+        
         visual_box.append (media_flow_box);
 
         initialize_color_controls (visual_box);

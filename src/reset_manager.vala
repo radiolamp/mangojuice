@@ -20,7 +20,7 @@ public class ResetManager {
         reset_switches (app.battery_switches);
         reset_switches (app.other_extra_switches);
         reset_switches (app.inform_switches);
-
+        reset_media_format_dropdowns();
         reset_entries ();
         reset_dropdowns ();
         reset_scales ();
@@ -49,7 +49,14 @@ public class ResetManager {
         app.fps_limit_entry_2.text        = "";
         app.fps_limit_entry_3.text        = "";
         app.toggle_hud_entry.text         = "";
-        app.media_entry.text              = "title,artist,album"; 
+    }
+
+    void reset_media_format_dropdowns() {
+        if (app.media_format_dropdowns != null && app.media_format_dropdowns.size >= 3) {
+            app.media_format_dropdowns[0].selected = 0;
+            app.media_format_dropdowns[1].selected = 1;
+            app.media_format_dropdowns[2].selected = 2;
+        }
     }
 
     void reset_custom_switch () {

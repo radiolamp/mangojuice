@@ -487,13 +487,45 @@ public class LoadStates {
                 }
 
                 if (line.has_prefix("media_player_format=")) {
-                    string saved_value = line.substring("media_player_format=".length).strip();
-                    
-                    if (saved_value.has_prefix("{") && saved_value.has_suffix("}")) {
-                        saved_value = saved_value.substring(1, saved_value.length - 2);
-                        saved_value = saved_value.replace("};{", ", ");
+                    var format_str = line.substring("media_player_format=".length).strip();
+
+                    if (format_str.has_prefix("{") && format_str.has_suffix("}")) {
+                        format_str = format_str.substring(1, format_str.length-2);
                     }
-                    mango_juice.media_entry.text = saved_value;
+
+                    string[] format_parts = format_str.split("};{");
+
+                    for (int i = 0; i < 3; i++) {
+                        string part = "none";
+                        if (i < format_parts.length) {
+                            part = format_parts[i].strip();
+                        }
+
+                        if (i < mango_juice.media_format_dropdowns.size) {
+                            var dropdown = mango_juice.media_format_dropdowns.get(i);
+                            var model = dropdown.model as Gtk.StringList;
+
+                            bool found = false;
+                            for (uint j = 0; j < model.get_n_items(); j++) {
+                                var item = model.get_item(j) as StringObject;
+                                if (item != null && item.get_string() == part) {
+                                    dropdown.selected = j;
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (!found && part == "none") {
+                                for (uint j = 0; j < model.get_n_items(); j++) {
+                                    var item = model.get_item(j) as StringObject;
+                                    if (item != null && item.get_string() == "none") {
+                                        dropdown.selected = j;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         } catch (Error e) {
