@@ -787,7 +787,16 @@ public class MangoJuice : Adw.Application {
         };
         intel_power_fix_button.clicked.connect (() => {
             try {
-                Process.spawn_command_line_sync ("pkexec chmod 0644 /sys/class/powercap/intel-rapl\\:0/energy_uj");
+                var file = File.new_for_path ("/sys/class/powercap/intel-rapl:0/energy_uj");
+                var info = file.query_info ("*", FileQueryInfoFlags.NONE);
+                var current_mode = info.get_attribute_uint32 (FileAttribute.UNIX_MODE);
+                string new_mode;
+                if ((current_mode & 0777) == 0644) {
+                    new_mode = "0600";
+                } else {
+                    new_mode = "0644";
+                }
+                Process.spawn_command_line_sync ("pkexec chmod " + new_mode + " /sys/class/powercap/intel-rapl\\:0/energy_uj");
                 check_file_permissions_async.begin ();
                 restart_vkcube_or_glxgears ();
             } catch (Error e) {
@@ -795,7 +804,6 @@ public class MangoJuice : Adw.Application {
             }
         });
         check_file_permissions_async.begin ();
-
         logs_key_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" }) {
             logs_key_model.append (item);
