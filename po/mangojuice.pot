@@ -1083,3 +1083,9 @@ msgstr ""
 
 msgid "All video cards"
 msgstr ""
+
+msgid "Core type"
+msgstr ""
+
+msgid "For new Intel and ARM"
+msgstr ""

@@ -135,7 +135,7 @@ public class MangoJuice : Adw.Application {
     };
     public string[] cpu_config_vars = {
         "cpu_stats", "cpu_load_change", "core_load", "core_bars", "cpu_mhz", "cpu_temp",
-        "cpu_power"
+        "cpu_power", "core_type"
     };
     public string[] memory_config_vars = {
         "ram", "io_read \n io_write", "procmem", "swap"
@@ -172,7 +172,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] cpu_label_texts = {
         _("Load CPU"),          _("Color load"),  _("Load per core"), _("Diagram"),
-        _("Maximum frequency"), _("Temperature"), _("Power")
+        _("Maximum frequency"), _("Temperature"), _("Power"), _("Core Type")
     };
     string[] memory_label_texts = {
         _("RAM"),             _("Disk"),
@@ -221,7 +221,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] cpu_label_texts_2 = {
         _("Percentage load"),      _("Color text"),      _("All cores"),     _("Load per core"),
-        _("Peak among all cores"), _("CPU temperature"), _("Consumption, W")
+        _("Peak among all cores"), _("CPU temperature"), _("Consumption, W"), _("For new Intel and ARM")
     };
     string[] memory_label_texts_2 = {
         _("Size, GiB"), _("Input/Output, MiB/s"),

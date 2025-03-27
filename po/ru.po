@@ -1098,3 +1098,9 @@ msgstr "Таблица поиска цветов"
 
 msgid "All video cards"
 msgstr "Все видеокарты"
+
+msgid "Core Type"
+msgstr "Тип ядра"
+
+msgid "For new Intel and ARM"
+msgstr "Для новых Intel и ARM"
