@@ -72,6 +72,7 @@ public class AdvancedDialog : Adw.Dialog {
 
                     if (!line.contains ("color") &&
                     !line.contains ("fps_limit_method=") &&
+                    !line.contains ("media_player_format=") &&
                     !line.contains ("fps_value=")) {
                         if (line.has_prefix ("custom_text_center=") ||
                             line.has_prefix ("custom_text=") ||
