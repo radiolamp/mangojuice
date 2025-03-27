@@ -153,7 +153,7 @@ public class MangoJuice : Adw.Application {
         "media_player", "full", "log_versioning", "upload_logs"
     };
     public string[] inform_config_vars = {
-        "fps", "fps_color_change", "fps_only", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "frame_timing_detailed", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
+        "fps", "fps_color_change", "fps_metrics=avg,0.01", "fps_metrics=avg,0.001", "show_fps_limit", "frame_timing", "frame_timing_detailed", "histogram", "frame_count", "temp_fahrenheit", "present_mode"
     };
     public string[] options_config_vars = {
         "version", "gamemode", "vkbasalt", "exec_name", "fcat", "fsr", "hdr", "hud_compact", "no_display", "text_outline=0", "no_small_font", "hud_no_margin"
@@ -203,7 +203,7 @@ public class MangoJuice : Adw.Application {
 
     // Performance
     string[] inform_label_texts = {
-        _("FPS"),           _("Color FPS"),   _("FPS Only"),    _("Lowest 1%"),
+        _("FPS"),           _("Color FPS"),   _("Lowest 1%"),
         _("Lowest 0.1%"),   _("Frame limit"), _("Frame graph"), _("Detailed Frametime") , _("Histogram"),
         _("Frame Counter"), _("°C to °F"),    _("VPS")
     };
@@ -252,7 +252,7 @@ public class MangoJuice : Adw.Application {
 
     // Performance
     string[] inform_label_texts_2 = {
-        _("Frames per second"),   _("Color text"),        _("Disable unnecessary"), _("1% is lower then"),
+        _("Frames per second"),   _("Color text"),        _("1% is lower then"),
         _("0.1% is lower then"),  _("FPS limitation"),    _("Frametime"),           _("Detailed frame time"),  _("Graph to histogram"),
         _("Display frame count"), _("Temperature in °F"), _("Present mode")
     };
@@ -552,11 +552,11 @@ public class MangoJuice : Adw.Application {
             add_value_changed_handler (scale);
         }
 
-        inform_switches[3].notify["active"].connect (() => {
-            if (inform_switches[3].active) inform_switches[4].active = false;
+        inform_switches[2].notify["active"].connect (() => {
+            if (inform_switches[2].active) inform_switches[3].active = false;
         });
-        inform_switches[4].notify["active"].connect (() => {
-            if (inform_switches[4].active) inform_switches[3].active = false;
+        inform_switches[3].notify["active"].connect (() => {
+            if (inform_switches[3].active) inform_switches[2].active = false;
         });
         inform_switches[1].notify["active"].connect (() => {
             if (inform_switches[1].active) inform_switches[0].active = true;
@@ -564,17 +564,17 @@ public class MangoJuice : Adw.Application {
         inform_switches[0].notify["active"].connect (() => {
             if (!inform_switches[0].active) inform_switches[1].active = false;
         });
+        inform_switches[6].notify["active"].connect (() => {
+            if (inform_switches[6].active) inform_switches[5].active = true;
+        });
         inform_switches[7].notify["active"].connect (() => {
-            if (inform_switches[7].active) inform_switches[6].active = true;
+            if (inform_switches[7].active) inform_switches[5].active = true;
         });
-        inform_switches[8].notify["active"].connect (() => {
-            if (inform_switches[8].active) inform_switches[6].active = true;
+        inform_switches[5].notify["active"].connect (() => {
+            if (!inform_switches[5].active) inform_switches[7].active = false;
         });
-        inform_switches[6].notify["active"].connect (() => {
-            if (!inform_switches[6].active) inform_switches[8].active = false;
-        });
-        inform_switches[6].notify["active"].connect (() => {
-            if (!inform_switches[6].active) inform_switches[7].active = false;
+        inform_switches[5].notify["active"].connect (() => {
+            if (!inform_switches[5].active) inform_switches[6].active = false;
         });
         cpu_switches[3].notify["active"].connect (() => {
             if (cpu_switches[3].active) cpu_switches[2].active = true;
