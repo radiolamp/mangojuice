@@ -272,39 +272,44 @@ public class MangoJuice : Adw.Application {
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
-
+    
         var quit_action = new SimpleAction ("quit", null);
         quit_action.activate.connect (() => {
             this.quit ();
         });
         this.add_action (quit_action);
-        this.set_accels_for_action ("app.quit", { "<Control>Q" });
-
+        const string[] quit_accels = { "<Control>Q", null };
+        this.set_accels_for_action ("app.quit", quit_accels);
+    
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (run_test);
         this.add_action (test_action_new);
-        this.set_accels_for_action ("app.test_new", { "<Primary>T" });
-
+        const string[] test_new_accels = { "<Primary>T", null };
+        this.set_accels_for_action ("app.test_new", test_new_accels);
+    
         var restore_config_action = new SimpleAction ("restore_config", null);
         restore_config_action.activate.connect (() => {
             on_restore_config_button_clicked ();
         });
         this.add_action (restore_config_action);
-        this.set_accels_for_action ("app.restore_config", { "<Primary>R" });
-
+        const string[] restore_config_accels = { "<Primary>R", null };
+        this.set_accels_for_action ("app.restore_config", restore_config_accels);
+    
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => {
             save_config ();
         });
         this.add_action (save_action);
-        this.set_accels_for_action ("app.save", { "<Primary>S" });
-
+        const string[] save_accels = { "<Primary>S", null };
+        this.set_accels_for_action ("app.save", save_accels);
+    
         var save_as_action = new SimpleAction ("save_as", null);
         save_as_action.activate.connect (() => {
             on_save_as_button_clicked ();
         });
         this.add_action (save_as_action);
-        this.set_accels_for_action ("app.save_as", { "<Primary>E" });
+        const string[] save_as_accels = { "<Primary>E", null };
+        this.set_accels_for_action ("app.save_as", save_as_accels);
     }
 
     protected override void activate () {

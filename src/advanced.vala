@@ -126,7 +126,7 @@ public class AdvancedDialog : Adw.Dialog {
                 print (_("Error when selecting a file: %s\n"), e.message);
             }
         } else {
-            print (_("MangoHud.conf does not exist.\n"), config_file.get_path ());
+            print (_("MangoHud.conf does not exist at: %s\n"), config_file.get_path ());
         }
 
         clamp.set_child (list_box);
