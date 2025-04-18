@@ -786,24 +786,11 @@ public class MangoJuice : Adw.Application {
             }
         };
         intel_power_fix_button.clicked.connect (() => {
-            try {
-                var file = File.new_for_path ("/sys/class/powercap/intel-rapl:0/energy_uj");
-                var info = file.query_info ("*", FileQueryInfoFlags.NONE);
-                var current_mode = info.get_attribute_uint32 (FileAttribute.UNIX_MODE);
-                string new_mode;
-                if ((current_mode & 0777) == 0644) {
-                    new_mode = "0600";
-                } else {
-                    new_mode = "0644";
-                }
-                Process.spawn_command_line_sync ("pkexec chmod " + new_mode + " /sys/class/powercap/intel-rapl\\:0/energy_uj");
-                check_file_permissions_async.begin ();
-                restart_vkcube_or_glxgears ();
-            } catch (Error e) {
-                stderr.printf (_("Error when executing the command: %s\n"), e.message);
-            }
+            on_intel_power_fix_button_clicked.begin(intel_power_fix_button);
+            restart_vkcube_or_glxgears ();
         });
-        check_file_permissions_async.begin ();
+        check_file_permissions_async.begin (intel_power_fix_button);
+
         logs_key_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" }) {
             logs_key_model.append (item);
@@ -2568,44 +2555,6 @@ public class MangoJuice : Adw.Application {
         label.set_margin_bottom (margin_bottom);
 
         return label;
-    }
-
-    async void check_file_permissions_async () {
-        string file_path = "/sys/class/powercap/intel-rapl:0/energy_uj";
-        bool has_permissions = yield check_file_permission_async (file_path, "644");
-
-        Idle.add (() => {
-            if (intel_power_fix_button != null) {
-                if (has_permissions) {
-                    intel_power_fix_button.add_css_class ("suggested-action");
-                } else {
-                    intel_power_fix_button.remove_css_class ("suggested-action");
-                }
-            }
-            return false;
-        });
-    }
-
-    async bool check_file_permission_async (string file_path, string expected_permissions) {
-        try {
-            string[] argv = { "stat", "-c", "%a", file_path };
-            string standard_output;
-            string standard_error;
-            int exit_status;
-
-            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-
-            if (exit_status == 0) {
-                string permissions = standard_output.strip ();
-                return permissions == expected_permissions;
-            } else {
-                stderr.printf (_("Error when getting access rights: %s\n"), standard_error);
-                return false;
-            }
-        } catch (Error e) {
-            stderr.printf (_("Error when getting access rights: %s\n"), e.message);
-            return false;
-        }
     }
 
     void on_mangohud_global_button_clicked () {

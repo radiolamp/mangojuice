@@ -14,6 +14,7 @@ sources = files(
     'other/other_load.vala',
     'load_states.vala',
     'reset_manager.vala',
+    'intel_power_fix_handler.vala',
     'advanced.vala'
 )
 
