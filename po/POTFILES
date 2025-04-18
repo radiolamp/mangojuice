@@ -1,2 +1,3 @@
 src/mangojuice.vala
 src/other/OtherBox.vala
+src/intel_power_fix_handler.vala

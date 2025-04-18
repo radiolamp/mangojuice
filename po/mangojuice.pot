@@ -1095,3 +1095,9 @@ msgstr ""
 
 msgid "Full frametime"
 msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "You are changing the rights to intel energy_uj, which could potentially lead to security issues."
+msgstr ""
