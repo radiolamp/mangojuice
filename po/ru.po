@@ -1112,6 +1112,15 @@ msgstr "Детальный график"
 msgid "Full frametime"
 msgstr "Время кадра"
 
+msgid "Permanently"
+msgstr "Постоянно"
+
+msgid "Until Reboot"
+msgstr "До перезагрузки"
+
+msgid "Cancel"
+msgstr "Назад"
+
 msgid "You are changing the rights to intel energy_uj, which could potentially lead to security issues."
 msgstr "Вы меняете права на intel energy_uj, что потенциально может привести к проблемам с безопасностью."
 

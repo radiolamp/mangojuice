@@ -1101,3 +1101,12 @@ msgstr ""
 
 msgid "You are changing the rights to intel energy_uj, which could potentially lead to security issues."
 msgstr ""
+
+msgid "Permanently"
+msgstr ""
+
+msgid "Until Reboot"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""

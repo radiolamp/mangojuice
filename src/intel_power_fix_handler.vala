@@ -7,15 +7,15 @@ public async void on_intel_power_fix_button_clicked(Button button) {
         var dialog = new Adw.AlertDialog(_("Warning"), _("You are changing the rights to intel energy_uj, which could potentially lead to security issues."));
         
         dialog.add_response("cancel", _("Cancel"));
-        dialog.add_response("continue", _("Continue"));
+        dialog.add_response("temporary", _("Until Reboot"));
+        dialog.add_response("permanent", _("Permanently"));
         dialog.set_default_response("cancel");
         dialog.set_close_response("cancel");
-        dialog.set_response_appearance("continue", Adw.ResponseAppearance.SUGGESTED);
         
         var window = (Gtk.Window) button.get_root();
         string response = yield dialog.choose(window, null);
         
-        if (response != "continue") {
+        if (response == "cancel") {
             return;
         }
 
@@ -25,7 +25,12 @@ public async void on_intel_power_fix_button_clicked(Button button) {
 
         string new_mode = ((current_mode & 0777) == 0644) ? "0600" : "0644";
 
-        Process.spawn_command_line_sync("pkexec chmod " + new_mode + " /sys/class/powercap/intel-rapl\\:0/energy_uj");
+        if (response == "temporary") {
+            Process.spawn_command_line_sync("pkexec chmod " + new_mode + " /sys/class/powercap/intel-rapl\\:0/energy_uj");
+        } else if (response == "permanent") {
+            Process.spawn_command_line_sync("pkexec sh -c 'chmod " + new_mode + " /sys/class/powercap/intel-rapl\\:0/energy_uj && " +
+                                         "echo \"chmod " + new_mode + " /sys/class/powercap/intel-rapl:0/energy_uj\" > /etc/udev/rules.d/99-intel-rapl.rules'");
+        }
 
         yield check_file_permissions_async(button);
 
