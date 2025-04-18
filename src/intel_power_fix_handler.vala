@@ -64,10 +64,9 @@ public async void on_intel_power_fix_button_clicked(Button button) {
                                                "systemctl daemon-reload && " +
                                                "systemctl enable powercap-permissions.service && " +
                                                "systemctl start powercap-permissions.service'");
-                
-                // Show reboot suggestion after permanent change
+
                 var reboot_dialog = new Adw.AlertDialog(
-                    _("Reboot Recommended"),
+                    _("Warning"),
                     _("For the permanent changes to take full effect, a reboot is recommended. Would you like to reboot now?")
                 );
                 reboot_dialog.add_response("no", _("Later"));

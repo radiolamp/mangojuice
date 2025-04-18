@@ -1121,6 +1121,15 @@ msgstr "До перезагрузки"
 msgid "Cancel"
 msgstr "Назад"
 
+msgid "Reboot Recommended"
+msgstr "Рекомендуется перезагрузка"
+
+msgid "For the permanent changes to take full effect, a reboot is recommended. Would you like to reboot now?"
+msgstr "Чтобы изменения вступили в силу, рекомендуется перезагрузиться. Хотите ли вы перезагрузиться сейчас?"
+
+msgid "Later"
+msgstr "Не сейчас"
+
 msgid "You are changing the rights to intel energy_uj, which could potentially lead to security issues."
 msgstr "Вы меняете права на intel energy_uj, что потенциально может привести к проблемам с безопасностью."
 

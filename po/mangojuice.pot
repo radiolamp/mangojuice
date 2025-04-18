@@ -1110,3 +1110,12 @@ msgstr ""
 
 msgid "Cancel"
 msgstr ""
+
+msgid "For the permanent changes to take full effect, a reboot is recommended. Would you like to reboot now?"
+msgstr ""
+
+msgid "Reboot Now"
+msgstr ""
+
+msgid "Later"
+msgstr ""

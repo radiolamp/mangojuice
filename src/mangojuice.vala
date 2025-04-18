@@ -787,9 +787,9 @@ public class MangoJuice : Adw.Application {
         };
         intel_power_fix_button.clicked.connect (() => {
             on_intel_power_fix_button_clicked.begin(intel_power_fix_button);
-            restart_vkcube_or_glxgears ();
         });
         check_file_permissions_async.begin (intel_power_fix_button);
+        restart_vkcube_or_glxgears ();
 
         logs_key_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" }) {
