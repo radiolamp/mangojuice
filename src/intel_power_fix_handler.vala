@@ -2,7 +2,6 @@ using Gtk;
 using GLib;
 using Adw;
 
-
 public async void on_intel_power_fix_button_clicked(Button button) {
     try {
         bool is_service_active = false;
@@ -48,6 +47,7 @@ public async void on_intel_power_fix_button_clicked(Button button) {
                 Process.spawn_command_line_sync("pkexec sh -c 'systemctl stop powercap-permissions.service && " +
                                                "systemctl disable powercap-permissions.service && " +
                                                "rm /etc/systemd/system/powercap-permissions.service && " +
+                                               "pkexec chmod 0600 /sys/class/powercap/intel-rapl\\:0/energy_uj && " +
                                                "systemctl daemon-reload'");
             } else {
                 string service_content = "[Unit]\n" +
@@ -64,6 +64,20 @@ public async void on_intel_power_fix_button_clicked(Button button) {
                                                "systemctl daemon-reload && " +
                                                "systemctl enable powercap-permissions.service && " +
                                                "systemctl start powercap-permissions.service'");
+                
+                // Show reboot suggestion after permanent change
+                var reboot_dialog = new Adw.AlertDialog(
+                    _("Reboot Recommended"),
+                    _("For the permanent changes to take full effect, a reboot is recommended. Would you like to reboot now?")
+                );
+                reboot_dialog.add_response("no", _("Later"));
+                reboot_dialog.add_response("yes", _("Reboot Now"));
+                reboot_dialog.set_response_appearance("yes", Adw.ResponseAppearance.DESTRUCTIVE);
+                
+                string reboot_response = yield reboot_dialog.choose(window, null);
+                if (reboot_response == "yes") {
+                    Process.spawn_command_line_async("pkexec reboot");
+                }
             }
         }
 
