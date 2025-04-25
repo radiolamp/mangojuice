@@ -14,6 +14,7 @@ public class ResetManager {
         reset_switches (app.gpu_switches);
         reset_switches (app.cpu_switches);
         reset_switches (app.memory_switches);
+        reset_switches (app.git_switches);
         reset_switches (app.system_switches);
         reset_switches (app.wine_switches);
         reset_switches (app.options_switches);

@@ -12,6 +12,7 @@ public class MangoJuice : Adw.Application {
     public  Switch[] gpu_switches;
     public  Switch[] cpu_switches;
     public  Switch[] memory_switches;
+    public  Switch[] git_switches;
     public  Switch[] system_switches;
     public  Switch[] wine_switches;
     public  Switch[] options_switches;
@@ -21,6 +22,7 @@ public class MangoJuice : Adw.Application {
     Label[] gpu_labels;
     Label[] cpu_labels;
     Label[] memory_labels;
+    Label[] git_labels;
     Label[] system_labels;
     Label[] wine_labels;
     Label[] options_labels;
@@ -116,6 +118,7 @@ public class MangoJuice : Adw.Application {
     const string GPU_TITLE               = _("GPU");
     const string CPU_TITLE               = _("CPU");
     const string MEMORY_TITLE            = _("Memory");
+    const string GIT_TITLE               = _("Git");
     const string OTHER_TITLE             = _("Other");
     const string SYSTEM_TITLE            = _("System");
     const string WINE_TITLE              = _("Wine");
@@ -139,6 +142,9 @@ public class MangoJuice : Adw.Application {
     };
     public string[] memory_config_vars = {
         "ram", "io_read \n io_write", "procmem", "swap"
+    };
+    public string[] git_config_vars = {
+        "gpu_efficiency", "flip_efficiency", "hide_fsr_sharpness"
     };
     public string[] system_config_vars = {
         "refresh_rate", "fan", "resolution", "display_server", "engine_short_names", "time", "arch", "network"
@@ -177,6 +183,11 @@ public class MangoJuice : Adw.Application {
     string[] memory_label_texts = {
         _("RAM"),             _("Disk"),
         _("Resident memory"), _("Swap")
+    };
+
+    string[] git_label_texts = {
+        _("GPU efficiency (F/J)"),             _("GPU energy (J/F)"),
+        _("Hide FSR sharpness")
     };
 
     // Extras
@@ -226,6 +237,11 @@ public class MangoJuice : Adw.Application {
     string[] memory_label_texts_2 = {
         _("Size, GiB"), _("Input/Output, MiB/s"),
         _("Size, GiB"), _("Size, GiB")
+    };
+
+    string[] git_label_texts_2 = {
+        _("GPU"), _("GPU"),
+        _("Gamescope")
     };
 
     // Extras
@@ -653,6 +669,14 @@ public class MangoJuice : Adw.Application {
         add_switch_handler (wine_switches);
         add_switch_handler (other_extra_switches);
         add_switch_handler (inform_switches);
+
+        if (Config.IS_DEVEL) {
+            git_switches = new Switch[git_config_vars.length];
+            git_labels = new Label[git_label_texts.length];
+            create_switches_and_labels (metrics_box, GIT_TITLE, git_switches, git_labels, git_config_vars, git_label_texts, git_label_texts_2);
+            add_switch_handler (git_switches);
+        }
+
         initialize_gpu_entry (extras_box);
 
         bool updating = false;
