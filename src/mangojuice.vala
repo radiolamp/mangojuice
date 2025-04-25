@@ -2473,7 +2473,7 @@ public class MangoJuice : Adw.Application {
         ScaleEntryWidget result = ScaleEntryWidget ();
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
-        result.scale.set_size_request (140, -1);
+        result.scale.set_size_request (120, -1);
         result.scale.set_hexpand (true);
         result.scale.adjustment.page_increment = 1;
 
