@@ -170,5 +170,9 @@ public class ResetManager {
         var default_network_color = Gdk.RGBA ();
         default_network_color.parse ("#e07b85");
         app.network_color_button.set_rgba (default_network_color);
+
+        var default_battery_color = Gdk.RGBA ();
+        default_battery_color.parse ("#92e79a");
+        app.battery_color_button.set_rgba (default_battery_color);
     }
 }

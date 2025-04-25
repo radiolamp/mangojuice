@@ -153,6 +153,10 @@ public class SaveStates {
         update_file ("network_color=", network_color);
     }
 
+    public static void update_battery_color_in_file (string battery_color) {
+        update_file ("battery_color=", battery_color);
+    }
+
     public static void update_media_player_format_in_file (string format_value) {
         update_file ("media_player_format=", format_value);
     }
@@ -536,6 +540,11 @@ public class SaveStates {
             if (mango_juice.network_color_button != null) {
                 var network_color = mango_juice.rgba_to_hex (mango_juice.network_color_button.get_rgba ());
                 update_parameter (data_stream, "network_color", network_color);
+            }
+
+            if (mango_juice.battery_color_button != null) {
+                var battery_color = mango_juice.rgba_to_hex (mango_juice.battery_color_button.get_rgba ());
+                update_parameter (data_stream, "battery_color", battery_color);
             }
 
             if (mango_juice.media_format_dropdowns != null) {

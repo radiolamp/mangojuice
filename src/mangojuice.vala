@@ -95,6 +95,7 @@ public class MangoJuice : Adw.Application {
     public  ColorDialogButton text_color_button;
     public  ColorDialogButton media_player_color_button;
     public  ColorDialogButton network_color_button;
+    public  ColorDialogButton battery_color_button;
     public  Entry             blacklist_entry;
     public  Entry             gpu_entry;
     public  Scale             offset_x_scale;
@@ -1618,8 +1619,17 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_network_color_in_file (rgba_to_hex (rgba));
         });
 
-        ColorDialogButton[] color_buttons = { background_color_button, frametime_color_button, vram_color_button, ram_color_button, wine_color_button, engine_color_button, media_player_color_button, network_color_button, text_color_button };
-        string[] color_labels = { _("Background"), _("Frametime"), _("VRAM"), _("RAM"), _("Wine"), _("Engine"), _("Media"), _("Network"), _("Text") };
+        battery_color_button = new ColorDialogButton (color_dialog);
+        var default_battery_color = Gdk.RGBA ();
+        default_battery_color.parse ("#92e79a");
+        battery_color_button.set_rgba (default_battery_color);
+        battery_color_button.notify["rgba"].connect ( () => {
+            var rgba = battery_color_button.get_rgba ().copy ();
+            SaveStates.update_battery_color_in_file (rgba_to_hex (rgba));
+        });
+
+        ColorDialogButton[] color_buttons = { background_color_button, frametime_color_button, vram_color_button, ram_color_button, wine_color_button, engine_color_button, media_player_color_button, network_color_button, text_color_button, battery_color_button };
+        string[] color_labels = { _("Background"), _("Frametime"), _("VRAM"), _("RAM"), _("Wine"), _("Engine"), _("Media"), _("Network"), _("Text"), _("Battery") };
 
         assert (color_buttons.length == color_labels.length);
 

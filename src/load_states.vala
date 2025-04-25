@@ -452,6 +452,13 @@ public class LoadStates {
                     mango_juice.network_color_button.set_rgba (rgba);
                 }
 
+                if (line.has_prefix ("battery_color=")) {
+                    var battery_color = line.substring ("battery_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + battery_color);
+                    mango_juice.battery_color_button.set_rgba (rgba);
+                }
+
                 if (line.has_prefix ("offset_x=")) {
                     if (mango_juice.offset_x_scale != null) {
                         mango_juice.offset_x_scale.set_value (int.parse (line.substring ("offset_x=".length)));
