@@ -700,7 +700,7 @@ msgstr "Ваш текст"
 
 #: src/mangojuice.vala:898
 msgid "Only FPS"
-msgstr "Только частота обновления"
+msgstr "Только FPS"
 
 #: src/mangojuice.vala:907
 msgid "Horizontal"
@@ -760,7 +760,7 @@ msgstr "Смещение по X"
 
 #: src/mangojuice.vala:1066
 msgid "Horizontal offset"
-msgstr "Горизонтальное смещение"
+msgstr "Горизонтальный сдвиг"
 
 #: src/mangojuice.vala:1078
 msgid "Offset Y"
@@ -768,7 +768,7 @@ msgstr "Смещение по Y"
 
 #: src/mangojuice.vala:1078
 msgid "Vertical offset"
-msgstr "Вертикальное смещение"
+msgstr "Вертикальный сдвиг"
 
 #: src/mangojuice.vala:1104
 msgid "Toggle position"

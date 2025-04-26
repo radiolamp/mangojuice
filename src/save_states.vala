@@ -64,10 +64,6 @@ public class SaveStates {
         update_file ("offset_y=", offset_y_value);
     }
 
-    public static void update_font_file_in_file (string font_file_value) {
-        update_file ("font_file=", font_file_value);
-    }
-
     public static void update_gpu_color_in_file (string gpu_color) {
         update_file ("gpu_color=", gpu_color);
     }
@@ -104,6 +100,10 @@ public class SaveStates {
 
     public static void update_gpu_load_color_in_file (string gpu_load_color_1, string gpu_load_color_2, string gpu_load_color_3) {
         update_file ("gpu_load_color=", "%s,%s,%s".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3));
+    }
+
+    public static void update_font_file_in_file (string font_path) {
+        update_file ("font_file=", font_path);
     }
 
     public static void update_cpu_load_value_in_file(string cpu_load_value_1, string cpu_load_value_2) {
@@ -417,13 +417,24 @@ public class SaveStates {
                 update_parameter (data_stream, "font_size", ((int)mango_juice.font_size_scale.get_value ()).to_string ());
             }
 
-            if (mango_juice.font_dropdown.selected_item != null) {
-                var font_name = (mango_juice.font_dropdown.selected_item as StringObject)?.get_string () ?? "";
-                if (font_name != "Default") {
-                    var font_path = mango_juice.find_font_path_by_name (font_name, mango_juice.find_fonts ());
+            ///if (mango_juice.font_dropdown.selected_item != null) {
+            ///    var font_name = (mango_juice.font_dropdown.selected_item as StringObject)?.get_string () ?? "";
+            ///    if (font_name != "Default") {
+            ///        var font_path = mango_juice.find_font_path_by_name (font_name, mango_juice.find_fonts ());
+            ///        if (font_path != "") {
+            ///            update_parameter (data_stream, "font_file", font_path);
+            ///            data_stream.put_string ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b\n");
+            ///        }
+            ///    }
+            ///}
+
+            if (mango_juice.font_button != null) {
+                var font_name = mango_juice.font_button.label;
+                if (font_name != _("Default") && font_name != _("Select Font")) {
+                    var font_path = mango_juice.find_font_path_by_name(font_name, mango_juice.find_fonts());
                     if (font_path != "") {
-                        update_parameter (data_stream, "font_file", font_path);
-                        data_stream.put_string ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b\n");
+                        update_parameter(data_stream, "font_file", font_path);
+                        data_stream.put_string("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b\n");
                     }
                 }
             }

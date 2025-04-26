@@ -279,16 +279,14 @@ public class LoadStates {
                         }
                     }
                 }
-
-                if (line.has_prefix ("font_file=")) {
-                    var font_file = line.substring ("font_file=".length);
-                    var font_name = Path.get_basename (font_file);
-                    for (uint i = 0; i < mango_juice.font_dropdown.model.get_n_items (); i++) {
-                        var item = mango_juice.font_dropdown.model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == font_name) {
-                            mango_juice.font_dropdown.selected = i;
-                            break;
-                        }
+               
+               if (line.has_prefix ("font_file=")) {
+                var font_file = line.substring ("font_file=".length);
+                if (font_file.strip() == "") {
+                    mango_juice.font_button.label = _("Default");
+                    } else {
+                        var font_name = Path.get_basename (font_file);
+                        mango_juice.font_button.label = font_name;
                     }
                 }
 

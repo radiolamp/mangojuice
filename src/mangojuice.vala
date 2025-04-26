@@ -66,7 +66,7 @@ public class MangoJuice : Adw.Application {
     public  Entry             toggle_hud_entry;
     public  Scale             font_size_scale;
     public  Entry             font_size_entry;
-    public  DropDown          font_dropdown;
+    public  Button            font_button;
     public  Entry             gpu_text_entry;
     public  ColorDialogButton gpu_color_button;
     public  Entry             cpu_text_entry;
@@ -1158,8 +1158,6 @@ public class MangoJuice : Adw.Application {
             }
         });
 
-        initialize_font_dropdown (visual_box);
-
         var fonts_flow_box = new FlowBox () {
             row_spacing = FLOW_BOX_ROW_SPACING,
             column_spacing = FLOW_BOX_COLUMN_SPACING,
@@ -1172,10 +1170,12 @@ public class MangoJuice : Adw.Application {
             selection_mode = SelectionMode.NONE
         };
 
-        fonts_flow_box.insert (font_dropdown, -1);
+        var font_selector_widget = new Box(Orientation.HORIZONTAL, 0);
+        initialize_font_selector(font_selector_widget);
 
+        fonts_flow_box.insert (font_selector_widget, -1);
         fonts_flow_box.insert (font_size_widget.widget, -1);
-
+        
         visual_box.append (fonts_flow_box);
 
         var media_label = create_label (_("Media"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
@@ -1647,75 +1647,107 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    void initialize_font_dropdown (Box visual_box) {
-        var font_model = new Gtk.StringList (null);
-        font_model.append (_("Default"));
+    void initialize_font_selector(Box visual_box) {
+        this.font_button = new Button.with_label(_("Default"));
+        font_button.set_tooltip_text(_("If you are going to play through Wine, then you need to select fonts from the home directory, the system fonts will not work."));
+        font_button.set_hexpand(true);
+        font_button.set_size_request(100, -1);
 
-        var fonts = find_fonts ();
-        var font_names = new Gee.ArrayList<string> ();
+        var popover = new Popover();
+        popover.set_autohide(true);
+        popover.set_has_arrow(false);
+        popover.set_parent(font_button);
 
+        var popover_box = new Box(Orientation.VERTICAL, 5);
+        popover_box.set_margin_top(5);
+        popover_box.set_margin_bottom(5);
+        popover_box.set_margin_start(5);
+        popover_box.set_margin_end(5);
+        popover.set_child(popover_box);
+
+        var search_entry = new SearchEntry();
+        search_entry.set_placeholder_text(_("Search font..."));
+        popover_box.append(search_entry);
+
+        var scroll = new ScrolledWindow();
+        scroll.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
+        scroll.set_size_request(300 , 300);
+        popover_box.append(scroll);
+    
+        var list_box = new ListBox();
+        scroll.set_child(list_box);
+
+        var fonts = find_fonts();
+        var font_items = new Gee.HashMap<string, string>();
+    
         foreach (var font_path in fonts) {
-            var font_name = Path.get_basename (font_path);
-            font_names.add (font_name);
+            var font_name = Path.get_basename(font_path);
+            font_items[font_name] = font_path;
         }
 
-        font_names.sort ((a, b) => {
-            return a.collate (b);
-        });
+        var sorted_fonts = new Gee.ArrayList<string>();
+        sorted_fonts.add_all(font_items.keys);
+        sorted_fonts.sort((a, b) => a.collate(b));
 
-        foreach (var font_name in font_names) {
-            font_model.append (font_name);
-        }
-        font_dropdown = new DropDown (font_model, null);
-        font_dropdown.set_hexpand (true);
-        font_dropdown.set_size_request (100, -1);
-        font_dropdown.set_tooltip_text (_("If you are going to play through Wine, then you need to select fonts from the home directory, the system fonts will not work."));
+        sorted_fonts.insert(0, _("Default"));
 
-        font_dropdown.notify["selected-item"].connect (() => {
-            var selected_font_name = (font_dropdown.selected_item as StringObject)?.get_string () ?? "";
-            var selected_font_path = find_font_path_by_name (selected_font_name, fonts);
-            SaveStates.update_font_file_in_file (selected_font_path);
-            save_config ();
-        });
+        search_entry.search_changed.connect(() => {
+            while (list_box.get_first_child() != null) {
+                list_box.remove(list_box.get_first_child());
+            }
 
-        var factory = new Gtk.SignalListItemFactory ();
-        factory.setup.connect ((item) => {
-            var list_item = item as Gtk.ListItem;
-            var box = new Box (Orientation.HORIZONTAL, 5);
-            var label = new Label (null);
-            label.set_ellipsize (Pango.EllipsizeMode.END);
-            label.set_xalign (0.0f);
-            label.set_hexpand (true);
+            foreach (var font_name in sorted_fonts) {
+                if (search_entry.text == "" || font_name.down().contains(search_entry.text.down())) {
+                    var row = new ListBoxRow();
+                    var box = new Box(Orientation.HORIZONTAL, 5);
+                    var label = new Label(font_name);
+                    label.set_xalign(0);
+                    label.set_hexpand(true);
+    
+                    var wine_label = new Label(_("Wine"));
+                    wine_label.add_css_class("dim-label");
+                    wine_label.set_visible(false);
+                    wine_label.set_halign(Align.END);
 
-            var wine_label = new Label (_("Support Wine"));
-            wine_label.set_halign (Align.END);
-            wine_label.add_css_class ("dim-label");
-            wine_label.set_visible (false);
-            wine_label.set_halign (Align.END);
-
-            box.append (label);
-            box.append (wine_label);
-            list_item.set_child (box);
-        });
-
-        factory.bind.connect ((item) => {
-            var list_item = item as Gtk.ListItem;
-            var box = list_item.get_child () as Box;
-            var label = box.get_first_child () as Label;
-            var wine_label = label.get_next_sibling () as Label;
-
-            var font_name = (list_item.get_item () as StringObject)?.get_string () ?? "";
-            label.label = font_name;
-
-            var font_path = find_font_path_by_name (font_name, fonts);
-            if (font_path != null && font_path.has_prefix (Environment.get_home_dir ())) {
-                wine_label.set_visible (true);
-            } else {
-                wine_label.set_visible (false);
+                    if (font_name != _("Default") && font_items.has_key(font_name)) {
+                        var font_path = font_items[font_name];
+                        if (font_path.has_prefix(Environment.get_home_dir())) {
+                            wine_label.set_visible(true);
+                        }
+                    }
+    
+                    box.append(label);
+                    box.append(wine_label);
+                    row.set_child(box);
+                    list_box.append(row);
+                }
             }
         });
 
-        font_dropdown.set_factory (factory);
+        search_entry.search_changed();
+
+        list_box.row_activated.connect((row) => {
+            var box = row.get_child() as Box;
+            var label = box.get_first_child() as Label;
+            var font_name = label.label;
+    
+            if (font_name == _("Default")) {
+                SaveStates.update_font_file_in_file("");
+            } else if (font_items.has_key(font_name)) {
+                SaveStates.update_font_file_in_file(font_items[font_name]);
+            }
+    
+            font_button.label = font_name;
+            popover.popdown();
+            save_config();
+        });
+
+        font_button.clicked.connect(() => {
+            popover.popup();
+            search_entry.grab_focus();
+        });
+
+        visual_box.append(font_button);
     }
 
     public Gee.List<string> find_fonts () {

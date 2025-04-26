@@ -72,7 +72,7 @@ public class ResetManager {
         app.opengl_dropdown.selected = 0;
         app.filter_dropdown.selected = 0;
         app.position_dropdown.selected = 0;
-        app.font_dropdown.selected = 0;
+        app.font_button.label = _("Default");
     }
 
     void reset_scales () {
