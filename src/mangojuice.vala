@@ -1162,7 +1162,7 @@ public class MangoJuice : Adw.Application {
             row_spacing = FLOW_BOX_ROW_SPACING,
             column_spacing = FLOW_BOX_COLUMN_SPACING,
             max_children_per_line = 2,
-            homogeneous = true,
+            //homogeneous = true,
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
             margin_top = FLOW_BOX_MARGIN,
@@ -1671,7 +1671,7 @@ public class MangoJuice : Adw.Application {
 
         var scroll = new ScrolledWindow();
         scroll.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
-        scroll.set_size_request(300 , 300);
+        scroll.set_size_request(240 , 300);
         popover_box.append(scroll);
     
         var list_box = new ListBox();
