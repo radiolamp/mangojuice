@@ -72,8 +72,13 @@ jobs:
 
       - name: Build Development Version
         run: |
+          # Сначала собираем с дополнительными флагами meson
+          meson setup _build --prefix=/app --libdir=lib -Dis_devel=true
+          meson compile -C _build
+          
+          # Затем используем flatpak-builder с опцией --build-shell
           flatpak-builder --user --force-clean --arch=x86_64 \
-            --build-arg=-Dis_devel=true \
+            --build-shell="meson setup _build --prefix=/app --libdir=lib -Dis_devel=true && meson compile -C _build" \
             build-dir-devel build-aux/flatpak/io.github.radiolamp.mangojuice.yml
 
       - name: Create Development Bundle
