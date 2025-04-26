@@ -19,10 +19,15 @@ jobs:
     name: "Flatpak (Release)"
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-48
+      image: fedora:latest
       options: --privileged
     steps:
       - uses: actions/checkout@v4
+
+      # Установка Flatpak
+      - name: Install Flatpak
+        run: |
+          dnf install -y flatpak flatpak-builder
 
       # Установка runtime и SDK
       - name: Install Flatpak runtime and SDK
@@ -58,10 +63,15 @@ jobs:
     name: "Flatpak (Development)"
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-48
+      image: fedora:latest
       options: --privileged
     steps:
       - uses: actions/checkout@v4
+
+      # Установка Flatpak
+      - name: Install Flatpak
+        run: |
+          dnf install -y flatpak flatpak-builder
 
       # Установка runtime и SDK
       - name: Install Flatpak runtime and SDK
