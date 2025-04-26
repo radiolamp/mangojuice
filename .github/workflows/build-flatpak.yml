@@ -1,4 +1,4 @@
-name: Flatpak
+name: Flatpak Build
 
 on:
   push:
@@ -24,28 +24,65 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Flatpak
+      - name: Install dependencies
         run: |
           dnf install -y flatpak flatpak-builder
 
-      - name: Install runtime and SDK
+      - name: Setup Flatpak
         run: |
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install --user -y flathub org.gnome.Platform//48
           flatpak install --user -y flathub org.gnome.Sdk//48
           flatpak install --user -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
 
-      - name: Build Flatpak
+      - name: Build Release
         run: |
-          flatpak-builder --user build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml --force-clean --arch=x86_64
+          flatpak-builder --user --force-clean --arch=x86_64 build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml
 
-      - name: Export bundle
+      - name: Create Bundle
         run: |
           flatpak build-export repo build-dir
           flatpak build-bundle repo io.github.radiolamp.mangojuice-x86_64.flatpak io.github.radiolamp.mangojuice
 
-      - name: Upload artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: io.github.radiolamp.mangojuice-x86_64.flatpak
+          name: mangojuice-release-x86_64.flatpak
           path: io.github.radiolamp.mangojuice-x86_64.flatpak
+
+  flatpak-devel:
+    name: "Flatpak (Development)"
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          dnf install -y flatpak flatpak-builder
+
+      - name: Setup Flatpak
+        run: |
+          flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install --user -y flathub org.gnome.Platform//48
+          flatpak install --user -y flathub org.gnome.Sdk//48
+          flatpak install --user -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
+
+      - name: Build Development Version
+        run: |
+          flatpak-builder --user --force-clean --arch=x86_64 \
+            --build-arg=-Dis_devel=true \
+            build-dir-devel build-aux/flatpak/io.github.radiolamp.mangojuice.yml
+
+      - name: Create Development Bundle
+        run: |
+          flatpak build-export repo build-dir-devel
+          flatpak build-bundle repo io.github.radiolamp.mangojuice-devel-x86_64.flatpak io.github.radiolamp.mangojuice
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mangojuice-devel-x86_64.flatpak
+          path: io.github.radiolamp.mangojuice-devel-x86_64.flatpak
