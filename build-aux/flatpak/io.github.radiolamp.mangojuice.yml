@@ -1,3 +1,5 @@
+name: Flatpak Build
+
 on:
   push:
     branches: [ "main" ]
@@ -7,8 +9,6 @@ on:
     branches: [ "main" ]
     types: [ "review_requested", "ready_for_review" ]
   workflow_dispatch:
-
-name: Flatpak
 
 permissions:
   id-token: write
@@ -24,39 +24,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Установка Flatpak
-      - name: Install Flatpak
+      - name: Install dependencies
         run: |
           dnf install -y flatpak flatpak-builder
 
-      # Установка runtime и SDK
-      - name: Install Flatpak runtime and SDK
+      - name: Setup Flatpak
         run: |
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install --user -y flathub org.gnome.Platform//48
           flatpak install --user -y flathub org.gnome.Sdk//48
-
-      # Установка расширения MangoHud
-      - name: Install MangoHud extension
-        run: |
           flatpak install --user -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
 
-      # Сборка Flatpak (Release)
-      - name: Build Flatpak (Release)
+      - name: Build Release
         run: |
-          flatpak-builder --user build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml --force-clean --arch=x86_64
+          flatpak-builder --user --force-clean --arch=x86_64 build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml
 
-      # Экспорт Flatpak bundle
-      - name: Export Flatpak bundle (Release)
+      - name: Create Bundle
         run: |
           flatpak build-export repo build-dir
           flatpak build-bundle repo io.github.radiolamp.mangojuice-x86_64.flatpak io.github.radiolamp.mangojuice
 
-      # Загрузка артефакта
-      - name: Upload Flatpak bundle as artifact (Release)
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: io.github.radiolamp.mangojuice-x86_64.flatpak
+          name: mangojuice-release-x86_64.flatpak
           path: io.github.radiolamp.mangojuice-x86_64.flatpak
 
   flatpak-devel:
@@ -68,37 +59,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Установка Flatpak
-      - name: Install Flatpak
+      - name: Install dependencies
         run: |
           dnf install -y flatpak flatpak-builder
 
-      # Установка runtime и SDK
-      - name: Install Flatpak runtime and SDK
+      - name: Setup Flatpak
         run: |
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install --user -y flathub org.gnome.Platform//48
           flatpak install --user -y flathub org.gnome.Sdk//48
-
-      # Установка расширения MangoHud
-      - name: Install MangoHud extension
-        run: |
           flatpak install --user -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
 
-      # Сборка Flatpak (Development)
-      - name: Build Flatpak (Development)
+      - name: Build Development Version
         run: |
-          flatpak-builder --user build-dir-devel build-aux/flatpak/io.github.radiolamp.mangojuice.yml --force-clean --arch=x86_64 --build-arg=-Dis_devel=true
+          flatpak-builder --user --force-clean --arch=x86_64 \
+            --build-arg=-Dis_devel=true \
+            build-dir-devel build-aux/flatpak/io.github.radiolamp.mangojuice.yml
 
-      # Экспорт Flatpak bundle
-      - name: Export Flatpak bundle (Development)
+      - name: Create Development Bundle
         run: |
           flatpak build-export repo build-dir-devel
           flatpak build-bundle repo io.github.radiolamp.mangojuice-devel-x86_64.flatpak io.github.radiolamp.mangojuice
 
-      # Загрузка артефакта
-      - name: Upload Flatpak bundle as artifact (Development)
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: io.github.radiolamp.mangojuice-devel-x86_64.flatpak
+          name: mangojuice-devel-x86_64.flatpak
           path: io.github.radiolamp.mangojuice-devel-x86_64.flatpak
