@@ -261,11 +261,13 @@ public class OtherBox : Box {
             label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
             label1.set_halign (Align.START);
             label1.set_hexpand (false);
+            label1.set_ellipsize (Pango.EllipsizeMode.END);
 
             var label2 = new Label (label_texts_2[i]);
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
+            label2.set_ellipsize (Pango.EllipsizeMode.END);
 
             label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
             label2.set_markup ("<span size='9000'>%s</span>".printf (label_texts_2[i]));
