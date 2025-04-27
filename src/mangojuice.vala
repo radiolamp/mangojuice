@@ -996,8 +996,7 @@ public class MangoJuice : Adw.Application {
             hexpand = true
         };
         custom_switch = new Switch () {
-            valign = Align.START,
-            margin_end = FLOW_BOX_MARGIN
+            valign = Align.CENTER
         };
         custom_switch.notify["active"].connect (() => {
             save_config ();
