@@ -2790,32 +2790,6 @@ public class MangoJuice : Adw.Application {
         });
     }
 
-    void show_mangohud_install_dialog(Gtk.Window parent) {
-        var dialog = new Adw.AlertDialog(
-            _("MangoHud Not Installed"),
-            _("MangoHud is required for this application. Would you like to install it from Flathub?")
-        );
-        
-        dialog.add_response("cancel", _("Cancel"));
-        dialog.add_response("install", _("Install"));
-        
-        dialog.set_default_response("install");
-        dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED);
-        
-        dialog.response.connect((response) => {
-            if (response == "install") {
-                try {
-                    // Открываем Flathub в магазине приложений или в браузере
-                    AppInfo.launch_default_for_uri("https://flathub.org/apps/org.freedesktop.Platform.VulkanLayer.MangoHud", null);
-                } catch (Error e) {
-                    stderr.printf("Error launching Flathub: %s\n", e.message);
-                }
-            }
-        });
-        
-        dialog.present(parent);
-    }
-
     public void on_about_button_clicked () {
         AboutDialog.show_about_dialog (this.active_window);
     }
