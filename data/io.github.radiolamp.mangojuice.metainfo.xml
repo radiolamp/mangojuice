@@ -12,32 +12,30 @@
   </description>
   <url type="homepage">https://github.com/radiolamp/mangojuice</url>
   <url type="bugtracker">https://github.com/radiolamp/mangojuice/issues</url>
-  <url type="help">https://github.com/radiolamp/mangojuice/wiki</url>
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice/blob/main/data/images/screen.png</image>
+      <image>https://raw.githubusercontent.com/radiolamp/mangojuice/main/data/images/screen1.png</image>
       <caption>Main interface of MangoJuice</caption>
     </screenshot>
-    <screenshot>
-      <image>https://github.com/radiolamp/mangojuice/blob/main/data/images/screen2.png</image>
-      <caption>Configuring GPU settings</caption>
-    </screenshot>
   </screenshots>
-  <developer_name>RadioLamp</developer_name>
-  <update_contact>radiolamp@example.com</update_contact>
-  <kudos>
-    <kudo>HiDpiIcon</kudo>
-    <kudo>ModernToolkit</kudo>
-    <kudo>UserDocs</kudo>
-  </kudos>
+  <developer_name>Radiolamp</developer_name>
+  <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
-    <release version="0.7.7" date="2024-10-26">
+    <release version="0.8.4" date="2025-04-30">
       <description>
         <p>Initial release of MangoJuice.</p>
       </description>
     </release>
   </releases>
+  <categories>
+    <category>Utility</category>
+    <category>Monitor</category>
+  </categories>
   <content_rating type="oars-1.1">
     <content_attribute id="games">none</content_attribute>
   </content_rating>
+  <branding>
+    <color type="primary" scheme_preference="light">#fee372</color>
+    <color type="primary" scheme_preference="dark">#dd624b</color>
+  </branding>
 </component>
