@@ -291,8 +291,10 @@ public class SaveStates {
             int[] memory_order = {0, 1, 2, 3};
             save_switches_to_file (data_stream, mango_juice.memory_switches, mango_juice.memory_config_vars, memory_order);
 
+            if (Config.IS_DEVEL) {
             int[] git_order = {0, 1, 2};
             save_switches_to_file (data_stream, mango_juice.git_switches, mango_juice.git_config_vars, git_order);
+            }
 
             save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_start").to_array ());
 

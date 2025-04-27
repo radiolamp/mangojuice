@@ -33,7 +33,9 @@ public class LoadStates {
                 load_switch_from_file (line, mango_juice.gpu_switches,         mango_juice.gpu_config_vars);
                 load_switch_from_file (line, mango_juice.cpu_switches,         mango_juice.cpu_config_vars);
                 load_switch_from_file (line, mango_juice.memory_switches,      mango_juice.memory_config_vars);
+                if (Config.IS_DEVEL) {
                 load_switch_from_file (line, mango_juice.git_switches,         mango_juice.git_config_vars);
+                }
                 load_switch_from_file (line, mango_juice.system_switches,      mango_juice.system_config_vars);
                 load_switch_from_file (line, mango_juice.wine_switches,        mango_juice.wine_config_vars);
                 load_switch_from_file (line, mango_juice.battery_switches,     mango_juice.battery_config_vars);
