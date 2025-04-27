@@ -38,7 +38,7 @@ namespace AboutDialog {
 void show_mangohud_install_dialog(Gtk.Window parent) {
     var dialog = new Adw.AlertDialog(
         _("MangoHud Not Installed"),
-        _("MangoHud is required for this application. Would you like to install it from Flathub?")
+        _("MangoHud is required for this application. Install it from fhathub")
     );
 
     var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);

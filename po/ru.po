@@ -1133,6 +1133,15 @@ msgstr "Не сейчас"
 msgid "You are changing the rights to intel energy_uj, which could potentially lead to security issues."
 msgstr "Вы меняете права на intel energy_uj, что потенциально может привести к проблемам с безопасностью."
 
+msgid "MangoHud Not Installed"
+msgstr "MangoHud не установлен"
+
+msgid "MangoHud is required for this application. Install it from fhathub"
+msgstr "Для этого приложения требуется MangoHud. Установите его с Flathub"
+
+msgid "Install from Flathub"
+msgstr "Перейти на Flathub"
+
 #~ msgid "Disable unnecessary"
 #~ msgstr "Выключить всё лишнее"
 

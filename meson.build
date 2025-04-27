@@ -1,6 +1,6 @@
 project(
     'mangojuice', 'vala',
-    version: '0.8.3',
+    version: '0.8.4',
     default_options: [
         'warning_level=0',
     ]

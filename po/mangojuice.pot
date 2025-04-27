@@ -1119,3 +1119,12 @@ msgstr ""
 
 msgid "Later"
 msgstr ""
+
+msgid "MangoHud Not Installed"
+msgstr ""
+
+msgid "MangoHud is required for this application. Install it from fhathub"
+msgstr ""
+
+msgid "Install from Flathub"
+msgstr ""
