@@ -495,7 +495,7 @@ public class MangoJuice : Adw.Application {
                 show_mangohud_install_dialog(window);
             }
 
-            if (!mangohud_available) {
+            if (!mangohud_available && !is_flatpak ()) {
                 stderr.printf (_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
 
                 var mangohud_notification = new GLib.Notification(_("MangoHud Not Found"));
