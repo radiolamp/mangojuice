@@ -76,5 +76,7 @@ modules:
   - name: mangojuice
     buildsystem: meson
     sources:
-      - type: dir
-        path: ../../
+      - type: git
+        url: https://github.com/radiolamp/mangojuice.git
+        tag: 0.8.3
+        commit: b70ac2d900dc97f0b6ba5fda9d9ac4a472c07c3c

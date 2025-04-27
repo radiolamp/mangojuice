@@ -10,6 +10,40 @@
                 "isDefault": true
             },
             "problemMatcher": []
+          },
+          {
+            "label": "flatpak: build and install",
+            "type": "shell",
+            "command": "flatpak-builder --force-clean --install --user build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml",
+            "group": {
+              "kind": "build",
+              "isDefault": true
+            },
+            "problemMatcher": []
+          },
+          {
+            "label": "flatpak: run",
+            "type": "shell",
+            "command": "flatpak run io.github.radiolamp.mangojuice",
+            "dependsOn": ["flatpak: build and install"],
+            "group": "none"
+          },
+          {
+            "label": "flatpak: clean",
+            "type": "shell",
+            "command": "rm -rf build-dir .flatpak-builder",
+            "group": "none"
+          },
+          {
+            "label": "flatpak: build and run",
+            "dependsOn": [
+              "flatpak: build and install",
+              "flatpak: run"
+            ],
+            "group": "test",
+            "problemMatcher": [],
+            "label": "flatpak: full cycle"
+          },
         }
     ]
 }
