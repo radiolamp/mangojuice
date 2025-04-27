@@ -490,6 +490,10 @@ public class MangoJuice : Adw.Application {
             bool mangohud_available = is_mangohud_available ();
             bool vkcube_available = is_vkcube_available ();
             bool glxgears_available = is_glxgears_available ();
+    
+            if (!mangohud_available && is_flatpak()) {
+                show_mangohud_install_dialog(window);
+            }
 
             if (!mangohud_available) {
                 stderr.printf (_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
@@ -2784,6 +2788,32 @@ public class MangoJuice : Adw.Application {
                 entry.add_css_class ("error");
             }
         });
+    }
+
+    void show_mangohud_install_dialog(Gtk.Window parent) {
+        var dialog = new Adw.AlertDialog(
+            _("MangoHud Not Installed"),
+            _("MangoHud is required for this application. Would you like to install it from Flathub?")
+        );
+        
+        dialog.add_response("cancel", _("Cancel"));
+        dialog.add_response("install", _("Install"));
+        
+        dialog.set_default_response("install");
+        dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED);
+        
+        dialog.response.connect((response) => {
+            if (response == "install") {
+                try {
+                    // Открываем Flathub в магазине приложений или в браузере
+                    AppInfo.launch_default_for_uri("https://flathub.org/apps/org.freedesktop.Platform.VulkanLayer.MangoHud", null);
+                } catch (Error e) {
+                    stderr.printf("Error launching Flathub: %s\n", e.message);
+                }
+            }
+        });
+        
+        dialog.present(parent);
     }
 
     public void on_about_button_clicked () {
