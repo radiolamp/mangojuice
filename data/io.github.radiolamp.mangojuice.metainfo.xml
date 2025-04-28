@@ -18,10 +18,12 @@
       <caption>Main interface of MangoJuice</caption>
     </screenshot>
   </screenshots>
-  <developer_name>Radiolamp</developer_name>
+  <developer id="io.github.radiolamp">
+    <name>Radiolamp</name>
+  </developer>
   <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
-    <release version="0.8.4" date="2025-04-30">
+    <release version="0.8.4" date="2025-04-28">
       <description>
         <p>Initial release of MangoJuice Flatpak.</p>
       </description>
@@ -31,8 +33,8 @@
     <category>Utility</category>
   </categories>
   <content_rating type="oars-1.1">
-    <content_attribute id="games">none</content_attribute>
   </content_rating>
+  <launchable type="desktop-id">io.github.radiolamp.mangojuice.desktop</launchable>
   <branding>
     <color type="primary" scheme_preference="light">#fee372</color>
     <color type="primary" scheme_preference="dark">#dd624b</color>
