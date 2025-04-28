@@ -23,13 +23,12 @@
   <releases>
     <release version="0.8.4" date="2025-04-30">
       <description>
-        <p>Initial release of MangoJuice.</p>
+        <p>Initial release of MangoJuice Flatpak.</p>
       </description>
     </release>
   </releases>
   <categories>
     <category>Utility</category>
-    <category>Monitor</category>
   </categories>
   <content_rating type="oars-1.1">
     <content_attribute id="games">none</content_attribute>

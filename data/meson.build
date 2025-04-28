@@ -20,3 +20,8 @@ install_data(
     'io.github.radiolamp.mangojuice.desktop',
     install_dir: get_option('datadir') / 'applications'
 )
+
+install_data(
+    'io.github.radiolamp.mangojuice.metainfo.xml',
+    install_dir: join_paths(get_option('datadir'), 'metainfo')
+)
