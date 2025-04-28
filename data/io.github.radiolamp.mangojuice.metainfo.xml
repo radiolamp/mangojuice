@@ -17,6 +17,18 @@
       <image>https://raw.githubusercontent.com/radiolamp/mangojuice/main/data/images/screen1.png</image>
       <caption>Main interface of MangoJuice</caption>
     </screenshot>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/radiolamp/mangojuice/main/data/images/screen2.png</image>
+      <caption>Extra</caption>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/radiolamp/mangojuice/main/data/images/screen3.png</image>
+      <caption>Metric</caption>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/radiolamp/mangojuice/main/data/images/screen4.png</image>
+      <caption>Visual</caption>
+    </screenshot>
   </screenshots>
   <developer id="io.github.radiolamp">
     <name>Radiolamp</name>
