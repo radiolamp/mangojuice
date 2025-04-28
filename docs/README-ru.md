@@ -63,6 +63,16 @@ sudo ninja -C build install
 sudo ninja -C build uninstall
 ```
 
+## Режим разрабочика
+
+Также в приложении есть режим Devel. Он предназначен для разработки и не рекомендуется использовать его на постоянной основе. В этом режиме тестируются новые возможности версий mangojuice и mangohud-git. Если вы все же хотите использовать его, в AUR есть пакет mangojuice-git или вы можете собрать его самостоятельно с помощью следующей команды:
+
+```shell
+  meson setup build
+  meson configure  build --no-pager -Dis_devel=true
+  sudo ninja -C build install
+```
+
 ## Flatpak
 
 ### Скачать Flatpak
