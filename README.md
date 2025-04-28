@@ -84,7 +84,7 @@ flatpak-builder --user --install build-dir build-aux/flatpak/io.github.radiolamp
 ```
 ## Devel
 
-Also in the app there is Devel mode. It is intended for development and it is not recommended to use it on a permanent basis. In this mode new features of [mangojuice](https://aur.archlinux.org/packages/mangojuice-git) and [mangohud-git](https://aur.archlinux.org/packages/mangohud-git) versions are tested. If you still want to use it, there is mangojuice-git package in AUR or you can build it yourself with the following command:
+Also in the app there is Devel mode. It is intended for development and it is not recommended to use it on a permanent basis. In this mode new features of mangojuice and [mangohud-git](https://aur.archlinux.org/packages/mangohud-git) versions are tested. If you still want to use it, there is [mangojuice-git](https://aur.archlinux.org/packages/mangojuice-git) package in AUR or you can build it yourself with the following command:
 
 ```shell
   meson setup build
