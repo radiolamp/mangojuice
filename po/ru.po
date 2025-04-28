@@ -1142,6 +1142,9 @@ msgstr "Для этого приложения требуется MangoHud. Ус
 msgid "Install from Flathub"
 msgstr "Перейти на Flathub"
 
+msgid "Search font"
+msgstr "Поиск шрифтов"
+
 #~ msgid "Disable unnecessary"
 #~ msgstr "Выключить всё лишнее"
 

@@ -770,7 +770,7 @@ public class MangoJuice : Adw.Application {
         var clear_button = new Button.from_icon_name ("edit-clear-symbolic");
         clear_button.tooltip_text = _("Clear");
         clear_button.visible = false;
-        clear_button.add_css_class ("flat");
+
         clear_button.clicked.connect (() => {
             entry.text = default_value;
             clear_button.visible = false;
@@ -1669,12 +1669,12 @@ public class MangoJuice : Adw.Application {
         popover.set_child(popover_box);
 
         var search_entry = new SearchEntry();
-        search_entry.set_placeholder_text(_("Search font..."));
+        search_entry.set_placeholder_text(_("Search font"));
         popover_box.append(search_entry);
 
         var scroll = new ScrolledWindow();
         scroll.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
-        scroll.set_size_request(240 , 300);
+        scroll.set_size_request(-1 , 300);
         popover_box.append(scroll);
     
         var list_box = new ListBox();

@@ -1128,3 +1128,6 @@ msgstr ""
 
 msgid "Install from Flathub"
 msgstr ""
+
+msgid "Search font"
+msgstr ""
