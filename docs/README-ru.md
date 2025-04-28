@@ -44,9 +44,6 @@
 
 ### Сборка
 
-> [!NOTE]
-> Функционал программы пока находится в стадии улучшения.
-
 ```shell
 meson setup build
 ```
@@ -75,6 +72,10 @@ sudo ninja -C build uninstall
 
 ## Flatpak
 
+```shell
+flatpak install --user https://dl.flathub.org/build-repo/181356/io.github.radiolamp.mangojuice.flatpakref
+```
+
 ### Скачать Flatpak
 
 [`Сборка Nightly (Основная)`](https://github.com/radiolamp/mangojuice/actions/)
@@ -87,11 +88,6 @@ sudo ninja -C build uninstall
 flatpak install --user io.github.radiolamp.mangojuice-x86_64.flatpak
 ```
 
-### Первоначальная поддержка Flatpak
-
-```shell
-flatpak-builder --user --install build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml
-```
 
 ## Горячие клавиши
 

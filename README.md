@@ -44,9 +44,6 @@ And also in the repository for [`openSUSE`](https://software.opensuse.org/packag
 
 ### Build
 
-> [!NOTE]
-> The functionality is currently being improved.
-
 ```shell
 meson setup build
 ```
@@ -65,6 +62,10 @@ sudo ninja -C build uninstall
 
 ## Flatpak
 
+```shell
+flatpak install --user https://dl.flathub.org/build-repo/181356/io.github.radiolamp.mangojuice.flatpakref
+```
+
 ### Download Flatpak
 
 [`Nightly build (Main)`](https://github.com/radiolamp/mangojuice/actions/)
@@ -77,11 +78,6 @@ sudo ninja -C build uninstall
 flatpak install --user io.github.radiolamp.mangojuice-x86_64.flatpak
 ```
 
-### Initial Flatpak support
-
-```shell
-flatpak-builder --user --install build-dir build-aux/flatpak/io.github.radiolamp.mangojuice.yml
-```
 ## Devel
 
 Also in the app there is Devel mode. It is intended for development and it is not recommended to use it on a permanent basis. In this mode new features of mangojuice and [mangohud-git](https://aur.archlinux.org/packages/mangohud-git) versions are tested. If you still want to use it, there is [mangojuice-git](https://aur.archlinux.org/packages/mangojuice-git) package in AUR or you can build it yourself with the following command:
