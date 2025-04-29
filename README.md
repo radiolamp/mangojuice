@@ -63,7 +63,7 @@ sudo ninja -C build uninstall
 ## Flatpak
 
 ```shell
-flatpak install --user https://dl.flathub.org/build-repo/181356/io.github.radiolamp.mangojuice.flatpakref
+flatpak install flathub io.github.radiolamp.mangojuice
 ```
 
 ### Download Flatpak
