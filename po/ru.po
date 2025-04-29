@@ -1145,6 +1145,9 @@ msgstr "Перейти на Flathub"
 msgid "Search font"
 msgstr "Поиск шрифтов"
 
+msgid "The setting is reset when the configuration is changed"
+msgstr "Настройка сбрасывается при изменении конфигурации"
+
 #~ msgid "Disable unnecessary"
 #~ msgstr "Выключить всё лишнее"
 

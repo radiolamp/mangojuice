@@ -1131,3 +1131,6 @@ msgstr ""
 
 msgid "Search font"
 msgstr ""
+
+msgid "The setting is reset when the configuration is changed"
+msgstr ""

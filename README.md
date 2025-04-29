@@ -3,12 +3,12 @@
 ### This program will be a convenient alternative to GOverlay for setting up MangoHud
 
 <p align="center">
-    <img src="data/images/screen1.png" alt="Screenshot"/>
+    <img src="https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true" alt="Screenshot"/>
 </p>
 
 |               Page 1                |               Page 2                |               Page 3                |               Page 4                |               Page 5                |
 | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: |
-| ![screen1](data/images/screen1.png) | ![screen2](data/images/screen2.png) | ![screen3](data/images/screen3.png) | ![screen4](data/images/screen4.png) | ![screen5](data/images/screen5.png) |
+| ![screen1](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true) | ![screen2](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen2.png?raw=true) | ![screen3](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen3.png?raw=true) | ![screen4](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen4.png?raw=true) | ![screen5](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen5.png?raw=true) |
 
 ## Repositories
 
