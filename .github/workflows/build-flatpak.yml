@@ -39,13 +39,26 @@ jobs:
         run: |
           flatpak-builder --user --force-clean --arch=x86_64 build-dir build-aux/flatpak/git-io.github.radiolamp.mangojuice.json
 
-      - name: Create Bundle
+      - name: Create Bundle and Repository
         run: |
           flatpak build-export repo build-dir
           flatpak build-bundle repo io.github.radiolamp.mangojuice-x86_64.flatpak io.github.radiolamp.mangojuice
 
-      - name: Upload Artifact
+      - name: Create flatpakref file
+        run: |
+          cat > io.github.radiolamp.mangojuice.flatpakref <<EOF
+          [Flatpak Ref]
+          Name=io.github.radiolamp.mangojuice
+          Branch=main
+          Url=https://github.com/radiolamp/mangojuice/releases/latest/download/
+          IsRuntime=false
+          RuntimeRepo=https://flathub.org/repo/flathub.flatpakrepo
+          EOF
+
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: mangojuice-x86_64.flatpak
-          path: io.github.radiolamp.mangojuice-x86_64.flatpak
+          name: flatpak-packages
+          path: |
+            io.github.radiolamp.mangojuice-x86_64.flatpak
+            io.github.radiolamp.mangojuice.flatpakref
