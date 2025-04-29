@@ -14,19 +14,19 @@
   <url type="bugtracker">https://github.com/radiolamp/mangojuice/issues</url>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/radiolamp/mangojuice/main/data/images/screen1.png</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.1/images/screen1.png?raw=true</image>
       <caption>Main interface of MangoJuice</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/radiolamp/mangojuice/main/data/images/screen2.png</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.1/images/screen2.png?raw=true</image>
       <caption>Extra</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/radiolamp/mangojuice/main/data/images/screen3.png</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.1/images/screen3.png?raw=true</image>
       <caption>Metric</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/radiolamp/mangojuice/main/data/images/screen4.png</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.1/images/screen4.png?raw=true</image>
       <caption>Visual</caption>
     </screenshot>
   </screenshots>
@@ -37,7 +37,15 @@
   <releases>
     <release version="0.8.4" date="2025-04-28">
       <description>
-        <p>Initial release of MangoJuice Flatpak.</p>
+        <p>Hello Flatpak</p>
+        <ul>
+          <li>Work has been done on flatpak manifest and mangojuice integration into flatpak has been improved</li>
+          <li>Updated font selection and added font search</li>
+          <li>Improved layout for gnome 48</li>
+          <li>Raised gnome sdk to version 48 for nightly flatpak builds</li>
+          <li>Added battery color settings</li>
+          <li>Improved translation and other</li>
+        </ul>
       </description>
     </release>
   </releases>
