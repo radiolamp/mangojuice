@@ -2045,7 +2045,7 @@ public class MangoJuice : Adw.Application {
         fps_sampling_period_scale.value_changed.connect (() => {
             if (!is_updating) {
                 is_updating = true;
-                int value = (int)fps_sampling_period_scale.get_value ();
+                int value = (int)fps_sampling_period_scale.get_value (); 
                 fps_sampling_period_entry.text = "%d".printf (value);
                 SaveStates.update_fps_sampling_period_in_file ("%d".printf (value));
                 is_updating = false;
@@ -2144,7 +2144,10 @@ public class MangoJuice : Adw.Application {
                     save_config ();
                 }
 
-                if (is_vkcube_available ()) {
+                if (is_flatpak ()) {
+                    Process.spawn_command_line_sync ("pkill vkcube");
+                    Process.spawn_command_line_async ("mangohud vkcube-wayland");
+                } else if (is_vkcube_available ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
                     Process.spawn_command_line_async ("mangohud vkcube");
                 } else if (is_glxgears_available ()) {

@@ -4,7 +4,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>MangoJuice</name>
-  <summary>A graphical user interface for MangoHud configuration</summary>
+  <summary>Graphical configurator Mangohud.</summary>
   <description>
     <p>
       MangoJuice is a graphical user interface application that allows users to configure MangoHud, a Vulkan and OpenGL overlay for monitoring FPS, temperature, CPU and GPU statistics, and more.
