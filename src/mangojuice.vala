@@ -2140,13 +2140,20 @@ public class MangoJuice : Adw.Application {
                 var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
                 var config_file = config_dir.get_child ("MangoHud.conf");
 
+                string? wayland_display = Environment.get_variable("WAYLAND_DISPLAY");
+                bool is_wayland = (wayland_display != null && wayland_display != "");
+
                 if (!config_file.query_exists ()) {
                     save_config ();
                 }
 
                 if (is_flatpak ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
-                    Process.spawn_command_line_async ("mangohud vkcube-wayland");
+                    if (is_wayland) {
+                        Process.spawn_command_line_async ("mangohud vkcube-wayland");
+                    } else {
+                        Process.spawn_command_line_async ("mangohud vkcube");
+                    }
                 } else if (is_vkcube_available ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
                     Process.spawn_command_line_async ("mangohud vkcube");

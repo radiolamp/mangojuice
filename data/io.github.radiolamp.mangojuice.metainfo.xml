@@ -7,26 +7,26 @@
   <summary>Graphical configurator Mangohud.</summary>
   <description>
     <p>
-      MangoJuice is a graphical user interface application that allows users to configure MangoHud, a Vulkan and OpenGL overlay for monitoring FPS, temperature, CPU and GPU statistics, and more.
+      Mangojuice is a helper for mangohud
     </p>
   </description>
   <url type="homepage">https://github.com/radiolamp/mangojuice</url>
   <url type="bugtracker">https://github.com/radiolamp/mangojuice/issues</url>
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.1/images/screen1.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.2/images/screen1.png?raw=true</image>
       <caption>Main interface of MangoJuice</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.1/images/screen2.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.2/images/screen2.png?raw=true</image>
       <caption>Extra</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.1/images/screen3.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.2/images/screen3.png?raw=true</image>
       <caption>Metric</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.1/images/screen4.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.2/images/screen4.png?raw=true</image>
       <caption>Visual</caption>
     </screenshot>
   </screenshots>
@@ -39,12 +39,7 @@
       <description>
         <p>Hello Flatpak</p>
         <ul>
-          <li>Work has been done on flatpak manifest and mangojuice integration into flatpak has been improved</li>
-          <li>Updated font selection and added font search</li>
-          <li>Improved layout for gnome 48</li>
-          <li>Raised gnome sdk to version 48 for nightly flatpak builds</li>
-          <li>Added battery color settings</li>
-          <li>Improved translation and other</li>
+          <li>Full customization of the mangohud overlay in manual mode, as well as with preconfigured profiles.</li>
         </ul>
       </description>
     </release>
