@@ -1760,26 +1760,17 @@ public class MangoJuice : Adw.Application {
             int exit_status;
             string standard_output;
             string standard_error;
-    
             Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-    
             if (exit_status == 0) {
                 string[] lines = standard_output.split ("\n");
-    
                 var regex = new Regex (".*\\.(ttf|otf|ttc)$", RegexCompileFlags.OPTIMIZE);
-                var home_dir = Environment.get_home_dir();
-                bool is_flatpak_env = is_flatpak();
-    
                 foreach (var line in lines) {
                     if (line.strip () != "") {
                         string[] parts = line.split (":");
                         if (parts.length > 0) {
                             string font_path = parts[0].strip ();
-    
-                            if (regex.match (font_path)) {
-                                if (!is_flatpak_env || font_path.has_prefix(home_dir)) {
-                                    fonts.add (font_path);
-                                }
+                            if (regex.match (font_path) && !font_path.contains ("/run/host/user-fonts/")) {
+                                fonts.add (font_path);
                             }
                         }
                     }

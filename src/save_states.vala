@@ -419,17 +419,6 @@ public class SaveStates {
                 update_parameter (data_stream, "font_size", ((int)mango_juice.font_size_scale.get_value ()).to_string ());
             }
 
-            ///if (mango_juice.font_dropdown.selected_item != null) {
-            ///    var font_name = (mango_juice.font_dropdown.selected_item as StringObject)?.get_string () ?? "";
-            ///    if (font_name != "Default") {
-            ///        var font_path = mango_juice.find_font_path_by_name (font_name, mango_juice.find_fonts ());
-            ///        if (font_path != "") {
-            ///            update_parameter (data_stream, "font_file", font_path);
-            ///            data_stream.put_string ("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b\n");
-            ///        }
-            ///    }
-            ///}
-
             if (mango_juice.font_button != null) {
                 var font_name = mango_juice.font_button.label;
                 if (font_name != _("Default") && font_name != _("Select Font")) {
