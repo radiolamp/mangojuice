@@ -17,7 +17,7 @@ jobs:
     - name: Update system and install dependencies
       run: |
         pacman -Syu --noconfirm
-        pacman -S --noconfirm git base-devel meson ninja fuse2 libsodium libgee gettext gtk4 libadwaita vala fontconfig glib2 wget patchelf strace xorg-server-xvfb
+        pacman -S --noconfirm git base-devel meson ninja fuse2 libsodium libgee gettext gtk4 libadwaita vala fontconfig glib2 wget patchelf strace xorg-server-xvfb vulkan-tools
         
     - name: Clone MangoJuice repository
       run: git clone https://github.com/radiolamp/mangojuice.git
