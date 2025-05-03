@@ -39,4 +39,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: MangoJuice-AppImage
-        path: ./mangojuice/MangoJuice-*.AppImage
+        path: ./mangojuice/build-aux/MangoJuice-*.AppImage
