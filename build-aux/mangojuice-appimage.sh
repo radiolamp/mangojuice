@@ -86,6 +86,7 @@ echo "Тест перевода: $(gettext -d mangojuice "GPU")" >&2
 exec "${HERE}/bin/mangojuice" "$@"
 EOF
 chmod +x ./AppRun
+./sharun -g
 
 echo 'MANGOJUICE=1' > ./.env
 echo 'TEXTDOMAINDIR="${SHARUN_DIR}/share/locale' >> ./.env
