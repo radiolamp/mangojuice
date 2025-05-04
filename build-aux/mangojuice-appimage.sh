@@ -30,19 +30,19 @@ else
 fi
 
 for icon in /usr/share/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice*.svg; do
-    mkdir -p ./usr/share/icons/hicolor/scalable/apps/
-    cp "$icon" ./usr/share/icons/hicolor/scalable/apps/
+    mkdir -p ./share/icons/hicolor/scalable/apps/
+    cp "$icon" ./share/icons/hicolor/scalable/apps/
 done
 
-mkdir -p ./usr/share/locale
+mkdir -p ./share/locale
 for mo_file in /usr/share/locale/*/LC_MESSAGES/mangojuice.mo; do
     lang_dir=$(dirname "$(dirname "$mo_file")")
     lang=$(basename "$lang_dir")
     if [[ "$lang" =~ ^[a-z]{2}$ ]]; then
         lang="${lang}_${lang^^}"
     fi
-    mkdir -p "./usr/share/locale/$lang/LC_MESSAGES"
-    cp "$mo_file" "./usr/share/locale/$lang/LC_MESSAGES/mangojuice.mo"
+    mkdir -p "./share/locale/$lang/LC_MESSAGES"
+    cp "$mo_file" "./share/locale/$lang/LC_MESSAGES/mangojuice.mo"
 done
 
 echo "Загрузка lib4bin..."
@@ -64,23 +64,20 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
     exit 1
 }
 
-mkdir -p ./usr/share/vulkan
+mkdir -p ./share/vulkan
 if [ -d "/usr/share/vulkan/implicit_layer.d" ]; then
-    cp -rv "/usr/share/vulkan/implicit_layer.d" "./usr/share/vulkan/"
-    sed -i 's|/usr/lib/mangojuice/||' ./usr/share/vulkan/implicit_layer.d/*
+    cp -rv "/usr/share/vulkan/implicit_layer.d" "./share/vulkan/"
+    sed -i 's|/usr/lib/mangojuice/||' ./share/vulkan/implicit_layer.d/*
 else
     echo "Предупреждение: Vulkan layers не найдены"
 fi
 
-cat > ./AppRun << 'EOF'
-#!/bin/bash
+# copy anything that remains in ./usr/share to ./share
+cp -rv ./usr/share/* ./share || true
 
+cat > ./AppRun << 'EOF'
+#!/bin/sh
 HERE="$(dirname "$(readlink -f "${0}")")"
-export PATH="${HERE}/bin:${PATH}"
-export LD_LIBRARY_PATH="${HERE}/lib:${HERE}/lib64:${LD_LIBRARY_PATH}"
-export XDG_DATA_DIRS="${HERE}/usr/share:${XDG_DATA_DIRS}"
-export TEXTDOMAINDIR="${HERE}/usr/share/locale"
-export TEXTDOMAIN="mangojuice"
 
 # Проверка перевода
 echo "Тест перевода: $(gettext -d mangojuice "GPU")" >&2
@@ -91,6 +88,8 @@ EOF
 chmod +x ./AppRun
 
 echo 'MANGOJUICE=1' > ./.env
+echo 'TEXTDOMAINDIR="${SHARUN_DIR}/share/locale' >> ./.env
+echo 'TEXTDOMAIN="mangojuice' >> ./.env
 
 cd .. || exit
 echo "Загрузка uruntime..."
