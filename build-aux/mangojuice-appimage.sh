@@ -59,7 +59,8 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
     /usr/lib/mangohud/* \
     /usr/bin/lspci \
     /usr/bin/gettext \
-    /usr/lib/libintl.so* || {
+    /usr/lib/libintl.so* \
+    /usr/lib/gdk-pixbuf-*/*/*/* || {
     echo "Ошибка при копировании файлов"
     exit 1
 }
