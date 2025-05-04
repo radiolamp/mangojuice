@@ -73,7 +73,7 @@ else
 fi
 
 # copy anything that remains in ./usr/share to ./share
-cp -rv ./usr/share/* ./share || true
+mv -v ./usr/share/* ./share || true
 
 cat > ./AppRun << 'EOF'
 #!/bin/sh
