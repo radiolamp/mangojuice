@@ -77,17 +77,8 @@ fi
 cp -rv ./usr/share/* ./share || true
 rm -rf ./usr/share
 
-cat > ./AppRun << 'EOF'
-#!/bin/sh
-HERE="$(dirname "$(readlink -f "${0}")")"
-
-# Проверка перевода
-echo "Тест перевода: $(gettext -d mangojuice "GPU")" >&2
-
-# Запуск основного приложения
-exec "${HERE}/bin/mangojuice" "$@"
-EOF
-chmod +x ./AppRun
+# prepare sharun
+ln ./sharun ./AppRun
 ./sharun -g
 
 echo 'MANGOJUICE=1' > ./.env
