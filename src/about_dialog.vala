@@ -10,11 +10,8 @@ namespace AboutDialog {
             "Boria138 https://github.com/Boria138",
             "SpikedPaladin https://github.com/SpikedPaladin",
             "slserg https://github.com/slserg",
-            "x1z53 https://gitverse.ru/x1z53"
-        };
-
-        const string[] designers = {
-            "Radiolamp https://github.com/radiolamp/",
+            "x1z53 https://gitverse.ru/x1z53",
+            "Samueru-sama https://github.com/Samueru-sama"
         };
 
         var dialog = new Adw.AboutDialog () {
@@ -25,7 +22,6 @@ namespace AboutDialog {
         };
 
         dialog.developers = developers;
-        dialog.designers = designers;
 
         dialog.add_link ("MangoJuice на GitHub", "https://github.com/radiolamp/mangojuice");
         dialog.add_link ("Financial support (Donationalerts)", "https://www.donationalerts.com/r/radiolamp");
