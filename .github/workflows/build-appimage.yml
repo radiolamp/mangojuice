@@ -21,7 +21,7 @@ jobs:
     - name: Update system and install dependencies
       run: |
         pacman -Syu --noconfirm
-        pacman -S --noconfirm git base-devel meson ninja libsodium libgee gettext gtk4 libadwaita vala fontconfig glib2 wget patchelf strace xorg-server-xvfb vulkan-tools mangohud
+        pacman -S --noconfirm git base-devel meson ninja libsodium libgee gettext gtk4 libadwaita vala fontconfig glib2 wget patchelf strace xorg-server-xvfb vulkan-tools
   
     - name: Build and install MangoJuice
       run: |
