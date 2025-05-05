@@ -11,6 +11,36 @@ LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bi
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
 
+# add debloated packages
+LLVM_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/llvm-libs-nano-$PKG_TYPE"
+LIBXML_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/libxml2-iculess-$PKG_TYPE"
+MESA_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/mesa-mini-$PKG_TYPE"
+VK_RADEON_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/vulkan-radeon-mini-$PKG_TYPE"
+VK_INTEL_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/vulkan-intel-mini-$PKG_TYPE"
+VK_NOUVEAU_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/vulkan-nouveau-mini-$PKG_TYPE"
+VK_PANFROST_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/vulkan-panfrost-mini-$PKG_TYPE"
+VK_FREEDRENO_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/vulkan-freedreno-mini-$PKG_TYPE"
+VK_BROADCOM_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/vulkan-broadcom-mini-$PKG_TYPE"
+
+echo "Installing debloated pckages..."
+echo "---------------------------------------------------------------"
+wget --retry-connrefused --tries=30 "$LLVM_URL"        -O  ./llvm-libs.pkg.tar.zst
+wget --retry-connrefused --tries=30 "$LIBXML_URL"      -O  ./libxml2.pkg.tar.zst
+wget --retry-connrefused --tries=30 "$MESA_URL"        -O  ./mesa.pkg.tar.zst
+wget --retry-connrefused --tries=30 "$VK_RADEON_URL"   -O  ./vulkan-radeon.pkg.tar.zst
+wget --retry-connrefused --tries=30 "$VK_NOUVEAU_URL"  -O  ./vulkan-nouveau.pkg.tar.zst
+
+if [ "$(uname -m)" = 'x86_64' ]; then
+	wget --retry-connrefused --tries=30 "$VK_INTEL_URL"     -O ./vulkan-intel.pkg.tar.zst
+else
+	wget --retry-connrefused --tries=30 "$VK_PANFROST_URL"  -O ./vulkan-panfrost.pkg.tar.zst
+	wget --retry-connrefused --tries=30 "$Vk_FREEDRENO_URL" -O ./vulkan-freedreno.pkg.tar.zst
+	wget --retry-connrefused --tries=30 "$Vk_BROADCOM_URL"  -O ./vulkan-broadcom.pkg.tar.zst
+fi
+
+pacman -U --noconfirm ./*.pkg.tar.zst
+rm -f ./*.pkg.tar.zst
+
 mkdir -p ./AppDir
 cd ./AppDir || exit
 
@@ -107,7 +137,7 @@ echo "Создание AppImage..."
 ./uruntime --appimage-mkdwarfs -f \
     --set-owner 0 --set-group 0 \
     --no-history --no-create-timestamp \
-    --compression zstd:level=12 -S26 -B8 \
+    --compression zstd:level=22 -S26 -B8 \
     --header uruntime-lite \
     -i ./AppDir -o "MangoJuice-${VERSION}-${ARCH}.AppImage" || {
     echo "Ошибка создания AppImage"
