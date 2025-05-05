@@ -11,13 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: archlinux:latest
-      options: --privileged
 
     steps:
     - name: Update system and install dependencies
       run: |
         pacman -Syu --noconfirm
-        pacman -S --noconfirm git base-devel meson ninja fuse2 libsodium libgee gettext gtk4 libadwaita vala fontconfig glib2 wget patchelf strace xorg-server-xvfb vulkan-tools
+        pacman -S --noconfirm git base-devel meson ninja libsodium libgee gettext gtk4 libadwaita vala fontconfig glib2 wget patchelf strace xorg-server-xvfb vulkan-tools
   
     - name: Build and install MangoJuice
       run: |
