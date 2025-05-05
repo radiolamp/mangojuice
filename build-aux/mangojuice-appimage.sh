@@ -40,8 +40,8 @@ if [ "$(uname -m)" = 'x86_64' ]; then
 	wget --retry-connrefused --tries=30 "$VK_INTEL_URL"     -O ./vulkan-intel.pkg.tar.zst
 else
 	wget --retry-connrefused --tries=30 "$VK_PANFROST_URL"  -O ./vulkan-panfrost.pkg.tar.zst
-	wget --retry-connrefused --tries=30 "$Vk_FREEDRENO_URL" -O ./vulkan-freedreno.pkg.tar.zst
-	wget --retry-connrefused --tries=30 "$Vk_BROADCOM_URL"  -O ./vulkan-broadcom.pkg.tar.zst
+	wget --retry-connrefused --tries=30 "$VK_FREEDRENO_URL" -O ./vulkan-freedreno.pkg.tar.zst
+	wget --retry-connrefused --tries=30 "$VK_BROADCOM_URL"  -O ./vulkan-broadcom.pkg.tar.zst
 fi
 
 pacman -U --noconfirm ./*.pkg.tar.zst
