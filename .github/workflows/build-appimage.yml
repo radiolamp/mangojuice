@@ -5,6 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch: {}
 
 jobs:
   build:
@@ -13,6 +14,10 @@ jobs:
       image: archlinux:latest
 
     steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+
     - name: Update system and install dependencies
       run: |
         pacman -Syu --noconfirm
