@@ -9,9 +9,18 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: archlinux:latest
+    name: "${{ matrix.name }} (${{ matrix.arch }})"
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        include:
+          - runs-on: ubuntu-latest
+            name: "mangojuice build"
+            arch: x86_64
+          - runs-on: ubuntu-24.04-arm
+            name: "mangojuice build"
+            arch: aarch64
+    container: ghcr.io/pkgforge-dev/archlinux:latest
 
     steps:
     - uses: actions/checkout@v4
@@ -20,8 +29,7 @@ jobs:
 
     - name: Update system and install dependencies
       run: |
-        pacman -Syu --noconfirm
-        pacman -S --noconfirm git base-devel meson ninja libsodium libgee gettext gtk4 libadwaita vala fontconfig glib2 wget patchelf strace xorg-server-xvfb vulkan-tools
+        pacman -Syu --noconfirm git base-devel meson ninja libsodium libgee gettext gtk4 libadwaita vala fontconfig glib2 wget patchelf strace xorg-server-xvfb vulkan-tools
   
     - name: Build and install MangoJuice
       run: |
@@ -37,5 +45,5 @@ jobs:
     - name: Upload AppImage artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MangoJuice-AppImage
+        name: MangoJuice-AppImagename-${{ matrix.arch }}
         path: MangoJuice-*.AppImage
