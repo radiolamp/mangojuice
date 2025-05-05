@@ -12,6 +12,12 @@ URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime
 URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
 
 # add debloated packages
+if [ "$(uname -m)" = 'x86_64' ]; then
+	PKG_TYPE='x86_64.pkg.tar.zst'
+else
+	PKG_TYPE='aarch64.pkg.tar.xz'
+fi
+
 LLVM_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/llvm-libs-nano-$PKG_TYPE"
 LIBXML_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/libxml2-iculess-$PKG_TYPE"
 MESA_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/mesa-mini-$PKG_TYPE"
