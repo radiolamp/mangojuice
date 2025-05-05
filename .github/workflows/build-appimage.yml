@@ -30,13 +30,12 @@ jobs:
         sudo ninja -C build install
         
     - name: Create AppImage
-      working-directory: ./mangojuice/build-aux
       run: |
-        chmod +x ./mangojuice-appimage.sh
-        ./mangojuice-appimage.sh
+        chmod +x ./build-aux/mangojuice-appimage.sh
+        ./build-aux/mangojuice-appimage.sh
         
     - name: Upload AppImage artifact
       uses: actions/upload-artifact@v4
       with:
         name: MangoJuice-AppImage
-        path: ./mangojuice/build-aux/MangoJuice-*.AppImage
+        path: MangoJuice-*.AppImage
