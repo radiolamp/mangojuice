@@ -47,6 +47,8 @@ fi
 pacman -U --noconfirm ./*.pkg.tar.zst
 rm -f ./*.pkg.tar.zst
 
+echo "Making AppImage..."
+echo "---------------------------------------------------------------"
 mkdir -p ./AppDir
 cd ./AppDir || exit
 
@@ -103,10 +105,18 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 mkdir -p ./share/vulkan
 if [ -d "/usr/share/vulkan/implicit_layer.d" ]; then
     cp -rv "/usr/share/vulkan/implicit_layer.d" "./share/vulkan/"
-    sed -i 's|/usr/lib/mangojuice/||' ./share/vulkan/implicit_layer.d/*
+    sed -i 's|/usr/lib/mangohud/||' ./share/vulkan/implicit_layer.d/*
 else
     echo "Предупреждение: Vulkan layers не найдены"
 fi
+
+# mangojuice is also going to run mangohud vkcube so we need to wrap this
+echo '#!/bin/sh
+CURRENTDIR="$(dirname "$(readlink -f "$0")")"
+export MANGOHUD=1
+shift
+"$CURRENTDIR"/vkcube "$@"' > ./bin/mangohud
+chmod +x ./bin/mangohud
 
 # copy anything that remains in ./usr/share to ./share
 cp -rv ./usr/share/* ./share || true
@@ -119,6 +129,7 @@ ln ./sharun ./AppRun
 echo 'MANGOJUICE=1' > ./.env
 echo 'TEXTDOMAINDIR="${SHARUN_DIR}/share/locale' >> ./.env
 echo 'TEXTDOMAIN="mangojuice' >> ./.env
+echo 'libMangoHud_shim.so' > ./.preload
 
 cd .. || exit
 echo "Загрузка uruntime..."
