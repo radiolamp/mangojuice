@@ -29,7 +29,71 @@ jobs:
 
     - name: Update system and install dependencies
       run: |
-        pacman -Syu --noconfirm git base-devel meson ninja libsodium libgee gettext gtk4 libadwaita vala fontconfig glib2 wget patchelf strace xorg-server-xvfb vulkan-tools
+        pacman -Syu --noconfirm \
+          appstream \
+          base-devel \
+          cmocka \
+          dbus \
+          fmt \
+          fontconfig \
+          gcc-libs \
+          gettext \
+          git \
+          glew \
+          glfw \
+          glib2 \
+          glslang \
+          gtk4 \
+          hicolor-icon-theme \
+          libadwaita \
+          libgee \
+          libglvnd \
+          libsodium \
+          libx11 \
+          libxkbcommon \
+          libxnvctrl \
+          libxrandr \
+          meson \
+          ninja \
+          nlohmann-json \
+          patchelf \
+          python \
+          python-mako \
+          python-matplotlib \
+          python-numpy \
+          strace \
+          vala \
+          vulkan-headers \
+          vulkan-tools \
+          wget \
+          xorg-server-xvfb \
+          zsync
+
+    - name: Build mangohud
+      run: |
+        echo "Building mangohud..."
+        echo "---------------------------------------------------------------"
+        sed -i 's|EUID == 0|EUID == 69|g' /usr/bin/makepkg
+        mkdir -p /usr/local/bin
+        cp /usr/bin/makepkg /usr/local/bin
+        
+        sed -i -e 's|-O2|-Os|' \
+        	-e 's|MAKEFLAGS=.*|MAKEFLAGS="-j$(nproc)"|' \
+        	-e 's|#MAKEFLAGS|MAKEFLAGS|' \
+        	/etc/makepkg.conf
+        
+        cat /etc/makepkg.conf
+        
+        git clone https://gitlab.archlinux.org/archlinux/packaging/packages/mangohud.git ./mangohud
+        ( cd ./mangohud
+        	sed -i -e "s|x86_64|$(uname -m)|" \
+        		-e 's|-Dmangohudctl=true|-Dmangohudctl=true -Dwith_xnvctrl=disabled|' \
+        		-e '/libxnvctrl/d' ./PKGBUILD
+        	makepkg -f
+        	ls -la .
+        	pacman --noconfirm -U *.pkg.tar.*
+        )
+        rm -rf ./mangohud
   
     - name: Build and install MangoJuice
       run: |
