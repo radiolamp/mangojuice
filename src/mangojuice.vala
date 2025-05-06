@@ -2492,6 +2492,7 @@ public class MangoJuice : Adw.Application {
         }
         LoadStates.load_states_from_file.begin (this);
         reset_manager.reset_all_widgets ();
+        LoadStates.load_states_from_file.begin (this);
     }
 
     struct ScaleEntryWidget {
