@@ -105,7 +105,7 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 mkdir -p ./share/vulkan
 if [ -d "/usr/share/vulkan/implicit_layer.d" ]; then
     cp -rv "/usr/share/vulkan/implicit_layer.d" "./share/vulkan/"
-    sed -i 's|/usr/lib/mangojuice/||' ./share/vulkan/implicit_layer.d/*
+    sed -i 's|/usr/lib/mangohud/||' ./share/vulkan/implicit_layer.d/*
 else
     echo "Предупреждение: Vulkan layers не найдены"
 fi
