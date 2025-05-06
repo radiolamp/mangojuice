@@ -47,6 +47,8 @@ fi
 pacman -U --noconfirm ./*.pkg.tar.zst
 rm -f ./*.pkg.tar.zst
 
+echo "Making AppImage..."
+echo "---------------------------------------------------------------"
 mkdir -p ./AppDir
 cd ./AppDir || exit
 
@@ -108,6 +110,13 @@ else
     echo "Предупреждение: Vulkan layers не найдены"
 fi
 
+# mangojuice is also going to run mangohud vkcube so we need to wrap this
+echo '#!/bin/sh
+CURRENTDIR="$(dirname "$(readlink -f "$0")")"
+shift
+"$CURRENTDIR"/vkcube "$@"' > ./bin/mangohud
+chmod +x ./bin/mangohud
+
 # copy anything that remains in ./usr/share to ./share
 cp -rv ./usr/share/* ./share || true
 rm -rf ./usr/share
@@ -119,6 +128,7 @@ ln ./sharun ./AppRun
 echo 'MANGOJUICE=1' > ./.env
 echo 'TEXTDOMAINDIR="${SHARUN_DIR}/share/locale' >> ./.env
 echo 'TEXTDOMAIN="mangojuice' >> ./.env
+echo 'libMangoHud_shim.so' > ./.preload
 
 cd .. || exit
 echo "Загрузка uruntime..."
