@@ -51,7 +51,6 @@ jobs:
           libsodium \
           libx11 \
           libxkbcommon \
-          libxnvctrl \
           libxrandr \
           meson \
           ninja \
