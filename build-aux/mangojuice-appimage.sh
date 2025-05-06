@@ -113,6 +113,7 @@ fi
 # mangojuice is also going to run mangohud vkcube so we need to wrap this
 echo '#!/bin/sh
 CURRENTDIR="$(dirname "$(readlink -f "$0")")"
+export MANGOHUD=1
 shift
 "$CURRENTDIR"/vkcube "$@"' > ./bin/mangohud
 chmod +x ./bin/mangohud
