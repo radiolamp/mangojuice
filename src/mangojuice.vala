@@ -1819,25 +1819,29 @@ public class MangoJuice : Adw.Application {
             var text_box = new Box (Orientation.VERTICAL, 0);
             text_box.set_valign (Align.CENTER);
             text_box.set_halign (Align.START);
-            text_box.set_size_request (175, -1); // Ширина 160 пикселей
+            text_box.set_size_request (175, -1);
+            text_box.set_hexpand (false);
 
             var label1 = new Label (null);
             label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
             label1.set_halign (Align.START);
             label1.set_hexpand (false);
             label1.set_ellipsize (Pango.EllipsizeMode.END);
-
-            string truncated_text = label_texts_2[i];
-            if (label_texts_2[i].char_count () > 22) {
-                truncated_text = label_texts_2[i].substring (0, label_texts_2[i].index_of_nth_char (22)) + "…";
+            label1.set_max_width_chars (18);
+            if (label_texts[i].length > 19) {
+                label1.set_tooltip_text (label_texts[i]);
             }
 
             var label2 = new Label (null);
-            label2.set_markup ("<span size='9000'>%s</span>".printf (truncated_text));
+            label2.set_markup ("<span size='8500'>%s</span>".printf (label_texts_2[i]));
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
             label2.set_ellipsize (Pango.EllipsizeMode.END);
+            label2.set_max_width_chars (19);
+            if (label_texts_2[i].length > 20) {
+                label2.set_tooltip_text (label_texts_2[i]);
+            }
 
             text_box.append (label1);
             text_box.append (label2);
@@ -2821,3 +2825,4 @@ public class MangoJuice : Adw.Application {
         return app.run (args);
     }
 }
+
