@@ -3,8 +3,8 @@
   <id>io.github.radiolamp.mangojuice</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
-  <name>MangoJuice</name>
-  <summary>Graphical configurator Mangohud.</summary>
+  <name>Mangojuice</name>
+  <summary>The mangohud customization assistant.</summary>
   <description>
     <p>
       Mangojuice is a helper for mangohud
