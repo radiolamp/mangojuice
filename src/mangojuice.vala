@@ -1796,7 +1796,7 @@ public class MangoJuice : Adw.Application {
     void create_switches_and_labels (Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
         var label = create_label (title, Align.START, { "title-4" }, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN, FLOW_BOX_MARGIN);
         parent_box.append (label);
-    
+
         var flow_box = new FlowBox ();
         flow_box.set_homogeneous (true);
         flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
@@ -1806,12 +1806,11 @@ public class MangoJuice : Adw.Application {
         flow_box.set_margin_start (FLOW_BOX_MARGIN);
         flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
-    
+
         for (int i = 0; i < config_vars.length; i++) {
             var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
             row_box.set_hexpand (true);
             row_box.set_valign (Align.CENTER);
-    
             switches[i] = new Switch ();
             switches[i].set_valign (Align.CENTER);
     
@@ -1819,23 +1818,20 @@ public class MangoJuice : Adw.Application {
             text_box.set_valign (Align.CENTER);
             text_box.set_halign (Align.START);
             text_box.set_size_request (175, -1);
-            text_box.set_hexpand (false);
     
             var label1 = new Label (null);
             label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
             label1.set_halign (Align.START);
-            label1.set_hexpand (false);
             label1.set_ellipsize (Pango.EllipsizeMode.END);
             label1.set_max_width_chars (18);
             
             if (label_texts[i].char_count() > 20) {
                 label1.set_tooltip_text (label_texts[i]);
             }
-    
+
             var label2 = new Label (null);
             label2.set_markup ("<span size='8500'>%s</span>".printf (label_texts_2[i]));
             label2.set_halign (Align.START);
-            label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
             label2.set_ellipsize (Pango.EllipsizeMode.END);
             label2.set_max_width_chars (19);
@@ -1843,10 +1839,10 @@ public class MangoJuice : Adw.Application {
             if (label_texts_2[i].char_count() > 21) {
                 label2.set_tooltip_text (label_texts_2[i]);
             }
-    
+
             text_box.append (label1);
             text_box.append (label2);
-    
+
             row_box.append (switches[i]);
             row_box.append (text_box);
             flow_box.insert (row_box, -1);
@@ -2755,7 +2751,7 @@ public class MangoJuice : Adw.Application {
     }
 
     async void add_other_box_if_needed () {
-        if (Config.IS_DEVEL || (!is_flatpak () && yield check_vkbasalt_installed_async ())) {
+        if (Config.IS_DEVEL || yield check_vkbasalt_installed_async ()) {
             view_stack.add_titled (other_scrolled_window, "other_box", _("Other")).icon_name = "view-grid-symbolic";
         }
     }
