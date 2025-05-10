@@ -1902,22 +1902,25 @@ public class MangoJuice : Adw.Application {
         fps_limit_method = new DropDown (fps_limit_method_model, null);
 
         fps_limit_entry_1 = new Entry ();
+        fps_limit_entry_1.input_purpose = InputPurpose.NUMBER;
         var fps_limit_entry_1_box = create_entry_with_clear_button (fps_limit_entry_1, _("Limit 1"), "");
         fps_limit_entry_1.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_1, 0, 1000);
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             save_config ();
         });
-
+        
         fps_limit_entry_2 = new Entry ();
+        fps_limit_entry_2.input_purpose = InputPurpose.NUMBER;
         var fps_limit_entry_2_box = create_entry_with_clear_button (fps_limit_entry_2, _("Limit 2"), "");
         fps_limit_entry_2.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_2, 0, 1000);
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             save_config ();
         });
-
+        
         fps_limit_entry_3 = new Entry ();
+        fps_limit_entry_3.input_purpose = InputPurpose.NUMBER;
         var fps_limit_entry_3_box = create_entry_with_clear_button (fps_limit_entry_3, _("Limit 3"), "");
         fps_limit_entry_3.changed.connect (() => {
             validate_numeric_entry (fps_limit_entry_3, 0, 1000);
