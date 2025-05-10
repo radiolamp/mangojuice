@@ -611,8 +611,8 @@ msgstr ""
 "полного функционала\n"
 
 #: src/mangojuice.vala:479
-msgid "MangoHud Not Found"
-msgstr "MangoHud не найден"
+msgid "MangoHud is not installed. Please install it."
+msgstr "MangoHud не установлен. Пожалуйста, установите его."
 
 #: src/mangojuice.vala:480
 msgid ""

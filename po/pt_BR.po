@@ -609,8 +609,8 @@ msgstr ""
 "completa.\n"
 
 #: src/mangojuice.vala:479
-msgid "MangoHud Not Found"
-msgstr "Mangohud não encontrado"
+msgid "MangoHud is not installed. Please install it."
+msgstr "O MangoHud não está instalado. Por favor, instale-o."
 
 #: src/mangojuice.vala:480
 msgid ""

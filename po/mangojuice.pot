@@ -606,7 +606,7 @@ msgid ""
 msgstr ""
 
 #: src/mangojuice.vala:479
-msgid "MangoHud Not Found"
+msgid "MangoHud is not installed. Please install it."
 msgstr ""
 
 #: src/mangojuice.vala:480
