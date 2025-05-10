@@ -16,12 +16,6 @@ namespace AboutDialog {
             "x1z53 https://gitverse.ru/x1z53"
         };
 
-        string[] translators = {
-            "x1z53 (English) https://gitverse.ru/x1z53",
-            "x1z53 (Russian) https://gitverse.ru/x1z53",
-            "johnpetersa19 (Português brasileiro)  https://github.com/johnpetersa19"
-        };
-
         var dialog = new Adw.AboutDialog () {
             application_icon = "io.github.radiolamp.mangojuice",
             application_name = "MangoJuice",
@@ -30,7 +24,7 @@ namespace AboutDialog {
         };
 
         dialog.set_developers(developers);
-        dialog.set_translator_credits(string.joinv("\n", translators));
+        dialog.translator_credits = _("translator-credits");
 
         dialog.add_link ("MangoJuice на GitHub", "https://github.com/radiolamp/mangojuice");
         dialog.add_link ("Financial support (Donationalerts)", "https://www.donationalerts.com/r/radiolamp");

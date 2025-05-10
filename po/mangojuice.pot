@@ -1134,3 +1134,6 @@ msgstr ""
 
 msgid "The setting is reset when the configuration is changed"
 msgstr ""
+
+msgid "translator-credits"
+msgstr ""

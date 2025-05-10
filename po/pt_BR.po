@@ -1154,3 +1154,6 @@ msgstr "Pesquisar fonte"
 
 msgid "The setting is reset when the configuration is changed"
 msgstr "A configuração é redefinida quando a configuração é alterada"
+
+msgid "translator-credits"
+msgstr "johnpetersa19 https://github.com/johnpetersa19"

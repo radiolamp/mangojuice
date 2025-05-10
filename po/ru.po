@@ -1148,6 +1148,9 @@ msgstr "Поиск шрифтов"
 msgid "The setting is reset when the configuration is changed"
 msgstr "Настройка сбрасывается при изменении конфигурации"
 
+msgid "translator-credits"
+msgstr "X1Z53 <x1z53@altlinux.org>"
+
 #~ msgid "Disable unnecessary"
 #~ msgstr "Выключить всё лишнее"
 
