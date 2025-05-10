@@ -1,27 +1,36 @@
 /* about_dialog  // Licence:  GPL-v3.0 */
+
 using Gtk;
 
 namespace AboutDialog {
+    
     public void show_about_dialog (Gtk.Window parent_window) {
 
         const string[] developers = {
-            "Radiolamp https://github.com/radiolamp/",
+            "Radiolamp https://github.com/radiolamp",
             "Rirusha https://rirusha.space",
             "Boria138 https://github.com/Boria138",
             "SpikedPaladin https://github.com/SpikedPaladin",
             "slserg https://github.com/slserg",
-            "x1z53 https://gitverse.ru/x1z53",
-            "Samueru-sama https://github.com/Samueru-sama"
+            "Samueru-sama https://github.com/Samueru-sama",
+            "x1z53 https://gitverse.ru/x1z53"
+        };
+
+        string[] translators = {
+            "x1z53 (English) https://gitverse.ru/x1z53",
+            "x1z53 (Russian) https://gitverse.ru/x1z53",
+            "johnpetersa19 (Português brasileiro)  https://github.com/johnpetersa19"
         };
 
         var dialog = new Adw.AboutDialog () {
             application_icon = "io.github.radiolamp.mangojuice",
             application_name = "MangoJuice",
             version = Config.VERSION,
-            license_type = Gtk.License.GPL_3_0,
+            license_type = Gtk.License.GPL_3_0
         };
 
-        dialog.developers = developers;
+        dialog.set_developers(developers);
+        dialog.set_translator_credits(string.joinv("\n", translators));
 
         dialog.add_link ("MangoJuice на GitHub", "https://github.com/radiolamp/mangojuice");
         dialog.add_link ("Financial support (Donationalerts)", "https://www.donationalerts.com/r/radiolamp");

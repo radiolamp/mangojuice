@@ -4,7 +4,7 @@
         {
           "label": "build and run",
           "type": "shell",
-          "command": "rm -rf ./build/ && meson setup build -Dis_devel=true --buildtype=debug && ninja -C build && ./build/src/mangojuice",
+          "command": "rm -rf ./build/ && meson setup build --reconfigure -Dis_devel=true --buildtype=debug && ninja -C build && ./build/src/mangojuice",
           "group": {
               "kind": "build",
               "isDefault": true
