@@ -2575,34 +2575,30 @@ public class MangoJuice : Adw.Application {
         result.entry.changed.connect (() => {
             if (!is_updating) {
                 int value = 0;
-                if (int.try_parse (result.entry.text, out value)) {
-                    if (value >= min && value <= max && value != (int)result.scale.get_value ()) {
-                        is_updating = true;
-                        GLib.Idle.add (() => {
-                            result.scale.set_value (value);
-                            validate_entry_value (result.entry, min, max);
-                            is_updating = false;
-                            return false;
-                        });
-                    }
-                } else if (result.entry.text.strip () == "") {
+                bool is_valid = int.try_parse (result.entry.text, out value);
+        
+                if (is_valid && value >= min && value <= max) {
                     is_updating = true;
                     GLib.Idle.add (() => {
-                        result.scale.set_value (initial_value);
-                        result.entry.text = "%d".printf (initial_value);
+                        result.scale.set_value (value);
+                        result.entry.remove_css_class ("error");
                         is_updating = false;
                         return false;
                     });
+                } else if (result.entry.text.strip () != "") {
+                    result.entry.add_css_class ("error");
                 }
-                validate_entry_value (result.entry, min, max);
             }
         });
 
-        result.entry.notify["has-focus"].connect (() => {
-            if (!result.entry.has_focus && result.entry.text.strip () == "") {
+        result.entry.activate.connect (() => {
+            if (result.entry.text.strip () == "" || result.entry.has_css_class ("error")) {
                 result.entry.text = "%d".printf (initial_value);
                 result.scale.set_value (initial_value);
+                result.entry.remove_css_class ("error");
             }
+        
+            result.entry.get_parent().grab_focus();
         });
 
         var text_box = new Box (Orientation.VERTICAL, 0);
