@@ -13,13 +13,7 @@
       "--filesystem=xdg-config/MangoHud:create",
       "--filesystem=home"
   ],
-  "add-extensions": {
-      "org.freedesktop.Platform.VulkanLayer.MangoHud": {
-          "version": "24.08",
-          "autodownload": true,
-          "autodelete": true
-      }
-  },
+
   "cleanup": [
       "/include",
       "/lib/pkgconfig",

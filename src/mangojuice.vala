@@ -497,6 +497,9 @@ public class MangoJuice : Adw.Application {
         
             if (!mangohud_available && is_flatpak()) {
                 show_mangohud_install_dialog(window);
+                if (mangohud_available) {
+                    test_button?.set_visible(true);
+                }
             }
 
             if (!mangohud_available && !is_flatpak ()) {

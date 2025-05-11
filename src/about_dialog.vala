@@ -93,7 +93,7 @@ void show_mangohud_install_dialog(Gtk.Window parent) {
             try {
                 string flatpakref_content = """[Flatpak Ref]
                 Name=org.freedesktop.Platform.VulkanLayer.MangoHud
-                Branch=23.08
+                Branch=24.08
                 IsRuntime=true
                 Url=https://dl.flathub.org/repo/appstream/org.freedesktop.Platform.VulkanLayer.MangoHud.flatpakref
                 """;
