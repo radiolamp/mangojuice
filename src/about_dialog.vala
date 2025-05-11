@@ -34,7 +34,7 @@ namespace AboutDialog {
     }
 }
 
-void show_mangohud_install_dialog(Gtk.Window parent) {
+public void show_mangohud_install_dialog(Gtk.Window parent, Gtk.Button test_button) {
     var dialog = new Adw.AlertDialog(
         _("MangoHud Not Installed"),
         _("MangoHud is required for this application. Install it from Flathub")
@@ -112,6 +112,7 @@ void show_mangohud_install_dialog(Gtk.Window parent) {
                     FileUtils.remove(file_path);
                     AppInfo.launch_default_for_uri("https://flathub.org/apps/org.freedesktop.Platform.VulkanLayer.MangoHud", null);      
                 }
+                test_button.set_visible(true);
             } catch (Error e) {
                 stderr.printf("Error creating flatpakref file: %s\n", e.message);
             }

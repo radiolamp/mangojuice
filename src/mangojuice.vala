@@ -496,10 +496,7 @@ public class MangoJuice : Adw.Application {
             bool glxgears_available = is_glxgears_available ();
         
             if (!mangohud_available && is_flatpak()) {
-                show_mangohud_install_dialog(window);
-                if (mangohud_available) {
-                    test_button?.set_visible(true);
-                }
+                show_mangohud_install_dialog(window, test_button);
             }
 
             if (!mangohud_available && !is_flatpak ()) {
