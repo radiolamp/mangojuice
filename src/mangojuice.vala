@@ -529,6 +529,11 @@ public class MangoJuice : Adw.Application {
                         }
                     });
                 }
+                toast.dismissed.connect(() => {
+                    if (mangohud_available || (vkcube_available && glxgears_available)) {
+                        test_button?.set_visible(true);
+                    }
+                });
                 toast_overlay.add_toast(toast);
             }
     
@@ -540,6 +545,11 @@ public class MangoJuice : Adw.Application {
     
                     var toast = new Adw.Toast (_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
                     toast.set_timeout (15);
+                    toast.dismissed.connect(() => {
+                        if (mangohud_available || (vkcube_available && glxgears_available)) {
+                            test_button?.set_visible(true);
+                        }
+                    });
                     toast_overlay.add_toast (toast);
                 }
             }

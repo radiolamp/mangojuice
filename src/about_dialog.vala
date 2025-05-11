@@ -37,7 +37,7 @@ namespace AboutDialog {
 void show_mangohud_install_dialog(Gtk.Window parent) {
     var dialog = new Adw.AlertDialog(
         _("MangoHud Not Installed"),
-        _("MangoHud is required for this application. Install it from fhathub")
+        _("MangoHud is required for this application. Install it from Flathub")
     );
 
     var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
@@ -88,10 +88,32 @@ void show_mangohud_install_dialog(Gtk.Window parent) {
     
     dialog.response.connect((response) => {
         if (response == "install") {
+            string file_path = Path.build_filename(Environment.get_home_dir(), "mangohud.flatpakref");
+            
             try {
-                AppInfo.launch_default_for_uri("https://flathub.org/apps/org.freedesktop.Platform.VulkanLayer.MangoHud", null);
+                string flatpakref_content = """[Flatpak Ref]
+                Name=org.freedesktop.Platform.VulkanLayer.MangoHud
+                Branch=23.08
+                IsRuntime=true
+                Url=https://dl.flathub.org/repo/appstream/org.freedesktop.Platform.VulkanLayer.MangoHud.flatpakref
+                """;
+
+                FileUtils.set_contents(file_path, flatpakref_content);
+                FileUtils.chmod(file_path, 0644);
+
+                try {
+                    Process.spawn_command_line_async("xdg-open " + file_path);
+
+                    Timeout.add_seconds(10, () => {
+                        FileUtils.remove(file_path);
+                        return Source.REMOVE;
+                    });
+                } catch (SpawnError e) {
+                    FileUtils.remove(file_path);
+                    AppInfo.launch_default_for_uri("https://flathub.org/apps/org.freedesktop.Platform.VulkanLayer.MangoHud", null);      
+                }
             } catch (Error e) {
-                stderr.printf("Error launching Flathub: %s\n", e.message);
+                stderr.printf("Error creating flatpakref file: %s\n", e.message);
             }
         }
     });

@@ -1140,7 +1140,7 @@ msgid "MangoHud is required for this application. Install it from fhathub"
 msgstr "Для этого приложения требуется MangoHud. Установите его с Flathub"
 
 msgid "Install from Flathub"
-msgstr "Перейти на Flathub"
+msgstr "Установить с Flathub"
 
 msgid "Search font"
 msgstr "Поиск шрифтов"
