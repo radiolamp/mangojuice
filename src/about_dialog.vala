@@ -128,24 +128,19 @@ struct PageData {
 }
 
 public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
-    var dialog = new Adw.Window();
-    dialog.set_title("");
-    dialog.set_default_size(600, 480);
-    dialog.set_transient_for(parent_window);
-    dialog.set_modal(true);
-    dialog.set_hide_on_close(true);
-
-    dialog.close_request.connect(() => {
-        dialog.destroy();
-        return false;
-    });
+    var dialog = new Adw.Dialog();
+    dialog.set_content_width(800);
+    dialog.set_content_height(600);
+    dialog.set_size_request(320, 240); 
 
     var breakpoint_450px = new Adw.Breakpoint(Adw.BreakpointCondition.parse("max-width: 450px"));
-    breakpoint_450px.set_condition(Adw.BreakpointCondition.parse("max-width: 450px"));
     dialog.add_breakpoint(breakpoint_450px);
 
     var main_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-    dialog.set_content(main_box);
+    dialog.set_child(main_box);
+
+    var window_handle = new Gtk.WindowHandle();
+    main_box.append(window_handle);
 
     var header_bar = new Adw.HeaderBar();
     header_bar.set_show_start_title_buttons(true);
@@ -173,8 +168,7 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
     var carousel = new Adw.Carousel();
     var indicators = new Adw.CarouselIndicatorDots();
     indicators.set_carousel(carousel);
-    indicators.set_hexpand(true);
-    indicators.set_valign (Align.CENTER);
+    indicators.set_valign(Align.CENTER);
     indicators_box.append(indicators);
 
     breakpoint_450px.add_setter(indicators, "visible", false);
@@ -198,7 +192,7 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
                 "cpu_load_value=30,60","cpu_load_color=FFFFFF,FFAA7F,CC0000","cpu_mhz","cpu_temp","cpu_color=2E97CB","vram","vram_color=AD64C1",
                 "ram","ram_color=C26693","wine_color=EB4B4B","fps","frametime_color=00e4ff","toggle_fps_limit=Shift_L+F1","fps_limit=0,30,60",
                 "fps_color_change","fps_color=ff0000,FDFD09,ffffff","fps_value=30,60","engine_short_names","frame_timing"};
-                set_preset (profile2_vars);
+                set_preset(profile2_vars);
                 break;
             case 2:
                 string[] profile3_vars ={"background_alpha=0.4","round_corners=10","gpu_text=GPU","gpu_stats","gpu_load_change","gpu_load_value=30,60",
@@ -207,7 +201,7 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
                 "ram_color=C26693","fps","engine_short_names","gpu_name","wine","wine_color=eb4b4b","frame_timing","frametime_color=00edff",
                 "toggle_fps_limit=Shift_L+F1","show_fps_limit","fps_limit=0,30,60","resolution","fsr","hdr","refresh_rate","fps_color_change",
                 "fps_color=ff0000,fdfd09,ffffff","fps_value=30,60","media_player","media_player_color=FFFFFF"};
-                set_preset (profile3_vars);
+                set_preset(profile3_vars);
                 break;
             case 3:
                 string[] profile4_vars = {"background_alpha=0.4","round_corners=10","background_alpha=0.4","table_columns=4","gpu_stats","gpu_load_change",
@@ -227,6 +221,7 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
         }
         LoadStates.load_states_from_file.begin(app);
         app.reset_manager.reset_all_widgets();
+        dialog.close();
     });
     header_bar.pack_end(apply_button);
 
@@ -293,7 +288,10 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
     }
 
     content_box.append(carousel);
-    dialog.present();
+
+    dialog.set_hexpand(true);
+    dialog.set_vexpand(true);
+    dialog.present(parent_window);
 }
 
 void set_preset (string[] preset_values) {
