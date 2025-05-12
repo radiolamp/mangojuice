@@ -691,10 +691,6 @@ msgstr ""
 msgid "Only FPS"
 msgstr ""
 
-#: src/mangojuice.vala:907
-msgid "Horizontal"
-msgstr ""
-
 #: src/mangojuice.vala:916
 msgid "Full"
 msgstr ""
@@ -1136,4 +1132,16 @@ msgid "The setting is reset when the configuration is changed"
 msgstr ""
 
 msgid "translator-credits"
+msgstr ""
+
+msgid "Minimal"
+msgstr ""
+
+msgid "Advanced"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Profile"
 msgstr ""

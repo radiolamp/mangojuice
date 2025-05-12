@@ -702,10 +702,6 @@ msgstr "Ваш текст"
 msgid "Only FPS"
 msgstr "Только FPS"
 
-#: src/mangojuice.vala:907
-msgid "Horizontal"
-msgstr "Горизонтальный"
-
 #: src/mangojuice.vala:916
 msgid "Full"
 msgstr "Полный"
@@ -1150,6 +1146,18 @@ msgstr "Настройка сбрасывается при изменении к
 
 msgid "translator-credits"
 msgstr "X1Z53 <x1z53@altlinux.org>"
+
+msgid "Minimal"
+msgstr "Минимальный"
+
+msgid "Advanced"
+msgstr "Продвинутый"
+
+msgid "Apply"
+msgstr "Применить"
+
+msgid "Profile"
+msgstr "Профили"
 
 #~ msgid "Disable unnecessary"
 #~ msgstr "Выключить всё лишнее"

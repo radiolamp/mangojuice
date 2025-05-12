@@ -702,10 +702,6 @@ msgstr "Seu texto"
 msgid "Only FPS"
 msgstr "Apenas fps"
 
-#: src/mangojuice.vala:907
-msgid "Horizontal"
-msgstr "Horizontal"
-
 #: src/mangojuice.vala:916
 msgid "Full"
 msgstr "Completo"
@@ -1157,3 +1153,15 @@ msgstr "A configuração é redefinida quando a configuração é alterada"
 
 msgid "translator-credits"
 msgstr "johnpetersa19 https://github.com/johnpetersa19"
+
+msgid "Minimal"
+msgstr "Mínimo"
+
+msgid "Advanced"
+msgstr "Avançado"
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Profile"
+msgstr "Perfil"

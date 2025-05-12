@@ -443,6 +443,8 @@ public class MangoJuice : Adw.Application {
         menu_model.append_item (restore_config_item);
         var advanced_item = new GLib.MenuItem (_("Change order"), "app.advanced");
         menu_model.append_item (advanced_item);
+        var carousel_item = new GLib.MenuItem (_("Profile"), "app.show_carousel_dialog");
+        menu_model.append_item (carousel_item);
         var about_item = new GLib.MenuItem (_("About"), "app.about");
         menu_model.append_item (about_item);
         menu_button.set_menu_model (menu_model);
@@ -602,6 +604,14 @@ public class MangoJuice : Adw.Application {
         var restore_config_action = new SimpleAction ("restore_config", null);
         restore_config_action.activate.connect (on_restore_config_button_clicked);
         this.add_action (restore_config_action);
+
+        var action = new SimpleAction ("show_carousel_dialog", null);
+        action.activate.connect (() => {
+            if (this.active_window != null) {
+                show_carousel_dialog(this.active_window, this);
+            }
+        });
+        this.add_action (action);
 
         var about_action = new SimpleAction ("about", null);
         about_action.activate.connect (on_about_button_clicked);
@@ -948,73 +958,10 @@ public class MangoJuice : Adw.Application {
         var custom_text_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
-            margin_top = FLOW_BOX_MARGIN,
-            margin_bottom = FLOW_BOX_MARGIN
+            margin_top = FLOW_BOX_MARGIN
         };
         custom_text_box.append (custom_text_center_box);
         visual_box.append (custom_text_box);
-
-        var button_flow_box = new FlowBox () {
-            max_children_per_line = 4,
-            homogeneous = true,
-            margin_start = 10,
-            margin_end = 10,
-            selection_mode = SelectionMode.NONE
-        };
-
-        var button1 = new Button.with_label (_("Only FPS"));
-        button1.set_size_request (160, -1);
-        button1.clicked.connect (() => {
-            string[] profile1_vars = { "fps_only", "background_alpha=0" };
-            set_preset (profile1_vars);
-            LoadStates.load_states_from_file.begin (this);
-            reset_manager.reset_all_widgets ();
-        });
-
-        var button2 = new Button.with_label (_("Horizontal"));
-        button2.clicked.connect (() => {
-            string[] profile2_vars = {"horizontal", "horizontal_stretch=0" , "gpu_stats", "position=top-center",
-            "gpu_load_change" ,"cpu_stats" , "cpu_load_change" , "ram", "fps", "fps_color_change" , "round_corners=8" };
-            set_preset (profile2_vars);
-            LoadStates.load_states_from_file.begin (this);
-            reset_manager.reset_all_widgets ();
-        });
-
-        var button3 = new Button.with_label (_("Full"));
-        button3.clicked.connect (() => {
-            string[] profile3_vars = { "hud_compact", "gpu_stats", "gpu_load_change", "gpu_voltage", "throttling_status",
-            "gpu_core_clock", "gpu_mem_clock", "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_power", "cpu_stats", "core_load",
-            "cpu_load_change", "cpu_mhz", "cpu_temp", "cpu_power", "io_stats", "io_read", "io_write", "swap", "vram", "ram", "procmem", "battery",
-            "battery_watt", "battery_time", "fps", "fps_metrics=avg,0.01", "engine_version", "gpu_name", "vulkan_driver", "arch", "wine",
-            "frame_timing", "throttling_status_graph", "frame_count", "fps_limit_method=late", "show_fps_limit", "fps_limit=0", "resolution",
-            "fsr", "hdr", "winesync", "present_mode", "refresh_rate", "gamemode", "vkbasalt", "device_battery=gamepad,mouse", "device_battery_icon",
-            "exec=lsb_release -a | grep Release | uniq | cut -c 10-26", "custom_text=Kernel", "exec=uname -r", "custom_text=Session:",
-            "display_server", "fps_color_change", "time#", "version", "media_player", "media_player_color=FFFF00" };
-            set_preset (profile3_vars);
-            LoadStates.load_states_from_file.begin (this);
-            reset_manager.reset_all_widgets ();
-        });
-
-        var button4 = new Button.with_label(_("Restore profile"));
-        button4.clicked.connect (() => {
-            try {
-                var backup_file = File.new_for_path (Environment.get_home_dir())
-                                      .get_child (".config")
-                                      .get_child ("MangoHud")
-                                      .get_child (".MangoHud.backup");
-                restore_config_from_file(backup_file.get_path ());
-                backup_file.delete();
-            } catch (Error e) {
-                stderr.printf ("Error: %s\n", e.message);
-            }
-        });
-
-        button_flow_box.insert (button1, -1);
-        button_flow_box.insert (button2, -1);
-        button_flow_box.insert (button3, -1);
-        button_flow_box.insert (button4, -1);
-
-        visual_box.append (button_flow_box);
 
         var combined_flow_box = new FlowBox () {
             row_spacing = FLOW_BOX_ROW_SPACING,
@@ -2511,7 +2458,7 @@ public class MangoJuice : Adw.Application {
         });
     }
 
-    void restore_config_from_file (string file_path) {
+    public void restore_config_from_file (string file_path) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         var file = config_dir.get_child ("MangoHud.conf");
 
@@ -2713,24 +2660,6 @@ public class MangoJuice : Adw.Application {
     void save_config () {
         if (!is_loading) {
             SaveStates.save_states_to_file (this);
-        }
-    }
-
-    void set_preset (string[] preset_values) {
-        var file = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child("MangoHud").get_child ("MangoHud.conf");
-        var backup_file = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud").get_child (".MangoHud.backup");
-        try {
-            if (file.query_exists () && !backup_file.query_exists ()) {
-                file.copy (backup_file, FileCopyFlags.OVERWRITE);
-            }
-            var output_stream = new DataOutputStream (file.replace(null, false, FileCreateFlags.NONE));
-            output_stream.put_string ("#Preset config by MangoJuice #\n");
-            output_stream.put_string ("legacy_layout=false\n");
-            foreach (string value in preset_values) {
-                output_stream.put_string ("%s\n".printf (value));
-            }
-        } catch (Error e) {
-            stderr.printf ("Error: %s\n", e.message);
         }
     }
 
