@@ -35,7 +35,7 @@
   </developer>
   <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
-    <release version="0.8.4" date="2025-04-28">
+    <release version="0.8.4-*" date="2025-04-28">
       <description>
         <p>Hello Flatpak</p>
         <ul>
@@ -44,6 +44,8 @@
       </description>
     </release>
   </releases>
+  <url type="homepage">https://github.com/radiolamp/mangojuice</url>
+  <url type="bugtracker">https://github.com/radiolamp/mangojuice/issues</url>
   <categories>
     <category>Utility</category>
   </categories>

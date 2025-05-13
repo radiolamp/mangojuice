@@ -3,35 +3,36 @@
 using Gtk;
 
 namespace AboutDialog {
-    
+
     public void show_about_dialog (Gtk.Window parent_window) {
 
         const string[] developers = {
-            "Radiolamp https://github.com/radiolamp",
-            "Rirusha https://rirusha.space",
-            "Boria138 https://github.com/Boria138",
-            "SpikedPaladin https://github.com/SpikedPaladin",
-            "slserg https://github.com/slserg",
-            "Samueru-sama https://github.com/Samueru-sama",
-            "x1z53 https://gitverse.ru/x1z53"
-        };
+        "Radiolamp https://github.com/radiolamp",
+        "Rirusha https://rirusha.space",
+        "Boria138 https://github.com/Boria138",
+        "SpikedPaladin https://github.com/SpikedPaladin",
+        "slserg https://github.com/slserg",
+        "Samueru-sama https://github.com/Samueru-sama",
+        "x1z53 https://gitverse.ru/x1z53"
+    };
 
-        var dialog = new Adw.AboutDialog () {
-            application_icon = "io.github.radiolamp.mangojuice",
-            application_name = "MangoJuice",
-            version = Config.VERSION,
-            license_type = Gtk.License.GPL_3_0
-        };
+    var dialog = new Adw.AboutDialog.from_appdata (
+        "/io/github/radiolamp/mangojuice/io.github.radiolamp.mangojuice.metainfo.xml",
+        Config.VERSION
+    );
 
-        dialog.set_developers(developers);
-        dialog.translator_credits = _("translator-credits");
+    dialog.application_icon = "io.github.radiolamp.mangojuice";
+    dialog.version = Config.VERSION;
+    dialog.translator_credits = _("translator-credits");
+    dialog.set_developers(developers);
+    dialog.add_link ("Financial support (Donationalerts)", "https://www.donationalerts.com/r/radiolamp");
+    dialog.add_link ("Financial support (Tinkoff)", "https://www.tbank.ru/cf/3PPTstulqEq");
+    dialog.add_link ("Financial support (Boosty)", "https://boosty.to/radiolamp");
 
-        dialog.add_link ("MangoJuice на GitHub", "https://github.com/radiolamp/mangojuice");
-        dialog.add_link ("Financial support (Donationalerts)", "https://www.donationalerts.com/r/radiolamp");
-        dialog.add_link ("Financial support (Tinkoff)", "https://www.tbank.ru/cf/3PPTstulqEq");
-        dialog.add_link ("Financial support (Boosty)", "https://boosty.to/radiolamp");
-        dialog.present (parent_window);
-    }
+    dialog.present (parent_window);
+}
+
+
 }
 
 public void show_mangohud_install_dialog(Gtk.Window parent, Gtk.Button test_button) {
