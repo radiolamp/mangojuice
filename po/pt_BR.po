@@ -1168,3 +1168,6 @@ msgstr "Perfil"
 
 msgid "Financial support"
 msgstr "Suporte financeiro"
+
+msgid "Your presets"
+msgstr "Suas predefinições"

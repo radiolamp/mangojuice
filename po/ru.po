@@ -1168,3 +1168,6 @@ msgstr "Поддержать проект"
 #~ msgid "Detailed frame time"
 #~ msgstr "Подробное время кадра"
 
+msgid "Your presets"
+msgstr "Твои профили"
+

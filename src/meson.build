@@ -6,7 +6,7 @@ deps = [
 vapi_sources = files('config.vapi')
 
 sources = files(
-    'about_dialog.vala',
+    'dialog.vala',
     'mangojuice.vala',
     'save_states.vala',
     'other/OtherBox.vala',

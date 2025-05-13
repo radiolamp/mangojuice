@@ -816,20 +816,23 @@ public class MangoJuice : Adw.Application {
         var clear_button = new Button.from_icon_name ("edit-clear-symbolic");
         clear_button.tooltip_text = _("Clear");
         clear_button.visible = false;
-
+        clear_button.valign = Align.CENTER;
         clear_button.clicked.connect (() => {
             entry.text = default_value;
             clear_button.visible = false;
         });
-
+        
         entry.changed.connect (() => {
-            clear_button.visible = entry.text != default_value;
+            clear_button.visible = entry.text != default_value && entry.text != "";
         });
 
-        var entry_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        var entry_box = new Box (Orientation.HORIZONTAL, 0);
         entry_box.append (entry);
         entry_box.append (clear_button);
 
+        entry_box.add_css_class("linked");
+        entry.add_css_class("entry-with-button");
+        
         return entry_box;
     }
 

@@ -1148,3 +1148,6 @@ msgstr ""
 
 msgid "Financial support"
 msgstr ""
+
+msgid "Your presets"
+msgstr ""
