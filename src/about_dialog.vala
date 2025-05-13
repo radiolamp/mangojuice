@@ -4,7 +4,7 @@ using Gtk;
 
 namespace AboutDialog {
 
-    public void show_about_dialog (Gtk.Window parent_window) {
+public void show_about_dialog (Gtk.Window parent_window) {
 
         const string[] developers = {
         "Radiolamp https://github.com/radiolamp",
@@ -18,16 +18,16 @@ namespace AboutDialog {
 
     var dialog = new Adw.AboutDialog.from_appdata (
         "/io/github/radiolamp/mangojuice/io.github.radiolamp.mangojuice.metainfo.xml",
-        Config.VERSION
+        null
     );
 
     dialog.application_icon = "io.github.radiolamp.mangojuice";
     dialog.version = Config.VERSION;
     dialog.translator_credits = _("translator-credits");
     dialog.set_developers(developers);
-    dialog.add_link ("Financial support (Donationalerts)", "https://www.donationalerts.com/r/radiolamp");
-    dialog.add_link ("Financial support (Tinkoff)", "https://www.tbank.ru/cf/3PPTstulqEq");
-    dialog.add_link ("Financial support (Boosty)", "https://boosty.to/radiolamp");
+    dialog.add_link (_("Financial support") + " (Donationalerts)", "https://www.donationalerts.com/r/radiolamp");
+    dialog.add_link (_("Financial support") + " (Tinkoff)", "https://www.tbank.ru/cf/3PPTstulqEq");
+    dialog.add_link (_("Financial support") + " (Boosty)", "https://boosty.to/radiolamp");
 
     dialog.present (parent_window);
 }

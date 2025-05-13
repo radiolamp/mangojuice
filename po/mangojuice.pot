@@ -1145,3 +1145,6 @@ msgstr ""
 
 msgid "Profile"
 msgstr ""
+
+msgid "Financial support"
+msgstr ""

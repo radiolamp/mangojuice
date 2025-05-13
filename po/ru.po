@@ -1159,8 +1159,12 @@ msgstr "Применить"
 msgid "Profile"
 msgstr "Профили"
 
+msgid "Financial support"
+msgstr "Поддержать проект"
+
 #~ msgid "Disable unnecessary"
 #~ msgstr "Выключить всё лишнее"
 
 #~ msgid "Detailed frame time"
 #~ msgstr "Подробное время кадра"
+

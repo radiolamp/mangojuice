@@ -1165,3 +1165,6 @@ msgstr "Aplicar"
 
 msgid "Profile"
 msgstr "Perfil"
+
+msgid "Financial support"
+msgstr "Suporte financeiro"
