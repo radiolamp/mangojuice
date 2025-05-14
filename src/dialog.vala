@@ -398,6 +398,7 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
 
     button.clicked.connect(() => {
         apply_profile_config(button.get_label());
+        MangoJuice.run_test_static();
     });
 
     box.append(button_box);

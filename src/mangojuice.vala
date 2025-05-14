@@ -2126,7 +2126,12 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    void run_test () {
+    public static void run_test_static() {
+        var instance = new MangoJuice();
+        instance.run_test();
+    }
+
+    public void run_test () {
         new Thread<void>("run-test", () => {
             try {
                 var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
