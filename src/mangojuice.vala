@@ -2527,6 +2527,7 @@ public class MangoJuice : Adw.Application {
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
         result.entry.add_css_class ("linked");
+        result.entry.set_input_purpose(Gtk.InputPurpose.NUMBER);
         validate_entry_value (result.entry, min, max);
     
         var reset_button = new Button.from_icon_name ("edit-undo-symbolic");
