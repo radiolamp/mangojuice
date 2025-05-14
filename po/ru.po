@@ -1179,3 +1179,6 @@ msgstr "Поддержать проект"
 msgid "Your presets"
 msgstr "Твои профили"
 
+msgid "Device icon"
+msgstr "Значёк батареи"
+

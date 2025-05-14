@@ -403,6 +403,8 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
     box.append(entry);
     box.append(button_box);
 
+    wrap.set_vexpand(true);
+    wrap.set_valign (Gtk.Align.CENTER);
     wrap.remove(add_button);
     wrap.append(box);
     wrap.append(add_button);

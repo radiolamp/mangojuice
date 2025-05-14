@@ -1175,3 +1175,6 @@ msgstr "Suporte financeiro"
 
 msgid "Your presets"
 msgstr "Suas predefinições"
+
+msgid "Device icon"
+msgstr ""

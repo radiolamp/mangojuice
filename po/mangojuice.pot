@@ -1161,3 +1161,6 @@ msgstr ""
 
 msgid "This devices"
 msgstr ""
+
+msgid "Device icon"
+msgstr ""
