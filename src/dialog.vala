@@ -400,9 +400,8 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
         apply_profile_config(button.get_label());
         MangoJuice.run_test_static();
     });
-
-    box.append(button_box);
     box.append(entry);
+    box.append(button_box);
 
     wrap.remove(add_button);
     wrap.append(box);
