@@ -345,6 +345,8 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
     }
 
     var button = new Gtk.Button.with_label(profile_name);
+    button.set_focusable(false);
+
     var entry = new Gtk.Entry();
     entry.set_text(profile_name);
     entry.set_visible(false);
@@ -352,20 +354,18 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
 
     var close_btn = new Gtk.Button();
     close_btn.set_icon_name("window-close-symbolic");
-    close_btn.add_css_class("circular");
-    close_btn.set_halign(Gtk.Align.CENTER);
-    close_btn.set_valign(Gtk.Align.CENTER);
-    close_btn.set_margin_end(4);
     close_btn.set_focusable(false);
-    close_btn.set_visible(false);
+    close_btn.set_visible(true);
 
     var edit_btn = new Gtk.Button();
     edit_btn.set_icon_name("document-edit-symbolic");
-    edit_btn.add_css_class("circular");
-    edit_btn.set_halign(Gtk.Align.CENTER);
-    edit_btn.set_valign(Gtk.Align.CENTER);
     edit_btn.set_focusable(false);
-    edit_btn.set_visible(false);
+
+    var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+    button_box.add_css_class("linked");
+    button_box.append(button);
+    button_box.append(edit_btn);
+    button_box.append(close_btn);
 
     edit_btn.clicked.connect(() => {
         button.set_visible(false);
@@ -396,23 +396,12 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
         wrap.remove(box);
     });
 
-    var right_click = new Gtk.GestureClick();
-    right_click.set_button(Gdk.BUTTON_SECONDARY);
-    right_click.pressed.connect((n_press, x, y) => {
-        bool currently_visible = close_btn.get_visible();
-        close_btn.set_visible(!currently_visible);
-        edit_btn.set_visible(!currently_visible);
-    });
-    box.add_controller(right_click);
-
-    box.append(button);
-    box.append(entry);
-    box.append(edit_btn);
-    box.append(close_btn);
-
     button.clicked.connect(() => {
         apply_profile_config(button.get_label());
     });
+
+    box.append(button_box);
+    box.append(entry);
 
     wrap.remove(add_button);
     wrap.append(box);

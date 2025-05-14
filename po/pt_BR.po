@@ -245,8 +245,12 @@ msgid "Time remain"
 msgstr "Tempo permanece"
 
 #: src/mangojuice.vala:193
-msgid "Battery icon"
-msgstr "Ícone da bateria"
+msgid "Icon Battary"
+msgstr "Ícone do dispositivo"
+
+#: src/mangojuice.vala:193
+msgid "More icon"
+msgstr "Mais ícones"
 
 #: src/mangojuice.vala:193
 msgid "Other batteries"

@@ -247,8 +247,12 @@ msgid "Time remain"
 msgstr "Оставшееся время"
 
 #: src/mangojuice.vala:193
-msgid "Battery icon"
+msgid "Icon Battary"
 msgstr "Значок батареи"
+
+#: src/mangojuice.vala:193
+msgid "More icon"
+msgstr "Другие значки"
 
 #: src/mangojuice.vala:193
 msgid "Other batteries"
@@ -487,6 +491,10 @@ msgstr "Время жизни"
 #: src/mangojuice.vala:242
 msgid "Wireless devices"
 msgstr "Беспроводные геймпады"
+
+#: src/mangojuice.vala:242
+msgid "This devices"
+msgstr "Данное устройство"
 
 #: src/mangojuice.vala:242
 msgid "Wireless battries"

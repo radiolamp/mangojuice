@@ -309,7 +309,7 @@ public class SaveStates {
 
             save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_end").to_array ());
 
-            int[] battery_order = {0, 1, 2, 3, 4};
+            int[] battery_order = {0, 1, 2, 3, 4, 5};
             save_switches_to_file (data_stream, mango_juice.battery_switches, mango_juice.battery_config_vars, battery_order);
 
             int[] other_extra_order = {1, 2, 0, 3};

@@ -1151,3 +1151,13 @@ msgstr ""
 
 msgid "Your presets"
 msgstr ""
+
+msgid "Icon Battary"
+msgstr ""
+
+#: src/mangojuice.vala:193
+msgid "More icon"
+msgstr ""
+
+msgid "This devices"
+msgstr ""

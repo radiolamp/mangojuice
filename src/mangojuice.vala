@@ -154,7 +154,7 @@ public class MangoJuice : Adw.Application {
         "wine", "winesync"
     };
     public string[] battery_config_vars = {
-        "battery", "battery_watt", "battery_time", "battery_icon \n device_battery_icon", "device_battery=gamepad,mouse"
+        "battery", "battery_watt", "battery_time", "battery_icon" , "device_battery_icon", "device_battery=gamepad,mouse"
     };
     public string[] other_extra_config_vars = {
         "media_player", "full", "log_versioning", "upload_logs"
@@ -203,7 +203,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] battery_label_texts = {
         _("Battery charge"), _("Battery power"),  _("Time remain"),
-        _("Battery icon"),   _("Other batteries")
+        _("Device icon"), _("More icon"),   _("Other batteries")
     };
     string[] wine_label_texts = {
         _("Version"), _("Winesync")
@@ -257,7 +257,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] battery_label_texts_2 = {
         _("Power level, %"),  _("Consumption, W"), _("Battery life"),
-        _("Wireless devices"), _("Wireless battries")
+        _("This devices"), _("Wireless devices"), _("Wireless battries")
     };
     string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("Wine sync method")
@@ -829,9 +829,7 @@ public class MangoJuice : Adw.Application {
         var entry_box = new Box (Orientation.HORIZONTAL, 0);
         entry_box.append (entry);
         entry_box.append (clear_button);
-
         entry_box.add_css_class("linked");
-        entry.add_css_class("entry-with-button");
         
         return entry_box;
     }
@@ -893,28 +891,28 @@ public class MangoJuice : Adw.Application {
             reset_manager.reset_all_widgets ();
         });
 
-        blacklist_entry = new Entry ();
-        var blacklist_box = create_entry_with_clear_button (blacklist_entry, _("Blacklist: (vkcube, WatchDogs2.exe)"), "");
-        blacklist_entry.changed.connect (() => {
-            SaveStates.update_blacklist_in_file (blacklist_entry.text);
-            save_config ();
-        });
-
-            mangohud_global_button = new Button.with_label (_("MangoHud Global"));
-            mangohud_global_button.clicked.connect (on_mangohud_global_button_clicked);
-        if (!is_flatpak ()) {
-            blacklist_box.append (mangohud_global_button);
-        }
-
-        var blacklist_flow_box = new FlowBox () {
-            max_children_per_line = 1,
-            margin_start = FLOW_BOX_MARGIN,
-            margin_end = FLOW_BOX_MARGIN,
-            selection_mode = SelectionMode.NONE
+        var blacklist_row = new Box(Orientation.HORIZONTAL, 0) {
+            margin_start = 15,
+            margin_end = 15
         };
-
-        blacklist_flow_box.insert (blacklist_box, -1);
-        extras_box.append (blacklist_flow_box);
+        
+        blacklist_entry = new Entry();
+        var blacklist_box = create_entry_with_clear_button(blacklist_entry, _("Blacklist: (vkcube, WatchDogs2.exe)"), "");
+        blacklist_box.hexpand = true;
+        blacklist_entry.changed.connect(() => {
+            SaveStates.update_blacklist_in_file(blacklist_entry.text);
+            save_config();
+        });
+        
+        blacklist_row.append(blacklist_box);
+        
+        if (!is_flatpak()) {
+            mangohud_global_button = new Button.with_label(_("MangoHud Global"));
+            mangohud_global_button.clicked.connect(on_mangohud_global_button_clicked);
+            blacklist_row.append(mangohud_global_button);
+        }
+        
+        extras_box.append(blacklist_row);
 
         var custom_command_flow_box = new FlowBox () {
             max_children_per_line = 3,
