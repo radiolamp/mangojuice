@@ -496,6 +496,12 @@ public class MangoJuice : Adw.Application {
             bool mangohud_available = is_mangohud_available ();
             bool vkcube_available = is_vkcube_available ();
             bool glxgears_available = is_glxgears_available ();
+
+            var click_controller = new Gtk.GestureClick();
+            click_controller.pressed.connect(() => {
+                window.set_focus(null);
+            });
+            toast_overlay.add_controller(click_controller);
         
             if (!mangohud_available && is_flatpak()) {
                 show_mangohud_install_dialog(window, test_button);
@@ -891,7 +897,7 @@ public class MangoJuice : Adw.Application {
             reset_manager.reset_all_widgets ();
         });
 
-        var blacklist_row = new Box(Orientation.HORIZONTAL, 0) {
+        var blacklist_row = new Box(Orientation.HORIZONTAL, 5) {
             margin_start = 15,
             margin_end = 15
         };
@@ -2241,7 +2247,7 @@ public class MangoJuice : Adw.Application {
 
     public Gtk.DropDown gpu_dropdown;
     private string[] gpu_pci_addresses = {};
-        
+   
     public void initialize_gpu_entry (Box extras_box) {
         var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         
@@ -2503,40 +2509,53 @@ public class MangoJuice : Adw.Application {
 
     ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
         ScaleEntryWidget result = ScaleEntryWidget ();
+    
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
-        result.scale.set_size_request (120, -1);
+        result.scale.set_size_request (110, -1);
         result.scale.set_hexpand (true);
         result.scale.adjustment.page_increment = 1;
-
+    
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
         result.entry.set_max_width_chars (4);
         result.entry.set_halign (Align.END);
-        validate_numeric_entry (result.entry, min, max);
-
+        result.entry.add_css_class ("linked");
+        validate_entry_value (result.entry, min, max);
+    
+        var reset_button = new Button.from_icon_name ("edit-undo-symbolic");
+        reset_button.set_focusable (false);
+        reset_button.set_valign (Align.CENTER);
+        reset_button.add_css_class ("linked");
+        reset_button.set_visible (false);
+    
+        var entry_container = new Box (Orientation.HORIZONTAL, 0);
+        entry_container.append (result.entry);
+        entry_container.append (reset_button);
+        entry_container.add_css_class ("linked");
+    
         bool is_updating = false;
-
+    
         result.scale.value_changed.connect (() => {
-            validate_entry_value (result.entry, min, max);
             if (!is_updating) {
                 is_updating = true;
                 GLib.Idle.add (() => {
-                    result.entry.text = "%d".printf ((int)result.scale.get_value ());
+                    int scale_val = (int) result.scale.get_value ();
+                    result.entry.text = "%d".printf (scale_val);
                     validate_entry_value (result.entry, min, max);
                     is_updating = false;
                     return false;
                 });
             }
         });
-
+    
         result.entry.changed.connect (() => {
             if (!is_updating) {
                 int value = 0;
-                bool is_valid = int.try_parse (result.entry.text, out value);
-        
-                if (is_valid && value >= min && value <= max) {
+                bool valid = int.try_parse (result.entry.text, out value);
+    
+                if (valid && value >= min && value <= max) {
                     is_updating = true;
                     GLib.Idle.add (() => {
                         result.scale.set_value (value);
@@ -2549,59 +2568,62 @@ public class MangoJuice : Adw.Application {
                 }
             }
         });
-
-        result.entry.activate.connect (() => {
-            if (result.entry.text.strip () == "" || result.entry.has_css_class ("error")) {
-                result.entry.text = "%d".printf (initial_value);
-                result.scale.set_value (initial_value);
-                result.entry.remove_css_class ("error");
-            }
-        
-            result.entry.get_parent().grab_focus();
+    
+        reset_button.clicked.connect (() => {
+            result.entry.text = "%d".printf (initial_value);
+            result.entry.remove_css_class ("error");
         });
 
-        var text_box = new Box (Orientation.VERTICAL, 0);
-        text_box.set_valign (Align.CENTER);
-        text_box.set_halign (Align.START);
+        var focus_controller = new EventControllerFocus ();
+        focus_controller.enter.connect (() => {
+            reset_button.set_visible (true);
+        });
 
-        var label1 = new Label (null);
-        label1.set_markup ("<b>%s</b>".printf (title));
-        label1.set_halign (Align.START);
-        label1.set_hexpand (false);
-        label1.set_ellipsize (Pango.EllipsizeMode.END);
-
-        var label2 = new Label (null);
-        label2.set_markup ("<span size='9000'>%s</span>".printf (description));
-        label2.set_halign (Align.START);
-        label2.set_hexpand (false);
-        label2.add_css_class ("dim-label");
-        label2.set_ellipsize (Pango.EllipsizeMode.END);
-
-        text_box.append (label1);
-        text_box.append (label2);
-
+        focus_controller.leave.connect (() => {
+            Timeout.add (300, () => {
+                if (!reset_button.has_focus) {
+                    reset_button.set_visible (false);
+                }
+                return false;
+            });
+        });
+        result.entry.add_controller (focus_controller);
+    
+        var labels_box = new Box (Orientation.VERTICAL, 0);
+        labels_box.set_valign (Align.CENTER);
+    
+        var title_label = new Label (null);
+        title_label.set_markup ("<b>%s</b>".printf (title));
+        title_label.set_halign (Align.START);
+        title_label.set_ellipsize (Pango.EllipsizeMode.END);
+    
+        var desc_label = new Label (null);
+        desc_label.set_markup ("<span size='8500'>%s</span>".printf (description));
+        desc_label.set_halign (Align.START);
+        desc_label.add_css_class ("dim-label");
+        desc_label.set_ellipsize (Pango.EllipsizeMode.END);
+    
+        labels_box.append (title_label);
+        labels_box.append (desc_label);
+    
         result.widget = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        result.widget.append (text_box);
+        result.widget.append (labels_box);
         result.widget.append (result.scale);
-        result.widget.append (result.entry);
-
-        var gesture_drag = new Gtk.GestureDrag ();
+        result.widget.append (entry_container);
+    
+        var gesture_drag = new GestureDrag ();
         gesture_drag.drag_update.connect ((offset_x, offset_y) => {
             double current_value = result.scale.get_value ();
-
             int scale_width = result.scale.get_width ();
-
             double new_value = current_value + (offset_x / scale_width) * (max - min);
-
             new_value = new_value.clamp (min, max);
-
             result.scale.set_value (new_value);
         });
-
         result.scale.add_controller (gesture_drag);
-
+    
         return result;
     }
+
 
     Label create_label (string text, Align halign = Align.START, string[] css_classes = {}, int margin_start = 0, int margin_end = 0, int margin_top = 0, int margin_bottom = 0) {
         var label = new Label (text);
