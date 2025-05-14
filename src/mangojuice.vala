@@ -2512,7 +2512,7 @@ public class MangoJuice : Adw.Application {
     
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
-        result.scale.set_size_request (110, -1);
+        result.scale.set_size_request (100, -1);
         result.scale.set_hexpand (true);
         result.scale.adjustment.page_increment = 1;
     
@@ -2570,8 +2570,11 @@ public class MangoJuice : Adw.Application {
         });
     
         reset_button.clicked.connect (() => {
+            is_updating = true;
             result.entry.text = "%d".printf (initial_value);
+            result.scale.set_value (initial_value);
             result.entry.remove_css_class ("error");
+            is_updating = false;
         });
 
         var focus_controller = new EventControllerFocus ();
@@ -2623,7 +2626,6 @@ public class MangoJuice : Adw.Application {
     
         return result;
     }
-
 
     Label create_label (string text, Align halign = Align.START, string[] css_classes = {}, int margin_start = 0, int margin_end = 0, int margin_top = 0, int margin_bottom = 0) {
         var label = new Label (text);
