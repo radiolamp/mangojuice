@@ -349,7 +349,6 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
     box.set_margin_top(4);
     box.set_margin_end(4);
     box.set_margin_start(2);
-    box.add_css_class("regular");
 
     string profile_name = initial_name;
     if (!is_existing_profile && initial_name == _("Profile")) {
@@ -357,8 +356,17 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
         create_profile_config(profile_name);
     }
 
+    string[] color_classes = { "blue", "orange", "pink", "green", "violet", "red", "grey", "yellow", "turquoise" };
+    
+    uint hash = 0;
+    for (int i = 0; i < profile_name.length; i++) {
+        hash = hash * 31 + profile_name[i];
+    }
+    string color_class = color_classes[hash % color_classes.length];
+
     var button = new Gtk.Button.with_label(profile_name);
     button.set_focusable(false);
+    button.add_css_class(color_class);
 
     var entry = new Gtk.Entry();
     entry.set_text(profile_name);
@@ -369,10 +377,12 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
     close_btn.set_icon_name("window-close-symbolic");
     close_btn.set_focusable(false);
     close_btn.set_visible(true);
+    close_btn.add_css_class(color_class);
 
     var edit_btn = new Gtk.Button();
     edit_btn.set_icon_name("document-edit-symbolic");
     edit_btn.set_focusable(false);
+    edit_btn.add_css_class(color_class);
 
     var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
     button_box.add_css_class("linked");
@@ -389,6 +399,21 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
     entry.activate.connect(() => {
         string new_name = entry.get_text().strip();
         if (new_name != "" && new_name != button.get_label()) {
+            uint new_hash = 0;
+            for (int i = 0; i < new_name.length; i++) {
+                new_hash = new_hash * 31 + new_name[i];
+            }
+            string new_color_class = color_classes[new_hash % color_classes.length];
+
+            button.remove_css_class(color_class);
+            edit_btn.remove_css_class(color_class);
+            close_btn.remove_css_class(color_class);
+            
+            color_class = new_color_class;
+            button.add_css_class(color_class);
+            edit_btn.add_css_class(color_class);
+            close_btn.add_css_class(color_class);
+            
             rename_profile_config(button.get_label(), new_name);
             button.set_label(new_name);
         }
