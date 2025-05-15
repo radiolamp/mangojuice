@@ -296,8 +296,8 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
                     FileInfo info;
                     while ((info = enumerator.next_file()) != null) {
                         string name = info.get_name();
-                        if (name.has_prefix("MangoJuice-") && name.has_suffix(".conf")) {
-                            string profile_name = name[11:-5].replace("_", " ");
+                        if (name.has_suffix(".conf") && name != "MangoHud.conf" && name != ".MangoHud.backup") {
+                             string profile_name = name[0:-5].replace("-", " ");
                             add_option_button(wrap, add_button, profile_name, true);
                         }
                     }
@@ -351,22 +351,18 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
     box.set_margin_start(2);
 
     string profile_name = initial_name;
-    if (!is_existing_profile && initial_name == _("Profile")) {
-        profile_name = generate_unique_profile_name(initial_name);
+
+    if (!is_existing_profile) {
+        if (profile_name.has_suffix(".exe")) {
+            profile_name = "wine-" + profile_name.substring(0, profile_name.length - 4);
+        } else if (initial_name == _("Profile")) {
+            profile_name = generate_unique_profile_name(initial_name);
+        }
         create_profile_config(profile_name);
     }
 
-    string[] color_classes = { "blue", "orange", "pink", "green", "violet", "red", "grey", "yellow", "turquoise" };
-    
-    uint hash = 0;
-    for (int i = 0; i < profile_name.length; i++) {
-        hash = hash * 31 + profile_name[i];
-    }
-    string color_class = color_classes[hash % color_classes.length];
-
     var button = new Gtk.Button.with_label(profile_name);
     button.set_focusable(false);
-    button.add_css_class(color_class);
 
     var entry = new Gtk.Entry();
     entry.set_text(profile_name);
@@ -377,12 +373,10 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
     close_btn.set_icon_name("window-close-symbolic");
     close_btn.set_focusable(false);
     close_btn.set_visible(true);
-    close_btn.add_css_class(color_class);
 
     var edit_btn = new Gtk.Button();
     edit_btn.set_icon_name("document-edit-symbolic");
     edit_btn.set_focusable(false);
-    edit_btn.add_css_class(color_class);
 
     var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
     button_box.add_css_class("linked");
@@ -398,22 +392,12 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
 
     entry.activate.connect(() => {
         string new_name = entry.get_text().strip();
-        if (new_name != "" && new_name != button.get_label()) {
-            uint new_hash = 0;
-            for (int i = 0; i < new_name.length; i++) {
-                new_hash = new_hash * 31 + new_name[i];
-            }
-            string new_color_class = color_classes[new_hash % color_classes.length];
 
-            button.remove_css_class(color_class);
-            edit_btn.remove_css_class(color_class);
-            close_btn.remove_css_class(color_class);
-            
-            color_class = new_color_class;
-            button.add_css_class(color_class);
-            edit_btn.add_css_class(color_class);
-            close_btn.add_css_class(color_class);
-            
+        if (new_name.has_suffix(".exe")) {
+            new_name = "wine-" + new_name.substring(0, new_name.length - 4);
+        }
+
+        if (new_name != "" && new_name != button.get_label()) {
             rename_profile_config(button.get_label(), new_name);
             button.set_label(new_name);
         }
@@ -460,7 +444,7 @@ private string generate_unique_profile_name(string base_name) {
             Environment.get_home_dir(),
             ".config",
             "MangoHud",
-            "MangoJuice-" + name.replace(" ", "_") + ".conf"
+            name.replace(" ", "-") + ".conf"
         );
 
         if (!File.new_for_path(config_path).query_exists()) {
@@ -482,9 +466,8 @@ private void create_profile_config(string profile_name) {
 
         var original_config = config_dir.get_child("MangoHud.conf");
         var new_config = config_dir.get_child(
-            "MangoJuice-" + profile_name.replace(" ", "_") + ".conf"
+            profile_name.replace(" ", "-") + ".conf"
         );
-
         if (original_config.query_exists()) {
             original_config.copy(new_config, FileCopyFlags.OVERWRITE);
         }
@@ -499,14 +482,13 @@ private void rename_profile_config(string old_name, string new_name) {
             Environment.get_home_dir(),
             ".config",
             "MangoHud",
-            "MangoJuice-" + old_name.replace(" ", "_") + ".conf"
+            old_name.replace(" ", "-") + ".conf"
         );
-
         string new_path = Path.build_filename(
             Environment.get_home_dir(),
             ".config",
             "MangoHud",
-            "MangoJuice-" + new_name.replace(" ", "_") + ".conf"
+            new_name.replace(" ", "-") + ".conf"
         );
 
         var old_file = File.new_for_path(old_path);
@@ -524,7 +506,7 @@ private void delete_profile_config(string profile_name) {
             Environment.get_home_dir(),
             ".config",
             "MangoHud",
-            "MangoJuice-" + profile_name.replace(" ", "_") + ".conf"
+            profile_name.replace(" ", "-") + ".conf"
         );
 
         var file = File.new_for_path(path);
