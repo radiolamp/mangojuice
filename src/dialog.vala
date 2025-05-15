@@ -136,7 +136,6 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
 
     var window_handle = new Gtk.WindowHandle();
     main_box.append(window_handle);
-
     var header_bar = new Adw.HeaderBar();
     header_bar.set_show_start_title_buttons(true);
     header_bar.set_show_end_title_buttons(true);
@@ -240,7 +239,7 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
     carousel.set_vexpand(true);
 
     string[] titles = { _("Your presets"), _("Minimal"), _("Default"), _("Advanced"), _("Full"), _("Only FPS") };
-    string[] icons = { "applications-graphics-symbolic", "minimal", "default", "advanced", "full", "fps" };
+    string[] icons = { "emoji-symbols-symbolic", "minimal", "default", "advanced", "full", "fps" };
 
     for (int i = 0; i < titles.length; i++) {
         var page_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
@@ -332,6 +331,20 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
 }
 
 private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, string initial_name = _("Profile"), bool is_existing_profile = false) {
+    var parent = wrap.get_parent();
+    if (!(parent is Gtk.ScrolledWindow)) {
+        if (parent is Gtk.Box) {
+            var box_parent = parent as Gtk.Box;
+            box_parent.remove(wrap);
+
+            var scrolled = new Gtk.ScrolledWindow();
+            scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
+            scrolled.set_child(wrap);
+            scrolled.set_vexpand(true);
+            box_parent.append(scrolled);
+        }
+    }
+
     var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
     box.set_margin_top(4);
     box.set_margin_end(4);
@@ -400,11 +413,12 @@ private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, strin
         apply_profile_config(button.get_label());
         MangoJuice.run_test_static();
     });
+
     box.append(entry);
     box.append(button_box);
 
     wrap.set_vexpand(true);
-    wrap.set_valign (Gtk.Align.CENTER);
+    wrap.set_valign(Gtk.Align.CENTER);
     wrap.remove(add_button);
     wrap.append(box);
     wrap.append(add_button);
