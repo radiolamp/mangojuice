@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/io/github/radiolamp/mangojuice">
-    <file>style.css</file>
     <file>icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg</file>
     <file>io.github.radiolamp.mangojuice.metainfo.xml</file>
     <file>images/fps.png</file>
