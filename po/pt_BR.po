@@ -710,10 +710,6 @@ msgstr "Apenas fps"
 msgid "Full"
 msgstr "Completo"
 
-#: src/mangojuice.vala:931
-msgid "Restore profile"
-msgstr "Perfil de restauração"
-
 #: src/mangojuice.vala:963
 msgid "Horizontal HUD"
 msgstr "HUD horizontal"

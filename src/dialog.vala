@@ -141,7 +141,7 @@ public void show_carousel_dialog(Gtk.Window parent_window, MangoJuice app) {
     header_bar.set_show_end_title_buttons(true);
     header_bar.add_css_class("flat");
 
-    var restore_button = new Gtk.Button.with_label("Restore"); 
+    var restore_button = new Gtk.Button.with_label(_("Restore")); 
     ((Gtk.Label)restore_button.get_child()).set_ellipsize(Pango.EllipsizeMode.END);
     restore_button.clicked.connect(() => {
         try {

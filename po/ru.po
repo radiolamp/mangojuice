@@ -714,10 +714,6 @@ msgstr "Только FPS"
 msgid "Full"
 msgstr "Полный"
 
-#: src/mangojuice.vala:931
-msgid "Restore profile"
-msgstr "Восстановить"
-
 #: src/mangojuice.vala:963
 msgid "Horizontal HUD"
 msgstr "Горизонтальный HUD"
@@ -1181,4 +1177,6 @@ msgstr "Твои профили"
 
 msgid "Device icon"
 msgstr "Значёк батареи"
+
+
 

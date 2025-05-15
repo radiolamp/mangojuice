@@ -695,10 +695,6 @@ msgstr ""
 msgid "Full"
 msgstr ""
 
-#: src/mangojuice.vala:931
-msgid "Restore profile"
-msgstr ""
-
 #: src/mangojuice.vala:963
 msgid "Horizontal HUD"
 msgstr ""
