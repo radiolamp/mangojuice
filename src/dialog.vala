@@ -144,6 +144,22 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     header_bar.set_title_widget(new Gtk.Label(_("Profiles")));
     main_box.append(header_bar);
 
+    var restore_button = new Gtk.Button.with_label(_("Restore"));
+    ((Gtk.Label)restore_button.get_child()).set_ellipsize(Pango.EllipsizeMode.END);
+    restore_button.clicked.connect(() => {
+        try {
+            var backup_file = File.new_for_path(Environment.get_home_dir())
+                .get_child(".config")
+                .get_child("MangoHud")
+                .get_child(".MangoHud.backup");
+            app.restore_config_from_file(backup_file.get_path());
+            backup_file.delete();
+        } catch (Error e) {
+            stderr.printf("Error: %s\n", e.message);
+        }
+    });
+    header_bar.pack_start(restore_button);
+
     var content_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
     content_box.set_margin_top(12);
     content_box.set_margin_bottom(12);
