@@ -159,7 +159,7 @@ public void preset_dialog(Gtk.Window parent_window, MangoJuice app) {
 
     var info_button = new Gtk.Button();
     info_button.set_icon_name("dialog-information-symbolic");
-    info_button.add_css_class("flat");
+    info_button.add_css_class("circular");
     info_button.set_tooltip_text(_("To get ready presets, click on the title."));
     header_bar.pack_start(info_button);
 
@@ -317,7 +317,6 @@ private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice a
         entry.set_visible(false);
         row.set_title(profile_name);
     });
-
 
     var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
     play_btn.add_css_class("flat");
