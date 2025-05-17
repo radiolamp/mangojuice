@@ -165,7 +165,7 @@ public void preset_dialog(Gtk.Window parent_window, MangoJuice app) {
 
     var presets_button = new Gtk.Button();
     presets_button.set_hexpand(true);
-    presets_button.add_css_class("flat");
+   // presets_button.add_css_class("flat");
     var button_content = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
     button_content.set_halign(Gtk.Align.CENTER);
     var presets_label = new Gtk.Label(_("Presets"));
@@ -192,7 +192,6 @@ public void preset_dialog(Gtk.Window parent_window, MangoJuice app) {
 
     var add_button = new Gtk.Button.with_label(_("Add Profile"));
     add_button.set_size_request(-1, 40);
-    add_button.add_css_class("suggested-action");
 
     add_button.clicked.connect(() => {
         var row = add_option_button(group, app, () => {
