@@ -128,9 +128,11 @@ private delegate void DeleteCallback();
 
 private void update_group_state(Adw.PreferencesGroup group, Adw.StatusPage status_page) {
     if (profile_count == 0 && status_page.get_parent() == null) {
+        group.set_margin_top(64);
         group.add(status_page);
     } else if (profile_count > 0 && status_page.get_parent() != null) {
         group.remove(status_page);
+        group.set_margin_top(0);
     }
 }
 
@@ -154,6 +156,12 @@ public void preset_dialog(Gtk.Window parent_window, MangoJuice app) {
     header_bar.set_show_end_title_buttons(true);
     header_bar.add_css_class("flat");
     main_box.append(header_bar);
+
+    var info_button = new Gtk.Button();
+    info_button.set_icon_name("dialog-information-symbolic");
+    info_button.add_css_class("flat");
+    info_button.set_tooltip_text(_("To get ready presets, click on the title."));
+    header_bar.pack_start(info_button);
 
     var presets_button = new Gtk.Button();
     presets_button.set_hexpand(true);
