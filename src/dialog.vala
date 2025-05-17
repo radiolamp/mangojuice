@@ -122,7 +122,19 @@ public void show_mangohud_install_dialog(Gtk.Window parent, Gtk.Button test_butt
     dialog.present(parent);
 }
 
-public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
+private int profile_count = 0;
+
+private delegate void DeleteCallback();
+
+private void update_group_state(Adw.PreferencesGroup group, Adw.StatusPage status_page) {
+    if (profile_count == 0 && status_page.get_parent() == null) {
+        group.add(status_page);
+    } else if (profile_count > 0 && status_page.get_parent() != null) {
+        group.remove(status_page);
+    }
+}
+
+public void preset_dialog(Gtk.Window parent_window, MangoJuice app) {
     var dialog = new Adw.Dialog();
     dialog.set_content_width(800);
     dialog.set_content_height(600);
@@ -136,28 +148,24 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
 
     var window_handle = new Gtk.WindowHandle();
     main_box.append(window_handle);
-    
+
     var header_bar = new Adw.HeaderBar();
     header_bar.set_show_start_title_buttons(true);
     header_bar.set_show_end_title_buttons(true);
     header_bar.add_css_class("flat");
     main_box.append(header_bar);
 
-    var restore_button = new Gtk.Button.with_label(_("Restore"));
-    ((Gtk.Label)restore_button.get_child()).set_ellipsize(Pango.EllipsizeMode.END);
-    restore_button.clicked.connect(() => {
-        try {
-            var backup_file = File.new_for_path(Environment.get_home_dir())
-                .get_child(".config")
-                .get_child("MangoHud")
-                .get_child(".MangoHud.backup");
-            app.restore_config_from_file(backup_file.get_path());
-            backup_file.delete();
-        } catch (Error e) {
-            stderr.printf("Error: %s\n", e.message);
-        }
-    });
-    header_bar.pack_start(restore_button);
+    var presets_button = new Gtk.Button();
+    presets_button.set_hexpand(true);
+    presets_button.add_css_class("flat");
+    var button_content = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+    button_content.set_halign(Gtk.Align.CENTER);
+    var presets_label = new Gtk.Label(_("Presets"));
+    var arrow_icon = new Gtk.Image.from_icon_name("go-next-symbolic");
+    button_content.append(presets_label);
+    button_content.append(arrow_icon);
+    presets_button.set_child(button_content);
+    header_bar.set_title_widget(presets_button);
 
     var content_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
     content_box.set_margin_top(12);
@@ -168,34 +176,24 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     content_box.set_vexpand(true);
     main_box.append(content_box);
 
-    var presets_button = new Gtk.Button();
-    presets_button.set_hexpand(true);
-    presets_button.set_margin_bottom(12);
-    presets_button.set_size_request(-1, 40);
-    
-    var button_content = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
-    button_content.set_halign(Gtk.Align.CENTER);
-    
-    var presets_label = new Gtk.Label(_("Presets"));
-    presets_label.add_css_class("title-4");
-    
-    var arrow_icon = new Gtk.Image.from_icon_name("go-next-symbolic");
-    
-    button_content.append(presets_label);
-    button_content.append(arrow_icon);
-    
-    presets_button.set_child(button_content);
-    content_box.append(presets_button);
-
     var group = new Adw.PreferencesGroup();
-    
+    var status_page = new Adw.StatusPage() {
+        title = _("No profiles yet"),
+        icon_name = "emoji-symbols-symbolic"
+    };
+
     var add_button = new Gtk.Button.with_label(_("Add Profile"));
     add_button.set_size_request(-1, 40);
-    add_button.add_css_class ("suggested-action");
+    add_button.add_css_class("suggested-action");
 
     add_button.clicked.connect(() => {
-        var row = add_option_button(group, add_button, app);
+        var row = add_option_button(group, app, () => {
+            profile_count--;
+            update_group_state(group, status_page);
+        });
         group.add(row);
+        profile_count++;
+        update_group_state(group, status_page);
     });
 
     try {
@@ -210,8 +208,12 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
                 string name = info.get_name();
                 if (name.has_suffix(".conf") && name != "MangoHud.conf" && name != ".MangoHud.backup") {
                     string profile_name = name[0:-5].replace("-", " ");
-                    var row = add_option_button(group, add_button, app, profile_name, true);
+                    var row = add_option_button(group, app, () => {
+                        profile_count--;
+                        update_group_state(group, status_page);
+                    }, profile_name, true);
                     group.add(row);
+                    profile_count++;
                 }
             }
         }
@@ -219,12 +221,14 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
         warning("Error loading profiles: %s", e.message);
     }
 
+    update_group_state(group, status_page);
+
     var scrolled = new Gtk.ScrolledWindow();
     scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 
     var profile_container = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
     profile_container.append(group);
-    
+
     scrolled.set_child(profile_container);
     scrolled.set_vexpand(true);
     content_box.append(scrolled);
@@ -233,16 +237,15 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     presets_button.clicked.connect(() => {
         show_presets_carousel_dialog(dialog, app);
     });
-    
+
     dialog.closed.connect(() => {
         app.exit_restart();
-        group = null;
     });
 
     dialog.present(parent_window);
 }
 
-private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, Gtk.Button add_button, MangoJuice app, string initial_name = _("Profile"), bool is_existing_profile = false) {
+private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice app, owned DeleteCallback on_delete, string initial_name = _("Profile"), bool is_existing_profile = false) {
     string profile_name = initial_name;
 
     if (!is_existing_profile) {
@@ -296,7 +299,7 @@ private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, Gtk.Button a
     var entry = new Gtk.Entry();
     entry.set_text(profile_name);
     entry.set_visible(false);
-    entry.set_hexpand (true);
+    entry.set_hexpand(true);
     entry.set_valign(Gtk.Align.CENTER);
     row.add_prefix(entry);
 
@@ -334,6 +337,7 @@ private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, Gtk.Button a
     close_btn.clicked.connect(() => {
         delete_profile_config(profile_name);
         group.remove(row);
+        on_delete();
     });
 
     row.activated.connect(() => {
@@ -366,7 +370,6 @@ private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, Gtk.Button a
 
     return row;
 }
-
 
 private void show_presets_carousel_dialog(Adw.Dialog parent_dialog, MangoJuice app) {
     var dialog = new Adw.Dialog();
