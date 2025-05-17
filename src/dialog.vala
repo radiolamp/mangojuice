@@ -235,7 +235,7 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     });
     
     dialog.closed.connect(() => {
-        app.run_test();
+        app.exit_restart();
         group = null;
     });
 
