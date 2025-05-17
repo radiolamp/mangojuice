@@ -288,21 +288,6 @@ private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice a
     button_box.append(close_btn);
     row.add_suffix(button_box);
 
-    var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
-    play_btn.add_css_class("flat");
-    play_btn.set_tooltip_text(_("Apply profile"));
-    play_btn.set_valign(Gtk.Align.CENTER);
-    play_btn.add_css_class("circular");
-
-    play_btn.clicked.connect(() => {
-        app.run_test();
-        apply_profile_config(profile_name);
-        LoadStates.load_states_from_file.begin(app);
-        app.reset_manager.reset_all_widgets();
-    });
-
-    row.add_prefix(play_btn);
-
     var entry = new Gtk.Entry();
     entry.set_text(profile_name);
     entry.set_visible(false);
@@ -332,6 +317,20 @@ private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice a
         entry.set_visible(false);
         row.set_title(profile_name);
     });
+
+
+    var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
+    play_btn.add_css_class("flat");
+    play_btn.set_tooltip_text(_("Apply profile"));
+    play_btn.set_valign(Gtk.Align.CENTER);
+    play_btn.add_css_class("circular");
+    play_btn.clicked.connect(() => {
+        app.run_test();
+        apply_profile_config(profile_name);
+        LoadStates.load_states_from_file.begin(app);
+        app.reset_manager.reset_all_widgets();
+    });
+    row.add_prefix(play_btn);
 
     var focus_controller = new Gtk.EventControllerFocus();
     focus_controller.leave.connect(() => {
