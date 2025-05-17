@@ -153,15 +153,11 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     content_box.set_vexpand(true);
     main_box.append(content_box);
 
-    // Кнопка для открытия карусели с пресетами
     var presets_button = new Gtk.Button.with_label(_("Presets"));
-    presets_button.add_css_class("pill");
-    presets_button.add_css_class("suggested-action");
-    presets_button.set_halign(Gtk.Align.CENTER);
+    presets_button.set_hexpand (true);
     presets_button.set_margin_bottom(12);
     content_box.append(presets_button);
 
-    // Область для пользовательских профилей
     var profiles_label = new Gtk.Label(_("Your Profiles"));
     profiles_label.add_css_class("title-4");
     profiles_label.set_halign(Gtk.Align.START);
