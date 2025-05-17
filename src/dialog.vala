@@ -141,7 +141,6 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     header_bar.set_show_start_title_buttons(true);
     header_bar.set_show_end_title_buttons(true);
     header_bar.add_css_class("flat");
-    header_bar.set_title_widget(new Gtk.Label(_("Profiles")));
     main_box.append(header_bar);
 
     var restore_button = new Gtk.Button.with_label(_("Restore"));
@@ -163,38 +162,47 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     var content_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
     content_box.set_margin_top(12);
     content_box.set_margin_bottom(12);
-    content_box.set_margin_start(12);
-    content_box.set_margin_end(12);
+    content_box.set_margin_start(24);
+    content_box.set_margin_end(24);
     content_box.set_hexpand(true);
     content_box.set_vexpand(true);
     main_box.append(content_box);
 
-    var presets_button = new Gtk.Button.with_label(_("Presets"));
-    presets_button.set_hexpand (true);
+    var presets_button = new Gtk.Button();
+    presets_button.set_hexpand(true);
     presets_button.set_margin_bottom(12);
+    presets_button.set_size_request(-1, 40);
+    
+    var button_content = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+    button_content.set_halign(Gtk.Align.CENTER);
+    
+    var presets_label = new Gtk.Label(_("Presets"));
+    presets_label.add_css_class("title-4");
+    
+    var arrow_icon = new Gtk.Image.from_icon_name("go-next-symbolic");
+    
+    button_content.append(presets_label);
+    button_content.append(arrow_icon);
+    
+    presets_button.set_child(button_content);
     content_box.append(presets_button);
 
-    var wrap = new Adw.WrapBox();
-    wrap.set_orientation(Gtk.Orientation.HORIZONTAL);
-    wrap.set_halign(Gtk.Align.CENTER);
+    var group = new Adw.PreferencesGroup();
     
-    var add_button = new Gtk.Button();
-    add_button.set_icon_name("list-add-symbolic");
-    add_button.add_css_class("circular");
-    add_button.set_margin_top(4);
+    var add_button = new Gtk.Button.with_label(_("Add Profile"));
+    add_button.set_size_request(-1, 40);
+    add_button.add_css_class ("suggested-action");
 
     add_button.clicked.connect(() => {
-        add_option_button(wrap, add_button);
+        var row = add_option_button(group, add_button);
+        group.add(row);
     });
 
-    wrap.append(add_button);
-
-    // Загрузка существующих профилей
     try {
         var config_dir = File.new_for_path(Environment.get_home_dir())
             .get_child(".config")
             .get_child("MangoHud");
-        
+
         if (config_dir.query_exists()) {
             var enumerator = config_dir.enumerate_children(FileAttribute.STANDARD_NAME, 0);
             FileInfo info;
@@ -202,7 +210,8 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
                 string name = info.get_name();
                 if (name.has_suffix(".conf") && name != "MangoHud.conf" && name != ".MangoHud.backup") {
                     string profile_name = name[0:-5].replace("-", " ");
-                    add_option_button(wrap, add_button, profile_name, true);
+                    var row = add_option_button(group, add_button, profile_name, true);
+                    group.add(row);
                 }
             }
         }
@@ -212,9 +221,14 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
 
     var scrolled = new Gtk.ScrolledWindow();
     scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
-    scrolled.set_child(wrap);
+
+    var profile_container = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+    profile_container.append(group);
+    
+    scrolled.set_child(profile_container);
     scrolled.set_vexpand(true);
     content_box.append(scrolled);
+    content_box.append(add_button);
 
     presets_button.clicked.connect(() => {
         show_presets_carousel_dialog(dialog, app);
@@ -222,6 +236,130 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
 
     dialog.present(parent_window);
 }
+
+private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, Gtk.Button add_button, string initial_name = _("Profile"), bool is_existing_profile = false) {
+    string profile_name = initial_name;
+
+    if (!is_existing_profile) {
+        if (profile_name.has_suffix(".exe")) {
+            profile_name = "wine-" + profile_name.substring(0, profile_name.length - 4);
+        } else if (initial_name == _("Profile")) {
+            profile_name = generate_unique_profile_name(initial_name);
+        }
+        create_profile_config(profile_name);
+    }
+
+    var row = new Adw.ActionRow();
+    row.set_title(profile_name);
+    row.set_activatable(true);
+    row.set_selectable(false);
+
+    var edit_btn = new Gtk.Button();
+    edit_btn.set_icon_name("document-edit-symbolic");
+    edit_btn.set_focusable(false);
+    edit_btn.add_css_class("flat");
+    edit_btn.add_css_class("circular");
+    edit_btn.set_valign(Gtk.Align.CENTER);
+
+    var close_btn = new Gtk.Button();
+    close_btn.set_icon_name("edit-delete-symbolic");
+    close_btn.set_focusable(false);
+    close_btn.add_css_class("flat");
+    close_btn.set_valign(Gtk.Align.CENTER);
+    close_btn.add_css_class("circular");
+
+    var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+    button_box.append(edit_btn);
+    button_box.append(close_btn);
+    row.add_suffix(button_box);
+
+    var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
+    play_btn.add_css_class("flat");
+    play_btn.set_tooltip_text(_("Apply profile"));
+    play_btn.set_valign(Gtk.Align.CENTER);
+    play_btn.add_css_class("circular");
+
+    play_btn.clicked.connect(() => {
+        apply_profile_config(profile_name);
+        MangoJuice.run_test_static();
+    });
+
+    row.add_prefix(play_btn);
+
+    var entry = new Gtk.Entry();
+    entry.set_text(profile_name);
+    entry.set_visible(false);
+    entry.set_hexpand (true);
+    entry.set_valign(Gtk.Align.CENTER);
+    row.add_prefix(entry);
+
+    edit_btn.clicked.connect(() => {
+        entry.set_text(profile_name);
+        row.set_title("");
+        entry.set_visible(true);
+        entry.grab_focus();
+    });
+
+    entry.activate.connect(() => {
+        string new_name = entry.get_text().strip();
+
+        if (new_name.has_suffix(".exe")) {
+            new_name = "wine-" + new_name.substring(0, new_name.length - 4);
+        }
+
+        if (new_name != "" && new_name != profile_name) {
+            rename_profile_config(profile_name, new_name);
+            profile_name = new_name;
+        }
+
+        entry.set_visible(false);
+        row.set_title(profile_name);
+    });
+
+    var focus_controller = new Gtk.EventControllerFocus();
+    focus_controller.leave.connect(() => {
+        if (entry.get_visible()) {
+            entry.activate();
+        }
+    });
+    entry.add_controller(focus_controller);
+
+    close_btn.clicked.connect(() => {
+        delete_profile_config(profile_name);
+        group.remove(row);
+    });
+
+    row.activated.connect(() => {
+        try {
+            Process.spawn_command_line_async("pkill vkcube");
+            Process.spawn_command_line_async("pkill glxgears");
+
+            string config_path = Path.build_filename(
+                Environment.get_home_dir(),
+                ".config",
+                "MangoHud",
+                profile_name.replace(" ", "-") + ".conf"
+            );
+
+            string base_cmd = @"env MANGOHUD_CONFIGFILE='$config_path' mangohud";
+
+            try {
+                Process.spawn_command_line_async(base_cmd + " vkcube");
+            } catch {
+                try {
+                    Process.spawn_command_line_async(base_cmd + " vkcube-wayland");
+                } catch {
+                    Process.spawn_command_line_async(base_cmd + " glxgears");
+                }
+            }
+        } catch (Error e) {
+            warning("%s", e.message);
+        }
+    });
+
+    return row;
+}
+
 
 private void show_presets_carousel_dialog(Adw.Dialog parent_dialog, MangoJuice app) {
     var dialog = new Adw.Dialog();
@@ -390,111 +528,6 @@ private void apply_preset(Adw.Carousel carousel, MangoJuice app) {
     app.reset_manager.reset_all_widgets();
 }
 
-private Gtk.Box add_option_button(Adw.WrapBox wrap, Gtk.Button add_button, string initial_name = _("Profile"), bool is_existing_profile = false) {
-    var parent = wrap.get_parent();
-    if (!(parent is Gtk.ScrolledWindow)) {
-        if (parent is Gtk.Box) {
-            var box_parent = parent as Gtk.Box;
-            box_parent.remove(wrap);
-
-            var scrolled = new Gtk.ScrolledWindow();
-            scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
-            scrolled.set_child(wrap);
-            scrolled.set_vexpand(true);
-            box_parent.append(scrolled);
-        }
-    }
-
-    var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
-    box.set_margin_top(4);
-    box.set_margin_end(4);
-    box.set_margin_start(2);
-
-    string profile_name = initial_name;
-
-    if (!is_existing_profile) {
-        if (profile_name.has_suffix(".exe")) {
-            profile_name = "wine-" + profile_name.substring(0, profile_name.length - 4);
-        } else if (initial_name == _("Profile")) {
-            profile_name = generate_unique_profile_name(initial_name);
-        }
-        create_profile_config(profile_name);
-    }
-
-    var button = new Gtk.Button.with_label(profile_name);
-    button.set_focusable(false);
-
-    var entry = new Gtk.Entry();
-    entry.set_text(profile_name);
-    entry.set_visible(false);
-    entry.set_hexpand(true);
-
-    var close_btn = new Gtk.Button();
-    close_btn.set_icon_name("window-close-symbolic");
-    close_btn.set_focusable(false);
-    close_btn.set_visible(true);
-
-    var edit_btn = new Gtk.Button();
-    edit_btn.set_icon_name("document-edit-symbolic");
-    edit_btn.set_focusable(false);
-
-    var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
-    button_box.add_css_class("linked");
-    button_box.append(button);
-    button_box.append(edit_btn);
-    button_box.append(close_btn);
-
-    edit_btn.clicked.connect(() => {
-        button.set_visible(false);
-        entry.set_visible(true);
-        entry.grab_focus();
-    });
-
-    entry.activate.connect(() => {
-        string new_name = entry.get_text().strip();
-
-        if (new_name.has_suffix(".exe")) {
-            new_name = "wine-" + new_name.substring(0, new_name.length - 4);
-        }
-
-        if (new_name != "" && new_name != button.get_label()) {
-            rename_profile_config(button.get_label(), new_name);
-            button.set_label(new_name);
-        }
-        entry.set_visible(false);
-        button.set_visible(true);
-    });
-
-    var focus_controller = new Gtk.EventControllerFocus();
-    focus_controller.leave.connect(() => {
-        if (entry.get_visible()) {
-            entry.activate();
-        }
-    });
-    entry.add_controller(focus_controller);
-
-    close_btn.clicked.connect(() => {
-        delete_profile_config(button.get_label());
-        wrap.remove(box);
-    });
-
-    button.clicked.connect(() => {
-        apply_profile_config(button.get_label());
-        MangoJuice.run_test_static();
-    });
-
-    box.append(entry);
-    box.append(button_box);
-
-    wrap.set_vexpand(true);
-    wrap.set_valign(Gtk.Align.CENTER);
-    wrap.remove(add_button);
-    wrap.append(box);
-    wrap.append(add_button);
-
-    return box;
-}
-
 private string generate_unique_profile_name(string base_name) {
     string name = base_name;
     int counter = 1;
@@ -584,7 +617,7 @@ private void apply_profile_config(string profile_name) {
             Environment.get_home_dir(),
             ".config",
             "MangoHud",
-            "MangoJuice-" + profile_name.replace(" ", "_") + ".conf"
+            profile_name.replace(" ", "-") + ".conf"
         );
 
         string target_path = Path.build_filename(
