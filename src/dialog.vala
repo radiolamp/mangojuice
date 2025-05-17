@@ -158,12 +158,6 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     presets_button.set_margin_bottom(12);
     content_box.append(presets_button);
 
-    var profiles_label = new Gtk.Label(_("Your Profiles"));
-    profiles_label.add_css_class("title-4");
-    profiles_label.set_halign(Gtk.Align.START);
-    profiles_label.set_margin_bottom(6);
-    content_box.append(profiles_label);
-
     var wrap = new Adw.WrapBox();
     wrap.set_orientation(Gtk.Orientation.HORIZONTAL);
     wrap.set_halign(Gtk.Align.CENTER);
