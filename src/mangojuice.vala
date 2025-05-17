@@ -2126,11 +2126,6 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public static void run_test_static() {
-        var instance = new MangoJuice();
-        instance.run_test();
-    }
-
     public void run_test () {
         new Thread<void>("run-test", () => {
             try {

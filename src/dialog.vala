@@ -194,7 +194,7 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     add_button.add_css_class ("suggested-action");
 
     add_button.clicked.connect(() => {
-        var row = add_option_button(group, add_button);
+        var row = add_option_button(group, add_button, app);
         group.add(row);
     });
 
@@ -210,7 +210,7 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
                 string name = info.get_name();
                 if (name.has_suffix(".conf") && name != "MangoHud.conf" && name != ".MangoHud.backup") {
                     string profile_name = name[0:-5].replace("-", " ");
-                    var row = add_option_button(group, add_button, profile_name, true);
+                    var row = add_option_button(group, add_button, app, profile_name, true);
                     group.add(row);
                 }
             }
@@ -233,11 +233,16 @@ public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
     presets_button.clicked.connect(() => {
         show_presets_carousel_dialog(dialog, app);
     });
+    
+    dialog.closed.connect(() => {
+        app.run_test();
+        group = null;
+    });
 
     dialog.present(parent_window);
 }
 
-private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, Gtk.Button add_button, string initial_name = _("Profile"), bool is_existing_profile = false) {
+private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, Gtk.Button add_button, MangoJuice app, string initial_name = _("Profile"), bool is_existing_profile = false) {
     string profile_name = initial_name;
 
     if (!is_existing_profile) {
@@ -280,8 +285,10 @@ private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, Gtk.Button a
     play_btn.add_css_class("circular");
 
     play_btn.clicked.connect(() => {
+        app.run_test();
         apply_profile_config(profile_name);
-        MangoJuice.run_test_static();
+        LoadStates.load_states_from_file.begin(app);
+        app.reset_manager.reset_all_widgets();
     });
 
     row.add_prefix(play_btn);
