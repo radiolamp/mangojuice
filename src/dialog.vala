@@ -255,7 +255,7 @@ namespace AboutDialog {
         clamped_content.append(add_button);
 
         presets_button.clicked.connect(() => {
-            show_presets_carousel_dialog(dialog, app);
+            show_presets_carousel_dialog((Gtk.Window)dialog, app);
         });
 
         dialog.closed.connect(() => {
@@ -263,10 +263,6 @@ namespace AboutDialog {
         });
 
         dialog.present(parent_window);
-    }
-
-    public static void carousel_dialog(Adw.Dialog parent_dialog, MangoJuice app) {
-        show_presets_carousel_dialog(parent_dialog, app);
     }
 
     private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice app, owned DeleteCallback on_delete, string initial_name = _("Profile"), bool is_existing_profile = false) {
@@ -396,7 +392,7 @@ namespace AboutDialog {
         return row;
     }
 
-    private void show_presets_carousel_dialog(Adw.Dialog? parent_dialog, MangoJuice app) {
+    private void show_presets_carousel_dialog(Gtk.Window parent_dialog, MangoJuice app) {
         var dialog = new Adw.Dialog();
         dialog.set_content_width(800);
         dialog.set_content_height(600);

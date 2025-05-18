@@ -330,7 +330,7 @@ public class MangoJuice : Adw.Application {
 
         var presets_action = new SimpleAction ("presets_carousel", null);
         presets_action.activate.connect (() => {
-            AboutDialog.show_presets_carousel_dialog(null, this);
+            AboutDialog.show_presets_carousel_dialog(this.active_window, this);
         });
         this.add_action (presets_action);
         const string[] presets_accels = { "<Primary>P", null };
@@ -643,7 +643,7 @@ public class MangoJuice : Adw.Application {
         var carousel_action = new SimpleAction ("presets_carousel", null);
         carousel_action.activate.connect (() => {
             if (this.active_window != null) {
-                AboutDialog.show_presets_carousel_dialog(null, this);
+                AboutDialog.show_presets_carousel_dialog(this.active_window, this);
             }
         });
         this.add_action (carousel_action);
