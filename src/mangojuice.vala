@@ -479,6 +479,8 @@ public class MangoJuice : Adw.Application {
         var motion_controller = new Gtk.EventControllerMotion ();
         motion_controller.enter.connect (() => {
             heart_button.add_css_class ("destructive-action");
+            heart_button.add_css_class ("circular");
+            heart_button.add_css_class ("flat");
         });
         motion_controller.leave.connect (() => {
             heart_button.remove_css_class ("destructive-action");
