@@ -1181,8 +1181,8 @@ msgstr "Visualização do perfil"
 msgid "No profiles yet"  
 msgstr "Nenhum perfil ainda"  
 
-msgid "Apply profile"  
-msgstr "Aplicar perfil"  
+msgid "Apply the profile to the entire system"  
+msgstr "Aplicar o perfil a todo o sistema"  
 
 msgid "Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe . Attention case is important!"  
 msgstr "Renomear. Digite o nome do jogo ou nome.exe para jogos no Wine, ex: DOOM.exe. Atenção: letras maiúsculas/minúsculas importam!"  

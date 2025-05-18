@@ -1184,8 +1184,8 @@ msgstr "Предпросмотр профиля"
 msgid "No profiles yet"  
 msgstr "Пока нет профилей"  
 
-msgid "Apply profile"  
-msgstr "Применить профиль"  
+msgid "Apply the profile to the entire system"  
+msgstr "Применить профиль ко всей системе"  
 
 msgid "Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe . Attention case is important!"  
 msgstr "Переименование. Укажите название игры или имя.exe для игр на Wine, например, DOOM.exe. Внимание: регистр важен!"  

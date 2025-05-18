@@ -335,7 +335,7 @@ private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice a
 
     var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
     play_btn.add_css_class("flat");
-    play_btn.set_tooltip_text(_("Apply profile"));
+    play_btn.set_tooltip_text(_("Apply the profile to the entire system"));
     play_btn.set_valign(Gtk.Align.CENTER);
     play_btn.add_css_class("circular");
     play_btn.clicked.connect(() => {

@@ -1176,7 +1176,7 @@ msgstr ""
 msgid "Delete profile"
 msgstr ""
 
-msgid "Add Profile"
+msgid "Apply the profile to the entire system"
 msgstr ""
 
 msgid "To get ready presets, click on the title."
