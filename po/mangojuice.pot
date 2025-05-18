@@ -1139,7 +1139,7 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-msgid "Profile"
+msgid "Profiles"
 msgstr ""
 
 msgid "Financial support"
@@ -1159,4 +1159,31 @@ msgid "This devices"
 msgstr ""
 
 msgid "Device icon"
+msgstr ""
+
+msgid "Profile preview"
+msgstr ""
+
+msgid "No profiles yet"
+msgstr ""
+
+msgid "Apply profile"
+msgstr ""
+
+msgid "Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe . Attention case is important!"
+msgstr ""
+
+msgid "Delete profile"
+msgstr ""
+
+msgid "Add Profile"
+msgstr ""
+
+msgid "To get ready presets, click on the title."
+msgstr ""
+
+msgid "Presets"
+msgstr ""
+
+msgid "Profile"
 msgstr ""

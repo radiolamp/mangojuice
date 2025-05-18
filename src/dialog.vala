@@ -128,11 +128,9 @@ private delegate void DeleteCallback();
 
 private void update_group_state(Adw.PreferencesGroup group, Adw.StatusPage status_page) {
     if (profile_count == 0 && status_page.get_parent() == null) {
-        group.set_margin_top(64);
         group.add(status_page);
     } else if (profile_count > 0 && status_page.get_parent() != null) {
         group.remove(status_page);
-        group.set_margin_top(0);
     }
 }
 
@@ -165,7 +163,6 @@ public void preset_dialog(Gtk.Window parent_window, MangoJuice app) {
 
     var presets_button = new Gtk.Button();
     presets_button.set_hexpand(true);
-   // presets_button.add_css_class("flat");
     var button_content = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
     button_content.set_halign(Gtk.Align.CENTER);
     var presets_label = new Gtk.Label(_("Presets"));
@@ -175,20 +172,31 @@ public void preset_dialog(Gtk.Window parent_window, MangoJuice app) {
     presets_button.set_child(button_content);
     header_bar.set_title_widget(presets_button);
 
-    var content_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
-    content_box.set_margin_top(12);
-    content_box.set_margin_bottom(12);
-    content_box.set_margin_start(24);
-    content_box.set_margin_end(24);
+    var content_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
     content_box.set_hexpand(true);
     content_box.set_vexpand(true);
     main_box.append(content_box);
+
+    var clamp = new Adw.Clamp() {
+        maximum_size = 800,
+        tightening_threshold = 450,
+        margin_top = 12,
+        margin_bottom = 12
+    };
+    content_box.append(clamp);
+
+    var clamped_content = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
+    clamped_content.set_margin_start(24);
+    clamped_content.set_margin_end(24);
+    clamp.set_child(clamped_content);
 
     var group = new Adw.PreferencesGroup();
     var status_page = new Adw.StatusPage() {
         title = _("No profiles yet"),
         icon_name = "emoji-symbols-symbolic"
     };
+    status_page.add_css_class("dim-label");
+    status_page.set_vexpand (true);
 
     var add_button = new Gtk.Button.with_label(_("Add Profile"));
     add_button.set_size_request(-1, 40);
@@ -234,12 +242,16 @@ public void preset_dialog(Gtk.Window parent_window, MangoJuice app) {
     scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 
     var profile_container = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+    profile_container.set_margin_top(2);
+    profile_container.set_margin_bottom(2);
+    profile_container.set_margin_start(2);
+    profile_container.set_margin_end(2);
     profile_container.append(group);
 
     scrolled.set_child(profile_container);
     scrolled.set_vexpand(true);
-    content_box.append(scrolled);
-    content_box.append(add_button);
+    clamped_content.append(scrolled);
+    clamped_content.append(add_button);
 
     presets_button.clicked.connect(() => {
         show_presets_carousel_dialog(dialog, app);
@@ -268,18 +280,21 @@ private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice a
     row.set_title(profile_name);
     row.set_activatable(true);
     row.set_selectable(false);
+    row.set_tooltip_text(_("Profile preview"));
 
     var edit_btn = new Gtk.Button();
     edit_btn.set_icon_name("document-edit-symbolic");
     edit_btn.set_focusable(false);
     edit_btn.add_css_class("flat");
     edit_btn.add_css_class("circular");
+    edit_btn.set_tooltip_text(_("Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe . Attention case is important!"));
     edit_btn.set_valign(Gtk.Align.CENTER);
 
     var close_btn = new Gtk.Button();
     close_btn.set_icon_name("edit-delete-symbolic");
     close_btn.set_focusable(false);
     close_btn.add_css_class("flat");
+    close_btn.set_tooltip_text(_("Delete profile"));
     close_btn.set_valign(Gtk.Align.CENTER);
     close_btn.add_css_class("circular");
 

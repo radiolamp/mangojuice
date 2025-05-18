@@ -1163,7 +1163,7 @@ msgstr "Avançado"
 msgid "Apply"
 msgstr "Aplicar"
 
-msgid "Profile"
+msgid "Profiles"
 msgstr "Perfil"
 
 msgid "Financial support"
@@ -1174,3 +1174,30 @@ msgstr "Suas predefinições"
 
 msgid "Device icon"
 msgstr ""
+
+msgid "Profile preview"  
+msgstr "Visualização do perfil"  
+
+msgid "No profiles yet"  
+msgstr "Nenhum perfil ainda"  
+
+msgid "Apply profile"  
+msgstr "Aplicar perfil"  
+
+msgid "Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe . Attention case is important!"  
+msgstr "Renomear. Digite o nome do jogo ou nome.exe para jogos no Wine, ex: DOOM.exe. Atenção: letras maiúsculas/minúsculas importam!"  
+
+msgid "Delete profile"  
+msgstr "Excluir perfil"  
+
+msgid "Add Profile"  
+msgstr "Adicionar perfil"  
+
+msgid "To get ready presets, click on the title."  
+msgstr "Para obter predefinições prontas, clique no título."  
+
+msgid "Presets"  
+msgstr "Predefinições"  
+
+msgid "Profile"  
+msgstr "Perfil"

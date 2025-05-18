@@ -443,7 +443,7 @@ public class MangoJuice : Adw.Application {
         menu_model.append_item (restore_config_item);
         var advanced_item = new GLib.MenuItem (_("Change order"), "app.advanced");
         menu_model.append_item (advanced_item);
-        var carousel_item = new GLib.MenuItem (_("Profile"), "app.preset_dialog");
+        var carousel_item = new GLib.MenuItem (_("Profiles"), "app.preset_dialog");
         menu_model.append_item (carousel_item);
         var about_item = new GLib.MenuItem (_("About"), "app.about");
         menu_model.append_item (about_item);
