@@ -1205,4 +1205,6 @@ msgstr "Предустановки"
 msgid "Profile"  
 msgstr "Профиль"
 
+msgid "You profiles"
+msgstr "Ваши профили"
 

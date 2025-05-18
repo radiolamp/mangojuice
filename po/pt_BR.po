@@ -1201,3 +1201,6 @@ msgstr "Predefinições"
 
 msgid "Profile"  
 msgstr "Perfil"
+
+msgid "You profiles"
+msgstr "Seus perfis"

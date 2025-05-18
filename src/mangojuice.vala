@@ -327,6 +327,25 @@ public class MangoJuice : Adw.Application {
         this.add_action (save_as_action);
         const string[] save_as_accels = { "<Primary>E", null };
         this.set_accels_for_action ("app.save_as", save_as_accels);
+
+        var presets_action = new SimpleAction ("presets_carousel", null);
+        presets_action.activate.connect (() => {
+            AboutDialog.show_presets_carousel_dialog(null, this);
+        });
+        this.add_action (presets_action);
+        const string[] presets_accels = { "<Primary>P", null };
+        this.set_accels_for_action ("app.presets_carousel", presets_accels);
+
+        var action_y = new SimpleAction ("preset_y_action", null);
+        action_y.activate.connect (() => {
+            if (this.active_window != null) {
+                AboutDialog.preset_dialog(this.active_window, this);
+            }
+        });
+        this.add_action (action_y);
+        
+        const string[] accels_y = { "<Primary>Y", null };
+        this.set_accels_for_action ("app.preset_dialog", accels_y);
     }
 
     protected override void activate () {
@@ -441,10 +460,12 @@ public class MangoJuice : Adw.Application {
         menu_model.append_item (save_as_item);
         var restore_config_item = new GLib.MenuItem (_("Restore"), "app.restore_config");
         menu_model.append_item (restore_config_item);
+        var profiles_item = new GLib.MenuItem (_("You profiles"), "app.preset_dialog");
+        menu_model.append_item (profiles_item);
+        var carousel_item = new GLib.MenuItem (_("Presets"), "app.presets_carousel");
+        menu_model.append_item (carousel_item);
         var advanced_item = new GLib.MenuItem (_("Change order"), "app.advanced");
         menu_model.append_item (advanced_item);
-        var carousel_item = new GLib.MenuItem (_("Profiles"), "app.preset_dialog");
-        menu_model.append_item (carousel_item);
         var about_item = new GLib.MenuItem (_("About"), "app.about");
         menu_model.append_item (about_item);
         menu_button.set_menu_model (menu_model);
@@ -504,7 +525,7 @@ public class MangoJuice : Adw.Application {
             toast_overlay.add_controller(click_controller);
         
             if (!mangohud_available && is_flatpak()) {
-                show_mangohud_install_dialog(window, test_button);
+                AboutDialog.show_mangohud_install_dialog(window, test_button);
             }
 
             if (!mangohud_available && !is_flatpak ()) {
@@ -614,10 +635,18 @@ public class MangoJuice : Adw.Application {
         var action = new SimpleAction ("preset_dialog", null);
         action.activate.connect (() => {
             if (this.active_window != null) {
-                preset_dialog(this.active_window, this);
+                AboutDialog.preset_dialog(this.active_window, this);
             }
         });
         this.add_action (action);
+
+        var carousel_action = new SimpleAction ("presets_carousel", null);
+        carousel_action.activate.connect (() => {
+            if (this.active_window != null) {
+                AboutDialog.show_presets_carousel_dialog(null, this);
+            }
+        });
+        this.add_action (carousel_action);
 
         var about_action = new SimpleAction ("about", null);
         about_action.activate.connect (on_about_button_clicked);
