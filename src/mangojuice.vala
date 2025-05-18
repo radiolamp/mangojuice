@@ -443,7 +443,7 @@ public class MangoJuice : Adw.Application {
         menu_model.append_item (restore_config_item);
         var advanced_item = new GLib.MenuItem (_("Change order"), "app.advanced");
         menu_model.append_item (advanced_item);
-        var carousel_item = new GLib.MenuItem (_("Profile"), "app.show_carousel_dialog");
+        var carousel_item = new GLib.MenuItem (_("Profiles"), "app.preset_dialog");
         menu_model.append_item (carousel_item);
         var about_item = new GLib.MenuItem (_("About"), "app.about");
         menu_model.append_item (about_item);
@@ -611,10 +611,10 @@ public class MangoJuice : Adw.Application {
         restore_config_action.activate.connect (on_restore_config_button_clicked);
         this.add_action (restore_config_action);
 
-        var action = new SimpleAction ("show_carousel_dialog", null);
+        var action = new SimpleAction ("preset_dialog", null);
         action.activate.connect (() => {
             if (this.active_window != null) {
-                show_carousel_dialog(this.active_window, this);
+                preset_dialog(this.active_window, this);
             }
         });
         this.add_action (action);
@@ -2126,11 +2126,6 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    public static void run_test_static() {
-        var instance = new MangoJuice();
-        instance.run_test();
-    }
-
     public void run_test () {
         new Thread<void>("run-test", () => {
             try {
@@ -2167,6 +2162,14 @@ public class MangoJuice : Adw.Application {
                 stderr.printf (_("Error when executing the command: %s\n"), e.message);
             }
         });
+    }
+
+    public void exit_restart () {
+        if (test_button_pressed) {
+            run_test();
+        } else {
+           stderr.printf ("Ok \n");
+        }
     }
 
     void delete_vkbasalt_conf () {

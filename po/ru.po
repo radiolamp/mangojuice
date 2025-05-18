@@ -1160,7 +1160,7 @@ msgstr "Продвинутый"
 msgid "Apply"
 msgstr "Применить"
 
-msgid "Profile"
+msgid "Profiles"
 msgstr "Профили"
 
 msgid "Financial support"
@@ -1178,5 +1178,31 @@ msgstr "Твои профили"
 msgid "Device icon"
 msgstr "Значёк батареи"
 
+msgid "Profile preview"  
+msgstr "Предпросмотр профиля"  
+
+msgid "No profiles yet"  
+msgstr "Пока нет профилей"  
+
+msgid "Apply profile"  
+msgstr "Применить профиль"  
+
+msgid "Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe . Attention case is important!"  
+msgstr "Переименование. Укажите название игры или имя.exe для игр на Wine, например, DOOM.exe. Внимание: регистр важен!"  
+
+msgid "Delete profile"  
+msgstr "Удалить профиль"  
+
+msgid "Add Profile"  
+msgstr "Добавить профиль"  
+
+msgid "To get ready presets, click on the title."  
+msgstr "Чтобы получить готовые пресеты, нажмите на заголовок."
+
+msgid "Presets"  
+msgstr "Предустановки"  
+
+msgid "Profile"  
+msgstr "Профиль"
 
 
