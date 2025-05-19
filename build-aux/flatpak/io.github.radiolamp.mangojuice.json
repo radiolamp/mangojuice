@@ -5,95 +5,202 @@
   "sdk": "org.gnome.Sdk",
   "command": "mangojuice",
   "finish-args": [
-      "--socket=fallback-x11",
-      "--share=ipc",
-      "--socket=wayland",
-      "--device=dri",
-      "--env=PATH=/app/bin:/usr/bin:/app/utils/bin:/usr/lib/extensions/vulkan/MangoHud/bin",
-      "--filesystem=xdg-config/MangoHud:create",
-      "--filesystem=home"
+    "--socket=wayland",
+    "--share=ipc",
+    "--socket=fallback-x11",
+    "--device=dri",
+    "--env=PATH=/app/bin:/usr/bin:/app/utils/bin",
+    "--filesystem=home",
+    "--filesystem=xdg-config/MangoHud:create"
   ],
-
   "cleanup": [
-      "/include",
-      "/lib/pkgconfig",
-      "/man",
-      "/share/doc",
-      "/share/gtk-doc",
-      "/share/man",
-      "/share/pkgconfig",
-      "/share/vala",
-      "*.la",
-      "*.a"
+    "/include",
+    "/lib/pkgconfig",
+    "/man",
+    "/share/doc",
+    "/share/gtk-doc",
+    "/share/man",
+    "/share/pkgconfig",
+    "/share/vala",
+    "*.la",
+    "*.a"
   ],
   "modules": [
-      {
-          "name": "vulkan-tools",
+    {
+      "name": "vulkan-tools",
+      "buildsystem": "cmake-ninja",
+      "config-opts": [
+        "-DGLSLANG_INSTALL_DIR=/app",
+        "-DVULKAN_HEADERS_INSTALL_DIR=/app",
+        "-DCMAKE_BUILD_TYPE=Release"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/KhronosGroup/Vulkan-Tools/archive/v1.3.297/Vulkan-Tools-1.3.297.tar.gz",
+          "sha256": "95bffa39d90f3ec81d8e3a0fa6c846ac1a10442152cc0b6d0d6567ce48932f89"
+        }
+      ],
+      "modules": [
+        {
+          "name": "volk",
           "buildsystem": "cmake-ninja",
           "config-opts": [
-              "-DGLSLANG_INSTALL_DIR=/app",
-              "-DVULKAN_HEADERS_INSTALL_DIR=/app",
-              "-DCMAKE_BUILD_TYPE=Release"
+            "-DVOLK_INSTALL=ON"
           ],
           "sources": [
-              {
-                  "type": "archive",
-                  "url": "https://github.com/KhronosGroup/Vulkan-Tools/archive/v1.3.297/Vulkan-Tools-1.3.297.tar.gz",
-                  "sha256": "95bffa39d90f3ec81d8e3a0fa6c846ac1a10442152cc0b6d0d6567ce48932f89"
-              }
+            {
+              "type": "archive",
+              "url": "https://github.com/zeux/volk/archive/vulkan-sdk-1.3.296.0.tar.gz",
+              "sha256": "8ffd0e81e29688f4abaa39e598937160b098228f37503903b10d481d4862ab85"
+            }
           ],
           "modules": [
-              {
-                  "name": "volk",
-                  "buildsystem": "cmake-ninja",
-                  "config-opts": [
-                      "-DVOLK_INSTALL=ON"
-                  ],
-                  "sources": [
-                      {
-                          "type": "archive",
-                          "url": "https://github.com/zeux/volk/archive/vulkan-sdk-1.3.296.0.tar.gz",
-                          "sha256": "8ffd0e81e29688f4abaa39e598937160b098228f37503903b10d481d4862ab85"
-                      }
-                  ],
-                  "modules": [
-                      {
-                          "name": "vulkan-headers",
-                          "buildsystem": "cmake-ninja",
-                          "sources": [
-                              {
-                                  "type": "archive",
-                                  "url": "https://github.com/KhronosGroup/Vulkan-Headers/archive/v1.3.297/Vulkan-Headers-v1.3.297.tar.gz",
-                                  "sha256": "1d679e2edc43cb7ad818b81dea960e374f1d6dd082325eb9b4c6113e76263c02"
-                              }
-                          ]
-                      }
-                  ]
-              }
+            {
+              "name": "vulkan-headers",
+              "buildsystem": "cmake-ninja",
+              "sources": [
+                {
+                  "type": "archive",
+                  "url": "https://github.com/KhronosGroup/Vulkan-Headers/archive/v1.3.297/Vulkan-Headers-v1.3.297.tar.gz",
+                  "sha256": "1d679e2edc43cb7ad818b81dea960e374f1d6dd082325eb9b4c6113e76263c02"
+                }
+              ]
+            }
           ]
-      },
-      {
+        }
+      ]
+    },
+    {
+      "name": "MangoHud",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dwith_xnvctrl=enabled",
+        "-Dappend_libdir_mangohud=false",
+        "-Dmangoplot=disabled",
+        "-Dmangoapp=true"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/flightlessmango/MangoHud/releases/download/v0.8.1/MangoHud-v0.8.1-Source.tar.xz",
+          "sha256": "4c8d8098f5deff7737978d792eef909b7469933f456a47132dccc06804825482",
+          "x-checker-data": {
+            "type": "json",
+            "url": "https://api.github.com/repos/flightlessmango/MangoHud/releases",
+            "url-query": "map(select(.tag_name | startswith(\"v\"))) | first |\n.assets | map((select(.name | endswith(\"Source.tar.xz\")))) | first | .browser_download_url\n",
+            "version-query": "map(select(.tag_name | startswith(\"v\"))) | first |\n.tag_name | sub(\"^[vV]\"; \"\")\n"
+          }
+        },
+        {
+          "type": "patch",
+          "path": "patches/0001-wayland-dlopen-correct-library.patch"
+        }
+      ],
+      "modules": [
+        {
+          "name": "glew",
+          "no-autogen": true,
+          "make-args": [
+            "GLEW_PREFIX=${FLATPAK_DEST}",
+            "GLEW_DEST=${FLATPAK_DEST}",
+            "LIBDIR=${FLATPAK_DEST}/lib",
+            "PKGDIR=${FLATPAK_DEST}/lib/pkgconfig",
+            "CFLAGS.EXTRA:=${CFLAGS} -fPIC",
+            "LDFLAGS.EXTRA=${LDFLAGS}"
+          ],
+          "make-install-args": [
+            "GLEW_PREFIX=${FLATPAK_DEST}",
+            "GLEW_DEST=${FLATPAK_DEST}",
+            "LIBDIR=${FLATPAK_DEST}/lib",
+            "PKGDIR=${FLATPAK_DEST}/lib/pkgconfig",
+            "CFLAGS.EXTRA:=${CFLAGS} -fPIC",
+            "LDFLAGS.EXTRA=${LDFLAGS}"
+          ],
+          "sources": [
+            {
+              "type": "archive",
+              "url": "https://downloads.sourceforge.net/project/glew/glew/2.2.0/glew-2.2.0.tgz",
+              "sha256": "d4fc82893cfb00109578d0a1a2337fb8ca335b3ceccf97b97e5cc7f08e4353e1"
+            }
+          ],
+          "modules": [
+            {
+              "name": "glu",
+              "buildsystem": "meson",
+              "sources": [
+                {
+                  "type": "archive",
+                  "url": "https://archive.mesa3d.org/glu/glu-9.0.3.tar.xz",
+                  "sha256": "bd43fe12f374b1192eb15fe20e45ff456b9bc26ab57f0eee919f96ca0f8a330f"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "glfw",
+          "buildsystem": "cmake-ninja",
+          "config-opts": [
+            "-DGLFW_BUILD_EXAMPLES:BOOL=OFF",
+            "-DGLFW_BUILD_TESTS:BOOL=OFF",
+            "-DGLFW_BUILD_DOCS:BOOL=OFF"
+          ],
+          "sources": [
+            {
+              "type": "git",
+              "url": "https://github.com/glfw/glfw.git",
+              "tag": "3.4",
+              "commit": "7b6aead9fb88b3623e3b3725ebb42670cbe4c579"
+            }
+          ]
+        },
+        {
+          "name": "nlohmann-json",
+          "buildsystem": "cmake-ninja",
+          "config-opts": [
+            "-DJSON_BuildTests:BOOL=OFF"
+          ],
+          "sources": [
+            {
+              "type": "git",
+              "url": "https://github.com/nlohmann/json.git",
+              "tag": "v3.11.2",
+              "commit": "bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d"
+            }
+          ]
+        },
+        {
           "name": "libNVCtrl",
           "no-autogen": true,
           "no-make-install": true,
           "build-commands": [
-              "mkdir -p ${FLATPAK_DEST}/lib",
-              "cp -a libXNVCtrl.so* ${FLATPAK_DEST}/lib/"
+            "mkdir -p ${FLATPAK_DEST}/lib",
+            "cp -a libXNVCtrl.so* ${FLATPAK_DEST}/lib/",
+            "install -D *.h -t ${FLATPAK_DEST}/include/NVCtrl"
           ],
           "subdir": "src/libXNVCtrl",
           "sources": [
-              {
-                  "type": "archive",
-                  "archive-type": "tar",
-                  "url": "https://api.github.com/repos/NVIDIA/nvidia-settings/tarball/refs/tags/470.63.01",
-                  "sha256": "0ede63515851d85ac0d1ed5f00e355f539968e6d1fd226120a27b2c66c3575de"
-              },
-              {
-                  "type": "patch",
-                  "path": "patches/libxnvctrl_so_0.patch"
+            {
+              "type": "archive",
+              "archive-type": "tar",
+              "url": "https://api.github.com/repos/NVIDIA/nvidia-settings/tarball/refs/tags/470.63.01",
+              "sha256": "0ede63515851d85ac0d1ed5f00e355f539968e6d1fd226120a27b2c66c3575de"
+            },
+            {
+              "type": "patch",
+              "path": "patches/libxnvctrl_so_0.patch",
+              "x-checker-data": {
+                "type": "json",
+                "url": "https://api.github.com/repos/NVIDIA/nvidia-settings/tags",
+                "url-query": ".[0].tarball_url",
+                "version-query": ".[0].na"
               }
+            }
           ]
-      },
+        }
+      ]
+    },
       {
           "name": "mangojuice",
           "buildsystem": "meson",
