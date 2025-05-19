@@ -201,15 +201,15 @@
         }
       ]
     },
-      {
-          "name": "mangojuice",
-          "buildsystem": "meson",
-          "sources": [
-              {
-                  "type": "dir",
-                  "path": "../../"
-              }
-          ]
-      }
+    {
+        "name": "mangojuice",
+        "buildsystem": "meson",
+        "sources": [
+            {
+                "type": "dir",
+                "path": "../../"
+            }
+        ]
+    }
   ]
 }

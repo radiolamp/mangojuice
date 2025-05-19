@@ -1,0 +1,48 @@
+From 6d2176a0e6280b13fa128589d2b3362be6de19e3 Mon Sep 17 00:00:00 2001
+From: 17314642 <48242771@protonmail.ch>
+Date: Fri, 4 Apr 2025 07:58:39 +0300
+Subject: [PATCH] wayland: dlopen correct library
+
+---
+ src/gl/inject_egl.cpp | 4 ++--
+ src/vulkan.cpp        | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/gl/inject_egl.cpp b/src/gl/inject_egl.cpp
+index e40d174..34fea7a 100644
+--- a/src/gl/inject_egl.cpp
++++ b/src/gl/inject_egl.cpp
+@@ -99,7 +99,7 @@ EXPORT_C_(void*) eglGetPlatformDisplay( unsigned int platform, void* native_disp
+     {
+         wl_display_ptr = (struct wl_display*)native_display;
+         HUDElements.display_server = HUDElements.display_servers::WAYLAND;
+-        wl_handle = real_dlopen("libwayland-client.so", RTLD_LAZY);
++        wl_handle = real_dlopen("libwayland-client.so.0", RTLD_LAZY);
+         init_wayland_data();
+     }
+ #endif
+@@ -125,7 +125,7 @@ EXPORT_C_(void*) eglGetDisplay( void* native_display )
+             {
+                 wl_display_ptr = (struct wl_display*)native_display;
+                 HUDElements.display_server = HUDElements.display_servers::WAYLAND;
+-                wl_handle = real_dlopen("libwayland-client.so", RTLD_LAZY);
++                wl_handle = real_dlopen("libwayland-client.so.0", RTLD_LAZY);
+                 init_wayland_data();
+             }
+         }
+diff --git a/src/vulkan.cpp b/src/vulkan.cpp
+index 9a10d61..d50c43a 100644
+--- a/src/vulkan.cpp
++++ b/src/vulkan.cpp
+@@ -2034,7 +2034,7 @@ static VkResult overlay_CreateWaylandSurfaceKHR(
+ {
+    struct instance_data *instance_data = FIND(struct instance_data, instance);
+    if (!wl_handle)
+-      wl_handle = real_dlopen("libwayland-client.so", RTLD_LAZY);
++      wl_handle = real_dlopen("libwayland-client.so.0", RTLD_LAZY);
+    wl_display_ptr = pCreateInfo->display;
+    HUDElements.display_server = HUDElements.display_servers::WAYLAND;
+    init_wayland_data();
+-- 
+2.49.0
+
