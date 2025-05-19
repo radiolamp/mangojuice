@@ -10,7 +10,7 @@ public class AdvancedDialog : Adw.Dialog {
 
     public static void show_advanced_dialog(Gtk.Window parent_window) {
         var advanced_dialog = new AdvancedDialog(parent_window);
-        advanced_dialog.set_content_width(2000);
+        advanced_dialog.set_content_width(1000);
         advanced_dialog.set_content_height(2000);
         advanced_dialog.present(parent_window);
     }
