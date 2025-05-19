@@ -584,42 +584,21 @@ public class MangoJuice : Adw.Application {
                     toast_overlay.add_toast (toast);
                 }
             }
-    
-            var advanced_action = new GLib.SimpleAction ("advanced", null);
-            advanced_action.activate.connect (() => {
-                var advanced_dialog = new AdvancedDialog (window);
-                int max_width = 800;
-                int max_height = 600;
-                int new_width = (int) (window.get_width () * 0.6);
-                int new_height = (int) (window.get_height () * 0.8);
-                if (new_width > max_width) new_width = max_width;
-                if (new_height > max_height) new_height = max_height;
-                advanced_dialog.set_size_request (new_width, new_height);
-                window.notify["default-width"].connect (() => {
-                    int updated_width = (int) (window.get_width () * 0.6);
-                    int updated_height = (int) (window.get_height () * 0.8);
-    
-                    if (updated_width > max_width) updated_width = max_width;
-                    if (updated_height > max_height) updated_height = max_height;
-                    advanced_dialog.set_size_request (updated_width, updated_height);
-                });
-                window.notify["default-height"].connect (() => {
-                    int updated_width = (int) (window.get_width () * 0.6);
-                    int updated_height = (int) (window.get_height () * 0.8);
-    
-                    if (updated_width > max_width) updated_width = max_width;
-                    if (updated_height > max_height) updated_height = max_height;
-                    advanced_dialog.set_size_request (updated_width, updated_height);
-                });
-                advanced_dialog.present (window);
+
+            var advanced_action = new GLib.SimpleAction("advanced", null);
+            advanced_action.activate.connect(() => {
+                if (window != null) {
+                    AdvancedDialog.show_advanced_dialog(window);
+                }
             });
-            this.add_action (advanced_action);
+            this.add_action(advanced_action);
     
             reset_manager = new ResetManager (this);
             initialize_rest_of_ui (view_stack);
             check_mangohud_global_status ();
             return false;
         });
+        
     
         LoadStates.load_states_from_file.begin (this);
     }

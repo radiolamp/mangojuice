@@ -8,6 +8,14 @@ public class AdvancedDialog : Adw.Dialog {
     List<string> filtered_config_lines;
     ListBox list_box;
 
+    public static void show_advanced_dialog(Gtk.Window parent_window) {
+        var advanced_dialog = new AdvancedDialog(parent_window);
+        advanced_dialog.set_content_width(800);
+        advanced_dialog.set_content_height(600);
+        advanced_dialog.set_size_request(320, 240);
+        advanced_dialog.present(parent_window);
+    }
+
     public AdvancedDialog (Gtk.Window parent) {
         Object ();
 
@@ -144,14 +152,14 @@ public class AdvancedDialog : Adw.Dialog {
         action_row.title = get_localized_title (key);
         action_row.subtitle = line;
 
-        var drag_button = new Gtk.Button ();
-        drag_button.icon_name = "list-drag-handle-symbolic";
-        drag_button.has_frame = false;
-        enable_drag_and_drop (drag_button, list_box, action_row);
-        action_row.add_prefix (drag_button);
-
+        var drag_icon = new Gtk.Image.from_icon_name("list-drag-handle-symbolic");
+        drag_icon.add_css_class("dim-label");
+        action_row.add_prefix (drag_icon);
+    
         var up_button = new Gtk.Button ();
         up_button.icon_name = "go-up-symbolic";
+        up_button.add_css_class("circular");
+        up_button.set_valign (Align.CENTER);
         up_button.has_frame = false;
         up_button.clicked.connect (() => {
             disable_scroll (list_box);
@@ -160,9 +168,11 @@ public class AdvancedDialog : Adw.Dialog {
             enable_scroll (list_box);
         });
         action_row.add_suffix (up_button);
-
+    
         var down_button = new Gtk.Button ();
         down_button.icon_name = "go-down-symbolic";
+        down_button.add_css_class("circular");
+        down_button.set_valign (Align.CENTER);
         down_button.has_frame = false;
         down_button.clicked.connect (() => {
             disable_scroll (list_box);
@@ -172,6 +182,8 @@ public class AdvancedDialog : Adw.Dialog {
         });
         action_row.add_suffix (down_button);
 
+        enable_drag_and_drop (action_row, list_box, action_row);
+    
         list_box.append (action_row);
     }
 
@@ -190,22 +202,20 @@ public class AdvancedDialog : Adw.Dialog {
         }
     }
 
-    void enable_drag_and_drop (Gtk.Button drag_button, ListBox list_box, ListBoxRow row) {
+    void enable_drag_and_drop (Gtk.Widget widget, ListBox list_box, ListBoxRow row) {
         var drag_source = new Gtk.DragSource ();
         drag_source.set_actions (Gdk.DragAction.MOVE);
-
+    
         drag_source.drag_begin.connect ((source, drag) => {
             row.add_css_class ("card");
             var paintable = new Gtk.WidgetPaintable (row);
             drag_source.set_icon (paintable, 0, 0);
-
         });
-
+    
         drag_source.drag_end.connect ((source, drag) => {
             row.remove_css_class ("card");
-
         });
-
+    
         drag_source.prepare.connect ((source, x, y) => {
             Value value = Value (typeof (ListBoxRow));
             disable_scroll (list_box);
@@ -213,9 +223,9 @@ public class AdvancedDialog : Adw.Dialog {
             enable_scroll (list_box);
             return new Gdk.ContentProvider.for_value (value);
         });
-
-        drag_button.add_controller (drag_source);
-
+    
+        widget.add_controller (drag_source);
+    
         var drop_target = new Gtk.DropTarget (typeof (ListBoxRow), Gdk.DragAction.MOVE);
         drop_target.drop.connect ((target, value, x, y) => {
             var source_row = value.get_object () as ListBoxRow;
@@ -229,7 +239,7 @@ public class AdvancedDialog : Adw.Dialog {
             }
             return false;
         });
-
+    
         drop_target.enter.connect ((target, x, y) => {
             var dest_row = list_box.get_row_at_y ((int)y);
             if (dest_row != null) {
@@ -237,17 +247,17 @@ public class AdvancedDialog : Adw.Dialog {
             }
             return Gdk.DragAction.MOVE;
         });
-
+    
         drag_source.drag_end.connect ((source, drag) => {
             row.remove_css_class ("card");
-
+    
             var child = list_box.get_first_child ();
             while (child != null) {
                 child.remove_css_class ("accent");
                 child = child.get_next_sibling ();
             }
         });
-
+    
         drop_target.motion.connect ((target, x, y) => {
             var dest_row = list_box.get_row_at_y ((int)y);
             if (dest_row != null) {
@@ -263,7 +273,7 @@ public class AdvancedDialog : Adw.Dialog {
             }
             return Gdk.DragAction.MOVE;
         });
-
+    
         list_box.add_controller (drop_target);
     }
 
