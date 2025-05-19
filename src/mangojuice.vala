@@ -525,12 +525,8 @@ public class MangoJuice : Adw.Application {
                 window.set_focus(null);
             });
             toast_overlay.add_controller(click_controller);
-        
-            if (!mangohud_available && is_flatpak()) {
-                AboutDialog.show_mangohud_install_dialog(window, test_button);
-            }
 
-            if (!mangohud_available && !is_flatpak ()) {
+            if (!mangohud_available) {
                 stderr.printf (_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
                 var toast_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
                 var toast_label = new Gtk.Label(_("MangoHud is not installed. Please install it."));

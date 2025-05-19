@@ -33,100 +33,11 @@ namespace AboutDialog {
         dialog.present (parent_window);
     }
 
+    int profile_count = 0;
 
-    public void show_mangohud_install_dialog(Gtk.Window parent, Gtk.Button test_button) {
-        var dialog = new Adw.AlertDialog(
-            _("MangoHud Not Installed"),
-            _("MangoHud is required for this application. Install it from Flathub")
-        );
+    delegate void DeleteCallback();
 
-        var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
-        box.margin_top = 12;
-
-        var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
-
-        var entry = new Gtk.Entry() {
-            text = "flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud",
-            editable = false,
-            hexpand = true
-        };
-        entry.add_css_class("monospace");
-
-        var click_controller = new Gtk.GestureClick();
-        click_controller.pressed.connect(() => {
-            entry.select_region(0, -1);
-        });
-        entry.add_controller(click_controller);
-
-        var copy_button = new Gtk.Button() {
-            icon_name = "edit-copy-symbolic",
-            tooltip_text = _("Copy to clipboard")
-        };
-
-        copy_button.clicked.connect(() => {
-            var clipboard = Gdk.Display.get_default()?.get_clipboard();
-            clipboard?.set_text(entry.text);
-
-            copy_button.icon_name = "emblem-ok-symbolic";
-            Timeout.add_seconds(2, () => {
-                copy_button.icon_name = "edit-copy-symbolic";
-                return Source.REMOVE;
-            });
-        });
-
-        hbox.append(entry);
-        hbox.append(copy_button);
-        box.append(hbox);
-
-        dialog.set_extra_child(box);
-
-        dialog.add_response("cancel", _("Cancel"));
-        dialog.add_response("install", _("Install from Flathub"));
-
-        dialog.set_default_response("install");
-        dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED);
-
-        dialog.response.connect((response) => {
-            if (response == "install") {
-                string file_path = Path.build_filename(Environment.get_home_dir(), "mangohud.flatpakref");
-
-                try {
-                    string flatpakref_content = """[Flatpak Ref]
-                    Name=org.freedesktop.Platform.VulkanLayer.MangoHud
-                    Branch=24.08
-                    IsRuntime=true
-                    Url=https://dl.flathub.org/repo/appstream/org.freedesktop.Platform.VulkanLayer.MangoHud.flatpakref
-                    """;
-
-                    FileUtils.set_contents(file_path, flatpakref_content);
-                    FileUtils.chmod(file_path, 0644);
-
-                    try {
-                        Process.spawn_command_line_async("xdg-open " + file_path);
-
-                        Timeout.add_seconds(10, () => {
-                            FileUtils.remove(file_path);
-                            return Source.REMOVE;
-                        });
-                    } catch (SpawnError e) {
-                        FileUtils.remove(file_path);
-                        AppInfo.launch_default_for_uri("https://flathub.org/apps/org.freedesktop.Platform.VulkanLayer.MangoHud", null);      
-                    }
-                    test_button.set_visible(true);
-                } catch (Error e) {
-                    stderr.printf("Error creating flatpakref file: %s\n", e.message);
-                }
-            }
-        });
-
-        dialog.present(parent);
-    }
-
-    private int profile_count = 0;
-
-    private delegate void DeleteCallback();
-
-    private void update_group_state(Adw.PreferencesGroup group, Adw.StatusPage status_page) {
+    void update_group_state(Adw.PreferencesGroup group, Adw.StatusPage status_page) {
         if (profile_count == 0 && status_page.get_parent() == null) {
             group.add(status_page);
         } else if (profile_count > 0 && status_page.get_parent() != null) {
@@ -265,7 +176,7 @@ namespace AboutDialog {
         dialog.present(parent_window);
     }
 
-    private Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice app, owned DeleteCallback on_delete, string initial_name = _("Profile"), bool is_existing_profile = false) {
+    Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice app, owned DeleteCallback on_delete, string initial_name = _("Profile"), bool is_existing_profile = false) {
         string profile_name = initial_name;
 
         if (!is_existing_profile) {
@@ -392,7 +303,7 @@ namespace AboutDialog {
         return row;
     }
 
-    private void show_presets_carousel_dialog(Gtk.Window parent_dialog, MangoJuice app) {
+    void show_presets_carousel_dialog(Gtk.Window parent_dialog, MangoJuice app) {
         var dialog = new Adw.Dialog();
         dialog.set_content_width(800);
         dialog.set_content_height(600);
@@ -512,7 +423,7 @@ namespace AboutDialog {
     }
 
 
-    private void apply_preset(Adw.Carousel carousel, MangoJuice app) {
+    void apply_preset(Adw.Carousel carousel, MangoJuice app) {
         int current_page = (int)carousel.get_position();
         string[] page_names = { _("Minimal"), _("Default"), _("Advanced"), _("Full"), _("Only FPS") };
         stdout.printf(_("Applying %s layout\n"), page_names[current_page]);
@@ -559,7 +470,7 @@ namespace AboutDialog {
         app.reset_manager.reset_all_widgets();
     }
 
-    private string generate_unique_profile_name(string base_name) {
+    string generate_unique_profile_name(string base_name) {
         string name = base_name;
         int counter = 1;
 
@@ -582,7 +493,7 @@ namespace AboutDialog {
         return name;
     }
 
-    private void create_profile_config(string profile_name) {
+    void create_profile_config(string profile_name) {
         try {
             var config_dir = File.new_for_path(Environment.get_home_dir())
                 .get_child(".config")
@@ -600,7 +511,7 @@ namespace AboutDialog {
         }
     }
 
-    private void rename_profile_config(string old_name, string new_name) {
+    void rename_profile_config(string old_name, string new_name) {
         try {
             string old_path = Path.build_filename(
                 Environment.get_home_dir(),
@@ -624,7 +535,7 @@ namespace AboutDialog {
         }
     }
 
-    private void delete_profile_config(string profile_name) {
+    void delete_profile_config(string profile_name) {
         try {
             string path = Path.build_filename(
                 Environment.get_home_dir(),
@@ -642,7 +553,7 @@ namespace AboutDialog {
         }
     }
 
-    private void apply_profile_config(string profile_name) {
+    void apply_profile_config(string profile_name) {
         try {
             string profile_path = Path.build_filename(
                 Environment.get_home_dir(),
