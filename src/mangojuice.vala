@@ -453,6 +453,7 @@ public class MangoJuice : Adw.Application {
         header_bar.pack_start (test_button);
 
         var menu_button = new Gtk.MenuButton ();
+        menu_button.add_css_class ("circular");
         var menu_model = new GLib.Menu ();
         var save_item = new GLib.MenuItem (_("Save"), "app.save");
         menu_model.append_item (save_item);
