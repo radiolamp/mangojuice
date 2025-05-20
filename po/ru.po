@@ -1208,3 +1208,5 @@ msgstr "Профиль"
 msgid "You profiles"
 msgstr "Ваши профили"
 
+msgid "Overwrite profile"
+msgstr "Перезаписать профиль"

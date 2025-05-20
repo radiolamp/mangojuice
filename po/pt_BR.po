@@ -1204,3 +1204,6 @@ msgstr "Perfil"
 
 msgid "You profiles"
 msgstr "Seus perfis"
+
+msgid "Overwrite profile"
+msgstr "Sobrescrever perfil"
