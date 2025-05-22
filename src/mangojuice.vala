@@ -578,10 +578,15 @@ public class MangoJuice : Adw.Application {
         }
 
         toast.dismissed.connect(() => {
-            if (is_mangohud_available() || (is_vkcube_available() && is_glxgears_available())) {
-                test_button.set_visible(true);
+            if (is_mangohud_available()) {
+                if (is_vkcube_available() && is_glxgears_available()) {
+                    test_button.set_visible(true);
+                }
+            } else {
+                test_button.set_visible(false);
             }
         });
+
 
         toast_overlay.add_toast(toast);
     }
