@@ -179,7 +179,12 @@ namespace AboutDialog {
         });
 
         dialog.closed.connect(() => {
-            app.exit_restart();
+            try {
+                Process.spawn_command_line_async ("pkill vkcube");
+                Process.spawn_command_line_async ("pkill glxgears");
+            } catch (Error e) {
+                stderr.printf (_("Error when executing the command: %s\n"), e.message);
+            }
         });
 
         dialog.present(parent_window);

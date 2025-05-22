@@ -2107,14 +2107,6 @@ public class MangoJuice : Adw.Application {
         });
     }
 
-    public void exit_restart () {
-        if (test_button_pressed) {
-            run_test();
-        } else {
-           stderr.printf ("Ok \n");
-        }
-    }
-
     void delete_vkbasalt_conf () {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("vkBasalt");
         var file = config_dir.get_child ("vkBasalt.conf");
