@@ -35,11 +35,11 @@
   </developer>
   <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
-    <release version="0.8.4" date="2025-04-28">
+    <release version="0.8.5" date="2025-05-30">
       <description>
-        <p>Hello Flatpak</p>
+        <p>Profiles and sorting</p>
         <ul>
-          <li>Full customization of the mangohud overlay in manual mode, as well as with preconfigured profiles.</li>
+          <li>Full update information is available on github.</li>
         </ul>
       </description>
     </release>
