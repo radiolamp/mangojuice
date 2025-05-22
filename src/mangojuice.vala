@@ -598,8 +598,12 @@ public class MangoJuice : Adw.Application {
         var toast = new Adw.Toast(_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
         toast.set_timeout(15);
         toast.dismissed.connect(() => {
-            if (mangohud_available || (is_vkcube_available() && is_glxgears_available())) {
-                test_button.set_visible(true);
+            if (is_vkcube_available() && is_glxgears_available()) {
+                if (is_mangohud_available()) {
+                    test_button.set_visible(true);
+                }
+            } else {
+                test_button.set_visible(false);
             }
         });
         toast_overlay.add_toast(toast);
