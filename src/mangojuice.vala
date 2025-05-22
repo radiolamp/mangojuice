@@ -107,7 +107,7 @@ public class MangoJuice : Adw.Application {
     public  Scale             fps_sampling_period_scale;
     public  Label             fps_sampling_period_value_label;
     public  Button            mangohud_global_button;
-    public  Gee.ArrayList<DropDown> media_format_dropdowns { get; private set; }
+    public  Gee.ArrayList<DropDown> media_format_dropdowns { get; set; }
 
     bool        mangohud_global_enabled = false;
     public bool is_loading              = false;
@@ -352,45 +352,40 @@ public class MangoJuice : Adw.Application {
         var window = new Adw.ApplicationWindow (this);
         window.set_default_size (1024, 700);
         window.set_title ("MangoJuice");
-
-        if (Config.IS_DEVEL) {
-            window.add_css_class ("devel");
-        }
+        if (Config.IS_DEVEL) window.add_css_class ("devel");
 
         var toast_overlay = new Adw.ToastOverlay ();
         var content_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         toast_overlay.set_child (content_box);
 
+        view_stack = new Adw.ViewStack ();
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
-
-        view_stack = new Adw.ViewStack ();
-
+    
         var toolbar_view_switcher = new Adw.ViewSwitcher ();
         toolbar_view_switcher.stack = view_stack;
         toolbar_view_switcher.policy = Adw.ViewSwitcherPolicy.WIDE;
-
+    
         var bottom_headerbar = new Gtk.HeaderBar ();
         bottom_headerbar.show_title_buttons = false;
-
+        bottom_headerbar.set_visible (false);
+    
         var bottom_view_switcher = new Adw.ViewSwitcher ();
         bottom_view_switcher.stack = view_stack;
-
+    
         var center_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         center_box.set_halign (Gtk.Align.CENTER);
         center_box.append (bottom_view_switcher);
         bottom_headerbar.set_title_widget (center_box);
-    
-        bottom_headerbar.set_visible (false);
 
         var breakpoint_800px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 800px"));
         var breakpoint_550px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 550px"));
-    
+        
         breakpoint_800px.add_setter (toolbar_view_switcher, "policy", Adw.ViewSwitcherPolicy.NARROW);
         breakpoint_550px.add_setter (toolbar_view_switcher, "policy", Adw.ViewSwitcherPolicy.NARROW);
         breakpoint_550px.add_setter (bottom_headerbar, "visible", true);
         breakpoint_550px.add_setter (toolbar_view_switcher, "visible", false);
-    
+        
         window.add_breakpoint (breakpoint_800px);
         window.add_breakpoint (breakpoint_550px);
 
@@ -399,112 +394,49 @@ public class MangoJuice : Adw.Application {
         var performance_box = new Gtk.Box (Gtk.Orientation.VERTICAL, MAIN_BOX_SPACING);
         var visual_box = new Gtk.Box (Gtk.Orientation.VERTICAL, MAIN_BOX_SPACING);
         var other_box = new OtherBox ();
-
+    
         initialize_switches_and_labels (metrics_box, extras_box, performance_box, visual_box);
         initialize_custom_controls (extras_box, visual_box);
 
-        var metrics_scrolled_window = new Gtk.ScrolledWindow ();
-        metrics_scrolled_window.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
-        metrics_scrolled_window.set_vexpand (true);
-        metrics_scrolled_window.set_child (metrics_box);
-    
-        var extras_scrolled_window = new Gtk.ScrolledWindow ();
-        extras_scrolled_window.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
-        extras_scrolled_window.set_vexpand (true);
-        extras_scrolled_window.set_child (extras_box);
-    
-        var performance_scrolled_window = new Gtk.ScrolledWindow ();
-        performance_scrolled_window.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
-        performance_scrolled_window.set_vexpand (true);
-        performance_scrolled_window.set_child (performance_box);
-    
-        var visual_scrolled_window = new Gtk.ScrolledWindow ();
-        visual_scrolled_window.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
-        visual_scrolled_window.set_vexpand (true);
-        visual_scrolled_window.set_child (visual_box);
-    
-        other_scrolled_window = new Gtk.ScrolledWindow ();
-        other_scrolled_window.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
-        other_scrolled_window.set_vexpand (true);
-        other_scrolled_window.set_child (other_box);
+        var metrics_scrolled_window = create_scrolled_window (metrics_box);
+        var extras_scrolled_window = create_scrolled_window (extras_box);
+        var performance_scrolled_window = create_scrolled_window (performance_box);
+        var visual_scrolled_window = create_scrolled_window (visual_box);
+        other_scrolled_window = create_scrolled_window (other_box);
 
         string? current_desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
         bool is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
-    
-        if (is_gnome) {
-            view_stack.add_titled (metrics_scrolled_window, "metrics_box", _("Metrics")).icon_name = "view-continuous-symbolic";
-            view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "application-x-addon-symbolic";
-            view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "emblem-system-symbolic";
-            view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "preferences-desktop-appearance-symbolic";
-        } else {
-            view_stack.add_titled (metrics_scrolled_window, "metrics_box", _("Metrics")).icon_name = "io.github.radiolamp.mangojuice-metrics-symbolic";
-            view_stack.add_titled (extras_scrolled_window, "extras_box", _("Extras")).icon_name = "io.github.radiolamp.mangojuice-extras-symbolic";
-            view_stack.add_titled (performance_scrolled_window, "performance_box", _("Performance")).icon_name = "io.github.radiolamp.mangojuice-performance-symbolic";
-            view_stack.add_titled (visual_scrolled_window, "visual_box", _("Visual")).icon_name = "io.github.radiolamp.mangojuice-visual-symbolic";
-        }
-    
+        
+        add_view_to_stack (metrics_scrolled_window, "metrics_box", _("Metrics"), 
+                          is_gnome ? "view-continuous-symbolic" : "io.github.radiolamp.mangojuice-metrics-symbolic");
+        add_view_to_stack (extras_scrolled_window, "extras_box", _("Extras"),
+                          is_gnome ? "application-x-addon-symbolic" : "io.github.radiolamp.mangojuice-extras-symbolic");
+        add_view_to_stack (performance_scrolled_window, "performance_box", _("Performance"),
+                          is_gnome ? "emblem-system-symbolic" : "io.github.radiolamp.mangojuice-performance-symbolic");
+        add_view_to_stack (visual_scrolled_window, "visual_box", _("Visual"),
+                          is_gnome ? "preferences-desktop-appearance-symbolic" : "io.github.radiolamp.mangojuice-visual-symbolic");
+        
         add_other_box_if_needed.begin ();
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
-
+    
         var test_button = new Gtk.Button.with_label (_("Test"));
         test_button.clicked.connect (run_test);
         header_bar.pack_start (test_button);
 
-        var menu_button = new Gtk.MenuButton ();
-        menu_button.add_css_class ("circular");
-        var menu_model = new GLib.Menu ();
-        var save_item = new GLib.MenuItem (_("Save"), "app.save");
-        menu_model.append_item (save_item);
-        var save_as_item = new GLib.MenuItem (_("Save As"), "app.save_as");
-        menu_model.append_item (save_as_item);
-        var restore_config_item = new GLib.MenuItem (_("Restore"), "app.restore_config");
-        menu_model.append_item (restore_config_item);
-        var profiles_item = new GLib.MenuItem (_("You profiles"), "app.preset_dialog");
-        menu_model.append_item (profiles_item);
-        var carousel_item = new GLib.MenuItem (_("Presets"), "app.presets_carousel");
-        menu_model.append_item (carousel_item);
-        var advanced_item = new GLib.MenuItem (_("Change order"), "app.advanced");
-        menu_model.append_item (advanced_item);
-        var about_item = new GLib.MenuItem (_("About"), "app.about");
-        menu_model.append_item (about_item);
-        menu_button.set_menu_model (menu_model);
-        menu_button.set_icon_name ("open-menu-symbolic");
+        var menu_button = create_menu_button ();
         header_bar.pack_end (menu_button);
 
-        var heart_button = new Gtk.Button ();
-        heart_button.set_icon_name ("io.github.radiolamp.mangojuice.donate-symbolic");
-        heart_button.set_tooltip_text (_("Donate"));
-    
-        var motion_controller = new Gtk.EventControllerMotion ();
-        motion_controller.enter.connect (() => {
-            heart_button.add_css_class ("love-hover");
-            heart_button.add_css_class ("circular");
-            heart_button.add_css_class ("flat");
-        });
-        motion_controller.leave.connect (() => {
-            heart_button.remove_css_class ("love-hover");
-        });
-        heart_button.add_controller (motion_controller);
-        heart_button.clicked.connect (() => {
-            try {
-                Process.spawn_async (null, {"xdg-open", "https://radiolamp.github.io/mangojuice-donate/"}, null, SpawnFlags.SEARCH_PATH, null, null);
-            } catch (Error e) {
-                stderr.printf ("Error when opening the site: %s\n", e.message);
-            }
-        });
+        var heart_button = create_heart_button ();
         header_bar.pack_end (heart_button);
 
         var save_action = new GLib.SimpleAction ("save", null);
         save_action.activate.connect (() => {
             save_config ();
             if (test_button_pressed) {
-                if (is_vkcube_available ()) {
-                    restart_vkcube ();
-                } else if (is_glxgears_available ()) {
-                    restart_glxgears ();
-                }
+                if (is_vkcube_available ()) restart_vkcube ();
+                else if (is_glxgears_available ()) restart_glxgears ();
             }
         });
         this.add_action (save_action);
@@ -512,92 +444,160 @@ public class MangoJuice : Adw.Application {
         content_box.append (header_bar);
         content_box.append (view_stack);
         content_box.append (bottom_headerbar);
-    
         window.set_content (toast_overlay);
         window.present ();
-    
+
         Idle.add (() => {
-            bool mangohud_available = is_mangohud_available ();
-            bool vkcube_available = is_vkcube_available ();
-            bool glxgears_available = is_glxgears_available ();
-
-            var click_controller = new Gtk.GestureClick();
-            click_controller.pressed.connect(() => {
-                window.set_focus(null);
-            });
-            toast_overlay.add_controller(click_controller);
-
-            if (!mangohud_available) {
-                stderr.printf (_("MangoHud not found. Please install MangoHud to enable full functionality.\n"));
-                var toast_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
-                var toast_label = new Gtk.Label(_("MangoHud is not installed. Please install it."));
-                toast_label.set_ellipsize(Pango.EllipsizeMode.END);
-                toast_label.set_halign(Gtk.Align.START);
-                var install_button = new Gtk.Button.with_label(_("Install"));
-                
-                toast_box.append(toast_label);
-                toast_box.append(install_button);
-                
-                var toast = new Adw.Toast("");
-                toast.set_custom_title(toast_box);
-                toast.set_timeout(0);
-                
-                bool appstream_available = check_appstream_available();
-                install_button.visible = appstream_available;
-                
-                if (appstream_available) {
-                    install_button.clicked.connect(() => {
-                        try {
-                            Process.spawn_command_line_async("xdg-open appstream://io.github.flightlessmango.mangohud");
-                            toast.dismiss();
-                        } catch (Error e) {
-                            var error_toast = new Adw.Toast(_("Failed to launch AppStream: %s").printf(e.message));
-                            error_toast.timeout = 15;
-                            toast_overlay.add_toast(error_toast);
-                        }
-                    });
-                }
-                toast.dismissed.connect(() => {
-                    if (mangohud_available || (vkcube_available && glxgears_available)) {
-                        test_button?.set_visible(true);
-                    }
-                });
-                toast_overlay.add_toast(toast);
-            }
-    
-            if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
-                test_button?.set_visible (false);
-                if (!vkcube_available && !glxgears_available) {
-                    stderr.printf (_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
-                                  _("glxgears not found. If you want a test button, install mesa-utils.\n"));
-    
-                    var toast = new Adw.Toast (_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
-                    toast.set_timeout (15);
-                    toast.dismissed.connect(() => {
-                        if (mangohud_available || (vkcube_available && glxgears_available)) {
-                            test_button?.set_visible(true);
-                        }
-                    });
-                    toast_overlay.add_toast (toast);
-                }
-            }
-
-            var advanced_action = new GLib.SimpleAction("advanced", null);
-            advanced_action.activate.connect(() => {
-                if (window != null) {
-                    AdvancedDialog.show_advanced_dialog(window);
-                }
-            });
-            this.add_action(advanced_action);
-    
-            reset_manager = new ResetManager (this);
-            initialize_rest_of_ui (view_stack);
-            check_mangohud_global_status ();
+            setup_initial_checks (window, toast_overlay, test_button);
             return false;
         });
         
-    
         LoadStates.load_states_from_file.begin (this);
+    }
+    
+    Gtk.ScrolledWindow create_scrolled_window (Gtk.Widget child) {
+        var scrolled = new Gtk.ScrolledWindow ();
+        scrolled.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
+        scrolled.set_vexpand (true);
+        scrolled.set_child (child);
+        return scrolled;
+    }
+    
+    void add_view_to_stack (Gtk.Widget widget, string name, string title, string icon_name) {
+        view_stack.add_titled (widget, name, title).icon_name = icon_name;
+    }
+    
+    Gtk.MenuButton create_menu_button () {
+        var menu_button = new Gtk.MenuButton ();
+        menu_button.add_css_class ("circular");
+        
+        var menu_model = new GLib.Menu ();
+        menu_model.append_item (new GLib.MenuItem (_("Save"), "app.save"));
+        menu_model.append_item (new GLib.MenuItem (_("Save As"), "app.save_as"));
+        menu_model.append_item (new GLib.MenuItem (_("Restore"), "app.restore_config"));
+        menu_model.append_item (new GLib.MenuItem (_("You profiles"), "app.preset_dialog"));
+        menu_model.append_item (new GLib.MenuItem (_("Presets"), "app.presets_carousel"));
+        menu_model.append_item (new GLib.MenuItem (_("Change order"), "app.advanced"));
+        menu_model.append_item (new GLib.MenuItem (_("About"), "app.about"));
+        
+        menu_button.set_menu_model (menu_model);
+        menu_button.set_icon_name ("open-menu-symbolic");
+        return menu_button;
+    }
+    
+    Gtk.Button create_heart_button () {
+        var button = new Gtk.Button ();
+        button.set_icon_name ("io.github.radiolamp.mangojuice.donate-symbolic");
+        button.set_tooltip_text (_("Donate"));
+        
+        var motion_controller = new Gtk.EventControllerMotion ();
+        motion_controller.enter.connect (() => {
+            button.add_css_class ("love-hover");
+            button.add_css_class ("circular");
+            button.add_css_class ("flat");
+        });
+        motion_controller.leave.connect (() => {
+            button.remove_css_class ("love-hover");
+        });
+        button.add_controller (motion_controller);
+        
+        button.clicked.connect (() => {
+            try {
+                Process.spawn_async (null, {"xdg-open", "https://radiolamp.github.io/mangojuice-donate/"}, 
+                                   null, SpawnFlags.SEARCH_PATH, null, null);
+            } catch (Error e) {
+                stderr.printf ("Error when opening the site: %s\n", e.message);
+            }
+        });
+        
+        return button;
+    }
+    
+    void setup_initial_checks (Adw.ApplicationWindow window, Adw.ToastOverlay toast_overlay, Gtk.Button test_button) {
+        bool mangohud_available = is_mangohud_available ();
+        bool vkcube_available = is_vkcube_available ();
+        bool glxgears_available = false;
+        if (!vkcube_available) {
+            glxgears_available = is_glxgears_available ();
+        }
+    
+        var click_controller = new Gtk.GestureClick();
+        click_controller.pressed.connect(() => window.set_focus(null));
+        toast_overlay.add_controller(click_controller);
+    
+        if (!mangohud_available) {
+            show_mangohud_not_found_toast(toast_overlay, test_button);
+        }
+    
+        if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
+            test_button.set_visible(false);
+            if (!vkcube_available && !glxgears_available) {
+                show_test_tools_not_found_toast(toast_overlay, test_button, mangohud_available);
+            }
+        }
+    
+        var advanced_action = new GLib.SimpleAction("advanced", null);
+        advanced_action.activate.connect(() => {
+            if (window != null) AdvancedDialog.show_advanced_dialog(window);
+        });
+        this.add_action(advanced_action);
+    
+        reset_manager = new ResetManager (this);
+        initialize_rest_of_ui (view_stack);
+        check_mangohud_global_status ();
+    }
+    
+    void show_mangohud_not_found_toast(Adw.ToastOverlay toast_overlay, Gtk.Button test_button) {
+        var toast_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+        var toast_label = new Gtk.Label(_("MangoHud is not installed. Please install it."));
+        toast_label.set_ellipsize(Pango.EllipsizeMode.END);
+        toast_label.set_halign(Gtk.Align.START);
+        var install_button = new Gtk.Button.with_label(_("Install"));
+        
+        toast_box.append(toast_label);
+        toast_box.append(install_button);
+        
+        var toast = new Adw.Toast("");
+        toast.set_custom_title(toast_box);
+        toast.set_timeout(0);
+        
+        bool appstream_available = check_appstream_available();
+        install_button.visible = appstream_available;
+
+        if (appstream_available) {
+            install_button.clicked.connect(() => {
+                try {
+                    Process.spawn_command_line_async("xdg-open appstream://io.github.flightlessmango.mangohud");
+                    toast.dismiss();
+                } catch (Error e) {
+                    var error_toast = new Adw.Toast(_("Failed to launch AppStream: %s").printf(e.message));
+                    error_toast.timeout = 15;
+                    toast_overlay.add_toast(error_toast);
+                }
+            });
+        }
+
+        toast.dismissed.connect(() => {
+            if (is_mangohud_available() || (is_vkcube_available() && is_glxgears_available())) {
+                test_button.set_visible(true);
+            }
+        });
+
+        toast_overlay.add_toast(toast);
+    }
+    
+    void show_test_tools_not_found_toast(Adw.ToastOverlay toast_overlay, Gtk.Button test_button, bool mangohud_available) {
+        stderr.printf(_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
+                     _("glxgears not found. If you want a test button, install mesa-utils.\n"));
+    
+        var toast = new Adw.Toast(_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
+        toast.set_timeout(15);
+        toast.dismissed.connect(() => {
+            if (mangohud_available || (is_vkcube_available() && is_glxgears_available())) {
+                test_button.set_visible(true);
+            }
+        });
+        toast_overlay.add_toast(toast);
     }
 
     void initialize_rest_of_ui (ViewStack view_stack) {
@@ -2188,7 +2188,7 @@ public class MangoJuice : Adw.Application {
     }
 
     public Gtk.DropDown gpu_dropdown;
-    private string[] gpu_pci_addresses = {};
+    string[] gpu_pci_addresses = {};
    
     public void initialize_gpu_entry (Box extras_box) {
         var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
@@ -2265,7 +2265,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    private string[] get_gpu_pci_addresses() {
+    string[] get_gpu_pci_addresses() {
         string[] addresses = {};
         try {
             string output;
