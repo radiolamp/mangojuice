@@ -289,7 +289,7 @@ public class MangoJuice : Adw.Application {
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
-
+    
         var quit_action = new SimpleAction ("quit", null);
         quit_action.activate.connect (() => {
             this.quit ();
@@ -297,13 +297,13 @@ public class MangoJuice : Adw.Application {
         this.add_action (quit_action);
         const string[] quit_accels = { "<Control>Q", null };
         this.set_accels_for_action ("app.quit", quit_accels);
-
+    
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (run_test);
         this.add_action (test_action_new);
         const string[] test_new_accels = { "<Primary>T", null };
         this.set_accels_for_action ("app.test_new", test_new_accels);
-
+    
         var restore_config_action = new SimpleAction ("restore_config", null);
         restore_config_action.activate.connect (() => {
             on_restore_config_button_clicked ();
@@ -311,7 +311,7 @@ public class MangoJuice : Adw.Application {
         this.add_action (restore_config_action);
         const string[] restore_config_accels = { "<Primary>R", null };
         this.set_accels_for_action ("app.restore_config", restore_config_accels);
-
+    
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => {
             save_config ();
@@ -319,7 +319,7 @@ public class MangoJuice : Adw.Application {
         this.add_action (save_action);
         const string[] save_accels = { "<Primary>S", null };
         this.set_accels_for_action ("app.save", save_accels);
-
+    
         var save_as_action = new SimpleAction ("save_as", null);
         save_as_action.activate.connect (() => {
             on_save_as_button_clicked ();
@@ -327,33 +327,32 @@ public class MangoJuice : Adw.Application {
         this.add_action (save_as_action);
         const string[] save_as_accels = { "<Primary>E", null };
         this.set_accels_for_action ("app.save_as", save_as_accels);
-
+    
         var presets_action = new SimpleAction ("presets_carousel", null);
         presets_action.activate.connect (() => {
-            AboutDialog.show_presets_carousel_dialog(this.active_window, this);
+            AboutDialog.show_presets_carousel_dialog (this.active_window, this);
         });
         this.add_action (presets_action);
         const string[] presets_accels = { "<Primary>P", null };
         this.set_accels_for_action ("app.presets_carousel", presets_accels);
-
+    
         var action_y = new SimpleAction ("preset_y_action", null);
         action_y.activate.connect (() => {
             if (this.active_window != null) {
-                AboutDialog.preset_dialog(this.active_window, this);
+                AboutDialog.preset_dialog (this.active_window, this);
             }
         });
         this.add_action (action_y);
-
         const string[] accels_y = { "<Primary>Y", null };
         this.set_accels_for_action ("app.preset_dialog", accels_y);
-
+    
         var action_a = new SimpleAction ("preset_a_action", null);
-            action_a.activate.connect (() => {
-                if (this.active_window != null) {
-                    AdvancedDialog.show_advanced_dialog(this.active_window);
-                }
-            });
-            this.add_action (action_a);
+        action_a.activate.connect (() => {
+            if (this.active_window != null) {
+                AdvancedDialog.show_advanced_dialog (this.active_window);
+            }
+        });
+        this.add_action (action_a);
         const string[] accels_a = { "<Primary>A", null };
         this.set_accels_for_action ("app.advanced", accels_a);
     }
