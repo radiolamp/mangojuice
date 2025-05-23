@@ -26,7 +26,7 @@ namespace AboutDialog {
         dialog.version = Config.VERSION;
         dialog.translator_credits = _("translator-credits");
         dialog.set_developers(developers);
-        dialog.add_link (_("Financial support") + " (Donationalerts)", "https://www.donationalerts.com/r/radiolamp");
+        dialog.add_link (_("Financial support") + " (Donation Alerts)", "https://www.donationalerts.com/r/radiolamp");
         dialog.add_link (_("Financial support") + " (Tinkoff)", "https://www.tbank.ru/cf/3PPTstulqEq");
         dialog.add_link (_("Financial support") + " (Boosty)", "https://boosty.to/radiolamp");
 
