@@ -346,6 +346,16 @@ public class MangoJuice : Adw.Application {
 
         const string[] accels_y = { "<Primary>Y", null };
         this.set_accels_for_action ("app.preset_dialog", accels_y);
+
+        var action_a = new SimpleAction ("preset_a_action", null);
+            action_a.activate.connect (() => {
+                if (this.active_window != null) {
+                    AdvancedDialog.show_advanced_dialog(this.active_window);
+                }
+            });
+            this.add_action (action_a);
+        const string[] accels_a = { "<Primary>A", null };
+        this.set_accels_for_action ("app.advanced", accels_a);
     }
 
     protected override void activate () {
