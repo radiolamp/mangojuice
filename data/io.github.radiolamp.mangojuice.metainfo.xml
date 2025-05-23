@@ -3,11 +3,11 @@
   <id>io.github.radiolamp.mangojuice</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
-  <name>Mangojuice</name>
-  <summary>The mangohud customization assistant.</summary>
+  <name>Mango Juice</name>
+  <summary>The MangoHUD customization assistant</summary>
   <description>
     <p>
-      Mangojuice is a helper for mangohud
+      MangoJuice is an application for easily editing MangoHUD settings, which in turn is an Overlay solution for tracking load and other parameters in games and other software.
     </p>
   </description>
   <url type="homepage">https://github.com/radiolamp/mangojuice</url>
@@ -39,13 +39,11 @@
       <description>
         <p>Profiles and sorting</p>
         <ul>
-          <li>Full update information is available on github.</li>
+          <li>Full update information is available on GitHub.</li>
         </ul>
       </description>
     </release>
   </releases>
-  <url type="homepage">https://github.com/radiolamp/mangojuice</url>
-  <url type="bugtracker">https://github.com/radiolamp/mangojuice/issues</url>
   <categories>
     <category>Utility</category>
   </categories>

@@ -215,8 +215,8 @@ public class MangoJuice : Adw.Application {
 
     // Performance
     string[] inform_label_texts = {
-        _("FPS"),           _("Color FPS"),   _("Lowest 1%"),
-        _("Lowest 0.1%"),   _("Frame limit"), _("Frame graph"), _("Detailed Frametime") , _("Histogram"),
+        _("FPS"),           _("Color FPS"),   _("Lowest 1%%"),
+        _("Lowest 0.1%%"),  _("Frame limit"), _("Frame graph"), _("Detailed Frametime") , _("Histogram"),
         _("Frame Counter"), _("°C to °F"),    _("VPS")
     };
 
@@ -256,8 +256,8 @@ public class MangoJuice : Adw.Application {
         _("Hide overlay"),           _("Shadows under text"), _("Same font size"), _("External offsets")
     };
     string[] battery_label_texts_2 = {
-        _("Power level, %"),  _("Consumption, W"), _("Battery life"),
-        _("This devices"), _("Wireless devices"), _("Wireless battries")
+        _("Power level, %%"), _("Consumption, W"),   _("Battery life"),
+        _("This devices"),    _("Wireless devices"), _("Wireless battries")
     };
     string[] wine_label_texts_2 = {
         _("Wine or Proton version"), _("Wine sync method")
@@ -269,8 +269,8 @@ public class MangoJuice : Adw.Application {
 
     // Performance
     string[] inform_label_texts_2 = {
-        _("Frames per second"),   _("Color text"),        _("1% is lower then"),
-        _("0.1% is lower then"),  _("FPS limitation"),    _("Frametime"),           _("Detailed frame time"),  _("Graph to histogram"),
+        _("Frames per second"),   _("Color text"),        _("1%% is lower then"),
+        _("0.1%% is lower then"), _("FPS limitation"),    _("Frametime"),           _("Detailed frame time"),  _("Graph to histogram"),
         _("Display frame count"), _("Temperature in °F"), _("Present mode")
     };
 
@@ -289,7 +289,7 @@ public class MangoJuice : Adw.Application {
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
-    
+
         var quit_action = new SimpleAction ("quit", null);
         quit_action.activate.connect (() => {
             this.quit ();
@@ -297,13 +297,13 @@ public class MangoJuice : Adw.Application {
         this.add_action (quit_action);
         const string[] quit_accels = { "<Control>Q", null };
         this.set_accels_for_action ("app.quit", quit_accels);
-    
+
         var test_action_new = new SimpleAction ("test_new", null);
         test_action_new.activate.connect (run_test);
         this.add_action (test_action_new);
         const string[] test_new_accels = { "<Primary>T", null };
         this.set_accels_for_action ("app.test_new", test_new_accels);
-    
+
         var restore_config_action = new SimpleAction ("restore_config", null);
         restore_config_action.activate.connect (() => {
             on_restore_config_button_clicked ();
@@ -311,7 +311,7 @@ public class MangoJuice : Adw.Application {
         this.add_action (restore_config_action);
         const string[] restore_config_accels = { "<Primary>R", null };
         this.set_accels_for_action ("app.restore_config", restore_config_accels);
-    
+
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (() => {
             save_config ();
@@ -319,7 +319,7 @@ public class MangoJuice : Adw.Application {
         this.add_action (save_action);
         const string[] save_accels = { "<Primary>S", null };
         this.set_accels_for_action ("app.save", save_accels);
-    
+
         var save_as_action = new SimpleAction ("save_as", null);
         save_as_action.activate.connect (() => {
             on_save_as_button_clicked ();
@@ -343,7 +343,7 @@ public class MangoJuice : Adw.Application {
             }
         });
         this.add_action (action_y);
-        
+
         const string[] accels_y = { "<Primary>Y", null };
         this.set_accels_for_action ("app.preset_dialog", accels_y);
     }
@@ -361,18 +361,18 @@ public class MangoJuice : Adw.Application {
         view_stack = new Adw.ViewStack ();
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, MAIN_BOX_SPACING);
         main_box.set_homogeneous (true);
-    
+
         var toolbar_view_switcher = new Adw.ViewSwitcher ();
         toolbar_view_switcher.stack = view_stack;
         toolbar_view_switcher.policy = Adw.ViewSwitcherPolicy.WIDE;
-    
+
         var bottom_headerbar = new Gtk.HeaderBar ();
         bottom_headerbar.show_title_buttons = false;
         bottom_headerbar.set_visible (false);
-    
+
         var bottom_view_switcher = new Adw.ViewSwitcher ();
         bottom_view_switcher.stack = view_stack;
-    
+
         var center_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         center_box.set_halign (Gtk.Align.CENTER);
         center_box.append (bottom_view_switcher);
@@ -380,12 +380,12 @@ public class MangoJuice : Adw.Application {
 
         var breakpoint_800px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 800px"));
         var breakpoint_550px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 550px"));
-        
+
         breakpoint_800px.add_setter (toolbar_view_switcher, "policy", Adw.ViewSwitcherPolicy.NARROW);
         breakpoint_550px.add_setter (toolbar_view_switcher, "policy", Adw.ViewSwitcherPolicy.NARROW);
         breakpoint_550px.add_setter (bottom_headerbar, "visible", true);
         breakpoint_550px.add_setter (toolbar_view_switcher, "visible", false);
-        
+
         window.add_breakpoint (breakpoint_800px);
         window.add_breakpoint (breakpoint_550px);
 
@@ -394,7 +394,7 @@ public class MangoJuice : Adw.Application {
         var performance_box = new Gtk.Box (Gtk.Orientation.VERTICAL, MAIN_BOX_SPACING);
         var visual_box = new Gtk.Box (Gtk.Orientation.VERTICAL, MAIN_BOX_SPACING);
         var other_box = new OtherBox ();
-    
+
         initialize_switches_and_labels (metrics_box, extras_box, performance_box, visual_box);
         initialize_custom_controls (extras_box, visual_box);
 
@@ -406,8 +406,8 @@ public class MangoJuice : Adw.Application {
 
         string? current_desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
         bool is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
-        
-        add_view_to_stack (metrics_scrolled_window, "metrics_box", _("Metrics"), 
+
+        add_view_to_stack (metrics_scrolled_window, "metrics_box", _("Metrics"),
                           is_gnome ? "view-continuous-symbolic" : "io.github.radiolamp.mangojuice-metrics-symbolic");
         add_view_to_stack (extras_scrolled_window, "extras_box", _("Extras"),
                           is_gnome ? "application-x-addon-symbolic" : "io.github.radiolamp.mangojuice-extras-symbolic");
@@ -415,12 +415,12 @@ public class MangoJuice : Adw.Application {
                           is_gnome ? "emblem-system-symbolic" : "io.github.radiolamp.mangojuice-performance-symbolic");
         add_view_to_stack (visual_scrolled_window, "visual_box", _("Visual"),
                           is_gnome ? "preferences-desktop-appearance-symbolic" : "io.github.radiolamp.mangojuice-visual-symbolic");
-        
+
         add_other_box_if_needed.begin ();
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
-    
+
         var test_button = new Gtk.Button.with_label (_("Test"));
         test_button.clicked.connect (run_test);
         header_bar.pack_start (test_button);
@@ -451,10 +451,10 @@ public class MangoJuice : Adw.Application {
             setup_initial_checks (window, toast_overlay, test_button);
             return false;
         });
-        
+
         LoadStates.load_states_from_file.begin (this);
     }
-    
+
     Gtk.ScrolledWindow create_scrolled_window (Gtk.Widget child) {
         var scrolled = new Gtk.ScrolledWindow ();
         scrolled.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
@@ -462,15 +462,15 @@ public class MangoJuice : Adw.Application {
         scrolled.set_child (child);
         return scrolled;
     }
-    
+
     void add_view_to_stack (Gtk.Widget widget, string name, string title, string icon_name) {
         view_stack.add_titled (widget, name, title).icon_name = icon_name;
     }
-    
+
     Gtk.MenuButton create_menu_button () {
         var menu_button = new Gtk.MenuButton ();
         menu_button.add_css_class ("circular");
-        
+
         var menu_model = new GLib.Menu ();
         menu_model.append_item (new GLib.MenuItem (_("Save"), "app.save"));
         menu_model.append_item (new GLib.MenuItem (_("Save As"), "app.save_as"));
@@ -479,17 +479,17 @@ public class MangoJuice : Adw.Application {
         menu_model.append_item (new GLib.MenuItem (_("Presets"), "app.presets_carousel"));
         menu_model.append_item (new GLib.MenuItem (_("Change order"), "app.advanced"));
         menu_model.append_item (new GLib.MenuItem (_("About"), "app.about"));
-        
+
         menu_button.set_menu_model (menu_model);
         menu_button.set_icon_name ("open-menu-symbolic");
         return menu_button;
     }
-    
+
     Gtk.Button create_heart_button () {
         var button = new Gtk.Button ();
         button.set_icon_name ("io.github.radiolamp.mangojuice.donate-symbolic");
         button.set_tooltip_text (_("Donate"));
-        
+
         var motion_controller = new Gtk.EventControllerMotion ();
         motion_controller.enter.connect (() => {
             button.add_css_class ("love-hover");
@@ -500,19 +500,19 @@ public class MangoJuice : Adw.Application {
             button.remove_css_class ("love-hover");
         });
         button.add_controller (motion_controller);
-        
+
         button.clicked.connect (() => {
             try {
-                Process.spawn_async (null, {"xdg-open", "https://radiolamp.github.io/mangojuice-donate/"}, 
+                Process.spawn_async (null, {"xdg-open", "https://radiolamp.github.io/mangojuice-donate/"},
                                    null, SpawnFlags.SEARCH_PATH, null, null);
             } catch (Error e) {
                 stderr.printf ("Error when opening the site: %s\n", e.message);
             }
         });
-        
+
         return button;
     }
-    
+
     void setup_initial_checks (Adw.ApplicationWindow window, Adw.ToastOverlay toast_overlay, Gtk.Button test_button) {
         bool mangohud_available = is_mangohud_available ();
         bool vkcube_available = is_vkcube_available ();
@@ -520,47 +520,47 @@ public class MangoJuice : Adw.Application {
         if (!vkcube_available) {
             glxgears_available = is_glxgears_available ();
         }
-    
+
         var click_controller = new Gtk.GestureClick();
         click_controller.pressed.connect(() => window.set_focus(null));
         toast_overlay.add_controller(click_controller);
-    
+
         if (!mangohud_available) {
             show_mangohud_not_found_toast(toast_overlay, test_button);
         }
-    
+
         if (!mangohud_available || (!vkcube_available && !glxgears_available)) {
             test_button.set_visible(false);
             if (!vkcube_available && !glxgears_available) {
                 show_test_tools_not_found_toast(toast_overlay, test_button, mangohud_available);
             }
         }
-    
+
         var advanced_action = new GLib.SimpleAction("advanced", null);
         advanced_action.activate.connect(() => {
             if (window != null) AdvancedDialog.show_advanced_dialog(window);
         });
         this.add_action(advanced_action);
-    
+
         reset_manager = new ResetManager (this);
         initialize_rest_of_ui (view_stack);
         check_mangohud_global_status ();
     }
-    
+
     void show_mangohud_not_found_toast(Adw.ToastOverlay toast_overlay, Gtk.Button test_button) {
         var toast_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
         var toast_label = new Gtk.Label(_("MangoHud is not installed. Please install it."));
         toast_label.set_ellipsize(Pango.EllipsizeMode.END);
         toast_label.set_halign(Gtk.Align.START);
         var install_button = new Gtk.Button.with_label(_("Install"));
-        
+
         toast_box.append(toast_label);
         toast_box.append(install_button);
-        
+
         var toast = new Adw.Toast("");
         toast.set_custom_title(toast_box);
         toast.set_timeout(0);
-        
+
         bool appstream_available = check_appstream_available();
         install_button.visible = appstream_available;
 
@@ -590,11 +590,11 @@ public class MangoJuice : Adw.Application {
 
         toast_overlay.add_toast(toast);
     }
-    
+
     void show_test_tools_not_found_toast(Adw.ToastOverlay toast_overlay, Gtk.Button test_button, bool mangohud_available) {
         stderr.printf(_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
                      _("glxgears not found. If you want a test button, install mesa-utils.\n"));
-    
+
         var toast = new Adw.Toast(_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
         toast.set_timeout(15);
         toast.dismissed.connect(() => {
@@ -843,7 +843,7 @@ public class MangoJuice : Adw.Application {
             entry.text = default_value;
             clear_button.visible = false;
         });
-        
+
         entry.changed.connect (() => {
             clear_button.visible = entry.text != default_value && entry.text != "";
         });
@@ -852,7 +852,7 @@ public class MangoJuice : Adw.Application {
         entry_box.append (entry);
         entry_box.append (clear_button);
         entry_box.add_css_class("linked");
-        
+
         return entry_box;
     }
 
@@ -917,7 +917,7 @@ public class MangoJuice : Adw.Application {
             margin_start = 15,
             margin_end = 15
         };
-        
+
         blacklist_entry = new Entry();
         var blacklist_box = create_entry_with_clear_button(blacklist_entry, _("Blacklist: (vkcube, WatchDogs2.exe)"), "");
         blacklist_box.hexpand = true;
@@ -925,15 +925,15 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_blacklist_in_file(blacklist_entry.text);
             save_config();
         });
-        
+
         blacklist_row.append(blacklist_box);
-        
+
         if (!is_flatpak()) {
             mangohud_global_button = new Button.with_label(_("MangoHud Global"));
             mangohud_global_button.clicked.connect(on_mangohud_global_button_clicked);
             blacklist_row.append(mangohud_global_button);
         }
-        
+
         extras_box.append(blacklist_row);
 
         var custom_command_flow_box = new FlowBox () {
@@ -1183,18 +1183,18 @@ public class MangoJuice : Adw.Application {
 
         fonts_flow_box.insert (font_selector_widget, -1);
         fonts_flow_box.insert (font_size_widget.widget, -1);
-        
+
         visual_box.append (fonts_flow_box);
 
         var media_label = create_label (_("Media"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (media_label);
-        
+
         var format_options = new Gtk.StringList (null);
         string[] options = { "title", "artist", "album", "none" };
         foreach (var option in options) {
             format_options.append (option);
         }
-        
+
         media_format_dropdowns = new Gee.ArrayList<DropDown>();
 
         for (int i = 0; i < 3; i++) {
@@ -1212,10 +1212,10 @@ public class MangoJuice : Adw.Application {
                 SaveStates.update_media_player_format_in_file(media_format);
                 save_config();
             });
-            
+
             media_format_dropdowns.add(dropdown);
         }
-        
+
         var media_flow_box = new FlowBox () {
             max_children_per_line = 3,
             margin_start = FLOW_BOX_MARGIN,
@@ -1230,7 +1230,7 @@ public class MangoJuice : Adw.Application {
         foreach (var dropdown in media_format_dropdowns) {
             media_flow_box.insert (dropdown, -1);
         }
-        
+
         visual_box.append (media_flow_box);
 
         initialize_color_controls (visual_box);
@@ -1240,24 +1240,24 @@ public class MangoJuice : Adw.Application {
         var default_rgba = Gdk.RGBA();
         default_rgba.parse(default_color_hex);
         button.set_rgba(default_rgba);
-    
+
         var gesture = new Gtk.GestureClick();
         gesture.set_button(0);
-    
+
         gesture.pressed.connect((n_press, x, y) => {
             var button_number = gesture.get_current_button();
             if (button_number == Gdk.BUTTON_SECONDARY) {
                 button.set_rgba(default_rgba);
             }
         });
-    
+
         button.add_controller(gesture);
     }
 
     void initialize_color_controls (Box visual_box) {
         var color_label = create_label (_("Color"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (color_label);
-        
+
         var color_flow_box = new FlowBox () {
             homogeneous = true,
             max_children_per_line = 9,
@@ -1285,14 +1285,14 @@ public class MangoJuice : Adw.Application {
             var rgba = cpu_color_button.get_rgba ().copy ();
             SaveStates.update_cpu_color_in_file (rgba_to_hex (rgba));
         });
-        
+
         gpu_text_entry = new Entry ();
         var gpu_text_entry_box = create_entry_with_clear_button (gpu_text_entry, _("GPU custom name"), "");
         gpu_text_entry.changed.connect (() => {
             SaveStates.update_gpu_text_in_file (gpu_text_entry.text);
             save_config ();
         });
-        
+
         cpu_text_entry = new Entry ();
         var cpu_text_entry_box = create_entry_with_clear_button (cpu_text_entry, _("CPU custom name"), "");
         cpu_text_entry.changed.connect (() => {
@@ -1311,10 +1311,10 @@ public class MangoJuice : Adw.Application {
         color_box.append (cpu_text_entry_box);
         color_box.append (cpu_color_button);
         visual_box.append (color_box);
-        
+
         var fps_clarge_label = create_label (_("FPS color levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (fps_clarge_label);
-        
+
         fps_value_entry_1 = new Entry ();
         var fps_entry_box_1 = create_entry_with_clear_button (fps_value_entry_1, _("Medium"), "30");
         fps_value_entry_1.changed.connect (() => {
@@ -1326,7 +1326,7 @@ public class MangoJuice : Adw.Application {
         fps_value_entry_2.changed.connect (() => {
             SaveStates.update_fps_value_in_file (fps_value_entry_1.text, fps_value_entry_2.text);
         });
-        
+
         var fps_entry_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         fps_entry_box.append (fps_entry_box_1);
         fps_entry_box.append (fps_entry_box_2);
@@ -1608,13 +1608,13 @@ public class MangoJuice : Adw.Application {
         scroll.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
         scroll.set_size_request(-1 , 300);
         popover_box.append(scroll);
-    
+
         var list_box = new ListBox();
         scroll.set_child(list_box);
 
         var fonts = find_fonts();
         var font_items = new Gee.HashMap<string, string>();
-    
+
         foreach (var font_path in fonts) {
             var font_name = Path.get_basename(font_path);
             font_items[font_name] = font_path;
@@ -1638,7 +1638,7 @@ public class MangoJuice : Adw.Application {
                     var label = new Label(font_name);
                     label.set_xalign(0);
                     label.set_hexpand(true);
-    
+
                     var wine_label = new Label(_("Wine"));
                     wine_label.add_css_class("dim-label");
                     wine_label.set_visible(false);
@@ -1650,7 +1650,7 @@ public class MangoJuice : Adw.Application {
                             wine_label.set_visible(true);
                         }
                     }
-    
+
                     box.append(label);
                     box.append(wine_label);
                     row.set_child(box);
@@ -1665,13 +1665,13 @@ public class MangoJuice : Adw.Application {
             var box = row.get_child() as Box;
             var label = box.get_first_child() as Label;
             var font_name = label.label;
-    
+
             if (font_name == _("Default")) {
                 SaveStates.update_font_file_in_file("");
             } else if (font_items.has_key(font_name)) {
                 SaveStates.update_font_file_in_file(font_items[font_name]);
             }
-    
+
             font_button.label = font_name;
             popover.popdown();
             save_config();
@@ -1745,18 +1745,18 @@ public class MangoJuice : Adw.Application {
             row_box.set_valign (Align.CENTER);
             switches[i] = new Switch ();
             switches[i].set_valign (Align.CENTER);
-    
+
             var text_box = new Box (Orientation.VERTICAL, 0);
             text_box.set_valign (Align.CENTER);
             text_box.set_halign (Align.START);
             text_box.set_size_request (175, -1);
-    
+
             var label1 = new Label (null);
             label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
             label1.set_halign (Align.START);
             label1.set_ellipsize (Pango.EllipsizeMode.END);
             label1.set_max_width_chars (18);
-            
+
             if (label_texts[i].char_count() > 20) {
                 label1.set_tooltip_text (label_texts[i]);
             }
@@ -1767,7 +1767,7 @@ public class MangoJuice : Adw.Application {
             label2.add_css_class ("dim-label");
             label2.set_ellipsize (Pango.EllipsizeMode.END);
             label2.set_max_width_chars (19);
-            
+
             if (label_texts_2[i].char_count() > 21) {
                 label2.set_tooltip_text (label_texts_2[i]);
             }
@@ -1779,7 +1779,7 @@ public class MangoJuice : Adw.Application {
             row_box.append (text_box);
             flow_box.insert (row_box, -1);
         }
-    
+
         parent_box.append (flow_box);
     }
 
@@ -1841,7 +1841,7 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             save_config ();
         });
-        
+
         fps_limit_entry_2 = new Entry ();
         fps_limit_entry_2.input_purpose = InputPurpose.NUMBER;
         var fps_limit_entry_2_box = create_entry_with_clear_button (fps_limit_entry_2, _("Limit 2"), "");
@@ -1850,7 +1850,7 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_fps_limit_in_file (fps_limit_entry_1.text, fps_limit_entry_2.text, fps_limit_entry_3.text);
             save_config ();
         });
-        
+
         fps_limit_entry_3 = new Entry ();
         fps_limit_entry_3.input_purpose = InputPurpose.NUMBER;
         var fps_limit_entry_3_box = create_entry_with_clear_button (fps_limit_entry_3, _("Limit 3"), "");
@@ -1976,7 +1976,7 @@ public class MangoJuice : Adw.Application {
         fps_sampling_period_scale.value_changed.connect (() => {
             if (!is_updating) {
                 is_updating = true;
-                int value = (int)fps_sampling_period_scale.get_value (); 
+                int value = (int)fps_sampling_period_scale.get_value ();
                 fps_sampling_period_entry.text = "%d".printf (value);
                 SaveStates.update_fps_sampling_period_in_file ("%d".printf (value));
                 is_updating = false;
@@ -2190,19 +2190,19 @@ public class MangoJuice : Adw.Application {
 
     public Gtk.DropDown gpu_dropdown;
     string[] gpu_pci_addresses = {};
-   
+
     public void initialize_gpu_entry (Box extras_box) {
         var gpu_list_label = create_label (_("List GPUs to display"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
-        
+
         gpu_entry = new Entry () { hexpand = true, halign = Align.FILL };
         var gpu_box = create_entry_with_clear_button (gpu_entry, _("Video card display order (0,1,2)"), "");
         gpu_entry.changed.connect (() => { SaveStates.update_gpu_in_file (gpu_entry.text); save_config (); });
-        
+
         var string_list = new Gtk.StringList (null);
         string_list.append (_("All video cards"));
-        
+
         gpu_dropdown = new Gtk.DropDown (string_list, null) { hexpand = true, halign = Align.FILL };
-        
+
         var factory = new Gtk.SignalListItemFactory();
         factory.setup.connect((item) => {
             var label = new Gtk.Label("") {
@@ -2214,7 +2214,7 @@ public class MangoJuice : Adw.Application {
                 list_item.set_child(label);
             }
         });
-        
+
         factory.bind.connect((item) => {
             var list_item = item as Gtk.ListItem;
             if (list_item != null) {
@@ -2231,16 +2231,16 @@ public class MangoJuice : Adw.Application {
         });
 
         gpu_dropdown.factory = factory;
-        
+
         gpu_pci_addresses = get_gpu_pci_addresses ();
-        
+
         if (gpu_pci_addresses.length == 1 && !Config.IS_DEVEL) {
             gpu_list_label.visible = gpu_box.visible = gpu_dropdown.visible = false;
         } else {
             foreach (var pci_address in gpu_pci_addresses) {
                 string_list.append (pci_address);
             }
-        
+
             gpu_dropdown.notify["selected"].connect (() => {
                 uint selected_index = gpu_dropdown.selected;
                 if (selected_index == 0) {
@@ -2251,17 +2251,17 @@ public class MangoJuice : Adw.Application {
                 }
                 save_config ();
             });
-        
+
             var gpu_hbox = new FlowBox () {
                 margin_start = FLOW_BOX_MARGIN,
                 margin_end = FLOW_BOX_MARGIN,
                 hexpand = true,
                 max_children_per_line = 2
             };
-            
+
             gpu_hbox.append (gpu_box);
             gpu_hbox.append (gpu_dropdown);
-        
+
             extras_box.append (gpu_list_label);
             extras_box.append (gpu_hbox);
         }
@@ -2273,14 +2273,14 @@ public class MangoJuice : Adw.Application {
             string output;
             Process.spawn_command_line_sync("lspci", out output);
             string[] lines = output.split("\n");
-        
+
             foreach (var line in lines) {
                 if ("VGA compatible controller" in line || "3D controller" in line || "Display controller" in line) {
                     string pci_address = line[0:7].strip();
                     string detailed_output;
                     Process.spawn_command_line_sync("lspci -D -s " + pci_address, out detailed_output);
                     string full_pci_address = detailed_output[0:12].strip();
-        
+
                     string vendor_info = "";
                     if ("Intel" in line) {
                         vendor_info = line.substring(line.index_of("Intel")).strip();
@@ -2301,7 +2301,7 @@ public class MangoJuice : Adw.Application {
                                            .replace(" (", " ").replace("(", " ")
                                            .replace(" )", " ").replace(")", " ")
                                            .replace("  ", " ").strip();
-                    
+
                     addresses += full_pci_address + " # " + vendor_info;
                 }
             }
@@ -2453,13 +2453,13 @@ public class MangoJuice : Adw.Application {
 
     ScaleEntryWidget create_scale_entry_widget (string title, string description, int min, int max, int initial_value) {
         ScaleEntryWidget result = ScaleEntryWidget ();
-    
+
         result.scale = new Scale.with_range (Orientation.HORIZONTAL, min, max, 1);
         result.scale.set_value (initial_value);
         result.scale.set_size_request (100, -1);
         result.scale.set_hexpand (true);
         result.scale.adjustment.page_increment = 1;
-    
+
         result.entry = new Entry ();
         result.entry.text = "%d".printf (initial_value);
         result.entry.set_width_chars (3);
@@ -2468,20 +2468,20 @@ public class MangoJuice : Adw.Application {
         result.entry.add_css_class ("linked");
         result.entry.set_input_purpose(Gtk.InputPurpose.NUMBER);
         validate_entry_value (result.entry, min, max);
-    
+
         var reset_button = new Button.from_icon_name ("edit-undo-symbolic");
         reset_button.set_focusable (false);
         reset_button.set_valign (Align.CENTER);
         reset_button.add_css_class ("linked");
         reset_button.set_visible (false);
-    
+
         var entry_container = new Box (Orientation.HORIZONTAL, 0);
         entry_container.append (result.entry);
         entry_container.append (reset_button);
         entry_container.add_css_class ("linked");
-    
+
         bool is_updating = false;
-    
+
         result.scale.value_changed.connect (() => {
             if (!is_updating) {
                 is_updating = true;
@@ -2494,12 +2494,12 @@ public class MangoJuice : Adw.Application {
                 });
             }
         });
-    
+
         result.entry.changed.connect (() => {
             if (!is_updating) {
                 int value = 0;
                 bool valid = int.try_parse (result.entry.text, out value);
-    
+
                 if (valid && value >= min && value <= max) {
                     is_updating = true;
                     GLib.Idle.add (() => {
@@ -2513,7 +2513,7 @@ public class MangoJuice : Adw.Application {
                 }
             }
         });
-    
+
         reset_button.clicked.connect (() => {
             is_updating = true;
             result.entry.text = "%d".printf (initial_value);
@@ -2536,29 +2536,29 @@ public class MangoJuice : Adw.Application {
             });
         });
         result.entry.add_controller (focus_controller);
-    
+
         var labels_box = new Box (Orientation.VERTICAL, 0);
         labels_box.set_valign (Align.CENTER);
-    
+
         var title_label = new Label (null);
         title_label.set_markup ("<b>%s</b>".printf (title));
         title_label.set_halign (Align.START);
         title_label.set_ellipsize (Pango.EllipsizeMode.END);
-    
+
         var desc_label = new Label (null);
         desc_label.set_markup ("<span size='8500'>%s</span>".printf (description));
         desc_label.set_halign (Align.START);
         desc_label.add_css_class ("dim-label");
         desc_label.set_ellipsize (Pango.EllipsizeMode.END);
-    
+
         labels_box.append (title_label);
         labels_box.append (desc_label);
-    
+
         result.widget = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         result.widget.append (labels_box);
         result.widget.append (result.scale);
         result.widget.append (entry_container);
-    
+
         var gesture_drag = new GestureDrag ();
         gesture_drag.drag_update.connect ((offset_x, offset_y) => {
             double current_value = result.scale.get_value ();
@@ -2568,7 +2568,7 @@ public class MangoJuice : Adw.Application {
             result.scale.set_value (new_value);
         });
         result.scale.add_controller (gesture_drag);
-    
+
         return result;
     }
 
@@ -2763,4 +2763,3 @@ public class MangoJuice : Adw.Application {
         return app.run (args);
     }
 }
-

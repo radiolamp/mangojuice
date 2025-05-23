@@ -1,3 +1,10 @@
+data/io.github.radiolamp.mangojuice.desktop
+data/io.github.radiolamp.mangojuice.metainfo.xml
+src/advanced.vala
+src/dialog.vala
+src/intel_power_fix_handler.vala
+src/load_states.vala
 src/mangojuice.vala
 src/other/OtherBox.vala
-src/intel_power_fix_handler.vala
+src/reset_manager.vala
+src/save_states.vala

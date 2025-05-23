@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mangojuice\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-24 14:01+0300\n"
+"POT-Creation-Date: 2025-05-23 19:07+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,1038 +17,1275 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. Constants
-#: src/mangojuice.vala:115
-msgid "GPU"
+#: data/io.github.radiolamp.mangojuice.desktop:3
+msgid "MangoJuice"
 msgstr ""
 
-#: src/mangojuice.vala:116
-msgid "CPU"
+#: data/io.github.radiolamp.mangojuice.desktop:4
+msgid "A convenient alternative to GOverlay for configuring MangoHud"
 msgstr ""
 
-#: src/mangojuice.vala:117
-msgid "Memory"
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:6
+msgid "Mango Juice"
 msgstr ""
 
-#: src/mangojuice.vala:118 src/mangojuice.vala:1917 src/mangojuice.vala:2645
-msgid "Other"
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:7
+msgid "The MangoHUD customization assistant."
 msgstr ""
 
-#: src/mangojuice.vala:119
-msgid "System"
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:9
+msgid "MangoJuice is a helper for MangoHUD"
 msgstr ""
 
-#: src/mangojuice.vala:120 src/mangojuice.vala:1548
-msgid "Wine"
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:18
+msgid "Main interface of MangoJuice"
 msgstr ""
 
-#: src/mangojuice.vala:121
-msgid "Options"
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:22
+msgid "Extra"
 msgstr ""
 
-#: src/mangojuice.vala:122
-msgid "Battery"
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:26
+msgid "Metric"
 msgstr ""
 
-#: src/mangojuice.vala:123
-msgid "Information"
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:30 src/mangojuice.vala:416
+msgid "Visual"
+msgstr ""
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:34
+msgid "Radiolamp"
+msgstr ""
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:40
+msgid "Profiles and sorting"
+msgstr ""
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:42
+msgid "Full update information is available on GitHub."
+msgstr ""
+
+#: src/advanced.vala:31
+msgid "The setting is reset when the configuration is changed"
+msgstr ""
+
+#: src/advanced.vala:133 src/mangojuice.vala:2407
+#, c-format
+msgid "Error when selecting a file: %s\n"
+msgstr ""
+
+#: src/advanced.vala:136
+#, c-format
+msgid "MangoHud.conf does not exist at: %s\n"
+msgstr ""
+
+#: src/advanced.vala:345 src/mangojuice.vala:2393 src/mangojuice.vala:2428
+#, c-format
+msgid "Error writing to the file: %s\n"
+msgstr ""
+
+#: src/advanced.vala:352 src/advanced.vala:354 src/mangojuice.vala:976
+msgid "Your text"
 msgstr ""
 
 #.
 #. * Labels
 #.
 #. Metrics
-#: src/mangojuice.vala:167
+#: src/advanced.vala:356 src/mangojuice.vala:175
 msgid "Load GPU"
 msgstr ""
 
-#: src/mangojuice.vala:167 src/mangojuice.vala:173
-msgid "Color load"
-msgstr ""
-
-#: src/mangojuice.vala:167 src/mangojuice.vala:1548
-msgid "VRAM"
-msgstr ""
-
-#: src/mangojuice.vala:167
-msgid "Core frequency"
-msgstr ""
-
-#: src/mangojuice.vala:168
-msgid "Memory frequency"
-msgstr ""
-
-#: src/mangojuice.vala:168 src/mangojuice.vala:174
-msgid "Temperature"
-msgstr ""
-
-#: src/mangojuice.vala:168
-msgid "Memory temperature"
-msgstr ""
-
-#: src/mangojuice.vala:168
-msgid "Max temperature"
-msgstr ""
-
-#: src/mangojuice.vala:169
-msgid "Fans"
-msgstr ""
-
-#: src/mangojuice.vala:169
-msgid "Model"
-msgstr ""
-
-#: src/mangojuice.vala:169 src/mangojuice.vala:174
-msgid "Power"
-msgstr ""
-
-#: src/mangojuice.vala:169
-msgid "Voltage"
-msgstr ""
-
-#: src/mangojuice.vala:170
-msgid "Throttling"
-msgstr ""
-
-#: src/mangojuice.vala:170
-msgid "Throttling graph"
-msgstr ""
-
-#: src/mangojuice.vala:170
+#: src/advanced.vala:358 src/mangojuice.vala:178
 msgid "Vulkan Driver"
 msgstr ""
 
-#: src/mangojuice.vala:173
+#: src/advanced.vala:360 src/mangojuice.vala:175 src/mangojuice.vala:1567
+msgid "VRAM"
+msgstr ""
+
+#: src/advanced.vala:362 src/mangojuice.vala:181
 msgid "Load CPU"
 msgstr ""
 
-#: src/mangojuice.vala:173 src/mangojuice.vala:222
+#: src/advanced.vala:364 src/mangojuice.vala:181 src/mangojuice.vala:235
 msgid "Load per core"
 msgstr ""
 
-#: src/mangojuice.vala:173
-msgid "Diagram"
-msgstr ""
-
-#: src/mangojuice.vala:174
-msgid "Maximum frequency"
-msgstr ""
-
-#: src/mangojuice.vala:177 src/mangojuice.vala:1548
+#: src/advanced.vala:366 src/mangojuice.vala:185 src/mangojuice.vala:1567
 msgid "RAM"
 msgstr ""
 
-#: src/mangojuice.vala:177
+#: src/advanced.vala:368 src/advanced.vala:370 src/mangojuice.vala:185
 msgid "Disk"
 msgstr ""
 
-#: src/mangojuice.vala:178
+#: src/advanced.vala:372 src/mangojuice.vala:186
 msgid "Resident memory"
 msgstr ""
 
-#: src/mangojuice.vala:178
+#: src/advanced.vala:374 src/mangojuice.vala:186
 msgid "Swap"
 msgstr ""
 
-#. Extras
-#: src/mangojuice.vala:183
-msgid "Refresh rate"
-msgstr ""
-
-#: src/mangojuice.vala:183
+#: src/advanced.vala:376 src/mangojuice.vala:196
 msgid "Fan"
 msgstr ""
 
-#: src/mangojuice.vala:183
-msgid "Resolution"
-msgstr ""
-
-#: src/mangojuice.vala:183
-msgid "Session type"
-msgstr ""
-
-#: src/mangojuice.vala:184
-msgid "Compact API"
-msgstr ""
-
-#: src/mangojuice.vala:184
-msgid "Watch"
-msgstr ""
-
-#: src/mangojuice.vala:184
-msgid "Architecture"
-msgstr ""
-
-#: src/mangojuice.vala:184 src/mangojuice.vala:1548
-msgid "Network"
-msgstr ""
-
-#: src/mangojuice.vala:187
-msgid "HUD Version"
-msgstr ""
-
-#: src/mangojuice.vala:187
-msgid "Gamemode"
-msgstr ""
-
-#: src/mangojuice.vala:187
-msgid "vkBasalt"
-msgstr ""
-
-#: src/mangojuice.vala:187
-msgid "Exe name"
-msgstr ""
-
-#: src/mangojuice.vala:188
-msgid "Fcat"
-msgstr ""
-
-#: src/mangojuice.vala:188
-msgid "FSR"
-msgstr ""
-
-#: src/mangojuice.vala:188
-msgid "HDR"
-msgstr ""
-
-#: src/mangojuice.vala:188
-msgid "Remove paddings"
-msgstr ""
-
-#: src/mangojuice.vala:189
-msgid "Hide HUD"
-msgstr ""
-
-#: src/mangojuice.vala:189
-msgid "Remove shadows"
-msgstr ""
-
-#: src/mangojuice.vala:189
-msgid "Font normalization"
-msgstr ""
-
-#: src/mangojuice.vala:189
-msgid "Remove margins"
-msgstr ""
-
-#: src/mangojuice.vala:192
-msgid "Battery charge"
-msgstr ""
-
-#: src/mangojuice.vala:192
-msgid "Battery power"
-msgstr ""
-
-#: src/mangojuice.vala:192
-msgid "Time remain"
-msgstr ""
-
-#: src/mangojuice.vala:193
-msgid "Battery icon"
-msgstr ""
-
-#: src/mangojuice.vala:193
-msgid "Other batteries"
-msgstr ""
-
-#: src/mangojuice.vala:196
-msgid "Version"
-msgstr ""
-
-#: src/mangojuice.vala:196
-msgid "Winesync"
-msgstr ""
-
-#: src/mangojuice.vala:199 src/mangojuice.vala:1548
-msgid "Media"
-msgstr ""
-
-#: src/mangojuice.vala:199
-msgid "Full ON"
-msgstr ""
-
-#: src/mangojuice.vala:200
-msgid "Full log"
-msgstr ""
-
-#: src/mangojuice.vala:200
-msgid "Upload logs"
-msgstr ""
-
 #. Performance
-#: src/mangojuice.vala:205
+#: src/advanced.vala:378 src/mangojuice.vala:218
 msgid "FPS"
 msgstr ""
 
-#: src/mangojuice.vala:205
-msgid "Color FPS"
-msgstr ""
-
-#: src/mangojuice.vala:205
-msgid "FPS Only"
-msgstr ""
-
-#: src/mangojuice.vala:205
-msgid "Lowest 1%"
-msgstr ""
-
-#: src/mangojuice.vala:206
+#: src/advanced.vala:380
 msgid "Lowest 0.1%"
 msgstr ""
 
-#: src/mangojuice.vala:206
+#: src/advanced.vala:382
+msgid "Lowest 1%"
+msgstr ""
+
+#: src/advanced.vala:384 src/advanced.vala:426 src/mangojuice.vala:209
+msgid "Version"
+msgstr ""
+
+#: src/advanced.vala:386 src/mangojuice.vala:200
+msgid "Gamemode"
+msgstr ""
+
+#: src/advanced.vala:388 src/mangojuice.vala:200
+msgid "vkBasalt"
+msgstr ""
+
+#: src/advanced.vala:390 src/mangojuice.vala:200
+msgid "Exe name"
+msgstr ""
+
+#: src/advanced.vala:392 src/mangojuice.vala:201
+msgid "FSR"
+msgstr ""
+
+#: src/advanced.vala:394 src/mangojuice.vala:201
+msgid "HDR"
+msgstr ""
+
+#. Extras
+#: src/advanced.vala:396 src/mangojuice.vala:196
+msgid "Refresh rate"
+msgstr ""
+
+#: src/advanced.vala:398 src/mangojuice.vala:196
+msgid "Resolution"
+msgstr ""
+
+#: src/advanced.vala:400 src/mangojuice.vala:197
+msgid "Architecture"
+msgstr ""
+
+#: src/advanced.vala:402 src/mangojuice.vala:220
+msgid "VPS"
+msgstr ""
+
+#: src/advanced.vala:404 src/mangojuice.vala:196
+msgid "Session type"
+msgstr ""
+
+#: src/advanced.vala:406 src/mangojuice.vala:219
 msgid "Frame limit"
 msgstr ""
 
-#: src/mangojuice.vala:206
+#: src/advanced.vala:408 src/mangojuice.vala:219
 msgid "Frame graph"
 msgstr ""
 
+#: src/advanced.vala:410
+msgid "Frame"
+msgstr ""
+
+#: src/advanced.vala:412 src/mangojuice.vala:205
+msgid "Battery charge"
+msgstr ""
+
+#: src/advanced.vala:414 src/mangojuice.vala:205
+msgid "Battery power"
+msgstr ""
+
+#: src/advanced.vala:416 src/mangojuice.vala:205
+msgid "Time remain"
+msgstr ""
+
+#: src/advanced.vala:418
+msgid "Battery icon"
+msgstr ""
+
+#: src/advanced.vala:420 src/mangojuice.vala:206
+msgid "Other batteries"
+msgstr ""
+
+#: src/advanced.vala:422 src/mangojuice.vala:197 src/mangojuice.vala:1567
+msgid "Network"
+msgstr ""
+
+#: src/advanced.vala:424 src/mangojuice.vala:212 src/mangojuice.vala:1189
+#: src/mangojuice.vala:1567
+msgid "Media"
+msgstr ""
+
+#: src/advanced.vala:428 src/mangojuice.vala:209
+msgid "Winesync"
+msgstr ""
+
+#: src/advanced.vala:430 src/mangojuice.vala:123 src/mangojuice.vala:1967
+#: src/mangojuice.vala:2688
+msgid "Other"
+msgstr ""
+
+#: src/dialog.vala:27
+msgid "translator-credits"
+msgstr ""
+
+#: src/dialog.vala:29 src/dialog.vala:30 src/dialog.vala:31
+msgid "Financial support"
+msgstr ""
+
+#: src/dialog.vala:72
+msgid "To get ready presets, click on the title."
+msgstr ""
+
+#: src/dialog.vala:80 src/mangojuice.vala:479
+msgid "Presets"
+msgstr ""
+
+#: src/dialog.vala:107
+msgid "No profiles yet"
+msgstr ""
+
+#: src/dialog.vala:113
+msgid "Add Profile"
+msgstr ""
+
+#: src/dialog.vala:186 src/mangojuice.vala:2105
+#, c-format
+msgid "Error when executing the command: %s\n"
+msgstr ""
+
+#: src/dialog.vala:193 src/dialog.vala:199
+msgid "Profile"
+msgstr ""
+
+#: src/dialog.vala:209
+msgid "Profile preview"
+msgstr ""
+
+#: src/dialog.vala:216
+msgid ""
+"Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM."
+"exe. Attention case is important!"
+msgstr ""
+
+#: src/dialog.vala:224
+msgid "Overwrite profile"
+msgstr ""
+
+#: src/dialog.vala:231
+msgid "Delete profile"
+msgstr ""
+
+#: src/dialog.vala:292
+msgid "Apply the profile to the entire system"
+msgstr ""
+
+#: src/dialog.vala:386 src/mangojuice.vala:477 src/mangojuice.vala:2400
+msgid "Restore"
+msgstr ""
+
+#: src/dialog.vala:402
+msgid "Apply"
+msgstr ""
+
+#: src/dialog.vala:434 src/dialog.vala:470
+msgid "Minimal"
+msgstr ""
+
+#: src/dialog.vala:434 src/dialog.vala:470 src/load_states.vala:288
+#: src/mangojuice.vala:1586 src/mangojuice.vala:1627 src/mangojuice.vala:1647
+#: src/mangojuice.vala:1669 src/reset_manager.vala:75 src/save_states.vala:424
+msgid "Default"
+msgstr ""
+
+#: src/dialog.vala:434 src/dialog.vala:470
+msgid "Advanced"
+msgstr ""
+
+#: src/dialog.vala:434 src/dialog.vala:470
+msgid "Full"
+msgstr ""
+
+#: src/dialog.vala:434 src/dialog.vala:470
+msgid "Only FPS"
+msgstr ""
+
+#: src/dialog.vala:471
+#, c-format
+msgid "Applying %s layout\n"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:16 src/intel_power_fix_handler.vala:69
+#: src/mangojuice.vala:2638
+msgid "Warning"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:16
+msgid ""
+"You are changing the rights to intel energy_uj, which could potentially lead "
+"to security issues."
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:18
+msgid "Cancel"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:19
+msgid "Until Reboot"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:20
+msgid "Permanently"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:70
+msgid ""
+"For the permanent changes to take full effect, a reboot is recommended. "
+"Would you like to reboot now?"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:72
+msgid "Later"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:73
+msgid "Reboot Now"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:89
+msgid "Error"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:92 src/mangojuice.vala:2641
+msgid "OK"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:124
+msgid "Permissions set permanently (systemd service active)"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:125
+msgid "Service exists but not active"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:125
+msgid "Permissions set until reboot"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:128
+msgid "Service active but permissions not set"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:129
+msgid "Service exists but inactive"
+msgstr ""
+
+#: src/intel_power_fix_handler.vala:129
+msgid "Permissions not set"
+msgstr ""
+
+#. Constants
+#: src/mangojuice.vala:119 src/mangojuice.vala:244
+msgid "GPU"
+msgstr ""
+
+#: src/mangojuice.vala:120
+msgid "CPU"
+msgstr ""
+
+#: src/mangojuice.vala:121
+msgid "Memory"
+msgstr ""
+
+#: src/mangojuice.vala:122
+msgid "Git"
+msgstr ""
+
+#: src/mangojuice.vala:124
+msgid "System"
+msgstr ""
+
+#: src/mangojuice.vala:125 src/mangojuice.vala:1567 src/mangojuice.vala:1642
+msgid "Wine"
+msgstr ""
+
+#: src/mangojuice.vala:126
+msgid "Options"
+msgstr ""
+
+#: src/mangojuice.vala:127 src/mangojuice.vala:1567
+msgid "Battery"
+msgstr ""
+
+#: src/mangojuice.vala:128
+msgid "Information"
+msgstr ""
+
+#: src/mangojuice.vala:175 src/mangojuice.vala:181
+msgid "Color load"
+msgstr ""
+
+#: src/mangojuice.vala:175
+msgid "Core frequency"
+msgstr ""
+
+#: src/mangojuice.vala:176
+msgid "Memory frequency"
+msgstr ""
+
+#: src/mangojuice.vala:176 src/mangojuice.vala:182
+msgid "Temperature"
+msgstr ""
+
+#: src/mangojuice.vala:176
+msgid "Memory temperature"
+msgstr ""
+
+#: src/mangojuice.vala:176
+msgid "Max temperature"
+msgstr ""
+
+#: src/mangojuice.vala:177
+msgid "Fans"
+msgstr ""
+
+#: src/mangojuice.vala:177
+msgid "Model"
+msgstr ""
+
+#: src/mangojuice.vala:177 src/mangojuice.vala:182
+msgid "Power"
+msgstr ""
+
+#: src/mangojuice.vala:177
+msgid "Voltage"
+msgstr ""
+
+#: src/mangojuice.vala:178
+msgid "Throttling"
+msgstr ""
+
+#: src/mangojuice.vala:178
+msgid "Throttling graph"
+msgstr ""
+
+#: src/mangojuice.vala:181
+msgid "Diagram"
+msgstr ""
+
+#: src/mangojuice.vala:182
+msgid "Maximum frequency"
+msgstr ""
+
+#: src/mangojuice.vala:182
+msgid "Core type"
+msgstr ""
+
+#: src/mangojuice.vala:190
+msgid "GPU efficiency (F/J)"
+msgstr ""
+
+#: src/mangojuice.vala:190
+msgid "GPU energy (J/F)"
+msgstr ""
+
+#: src/mangojuice.vala:191
+msgid "Hide FSR sharpness"
+msgstr ""
+
+#: src/mangojuice.vala:197
+msgid "Compact API"
+msgstr ""
+
+#: src/mangojuice.vala:197
+msgid "Watch"
+msgstr ""
+
+#: src/mangojuice.vala:200
+msgid "HUD Version"
+msgstr ""
+
+#: src/mangojuice.vala:201
+msgid "Fcat"
+msgstr ""
+
+#: src/mangojuice.vala:201
+msgid "Remove paddings"
+msgstr ""
+
+#: src/mangojuice.vala:202
+msgid "Hide HUD"
+msgstr ""
+
+#: src/mangojuice.vala:202
+msgid "Remove shadows"
+msgstr ""
+
+#: src/mangojuice.vala:202
+msgid "Font normalization"
+msgstr ""
+
+#: src/mangojuice.vala:202
+msgid "Remove margins"
+msgstr ""
+
 #: src/mangojuice.vala:206
+msgid "Device icon"
+msgstr ""
+
+#: src/mangojuice.vala:206
+msgid "More icon"
+msgstr ""
+
+#: src/mangojuice.vala:212
+msgid "Full ON"
+msgstr ""
+
+#: src/mangojuice.vala:213
+msgid "Full log"
+msgstr ""
+
+#: src/mangojuice.vala:213
+msgid "Upload logs"
+msgstr ""
+
+#: src/mangojuice.vala:218
+msgid "Color FPS"
+msgstr ""
+
+#: src/mangojuice.vala:218
+#, c-format
+msgid "Lowest 1%%"
+msgstr ""
+
+#: src/mangojuice.vala:219
+#, c-format
+msgid "Lowest 0.1%%"
+msgstr ""
+
+#: src/mangojuice.vala:219
+msgid "Detailed Frametime"
+msgstr ""
+
+#: src/mangojuice.vala:219
 msgid "Histogram"
 msgstr ""
 
-#: src/mangojuice.vala:207
+#: src/mangojuice.vala:220
 msgid "Frame Counter"
 msgstr ""
 
-#: src/mangojuice.vala:207
+#: src/mangojuice.vala:220
 msgid "°C to °F"
-msgstr ""
-
-#: src/mangojuice.vala:207
-msgid "VPS"
 msgstr ""
 
 #.
 #. * Descriptions
 #.
 #. Metrics
-#: src/mangojuice.vala:216 src/mangojuice.vala:222
+#: src/mangojuice.vala:229 src/mangojuice.vala:235
 msgid "Percentage load"
 msgstr ""
 
-#: src/mangojuice.vala:216 src/mangojuice.vala:222 src/mangojuice.vala:254
+#: src/mangojuice.vala:229 src/mangojuice.vala:235 src/mangojuice.vala:272
 msgid "Color text"
 msgstr ""
 
-#: src/mangojuice.vala:216
+#: src/mangojuice.vala:229
 msgid "Amount of video memory"
 msgstr ""
 
-#: src/mangojuice.vala:216 src/mangojuice.vala:217
+#: src/mangojuice.vala:229 src/mangojuice.vala:230
 msgid "Frequency, MHz"
 msgstr ""
 
-#: src/mangojuice.vala:217
+#: src/mangojuice.vala:230
 msgid "GPU temperature"
 msgstr ""
 
-#: src/mangojuice.vala:217
+#: src/mangojuice.vala:230
 msgid "GDDR temperature"
 msgstr ""
 
-#: src/mangojuice.vala:217
+#: src/mangojuice.vala:230
 msgid "Temperature peak"
 msgstr ""
 
-#: src/mangojuice.vala:218
+#: src/mangojuice.vala:231
 msgid "Speed, RPM"
 msgstr ""
 
-#: src/mangojuice.vala:218
+#: src/mangojuice.vala:231
 msgid "GPU name"
 msgstr ""
 
-#: src/mangojuice.vala:218 src/mangojuice.vala:223 src/mangojuice.vala:241
+#: src/mangojuice.vala:231 src/mangojuice.vala:236 src/mangojuice.vala:259
 msgid "Consumption, W"
 msgstr ""
 
-#: src/mangojuice.vala:218
+#: src/mangojuice.vala:231
 msgid "Consumption, V"
 msgstr ""
 
-#: src/mangojuice.vala:219
+#: src/mangojuice.vala:232
 msgid "Trolling parametrs"
 msgstr ""
 
-#: src/mangojuice.vala:219
+#: src/mangojuice.vala:232
 msgid "Curve"
 msgstr ""
 
-#: src/mangojuice.vala:219
+#: src/mangojuice.vala:232
 msgid "Driver Version"
 msgstr ""
 
-#: src/mangojuice.vala:222
+#: src/mangojuice.vala:235
 msgid "All cores"
 msgstr ""
 
-#: src/mangojuice.vala:223
+#: src/mangojuice.vala:236
 msgid "Peak among all cores"
 msgstr ""
 
-#: src/mangojuice.vala:223
+#: src/mangojuice.vala:236
 msgid "CPU temperature"
 msgstr ""
 
-#: src/mangojuice.vala:226 src/mangojuice.vala:227
+#: src/mangojuice.vala:236
+msgid "For new Intel and ARM"
+msgstr ""
+
+#: src/mangojuice.vala:239 src/mangojuice.vala:240
 msgid "Size, GiB"
 msgstr ""
 
-#: src/mangojuice.vala:226
+#: src/mangojuice.vala:239
 msgid "Input/Output, MiB/s"
 msgstr ""
 
+#: src/mangojuice.vala:245
+msgid "Gamescope"
+msgstr ""
+
 #. Extras
-#: src/mangojuice.vala:232 src/mangojuice.vala:237
+#: src/mangojuice.vala:250 src/mangojuice.vala:255
 msgid "Gamescope only"
 msgstr ""
 
-#: src/mangojuice.vala:232
+#: src/mangojuice.vala:250
 msgid "Steam Deck only"
 msgstr ""
 
-#: src/mangojuice.vala:232
+#: src/mangojuice.vala:250
 msgid "Window size"
 msgstr ""
 
-#: src/mangojuice.vala:232
+#: src/mangojuice.vala:250
 msgid "X11/Wayland"
 msgstr ""
 
-#: src/mangojuice.vala:233
+#: src/mangojuice.vala:251
 msgid "Shortens the name"
 msgstr ""
 
-#: src/mangojuice.vala:233
+#: src/mangojuice.vala:251
 msgid "Current time"
 msgstr ""
 
-#: src/mangojuice.vala:233
+#: src/mangojuice.vala:251
 msgid "Processor base"
 msgstr ""
 
-#: src/mangojuice.vala:233
+#: src/mangojuice.vala:251
 msgid "Adapters speed"
 msgstr ""
 
-#: src/mangojuice.vala:236
+#: src/mangojuice.vala:254
 msgid "MangoHud version"
 msgstr ""
 
-#: src/mangojuice.vala:236
+#: src/mangojuice.vala:254
 msgid "Gamemode state"
 msgstr ""
 
-#: src/mangojuice.vala:236
+#: src/mangojuice.vala:254
 msgid "vkBasalt state"
 msgstr ""
 
-#: src/mangojuice.vala:236
+#: src/mangojuice.vala:254
 msgid "Proccess name"
 msgstr ""
 
-#: src/mangojuice.vala:237
+#: src/mangojuice.vala:255
 msgid "Updating visualization"
 msgstr ""
 
-#: src/mangojuice.vala:237
+#: src/mangojuice.vala:255
 msgid "Internal offsets"
 msgstr ""
 
-#: src/mangojuice.vala:238
+#: src/mangojuice.vala:256
 msgid "Hide overlay"
 msgstr ""
 
-#: src/mangojuice.vala:238
+#: src/mangojuice.vala:256
 msgid "Shadows under text"
 msgstr ""
 
-#: src/mangojuice.vala:238
+#: src/mangojuice.vala:256
 msgid "Same font size"
 msgstr ""
 
-#: src/mangojuice.vala:238
+#: src/mangojuice.vala:256
 msgid "External offsets"
 msgstr ""
 
-#: src/mangojuice.vala:241
-msgid "Power level, %"
+#: src/mangojuice.vala:259
+#, c-format
+msgid "Power level, %%"
 msgstr ""
 
-#: src/mangojuice.vala:241
+#: src/mangojuice.vala:259
 msgid "Battery life"
 msgstr ""
 
-#: src/mangojuice.vala:242
+#: src/mangojuice.vala:260
+msgid "This devices"
+msgstr ""
+
+#: src/mangojuice.vala:260
 msgid "Wireless devices"
 msgstr ""
 
-#: src/mangojuice.vala:242
+#: src/mangojuice.vala:260
 msgid "Wireless battries"
 msgstr ""
 
-#: src/mangojuice.vala:245
+#: src/mangojuice.vala:263
 msgid "Wine or Proton version"
 msgstr ""
 
-#: src/mangojuice.vala:245
+#: src/mangojuice.vala:263
 msgid "Wine sync method"
 msgstr ""
 
-#: src/mangojuice.vala:248
+#: src/mangojuice.vala:266
 msgid "Current playback"
 msgstr ""
 
-#: src/mangojuice.vala:248
+#: src/mangojuice.vala:266
 msgid "All but histograms"
 msgstr ""
 
-#: src/mangojuice.vala:249
+#: src/mangojuice.vala:267
 msgid "Log information"
 msgstr ""
 
-#: src/mangojuice.vala:249
+#: src/mangojuice.vala:267
 msgid "flightlessmango.com"
 msgstr ""
 
 #. Performance
-#: src/mangojuice.vala:254
+#: src/mangojuice.vala:272
 msgid "Frames per second"
 msgstr ""
 
-#: src/mangojuice.vala:254
-msgid "Disable all but FPS"
-msgstr ""
-
-#: src/mangojuice.vala:254
+#: src/mangojuice.vala:272
 #, c-format
-msgid "1% is lower then"
+msgid "1%% is lower then"
 msgstr ""
 
-#: src/mangojuice.vala:255
+#: src/mangojuice.vala:273
 #, c-format
-msgid "0.1% is lower then"
+msgid "0.1%% is lower then"
 msgstr ""
 
-#: src/mangojuice.vala:255
+#: src/mangojuice.vala:273
 msgid "FPS limitation"
 msgstr ""
 
-#: src/mangojuice.vala:255 src/mangojuice.vala:1548
+#: src/mangojuice.vala:273 src/mangojuice.vala:1567
 msgid "Frametime"
 msgstr ""
 
-#: src/mangojuice.vala:255
+#: src/mangojuice.vala:273
+msgid "Detailed frame time"
+msgstr ""
+
+#: src/mangojuice.vala:273
 msgid "Graph to histogram"
 msgstr ""
 
-#: src/mangojuice.vala:256
+#: src/mangojuice.vala:274
 msgid "Display frame count"
 msgstr ""
 
-#: src/mangojuice.vala:256
+#: src/mangojuice.vala:274
 msgid "Temperature in °F"
 msgstr ""
 
-#: src/mangojuice.vala:256
+#: src/mangojuice.vala:274
 msgid "Present mode"
 msgstr ""
 
-#: src/mangojuice.vala:394 src/mangojuice.vala:399
+#: src/mangojuice.vala:410
 msgid "Metrics"
 msgstr ""
 
-#: src/mangojuice.vala:395 src/mangojuice.vala:400
+#: src/mangojuice.vala:412
 msgid "Extras"
 msgstr ""
 
-#: src/mangojuice.vala:396 src/mangojuice.vala:401
+#: src/mangojuice.vala:414
 msgid "Performance"
 msgstr ""
 
-#: src/mangojuice.vala:397 src/mangojuice.vala:402
-msgid "Visual"
-msgstr ""
-
-#: src/mangojuice.vala:410
+#: src/mangojuice.vala:424
 msgid "Test"
 msgstr ""
 
-#: src/mangojuice.vala:416 src/mangojuice.vala:2278
+#: src/mangojuice.vala:475 src/mangojuice.vala:2361
 msgid "Save"
 msgstr ""
 
-#: src/mangojuice.vala:418
+#: src/mangojuice.vala:476
 msgid "Save As"
 msgstr ""
 
-#: src/mangojuice.vala:420 src/mangojuice.vala:2317
-msgid "Restore"
-msgstr ""
-
-#: src/mangojuice.vala:422
-msgid "Change order"
-msgstr ""
-
-#: src/mangojuice.vala:424
-msgid "About"
-msgstr ""
-
-#: src/mangojuice.vala:432
-msgid "Donate"
-msgstr ""
-
-#: src/mangojuice.vala:477
-msgid ""
-"MangoHud not found. Please install MangoHud to enable full functionality.\n"
-msgstr ""
-
-#: src/mangojuice.vala:479
-msgid "MangoHud is not installed. Please install it."
+#: src/mangojuice.vala:478
+msgid "You profiles"
 msgstr ""
 
 #: src/mangojuice.vala:480
-msgid ""
-"MangoHud is not installed. Please install it. If you are using flatpak, you "
-"need to install the flatpak version."
+msgid "Change order"
 msgstr ""
 
-#: src/mangojuice.vala:488
-msgid "vkcube not found. If you want a test button, install vulkan-tools.\n"
-msgstr ""
-
-#: src/mangojuice.vala:489
-msgid "glxgears not found. If you want a test button, install mesa-utils.\n"
+#: src/mangojuice.vala:481
+msgid "About"
 msgstr ""
 
 #: src/mangojuice.vala:491
-msgid "Test Button Disabled"
+msgid "Donate"
 msgstr ""
 
-#: src/mangojuice.vala:492
+#: src/mangojuice.vala:552
+msgid "MangoHud is not installed. Please install it."
+msgstr ""
+
+#: src/mangojuice.vala:555
+msgid "Install"
+msgstr ""
+
+#: src/mangojuice.vala:573
+#, c-format
+msgid "Failed to launch AppStream: %s"
+msgstr ""
+
+#: src/mangojuice.vala:595
+msgid "vkcube not found. If you want a test button, install vulkan-tools.\n"
+msgstr ""
+
+#: src/mangojuice.vala:596
+msgid "glxgears not found. If you want a test button, install mesa-utils.\n"
+msgstr ""
+
+#: src/mangojuice.vala:598
 msgid ""
 "Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable "
 "the test button."
 msgstr ""
 
-#: src/mangojuice.vala:596
+#: src/mangojuice.vala:692
 #, c-format
 msgid "Error closing test apps: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:735
+#: src/mangojuice.vala:839
 msgid "Clear"
 msgstr ""
 
-#: src/mangojuice.vala:756
+#: src/mangojuice.vala:861
 msgid "MangoHud variable"
 msgstr ""
 
-#: src/mangojuice.vala:762
+#: src/mangojuice.vala:867
 msgid "Home"
 msgstr ""
 
-#: src/mangojuice.vala:769
+#: src/mangojuice.vala:874
 msgid "The directory for saving the logging"
 msgstr ""
 
-#: src/mangojuice.vala:775
+#: src/mangojuice.vala:880
 msgid "Intel Power Fix"
 msgstr ""
 
-#: src/mangojuice.vala:787 src/mangojuice.vala:2041
-#, c-format
-msgid "Error when executing the command: %s\n"
-msgstr ""
-
-#: src/mangojuice.vala:803
+#: src/mangojuice.vala:903
 msgid "Reset Config"
 msgstr ""
 
-#: src/mangojuice.vala:817
+#: src/mangojuice.vala:922
 msgid "Blacklist: (vkcube, WatchDogs2.exe)"
 msgstr ""
 
-#: src/mangojuice.vala:823
+#: src/mangojuice.vala:932
 msgid "MangoHud Global"
 msgstr ""
 
-#: src/mangojuice.vala:848
+#: src/mangojuice.vala:948
 msgid "Logs key"
 msgstr ""
 
-#: src/mangojuice.vala:872
+#: src/mangojuice.vala:972
 msgid "Customize"
 msgstr ""
 
-#: src/mangojuice.vala:876
-msgid "Your text"
-msgstr ""
-
-#: src/mangojuice.vala:898
-msgid "Only FPS"
-msgstr ""
-
-#: src/mangojuice.vala:916
-msgid "Full"
-msgstr ""
-
-#: src/mangojuice.vala:963
+#: src/mangojuice.vala:1000
 msgid "Horizontal HUD"
 msgstr ""
 
-#: src/mangojuice.vala:981
+#: src/mangojuice.vala:1017
 msgid "Borders"
 msgstr ""
 
-#: src/mangojuice.vala:981
+#: src/mangojuice.vala:1017
 msgid "Round"
 msgstr ""
 
-#: src/mangojuice.vala:993
+#: src/mangojuice.vala:1029
 msgid "Alpha"
 msgstr ""
 
-#: src/mangojuice.vala:993
+#: src/mangojuice.vala:1029
 msgid "Transparency"
 msgstr ""
 
-#: src/mangojuice.vala:1023
+#: src/mangojuice.vala:1059
 msgid "Position"
 msgstr ""
 
-#: src/mangojuice.vala:1028
+#: src/mangojuice.vala:1064
 msgid "Columns"
 msgstr ""
 
-#: src/mangojuice.vala:1028
+#: src/mangojuice.vala:1064
 msgid "Number of columns"
 msgstr ""
 
-#: src/mangojuice.vala:1040
+#: src/mangojuice.vala:1076
 msgid "Key shortcuts"
 msgstr ""
 
-#: src/mangojuice.vala:1060
+#: src/mangojuice.vala:1096
 msgid "Hide the HUD"
 msgstr ""
 
-#: src/mangojuice.vala:1066
+#: src/mangojuice.vala:1102
 msgid "Offset X"
 msgstr ""
 
-#: src/mangojuice.vala:1066
+#: src/mangojuice.vala:1102
 msgid "Horizontal offset"
 msgstr ""
 
-#: src/mangojuice.vala:1078
+#: src/mangojuice.vala:1114
 msgid "Offset Y"
 msgstr ""
 
-#: src/mangojuice.vala:1078
+#: src/mangojuice.vala:1114
 msgid "Vertical offset"
 msgstr ""
 
-#: src/mangojuice.vala:1104
+#: src/mangojuice.vala:1140
 msgid "Toggle position"
 msgstr ""
 
-#: src/mangojuice.vala:1122
+#: src/mangojuice.vala:1158
 msgid "Font"
 msgstr ""
 
-#: src/mangojuice.vala:1125
+#: src/mangojuice.vala:1161
 msgid "Size"
 msgstr ""
 
-#: src/mangojuice.vala:1125
+#: src/mangojuice.vala:1161
 msgid "Size in pixels"
 msgstr ""
 
-#: src/mangojuice.vala:1157
+#: src/mangojuice.vala:1258
 msgid "Color"
 msgstr ""
 
-#: src/mangojuice.vala:1193
+#: src/mangojuice.vala:1290
 msgid "GPU custom name"
 msgstr ""
 
-#: src/mangojuice.vala:1200
+#: src/mangojuice.vala:1297
 msgid "CPU custom name"
 msgstr ""
 
-#: src/mangojuice.vala:1219 src/mangojuice.vala:1304 src/mangojuice.vala:1385
-msgid "Reset to default"
-msgstr ""
-
-#: src/mangojuice.vala:1231 src/mangojuice.vala:1315 src/mangojuice.vala:1396
-msgid "Medium"
-msgstr ""
-
-#: src/mangojuice.vala:1242 src/mangojuice.vala:1326 src/mangojuice.vala:1407
-msgid "High"
-msgstr ""
-
-#: src/mangojuice.vala:1257
+#: src/mangojuice.vala:1315
 msgid "FPS color levels"
 msgstr ""
 
-#: src/mangojuice.vala:1300
+#: src/mangojuice.vala:1319 src/mangojuice.vala:1378 src/mangojuice.vala:1437
+msgid "Medium"
+msgstr ""
+
+#: src/mangojuice.vala:1325 src/mangojuice.vala:1384 src/mangojuice.vala:1443
+msgid "High"
+msgstr ""
+
+#: src/mangojuice.vala:1374
 msgid "GPU level colors"
 msgstr ""
 
-#: src/mangojuice.vala:1381
+#: src/mangojuice.vala:1433
 msgid "CPU level colors"
 msgstr ""
 
-#: src/mangojuice.vala:1548
+#: src/mangojuice.vala:1567
 msgid "Background"
 msgstr ""
 
-#: src/mangojuice.vala:1548
+#: src/mangojuice.vala:1567
 msgid "Engine"
 msgstr ""
 
-#: src/mangojuice.vala:1548
+#: src/mangojuice.vala:1567
 msgid "Text"
 msgstr ""
 
-#: src/mangojuice.vala:1568 src/mangojuice.vala:2148 src/mangojuice.vala:2164
-msgid "Default"
-msgstr ""
-
-#: src/mangojuice.vala:1588
+#: src/mangojuice.vala:1587
 msgid ""
 "If you are going to play through Wine, then you need to select fonts from "
 "the home directory, the system fonts will not work."
 msgstr ""
 
-#: src/mangojuice.vala:1606
-msgid "Support Wine"
+#: src/mangojuice.vala:1604
+msgid "Search font"
 msgstr ""
 
-#: src/mangojuice.vala:1665
+#: src/mangojuice.vala:1711
 #, c-format
 msgid "Error executing fc-list: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:1668
+#: src/mangojuice.vala:1714
 #, c-format
 msgid "Error when searching for fonts: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:1748
+#: src/mangojuice.vala:1795
 msgid "Logging"
 msgstr ""
 
-#: src/mangojuice.vala:1761
+#: src/mangojuice.vala:1808
 msgid "Duration"
 msgstr ""
 
-#: src/mangojuice.vala:1761
+#: src/mangojuice.vala:1808
 msgid "Autostart"
 msgstr ""
 
-#: src/mangojuice.vala:1761
+#: src/mangojuice.vala:1808
 msgid "Interval"
 msgstr ""
 
-#: src/mangojuice.vala:1762
+#: src/mangojuice.vala:1809
 msgid "Seconds"
 msgstr ""
 
-#: src/mangojuice.vala:1762 src/mangojuice.vala:1920
+#: src/mangojuice.vala:1809 src/mangojuice.vala:1970
 msgid "Milliseconds"
 msgstr ""
 
-#: src/mangojuice.vala:1780
+#: src/mangojuice.vala:1827
 msgid "Limiters FPS"
 msgstr ""
 
-#: src/mangojuice.vala:1790
+#: src/mangojuice.vala:1838
 msgid "Limit 1"
 msgstr ""
 
-#: src/mangojuice.vala:1798
+#: src/mangojuice.vala:1847
 msgid "Limit 2"
 msgstr ""
 
-#: src/mangojuice.vala:1806
+#: src/mangojuice.vala:1856
 msgid "Limit 3"
 msgstr ""
 
-#: src/mangojuice.vala:1833
+#: src/mangojuice.vala:1883
 msgid "VSync"
 msgstr ""
 
-#: src/mangojuice.vala:1873
+#: src/mangojuice.vala:1923
 msgid "Filters"
 msgstr ""
 
-#: src/mangojuice.vala:1887
+#: src/mangojuice.vala:1937
 msgid "Anisotropic"
 msgstr ""
 
-#: src/mangojuice.vala:1887
+#: src/mangojuice.vala:1937
 msgid "Filtering"
 msgstr ""
 
-#: src/mangojuice.vala:1891
+#: src/mangojuice.vala:1941
 msgid "Mipmap"
 msgstr ""
 
-#: src/mangojuice.vala:1891
+#: src/mangojuice.vala:1941
 msgid "Aliasing"
 msgstr ""
 
-#: src/mangojuice.vala:1920
+#: src/mangojuice.vala:1970
 msgid "FPS Sampling"
 msgstr ""
 
-#: src/mangojuice.vala:1962
+#: src/mangojuice.vala:2016
 #, c-format
 msgid "Error when restarting vkcube: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:1971
+#: src/mangojuice.vala:2025
 #, c-format
 msgid "Error when restarting glxgears: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:1998 src/mangojuice.vala:2013
+#: src/mangojuice.vala:2052 src/mangojuice.vala:2067
 #, c-format
 msgid "Error checking running processes: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2052
+#: src/mangojuice.vala:2116
 msgid "vkBasalt.conf file deleted."
 msgstr ""
 
-#: src/mangojuice.vala:2054
+#: src/mangojuice.vala:2118
 #, c-format
 msgid "Error deleting vkBasalt.conf: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2057
+#: src/mangojuice.vala:2121
 msgid "vkBasalt.conf file does not exist."
 msgstr ""
 
-#: src/mangojuice.vala:2070
+#: src/mangojuice.vala:2134
 msgid ".MangoHud.backup file deleted."
 msgstr ""
 
-#: src/mangojuice.vala:2072
+#: src/mangojuice.vala:2136
 #, c-format
 msgid "Error deleting .MangoHud.backup: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2075
+#: src/mangojuice.vala:2139
 msgid ".MangoHud.backup file does not exist."
 msgstr ""
 
-#: src/mangojuice.vala:2086
+#: src/mangojuice.vala:2150
 #, c-format
 msgid "Error when selecting a folder: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2141
+#: src/mangojuice.vala:2195
 msgid "List GPUs to display"
 msgstr ""
 
-#: src/mangojuice.vala:2144
+#: src/mangojuice.vala:2198
 msgid "Video card display order (0,1,2)"
 msgstr ""
 
-#: src/mangojuice.vala:2240
+#: src/mangojuice.vala:2202 src/mangojuice.vala:2247 src/save_states.vala:212
+msgid "All video cards"
+msgstr ""
+
+#: src/mangojuice.vala:2296
+msgid "Unknown Videocard"
+msgstr ""
+
+#: src/mangojuice.vala:2323
 #, c-format
 msgid "Error checking vkcube availability: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2253
+#: src/mangojuice.vala:2336
 msgid "MangoHud not found. Please install MangoHud to use this application.\n"
 msgstr ""
 
-#: src/mangojuice.vala:2257
+#: src/mangojuice.vala:2340
 #, c-format
 msgid "Error checking MangoHud availability: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2271
+#: src/mangojuice.vala:2354
 #, c-format
 msgid "Error checking glxgears availability: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2286
+#: src/mangojuice.vala:2369
 #, c-format
 msgid "Error when saving the file: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2295
+#: src/mangojuice.vala:2378
 msgid "MangoHud.conf does not exist.\n"
 msgstr ""
 
-#: src/mangojuice.vala:2310 src/mangojuice.vala:2345
-#, c-format
-msgid "Error writing to the file: %s\n"
-msgstr ""
-
-#: src/mangojuice.vala:2316
+#: src/mangojuice.vala:2399
 msgid "Select config file to restore"
 msgstr ""
 
-#: src/mangojuice.vala:2324
-#, c-format
-msgid "Error when selecting a file: %s\n"
-msgstr ""
-
-#: src/mangojuice.vala:2343
+#: src/mangojuice.vala:2426
 #, c-format
 msgid "Configuration restored from %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2521 src/mangojuice.vala:2525
-#, c-format
-msgid "Error when getting access rights: %s\n"
-msgstr ""
-
-#: src/mangojuice.vala:2544
+#: src/mangojuice.vala:2605
 #, c-format
 msgid "Error deleting MANGOHUD from /etc/environment: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2557
+#: src/mangojuice.vala:2618
 #, c-format
 msgid "Error adding MANGOHUD to /etc/environment: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2565
+#: src/mangojuice.vala:2626
 msgid "Failed to modify /etc/environment.\n"
 msgstr ""
 
-#: src/mangojuice.vala:2595
-msgid "Warning"
-msgstr ""
-
-#: src/mangojuice.vala:2596
+#: src/mangojuice.vala:2639
 msgid "The changes will take effect only after the system is restarted."
 msgstr ""
 
-#: src/mangojuice.vala:2598
-msgid "OK"
-msgstr ""
-
-#: src/mangojuice.vala:2599
+#: src/mangojuice.vala:2642
 msgid "Restart"
 msgstr ""
 
-#: src/mangojuice.vala:2610
+#: src/mangojuice.vala:2653
 #, c-format
 msgid "Error when restarting the system: %s\n"
 msgstr ""
 
-#: src/mangojuice.vala:2638
+#: src/mangojuice.vala:2681
 #, c-format
 msgid "Error checking the MANGOHUD status: %s\n"
 msgstr ""
@@ -1073,124 +1310,6 @@ msgstr ""
 msgid "Color LookUp Table"
 msgstr ""
 
-msgid "All video cards"
+#: src/save_states.vala:424
+msgid "Select Font"
 msgstr ""
-
-msgid "Core type"
-msgstr ""
-
-msgid "For new Intel and ARM"
-msgstr ""
-
-msgid "Detailed Frametime"
-msgstr ""
-
-msgid "Full frametime"
-msgstr ""
-
-msgid "Warning"
-msgstr ""
-
-msgid "You are changing the rights to intel energy_uj, which could potentially lead to security issues."
-msgstr ""
-
-msgid "Permanently"
-msgstr ""
-
-msgid "Until Reboot"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid "For the permanent changes to take full effect, a reboot is recommended. Would you like to reboot now?"
-msgstr ""
-
-msgid "Reboot Now"
-msgstr ""
-
-msgid "Later"
-msgstr ""
-
-msgid "MangoHud Not Installed"
-msgstr ""
-
-msgid "MangoHud is required for this application. Install it from fhathub"
-msgstr ""
-
-msgid "Install from Flathub"
-msgstr ""
-
-msgid "Search font"
-msgstr ""
-
-msgid "The setting is reset when the configuration is changed"
-msgstr ""
-
-msgid "translator-credits"
-msgstr ""
-
-msgid "Minimal"
-msgstr ""
-
-msgid "Advanced"
-msgstr ""
-
-msgid "Apply"
-msgstr ""
-
-msgid "Profiles"
-msgstr ""
-
-msgid "Financial support"
-msgstr ""
-
-msgid "Your presets"
-msgstr ""
-
-msgid "Icon Battary"
-msgstr ""
-
-#: src/mangojuice.vala:193
-msgid "More icon"
-msgstr ""
-
-msgid "This devices"
-msgstr ""
-
-msgid "Device icon"
-msgstr ""
-
-msgid "Profile preview"
-msgstr ""
-
-msgid "No profiles yet"
-msgstr ""
-
-msgid "Apply profile"
-msgstr ""
-
-msgid "Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe . Attention case is important!"
-msgstr ""
-
-msgid "Delete profile"
-msgstr ""
-
-msgid "Apply the profile to the entire system"
-msgstr ""
-
-msgid "To get ready presets, click on the title."
-msgstr ""
-
-msgid "Presets"
-msgstr ""
-
-msgid "Profile"
-msgstr ""
-
-msgid "You profiles"
-msgstr ""
-
-msgid "Overwrite profile"
-msgstr ""
-
