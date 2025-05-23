@@ -2246,6 +2246,7 @@ public class MangoJuice : Adw.Application {
                 if (selected_index == 0) {
                     SaveStates.update_pci_dev_in_file (_("All video cards"));
                 } else if (selected_index - 1 < gpu_pci_addresses.length) {
+                    gpu_text_entry.text = "";
                     SaveStates.update_pci_dev_in_file (gpu_pci_addresses[selected_index - 1]);
                 }
                 save_config ();
