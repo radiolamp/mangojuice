@@ -3,7 +3,7 @@
 <div align="center">
   <h1>
     <img
-      src="data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg"
+      src="https://github.com/radiolamp/mangojuice/raw/main/data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg"
       height="64"
     />
     MangoJuice
@@ -12,19 +12,19 @@
 ### Эта программа станет удобной альтернативой GOverlay для настройки MangoHud
 
 <p align="center">
-    <img src="data/images/screen1.png" alt="Скриншот"/>
+    <img src="https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true" alt="Скриншот"/>
 </p>
 
 |             Страница 1              |             Страница 2              |             Страница 3              |             Страница 4              |             Страница 5              |
 | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: |
-| ![screen1](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true) | ![screen2](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen2.png?raw=true) | ![screen3](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen3.png?raw=true) | ![screen4](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen4.png?raw=true) | ![screen5](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen5.png?raw=true) |
+| ![screen1](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true) | ![screen2](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen2.png?raw=true) | ![screen3](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen3.png?raw=true) | ![screen4](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen4.png?raw=true) | ![screen5](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen0.png?raw=true) |
 
 ## Установить
 
 **Flathub:**
 
 <a href="https://flathub.org/ru/apps/io.github.radiolamp.mangojuice">
-  <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-ru.svg'/>
+  <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
 </a>
 
 </div>
@@ -101,13 +101,13 @@ sudo ninja -C build uninstall
 
 <div align="center">
   <a href="https://boosty.to/radiolamp/donate">
-    <img height="200" src="data/assets/boosty_qrcode.png" alt="Boosty">
+    <img height="200" src="https://github.com/radiolamp/mangojuice/raw/main/data/assets/boosty_qrcode.png" alt="Boosty">
   </a>
   <a href="https://www.donationalerts.com/r/radiolamp">
-    <img height="200" src="data/assets/donationalerts_qrcode.png" alt="Donation Alerts">
+    <img height="200" src="https://github.com/radiolamp/mangojuice/raw/main/data/assets/donationalerts_qrcode.png" alt="Donation Alerts">
   </a>
   <a href="https://www.tbank.ru/cf/3PPTstulqEq">
-    <img height="200" src="data/assets/tbank_qrcode.png" alt="Т-Банк">
+    <img height="200" src="https://github.com/radiolamp/mangojuice/raw/main/data/assets/tbank_qrcode.png" alt="Т-Банк">
   </a>
 </div>
 
