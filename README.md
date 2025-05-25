@@ -1,4 +1,13 @@
-## MangoJuice [![En](https://img.shields.io/badge/en-green)](README.md) [![Ru](https://img.shields.io/badge/ru-gray)](docs/README-ru.md)
+### README language: [![En](https://img.shields.io/badge/en-green)](README.md) [![Ru](https://img.shields.io/badge/ru-gray)](docs/README-ru.md)
+
+<div align="center">
+  <h1>
+    <img
+      src="data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg"
+      height="64"
+    />
+    MangoJuice
+  </h1>
 
 ### This program will be a convenient alternative to GOverlay for setting up MangoHud
 
@@ -9,6 +18,18 @@
 |               Page 1                |               Page 2                |               Page 3                |               Page 4                |               Page 5                |
 | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: |
 | ![screen1](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true) | ![screen2](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen2.png?raw=true) | ![screen3](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen3.png?raw=true) | ![screen4](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen4.png?raw=true) | ![screen5](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen0.png?raw=true) |
+
+## Install
+
+**Flathub:**
+
+<a href="https://flathub.org/ru/apps/io.github.radiolamp.mangojuice">
+  <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
+</a>
+
+```shell
+flatpak install io.github.radiolamp.mangojuice
+```
 
 ## Repositories
 
@@ -60,24 +81,6 @@ sudo ninja -C build install
 sudo ninja -C build uninstall
 ```
 
-## Flatpak
-
-```shell
-flatpak install flathub io.github.radiolamp.mangojuice
-```
-
-### Download Flatpak
-
-[`Nightly build (Main)`](https://github.com/radiolamp/mangojuice/actions/)
-
-### Install Flatpak build
-
-> [WARNING] Attention: for full functionality install MangoHud from Flatpak</span></strong>
-
-```shell
-flatpak install --user io.github.radiolamp.mangojuice-x86_64.flatpak
-```
-
 ## Devel
 
 Also in the app there is Devel mode. It is intended for development and it is not recommended to use it on a permanent basis. In this mode new features of mangojuice and [mangohud-git](https://aur.archlinux.org/packages/mangohud-git) versions are tested. If you still want to use it, there is [mangojuice-git](https://aur.archlinux.org/packages/mangojuice-git) package in AUR or you can build it yourself with the following command:
@@ -87,16 +90,6 @@ Also in the app there is Devel mode. It is intended for development and it is no
   meson configure  build --no-pager -Dis_devel=true
   sudo ninja -C build install
 ```
-
-## Hotkey
-
-|      Hotkey      | Description |
-| :--------------: | :---------: |
-| [[Ctrl]] + [[Q]] |    Exit     |
-| [[Ctrl]] + [[S]] |    Save     |
-| [[Ctrl]] + [[E]] |   Save As   |
-| [[Ctrl]] + [[R]] |   Restore   |
-| [[Ctrl]] + [[T]] |    Test     |
 
 ## Support
 
