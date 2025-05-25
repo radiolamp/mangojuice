@@ -288,7 +288,7 @@ public class SaveStates {
             int[] cpu_order = {0, 1, 2, 3, 4, 5, 6, 7, 8};
             save_switches_to_file (data_stream, mango_juice.cpu_switches, mango_juice.cpu_config_vars, cpu_order);
 
-            int[] memory_order = {0, 1, 2, 3};
+            int[] memory_order = {0, 1, 2, 3, 4};
             save_switches_to_file (data_stream, mango_juice.memory_switches, mango_juice.memory_config_vars, memory_order);
 
             if (Config.IS_DEVEL) {

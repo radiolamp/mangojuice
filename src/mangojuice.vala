@@ -142,7 +142,7 @@ public class MangoJuice : Adw.Application {
         "cpu_power", "core_type"
     };
     public string[] memory_config_vars = {
-        "ram", "io_read \n io_write", "procmem", "swap"
+        "ram", "io_read \n io_write", "procmem", "procmem_shared \n procmem_virt", "swap"
     };
     public string[] git_config_vars = {
         "gpu_efficiency", "flip_efficiency", "hide_fsr_sharpness"
@@ -183,7 +183,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] memory_label_texts = {
         _("RAM"),             _("Disk"),
-        _("Resident memory"), _("Swap")
+        _("Resident memory"), _("General memory"),  _("Swap")
     };
 
     string[] git_label_texts = {
@@ -237,7 +237,7 @@ public class MangoJuice : Adw.Application {
     };
     string[] memory_label_texts_2 = {
         _("Size, GiB"), _("Input/Output, MiB/s"),
-        _("Size, GiB"), _("Size, GiB")
+        _("Size, GiB"), _("Including virtual"), _("Size, GiB")
     };
 
     string[] git_label_texts_2 = {
@@ -359,7 +359,7 @@ public class MangoJuice : Adw.Application {
 
     protected override void activate () {
         var window = new Adw.ApplicationWindow (this);
-        window.set_default_size (1024, 700);
+        window.set_default_size (1280, 700);
         window.set_title ("MangoJuice");
         if (Config.IS_DEVEL) window.add_css_class ("devel");
 
@@ -702,6 +702,18 @@ public class MangoJuice : Adw.Application {
         });
         gpu_switches[2].notify["active"].connect (() => {
             if (!gpu_switches[2].active) gpu_switches[4].active = false;
+        });
+        gpu_switches[4].notify["active"].connect (() => {
+            if (gpu_switches[4].active) gpu_switches[2].active = true;
+        });
+        gpu_switches[2].notify["active"].connect (() => {
+            if (!gpu_switches[2].active) gpu_switches[4].active = false;
+        });
+        memory_switches[3].notify["active"].connect (() => {
+            if (memory_switches[3].active) memory_switches[2].active = true;
+        });
+        memory_switches[2].notify["active"].connect (() => {
+            if (!memory_switches[2].active) memory_switches[3].active = false;
         });
     }
 
