@@ -579,13 +579,13 @@ msgstr "Цветной FPS"
 
 #: src/mangojuice.vala:218
 #, c-format
-msgid "Lowest 1%%"
-msgstr "Наименьший 1%%"
+msgid "Lowest 1%"
+msgstr "Наименьший 1%"
 
 #: src/mangojuice.vala:219
 #, c-format
-msgid "Lowest 0.1%%"
-msgstr "Наименьший 0.1%%"
+msgid "Lowest 0.1%"
+msgstr "Наименьший 0.1%"
 
 #: src/mangojuice.vala:219
 msgid "Detailed Frametime"
@@ -766,8 +766,8 @@ msgstr "Внешние отступы"
 
 #: src/mangojuice.vala:259
 #, c-format
-msgid "Power level, %%"
-msgstr "Уровни заряда, %%"
+msgid "Power level, %"
+msgstr "Уровни заряда, %"
 
 #: src/mangojuice.vala:259
 msgid "Battery life"
@@ -816,13 +816,13 @@ msgstr "Кадры в секунду"
 
 #: src/mangojuice.vala:272
 #, c-format
-msgid "1%% is lower then"
-msgstr "1%% меньше, чем"
+msgid "1% is lower then"
+msgstr "1% меньше, чем"
 
 #: src/mangojuice.vala:273
 #, c-format
-msgid "0.1%% is lower then"
-msgstr "0.1%% меньше, чем"
+msgid "0.1% is lower then"
+msgstr "0.1% меньше, чем"
 
 #: src/mangojuice.vala:273
 msgid "FPS limitation"

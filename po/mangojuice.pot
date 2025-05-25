@@ -570,12 +570,12 @@ msgstr ""
 
 #: src/mangojuice.vala:218
 #, c-format
-msgid "Lowest 1%%"
+msgid "Lowest 1%"
 msgstr ""
 
 #: src/mangojuice.vala:219
 #, c-format
-msgid "Lowest 0.1%%"
+msgid "Lowest 0.1%"
 msgstr ""
 
 #: src/mangojuice.vala:219
@@ -757,7 +757,7 @@ msgstr ""
 
 #: src/mangojuice.vala:259
 #, c-format
-msgid "Power level, %%"
+msgid "Power level, %"
 msgstr ""
 
 #: src/mangojuice.vala:259
@@ -807,12 +807,12 @@ msgstr ""
 
 #: src/mangojuice.vala:272
 #, c-format
-msgid "1%% is lower then"
+msgid "1% is lower then"
 msgstr ""
 
 #: src/mangojuice.vala:273
 #, c-format
-msgid "0.1%% is lower then"
+msgid "0.1% is lower then"
 msgstr ""
 
 #: src/mangojuice.vala:273

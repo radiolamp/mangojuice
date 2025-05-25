@@ -215,8 +215,8 @@ public class MangoJuice : Adw.Application {
 
     // Performance
     string[] inform_label_texts = {
-        _("FPS"),           _("Color FPS"),   _("Lowest 1%%"),
-        _("Lowest 0.1%%"),  _("Frame limit"), _("Frame graph"), _("Detailed Frametime") , _("Histogram"),
+        _("FPS"),           _("Color FPS"),   _("Lowest 1%"),
+        _("Lowest 0.1%"),  _("Frame limit"), _("Frame graph"), _("Detailed Frametime") , _("Histogram"),
         _("Frame Counter"), _("°C to °F"),    _("VPS")
     };
 
@@ -256,7 +256,7 @@ public class MangoJuice : Adw.Application {
         _("Hide overlay"),           _("Shadows under text"), _("Same font size"), _("External offsets")
     };
     string[] battery_label_texts_2 = {
-        _("Power level, %%"), _("Consumption, W"),   _("Battery life"),
+        _("Power level, %"), _("Consumption, W"),   _("Battery life"),
         _("This devices"),    _("Wireless devices"), _("Wireless battries")
     };
     string[] wine_label_texts_2 = {
@@ -269,8 +269,8 @@ public class MangoJuice : Adw.Application {
 
     // Performance
     string[] inform_label_texts_2 = {
-        _("Frames per second"),   _("Color text"),        _("1%% is lower then"),
-        _("0.1%% is lower then"), _("FPS limitation"),    _("Frametime"),           _("Detailed frame time"),  _("Graph to histogram"),
+        _("Frames per second"),   _("Color text"),        _("1% is lower then"),
+        _("0.1% is lower then"), _("FPS limitation"),    _("Frametime"),           _("Detailed frame time"),  _("Graph to histogram"),
         _("Display frame count"), _("Temperature in °F"), _("Present mode")
     };
 
