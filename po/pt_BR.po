@@ -1222,3 +1222,9 @@ msgstr "Todos mínimos"
 
 msgid "1% and 0.1% lower than"
 msgstr "1% e 0.1% abaixo"
+
+msgid "Color text core"
+msgstr "Núcleo de texto colorido"
+
+msgid "Color core"
+msgstr "Núcleo colorido"

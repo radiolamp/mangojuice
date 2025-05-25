@@ -1330,3 +1330,9 @@ msgstr ""
 msgid "1% and 0.1% lower than"
 msgstr ""
 
+msgid "Color text core"
+msgstr ""
+
+msgid "Color core"
+msgstr ""
+

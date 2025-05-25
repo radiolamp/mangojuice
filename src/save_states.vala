@@ -285,7 +285,7 @@ public class SaveStates {
 
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
 
-            int[] cpu_order = {0, 1, 2, 3, 4, 5, 6, 7};
+            int[] cpu_order = {0, 1, 2, 3, 4, 5, 6, 7, 8};
             save_switches_to_file (data_stream, mango_juice.cpu_switches, mango_juice.cpu_config_vars, cpu_order);
 
             int[] memory_order = {0, 1, 2, 3};

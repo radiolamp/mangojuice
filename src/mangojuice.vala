@@ -138,7 +138,7 @@ public class MangoJuice : Adw.Application {
         "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "engine_version"
     };
     public string[] cpu_config_vars = {
-        "cpu_stats", "cpu_load_change", "core_load", "core_bars", "cpu_mhz", "cpu_temp",
+        "cpu_stats", "cpu_load_change", "core_load", "core_load_change", "core_bars", "cpu_mhz", "cpu_temp",
         "cpu_power", "core_type"
     };
     public string[] memory_config_vars = {
@@ -178,7 +178,7 @@ public class MangoJuice : Adw.Application {
         _("Throttling"),       _("Throttling graph"), _("Vulkan Driver")
     };
     string[] cpu_label_texts = {
-        _("Load CPU"),          _("Color load"),  _("Load per core"), _("Diagram"),
+        _("Load CPU"),          _("Color load"),  _("Load per core"), _("Color core"), _("Diagram"),
         _("Maximum frequency"), _("Temperature"), _("Power"),  _("Core type")
     };
     string[] memory_label_texts = {
@@ -232,7 +232,7 @@ public class MangoJuice : Adw.Application {
         _("Trolling parametrs"), _("Curve"),           _("Driver Version")
     };
     string[] cpu_label_texts_2 = {
-        _("Percentage load"),      _("Color text"),      _("All cores"),     _("Load per core"),
+        _("Percentage load"),      _("Color text"),      _("All cores"),  _("Color text core"),   _("Load per core"),
         _("Peak among all cores"), _("CPU temperature"), _("Consumption, W"), _("For new Intel and ARM")
     };
     string[] memory_label_texts_2 = {
@@ -685,11 +685,17 @@ public class MangoJuice : Adw.Application {
         inform_switches[6].notify["active"].connect (() => {
             if (!inform_switches[6].active) inform_switches[7].active = false;
         });
-        cpu_switches[3].notify["active"].connect (() => {
-            if (cpu_switches[3].active) cpu_switches[2].active = true;
+        cpu_switches[4].notify["active"].connect (() => {
+            if (cpu_switches[4].active) cpu_switches[2].active = true;
+            if (cpu_switches[4].active) cpu_switches[3].active = false;
         });
         cpu_switches[2].notify["active"].connect (() => {
+            if (!cpu_switches[2].active) cpu_switches[4].active = false;
             if (!cpu_switches[2].active) cpu_switches[3].active = false;
+        });
+        cpu_switches[3].notify["active"].connect (() => {
+            if (cpu_switches[3].active) cpu_switches[2].active = true;
+            if (cpu_switches[3].active) cpu_switches[4].active = false;
         });
         gpu_switches[4].notify["active"].connect (() => {
             if (gpu_switches[4].active) gpu_switches[2].active = true;

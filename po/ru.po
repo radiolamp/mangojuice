@@ -1341,3 +1341,9 @@ msgstr "На 1% и 0.1% ниже"
 
 #~ msgid "Lowest 0.1\\%"
 #~ msgstr "Наименьший 0.1\\%"
+
+msgid "Color text core"
+msgstr "Цветная нагрузка язда"
+
+msgid "Color core"
+msgstr "Цветное ядро"
