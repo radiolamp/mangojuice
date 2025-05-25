@@ -1331,6 +1331,15 @@ msgstr "Таблица поиска цветов"
 msgid "Select Font"
 msgstr "Выбрать шрифт"
 
+msgid "Deleted"
+msgstr "Удалено"
+
+msgid "Applied"
+msgstr "Применено"
+
+msgid "Changed"
+msgstr "Изменено"
+
 #~ msgid "Lowest 1\\%"
 #~ msgstr "Наименьший 1\\%"
 

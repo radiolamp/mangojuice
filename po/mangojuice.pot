@@ -1313,3 +1313,12 @@ msgstr ""
 #: src/save_states.vala:424
 msgid "Select Font"
 msgstr ""
+
+msgid "Deleted"
+msgstr ""
+
+msgid "Applied"
+msgstr ""
+
+msgid "Changed"
+msgstr ""

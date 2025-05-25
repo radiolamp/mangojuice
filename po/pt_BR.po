@@ -1207,3 +1207,12 @@ msgstr "Seus perfis"
 
 msgid "Overwrite profile"
 msgstr "Sobrescrever perfil"
+
+msgid "Deleted"
+msgstr "Excluído"
+
+msgid "Applied"
+msgstr "Aplicado"
+
+msgid "Changed"
+msgstr "Alterado"
