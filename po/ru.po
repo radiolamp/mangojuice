@@ -1347,3 +1347,9 @@ msgstr "Цветная нагрузка язда"
 
 msgid "Color core"
 msgstr "Цветное ядро"
+
+msgid "Including virtual"  
+msgstr "Включая виртуальный"  
+
+msgid "General memory"  
+msgstr "Общая память"  

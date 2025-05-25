@@ -1228,3 +1228,9 @@ msgstr "Núcleo de texto colorido"
 
 msgid "Color core"
 msgstr "Núcleo colorido"
+
+msgid "Including virtual"  
+msgstr "Incluindo virtual"  
+
+msgid "General memory"  
+msgstr "Memória geral"  

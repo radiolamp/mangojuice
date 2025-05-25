@@ -1336,3 +1336,9 @@ msgstr ""
 msgid "Color core"
 msgstr ""
 
+msgid "Including virtual"
+msgstr ""
+
+msgid "General memory"
+msgstr ""
+
