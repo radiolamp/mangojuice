@@ -9,6 +9,7 @@
     MangoJuice
   </h1>
 
+
 ### This program will be a convenient alternative to GOverlay for setting up MangoHud
 
 <p align="center">
@@ -27,9 +28,7 @@
   <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
 </a>
 
-```shell
-flatpak install io.github.radiolamp.mangojuice
-```
+</div>
 
 ## Repositories
 
