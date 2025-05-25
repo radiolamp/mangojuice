@@ -14,19 +14,31 @@
   <url type="bugtracker">https://github.com/radiolamp/mangojuice/issues</url>
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.2/images/screen1.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen1.png?raw=true</image>
       <caption>Main interface of MangoJuice</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.2/images/screen2.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen2.png?raw=true</image>
       <caption>Extra</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.2/images/screen3.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen3.png?raw=true</image>
       <caption>Metric</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.2/images/screen4.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen4.png?raw=true</image>
+      <caption>Visual</caption>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen5.png?raw=true</image>
+      <caption>You profiles</caption>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen7.png?raw=true</image>
+      <caption>Change order</caption>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen6.png?raw=true</image>
       <caption>Visual</caption>
     </screenshot>
   </screenshots>
@@ -41,6 +53,11 @@
         <ul>
           <li>Full update information is available on GitHub.</li>
         </ul>
+      </description>
+    </release>
+    <release version="0.8.4" date="2025-04-30">
+      <description>
+        <p>Initial release of MangoJuice.</p>
       </description>
     </release>
   </releases>
