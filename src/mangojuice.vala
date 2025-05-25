@@ -2326,7 +2326,7 @@ public class MangoJuice : Adw.Application {
         return addresses;
     }
 
-    bool is_vkcube_available () {
+    public bool is_vkcube_available () {
         try {
             string[] argv = { "which", "vkcube" };
             int exit_status;
@@ -2357,7 +2357,7 @@ public class MangoJuice : Adw.Application {
         }
     }
 
-    bool is_glxgears_available () {
+    public bool is_glxgears_available () {
         try {
             string[] argv = { "which", "glxgears" };
             int exit_status;
@@ -2764,7 +2764,7 @@ public class MangoJuice : Adw.Application {
         return "%02x%02x%02x".printf ((int) (rgba.red * 255), (int) (rgba.green * 255), (int) (rgba.blue * 255));
     }
 
-    bool is_flatpak () {
+    public bool is_flatpak () {
         return Environment.get_variable ("FLATPAK_ID") != null;
     }
 

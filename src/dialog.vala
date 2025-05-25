@@ -328,7 +328,10 @@ namespace AboutDialog {
             toast.set_timeout(3);
             toast_overlay.add_toast(toast);
         });
-    
+
+        string? wayland_display = Environment.get_variable("WAYLAND_DISPLAY");
+        bool is_wayland = (wayland_display != null && wayland_display != "");
+
         row.activated.connect(() => {
             try {
                 Process.spawn_command_line_async("pkill vkcube");
@@ -343,14 +346,19 @@ namespace AboutDialog {
     
                 string base_cmd = @"env MANGOHUD_CONFIGFILE='$config_path' mangohud";
     
-                try {
-                    Process.spawn_command_line_async(base_cmd + " vkcube");
-                } catch {
-                    try {
-                        Process.spawn_command_line_async(base_cmd + " vkcube-wayland");
-                    } catch {
-                        Process.spawn_command_line_async(base_cmd + " glxgears");
+                if (app.is_flatpak ()) {
+                    Process.spawn_command_line_sync ("pkill vkcube");
+                    if (is_wayland) {
+                        Process.spawn_command_line_async (base_cmd + " mangohud vkcube-wayland");
+                    } else {
+                        Process.spawn_command_line_async (base_cmd + " mangohud vkcube");
                     }
+                } else if (app.is_vkcube_available ()) {
+                    Process.spawn_command_line_sync ("pkill vkcube");
+                    Process.spawn_command_line_async (base_cmd + " mangohud vkcube");
+                } else if (app.is_glxgears_available ()) {
+                    Process.spawn_command_line_sync ("pkill glxgears");
+                    Process.spawn_command_line_async (base_cmd + " mangohud glxgears");
                 }
             } catch (Error e) {
                 warning("%s", e.message);
