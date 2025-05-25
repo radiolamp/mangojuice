@@ -577,16 +577,6 @@ msgstr "Выгрузка логов"
 msgid "Color FPS"
 msgstr "Цветной FPS"
 
-#: src/mangojuice.vala:218
-#, c-format
-msgid "Lowest 1%"
-msgstr "Наименьший 1%"
-
-#: src/mangojuice.vala:219
-#, c-format
-msgid "Lowest 0.1%"
-msgstr "Наименьший 0.1%"
-
 #: src/mangojuice.vala:219
 msgid "Detailed Frametime"
 msgstr "Детальный график"
