@@ -1782,7 +1782,7 @@ public class MangoJuice : Adw.Application {
             var text_box = new Box (Orientation.VERTICAL, 0);
             text_box.set_valign (Align.CENTER);
             text_box.set_halign (Align.START);
-            text_box.set_size_request (175, -1);
+            text_box.set_size_request (170, -1); 
 
             var label1 = new Label (null);
             label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
