@@ -1330,6 +1330,12 @@ msgstr "Применено"
 msgid "Changed"
 msgstr "Изменено"
 
+msgid "All lowest"
+msgstr "Все минимумы"
+
+msgid "1% and 0.1% lower than"
+msgstr "На 1% и 0.1% ниже"
+
 #~ msgid "Lowest 1\\%"
 #~ msgstr "Наименьший 1\\%"
 

@@ -236,14 +236,14 @@ public class SaveStates {
             var order_map = new HashMap<string, ArrayList<int>> ();
 
             var inform_start = new ArrayList<int> ();
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 5; i++) {
                 inform_start.add (i);
             }
             order_map.set ("inform_start", inform_start);
 
             var inform_end = new ArrayList<int> ();
-            inform_end.add (10);
-            for (int i = 4; i < 10; i++) {
+            inform_end.add (11);
+            for (int i = 5; i < 11; i++) {
                 inform_end.add (i);
             }
             order_map.set ("inform_end", inform_end);

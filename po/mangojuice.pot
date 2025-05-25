@@ -1322,3 +1322,11 @@ msgstr ""
 
 msgid "Changed"
 msgstr ""
+
+
+msgid "All lowest"
+msgstr ""
+
+msgid "1% and 0.1% lower than"
+msgstr ""
+

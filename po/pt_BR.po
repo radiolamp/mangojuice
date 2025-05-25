@@ -1216,3 +1216,9 @@ msgstr "Aplicado"
 
 msgid "Changed"
 msgstr "Alterado"
+
+msgid "All lowest"
+msgstr "Todos mínimos"
+
+msgid "1% and 0.1% lower than"
+msgstr "1% e 0.1% abaixo"
