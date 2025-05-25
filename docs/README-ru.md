@@ -1,4 +1,13 @@
-## MangoJuice [![En](https://img.shields.io/badge/en-gray)](/README.md) [![Ru](https://img.shields.io/badge/ru-green)](/docs/README-ru.md)
+[![En](https://img.shields.io/badge/en-gray)](/README.md) [![Ru](https://img.shields.io/badge/ru-green)](/docs/README-ru.md)
+
+<div align="center">
+  <h1>
+    <img
+      src="data/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg"
+      height="64"
+    />
+    MangoJuice
+  </h1>
 
 ### Эта программа станет удобной альтернативой GOverlay для настройки MangoHud
 
@@ -9,6 +18,16 @@
 |             Страница 1              |             Страница 2              |             Страница 3              |             Страница 4              |             Страница 5              |
 | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: |
 | ![screen1](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true) | ![screen2](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen2.png?raw=true) | ![screen3](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen3.png?raw=true) | ![screen4](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen4.png?raw=true) | ![screen5](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen5.png?raw=true) |
+
+## Установить
+
+**Flathub:**
+
+<a href="https://flathub.org/ru/apps/io.github.radiolamp.mangojuice">
+  <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-ru.svg'/>
+</a>
+
+</div>
 
 ## Репозитории
 
@@ -69,35 +88,6 @@ sudo ninja -C build uninstall
   meson configure  build --no-pager -Dis_devel=true
   sudo ninja -C build install
 ```
-
-## Flatpak
-
-```shell
-flatpak install flathub io.github.radiolamp.mangojuice
-```
-
-### Скачать Flatpak
-
-[`Сборка Nightly (Основная)`](https://github.com/radiolamp/mangojuice/actions/)
-
-### Установить сборку Flatpak
-
-> [ВНИМАНИЕ] Обратите внимание: для полной функциональности установите MangoHud через Flatpak</span></strong>
-
-```shell
-flatpak install --user io.github.radiolamp.mangojuice-x86_64.flatpak
-```
-
-
-## Горячие клавиши
-
-| Горячая клавиша  |   Описание    |
-| :--------------: | :-----------: |
-| [[Ctrl]] + [[Q]] |     Выход     |
-| [[Ctrl]] + [[S]] |   Сохранить   |
-| [[Ctrl]] + [[E]] | Сохранить как |
-| [[Ctrl]] + [[R]] | Восстановить  |
-| [[Ctrl]] + [[T]] | Тестирование  |
 
 ## Поддержка проекта
 
