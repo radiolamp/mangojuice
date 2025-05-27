@@ -715,6 +715,12 @@ public class MangoJuice : Adw.Application {
         memory_switches[2].notify["active"].connect (() => {
             if (!memory_switches[2].active) memory_switches[3].active = false;
         });
+        memory_switches[4].notify["active"].connect (() => {
+            if (memory_switches[4].active) memory_switches[0].active = true;
+        });
+        memory_switches[0].notify["active"].connect (() => {
+            if (!memory_switches[0].active) memory_switches[4].active = false;
+        });
     }
 
     protected override void shutdown () {
