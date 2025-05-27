@@ -178,7 +178,7 @@ public class MangoJuice : Adw.Application {
         _("Throttling"),       _("Throttling graph"), _("Vulkan Driver")
     };
     string[] cpu_label_texts = {
-        _("Load CPU"),          _("Color load"),  _("Load per core"), _("Color core"), _("Diagram"),
+        _("Load CPU"),          _("Color load"),  _("Load per core"), _("Colored cores"), _("Diagram"),
         _("Maximum frequency"), _("Temperature"), _("Power"),  _("Core type")
     };
     string[] memory_label_texts = {
@@ -232,7 +232,7 @@ public class MangoJuice : Adw.Application {
         _("Trolling parametrs"), _("Curve"),           _("Driver Version")
     };
     string[] cpu_label_texts_2 = {
-        _("Percentage load"),      _("Color text"),      _("All cores"),  _("Color text core"),   _("Load per core"),
+        _("Percentage load"),      _("Color text"),      _("All cores"),  _("Colored cores text"),   _("Load per core"),
         _("Peak among all cores"), _("CPU temperature"), _("Consumption, W"), _("For new Intel and ARM")
     };
     string[] memory_label_texts_2 = {
@@ -269,8 +269,8 @@ public class MangoJuice : Adw.Application {
 
     // Performance
     string[] inform_label_texts_2 = {
-        _("Frames per second"),   _("Color text"),        _("1% is lower then"),
-        _("0.1% is lower then"), _("1% and 0.1% lower than"), _("FPS limitation"),  _("Frametime"), _("Detailed frame time"), _("Graph to histogram"),
+        _("Frames per second"),   _("Color text"),        _("1% is lower than"),
+        _("0.1% is lower than"), _("1% and 0.1% lower than"), _("FPS limitation"),  _("Frametime"), _("Detailed frame time"), _("Graph to histogram"),
         _("Display frame count"), _("Temperature in °F"), _("Present mode")
     };
 
@@ -484,7 +484,7 @@ public class MangoJuice : Adw.Application {
         menu_model.append_item (new GLib.MenuItem (_("Save"), "app.save"));
         menu_model.append_item (new GLib.MenuItem (_("Save As"), "app.save_as"));
         menu_model.append_item (new GLib.MenuItem (_("Restore"), "app.restore_config"));
-        menu_model.append_item (new GLib.MenuItem (_("You profiles"), "app.preset_dialog"));
+        menu_model.append_item (new GLib.MenuItem (_("Your profiles"), "app.preset_dialog"));
         menu_model.append_item (new GLib.MenuItem (_("Presets"), "app.presets_carousel"));
         menu_model.append_item (new GLib.MenuItem (_("Change order"), "app.advanced"));
         menu_model.append_item (new GLib.MenuItem (_("About"), "app.about"));
