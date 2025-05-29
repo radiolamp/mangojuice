@@ -135,7 +135,7 @@ public class MangoJuice : Adw.Application {
     public string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
-        "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "engine_version"
+        "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "vulkan_driver"
     };
     public string[] cpu_config_vars = {
         "cpu_stats", "cpu_load_change", "core_load", "core_load_change", "core_bars", "cpu_mhz", "cpu_temp",
@@ -847,7 +847,7 @@ public class MangoJuice : Adw.Application {
 
         for (int i = 0; i < gpu_switches.length; i++) {
             if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name"
-                && gpu_config_vars[i] != "engine_version" && gpu_config_vars[i] != "gpu_mem_clock") {
+                && gpu_config_vars[i] != "vulkan_driver" && gpu_config_vars[i] != "gpu_mem_clock") {
                 any_gpu_switch_active = true;
                 break;
             }
