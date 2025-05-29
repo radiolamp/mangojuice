@@ -135,7 +135,7 @@ public class MangoJuice : Adw.Application {
     public string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
-        "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "vulkan_driver"
+        "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "vulkan_driver" , "engine_version"
     };
     public string[] cpu_config_vars = {
         "cpu_stats", "cpu_load_change", "core_load", "core_load_change", "core_bars", "cpu_mhz", "cpu_temp",
@@ -175,7 +175,7 @@ public class MangoJuice : Adw.Application {
         _("Load GPU"),         _("Color load"),       _("VRAM"),               _("Core frequency"),
         _("Memory frequency"), _("Temperature"),      _("Memory temperature"), _("Max temperature"),
         _("Fans"),             _("Model"),            _("Power"),              _("Voltage"),
-        _("Throttling"),       _("Throttling graph"), _("Vulkan Driver")
+        _("Throttling"),       _("Throttling graph"), _("Vulkan Driver") ,     _("Engine version")
     };
     string[] cpu_label_texts = {
         _("Load CPU"),          _("Color load"),  _("Load per core"), _("Colored cores"), _("Diagram"),
@@ -228,8 +228,8 @@ public class MangoJuice : Adw.Application {
     string[] gpu_label_texts_2 = {
         _("Percentage load"),    _("Color text"),      _("Amount of video memory"), _("Frequency, MHz"),
         _("Frequency, MHz"),     _("GPU temperature"), _("GDDR temperature"),       _("Temperature peak"),
-        _("Speed, RPM"),     _("GPU name"),        _("Consumption, W" ),        _("Consumption, V"),
-        _("Trolling parametrs"), _("Curve"),           _("Driver Version")
+        _("Speed, RPM"),         _("GPU name"),        _("Consumption, W" ),        _("Consumption, V"),
+        _("Trolling parametrs"), _("Curve"),           _("Driver Version"),         _("OpenGL and Vulkan")
     };
     string[] cpu_label_texts_2 = {
         _("Percentage load"),      _("Color text"),      _("All cores"),  _("Colored cores text"),   _("Load per core"),
@@ -847,7 +847,7 @@ public class MangoJuice : Adw.Application {
 
         for (int i = 0; i < gpu_switches.length; i++) {
             if (gpu_switches[i].active && gpu_config_vars[i] != "vram" && gpu_config_vars[i] != "gpu_name"
-                && gpu_config_vars[i] != "vulkan_driver" && gpu_config_vars[i] != "gpu_mem_clock") {
+                && gpu_config_vars[i] != "vulkan_driver" && gpu_config_vars[i] != "gpu_mem_clock" && gpu_config_vars[i] != "engine_version") {
                 any_gpu_switch_active = true;
                 break;
             }

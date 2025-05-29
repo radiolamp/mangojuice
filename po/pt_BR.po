@@ -1234,3 +1234,9 @@ msgstr "Incluindo virtual"
 
 msgid "General memory"  
 msgstr "Memória geral"  
+
+msgid "Engine version"  
+msgstr "Versão do motor"  
+
+msgid "OpenGL and Vulkan"  
+msgstr "OpenGL e Vulkan"  

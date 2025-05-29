@@ -1347,3 +1347,9 @@ msgstr ""
 #: src/save_states.vala:424
 msgid "Select Font"
 msgstr ""
+
+msgid "Engine version"
+msgstr ""
+
+msgid "OpenGL and Vulkan"
+msgstr ""

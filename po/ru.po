@@ -1364,3 +1364,9 @@ msgstr "Таблица поиска цветов"
 #: src/save_states.vala:424
 msgid "Select Font"
 msgstr "Выбрать шрифт"
+
+msgid "Engine version"  
+msgstr "Версия движка"  
+
+msgid "OpenGL and Vulkan"  
+msgstr "OpenGL и Vulkan"  

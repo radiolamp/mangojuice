@@ -102,6 +102,7 @@ public class AdvancedDialog : Adw.Dialog {
                             line.has_prefix ("exec_name") ||
                             line.has_prefix ("fsr") ||
                             line.has_prefix ("hdr") ||
+                            line.has_prefix ("vulkan_driver") ||
                             line.has_prefix ("engine_version") ||
                             line.has_prefix ("refresh_rate") ||
                             line.has_prefix ("resolution") ||
@@ -354,7 +355,7 @@ public class AdvancedDialog : Adw.Dialog {
                 return _("Your text");
             case "gpu_stats":
                 return _("Load GPU");
-            case "engine_version":
+            case "vulkan_driver":
                 return _("Vulkan Driver");
             case "vram":
                 return _("VRAM");
@@ -382,6 +383,8 @@ public class AdvancedDialog : Adw.Dialog {
                 return _("Lowest 1%");
             case "version":
                 return _("Version");
+             case "engine_version":
+                return _("Engine version");
             case "gamemode":
                 return _("Gamemode");
             case "vkbasalt":

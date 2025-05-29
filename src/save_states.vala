@@ -267,6 +267,7 @@ public class SaveStates {
             var gpu_end = new ArrayList<int> ();
             gpu_end.add (9);
             gpu_end.add (14);
+            gpu_end.add (15);
             order_map.set ("gpu_end", gpu_end);
 
             var system_start = new ArrayList<int> ();
