@@ -133,7 +133,10 @@ msgid "RAM"
 msgstr ""
 
 #: src/advanced.vala:368 src/advanced.vala:370 src/mangojuice.vala:185
-msgid "Disk"
+msgid "Disk read"
+msgstr ""
+
+msgid "Disk write"
 msgstr ""
 
 #: src/advanced.vala:372 src/mangojuice.vala:186
@@ -709,7 +712,11 @@ msgid "Size, GiB"
 msgstr ""
 
 #: src/mangojuice.vala:239
-msgid "Input/Output, MiB/s"
+msgid "Input, MiB/s"
+msgstr ""
+
+#: src/mangojuice.vala:239
+msgid "Output, MiB/s"
 msgstr ""
 
 #: src/mangojuice.vala:240
@@ -1352,4 +1359,10 @@ msgid "Engine version"
 msgstr ""
 
 msgid "OpenGL and Vulkan"
+msgstr ""
+
+msgid "Size, MiB/s"
+msgstr ""
+
+msgid "Virtual memory"
 msgstr ""

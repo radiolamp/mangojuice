@@ -139,10 +139,6 @@ msgstr "Frequência máxima"
 msgid "RAM"
 msgstr "RAM"
 
-#: src/mangojuice.vala:177
-msgid "Disk"
-msgstr "Disco"
-
 #: src/mangojuice.vala:178
 msgid "Resident memory"
 msgstr "Memória residente"
@@ -402,8 +398,17 @@ msgid "Size, GiB"
 msgstr "Tamanho, GiB"
 
 #: src/mangojuice.vala:226
-msgid "Input/Output, MiB/s"
-msgstr "Entrada/saída, MIB/S"
+msgid "Disk read"  
+msgstr "Leitura do disco"  
+
+msgid "Disk write"  
+msgstr "Gravação no disco"  
+
+msgid "Input, MiB/s"  
+msgstr "Entrada, MiB/s"  
+
+msgid "Output, MiB/s"  
+msgstr "Saída, MiB/s"  
 
 #. Extras
 #: src/mangojuice.vala:232 src/mangojuice.vala:237
@@ -1239,4 +1244,10 @@ msgid "Engine version"
 msgstr "Versão do motor"  
 
 msgid "OpenGL and Vulkan"  
-msgstr "OpenGL e Vulkan"  
+msgstr "OpenGL e Vulkan"
+
+msgid "Size, MiB/s"  
+msgstr "Tamanho, MiB/s"  
+
+msgid "Virtual memory"  
+msgstr "Memória virtual"  

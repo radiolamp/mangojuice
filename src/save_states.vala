@@ -289,7 +289,7 @@ public class SaveStates {
             int[] cpu_order = {0, 1, 2, 3, 4, 5, 6, 7, 8};
             save_switches_to_file (data_stream, mango_juice.cpu_switches, mango_juice.cpu_config_vars, cpu_order);
 
-            int[] memory_order = {0, 1, 2, 3, 4};
+            int[] memory_order = {0, 1, 2, 3, 4, 5, 6};
             save_switches_to_file (data_stream, mango_juice.memory_switches, mango_juice.memory_config_vars, memory_order);
 
             if (Config.IS_DEVEL) {
@@ -590,12 +590,7 @@ public class SaveStates {
             if (switches[index].active) {
                 try {
                     string config_var = config_vars[index];
-                    if (config_var == "io_read \n io_write") {
-                        data_stream.put_string ("io_read\n");
-                        data_stream.put_string ("io_write\n");
-                    } else {
-                        data_stream.put_string ("%s\n".printf (config_var));
-                    }
+                    data_stream.put_string ("%s\n".printf (config_var));
                 } catch (Error e) {
                     stderr.printf ("Error writing to the file: %s\n", e.message);
                 }

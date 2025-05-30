@@ -138,10 +138,6 @@ msgstr "Нагрузка на ядро"
 msgid "RAM"
 msgstr "ОЗУ"
 
-#: src/advanced.vala:368 src/advanced.vala:370 src/mangojuice.vala:185
-msgid "Disk"
-msgstr "Диск"
-
 #: src/advanced.vala:372 src/mangojuice.vala:186
 msgid "Resident memory"
 msgstr "Резерв памяти"
@@ -720,9 +716,17 @@ msgstr "Для новых Intel и ARM"
 msgid "Size, GiB"
 msgstr "Размер, ГиБ"
 
-#: src/mangojuice.vala:239
-msgid "Input/Output, MiB/s"
-msgstr "Ввод/Вывод, МиБ/с"
+msgid "Disk read"  
+msgstr "Чтение с диска"  
+
+msgid "Disk write"  
+msgstr "Запись на диск"  
+
+msgid "Input, MiB/s"  
+msgstr "Ввод, МиБ/с"  
+
+msgid "Output, MiB/s"  
+msgstr "Вывод, МиБ/с"  
 
 #: src/mangojuice.vala:240
 msgid "Including virtual"
@@ -1369,4 +1373,10 @@ msgid "Engine version"
 msgstr "Версия движка"  
 
 msgid "OpenGL and Vulkan"  
-msgstr "OpenGL и Vulkan"  
+msgstr "OpenGL и Vulkan"
+
+msgid "Size, MiB/s"  
+msgstr "Размер, МиБ/с"  
+
+msgid "Virtual memory"  
+msgstr "Виртуальная память"  

@@ -142,7 +142,7 @@ public class MangoJuice : Adw.Application {
         "cpu_power", "core_type"
     };
     public string[] memory_config_vars = {
-        "ram", "io_read \n io_write", "procmem", "procmem_shared \n procmem_virt", "swap"
+        "ram", "io_read", "io_write", "procmem", "procmem_shared", "procmem_virt", "swap"
     };
     public string[] git_config_vars = {
         "gpu_efficiency", "flip_efficiency", "hide_fsr_sharpness"
@@ -182,8 +182,8 @@ public class MangoJuice : Adw.Application {
         _("Maximum frequency"), _("Temperature"), _("Power"),  _("Core type")
     };
     string[] memory_label_texts = {
-        _("RAM"),             _("Disk"),
-        _("Resident memory"), _("General memory"),  _("Swap")
+        _("RAM"),             _("Disk read"),       _("Disk write"),  _("Resident memory"),
+        _("General memory"),  _("Virtual memory"),  _("Swap")
     };
 
     string[] git_label_texts = {
@@ -236,13 +236,12 @@ public class MangoJuice : Adw.Application {
         _("Peak among all cores"), _("CPU temperature"), _("Consumption, W"), _("For new Intel and ARM")
     };
     string[] memory_label_texts_2 = {
-        _("Size, GiB"), _("Input/Output, MiB/s"),
-        _("Size, GiB"), _("Including virtual"), _("Size, GiB")
+         _("Size, GiB"),   _("Input, MiB/s"), _("Output, MiB/s"), _("Size, GiB"),
+         _("Size, MiB/s"), _("Size, MiB/s"),  _("Size, GiB")
     };
 
     string[] git_label_texts_2 = {
-        _("GPU"), _("GPU"),
-        _("Gamescope")
+         _("GPU"), _("GPU"), _("Gamescope")
     };
 
     // Extras
@@ -709,17 +708,22 @@ public class MangoJuice : Adw.Application {
         gpu_switches[2].notify["active"].connect (() => {
             if (!gpu_switches[2].active) gpu_switches[4].active = false;
         });
-        memory_switches[3].notify["active"].connect (() => {
-            if (memory_switches[3].active) memory_switches[2].active = true;
-        });
-        memory_switches[2].notify["active"].connect (() => {
-            if (!memory_switches[2].active) memory_switches[3].active = false;
-        });
         memory_switches[4].notify["active"].connect (() => {
-            if (memory_switches[4].active) memory_switches[0].active = true;
+            if (memory_switches[4].active) memory_switches[3].active = true;
+        });
+        memory_switches[3].notify["active"].connect (() => {
+            if (!memory_switches[3].active) memory_switches[3].active = false;
+            if (!memory_switches[3].active) memory_switches[4].active = false;
+            if (!memory_switches[3].active) memory_switches[5].active = false;
+        });
+        memory_switches[5].notify["active"].connect (() => {
+            if (memory_switches[5].active) memory_switches[3].active = true;
+        });
+        memory_switches[6].notify["active"].connect (() => {
+            if (memory_switches[6].active) memory_switches[0].active = true;
         });
         memory_switches[0].notify["active"].connect (() => {
-            if (!memory_switches[0].active) memory_switches[4].active = false;
+            if (!memory_switches[0].active) memory_switches[6].active = false;
         });
     }
 
