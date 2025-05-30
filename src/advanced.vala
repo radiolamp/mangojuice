@@ -8,14 +8,14 @@ public class AdvancedDialog : Adw.Dialog {
     List<string> filtered_config_lines;
     ListBox list_box;
 
-    public static void show_advanced_dialog(Gtk.Window parent_window) {
-        var advanced_dialog = new AdvancedDialog(parent_window);
+    public static void show_advanced_dialog(Gtk.Window parent_window, MangoJuice app) {
+        var advanced_dialog = new AdvancedDialog(parent_window, app);
         advanced_dialog.set_content_width(1000);
         advanced_dialog.set_content_height(2000);
         advanced_dialog.present(parent_window);
     }
 
-    public AdvancedDialog (Gtk.Window parent) {
+    public AdvancedDialog (Gtk.Window parent, MangoJuice app) {
         Object ();
 
         var header_bar = new Adw.HeaderBar ();
@@ -40,6 +40,10 @@ public class AdvancedDialog : Adw.Dialog {
         main_box.append (header_bar);
 
         main_box.append (create_advanced_content ());
+
+        this.closed.connect(() => {
+        //    LoadStates.load_states_from_file.begin(app);
+        });
 
         this.set_child (main_box);
         this.present (parent);
@@ -142,14 +146,38 @@ public class AdvancedDialog : Adw.Dialog {
 
         scrolled_window.set_child (group);
 
-        return scrolled_window;
+        var outer_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
+        outer_box.set_margin_bottom(12);
+        outer_box.append (scrolled_window);
+
+        var button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        button_box.set_halign (Gtk.Align.CENTER);
+        button_box.set_margin_top (6);
+        
+        var add_space_button = new Gtk.Button.with_label (_("Add space"));
+        add_space_button.add_css_class ("suggested-action");
+        add_space_button.clicked.connect (() => {
+            var space_line = "custom_text=  #space";
+            filtered_config_lines.append (space_line);
+            add_config_row (list_box, space_line);
+            save_config_to_file (list_box);
+        });
+        
+        button_box.append (add_space_button);
+        outer_box.append (button_box);
+        
+        return outer_box;
     }
 
-    void add_config_row (ListBox list_box, string line) {
+    public void add_config_row (ListBox list_box, string line) {
         var action_row = new Adw.ActionRow ();
 
         string key = line.split ("=")[0];
-        action_row.title = get_localized_title (key);
+        if (line.strip() == "custom_text=  #space") {
+            action_row.title = "space";
+        } else {
+            action_row.title = get_localized_title (key);
+        }
         action_row.subtitle = line;
 
         var drag_icon = new Gtk.Image.from_icon_name("list-drag-handle-symbolic");
@@ -181,6 +209,19 @@ public class AdvancedDialog : Adw.Dialog {
             enable_scroll (list_box);
         });
         action_row.add_suffix (down_button);
+
+        var delete_button = new Gtk.Button ();
+        delete_button.icon_name = "user-trash-symbolic";
+        delete_button.add_css_class ("circular");
+        delete_button.set_valign (Align.CENTER);
+        delete_button.has_frame = false;
+        delete_button.clicked.connect (() => {
+            disable_scroll (list_box);
+            list_box.remove (action_row);
+            save_config_to_file (list_box);
+            enable_scroll (list_box);
+        });
+        action_row.add_suffix (delete_button);
 
         enable_drag_and_drop (action_row, list_box, action_row);
     

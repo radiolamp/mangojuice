@@ -348,7 +348,8 @@ public class MangoJuice : Adw.Application {
         var action_a = new SimpleAction ("preset_a_action", null);
         action_a.activate.connect (() => {
             if (this.active_window != null) {
-                AdvancedDialog.show_advanced_dialog (this.active_window);
+                AdvancedDialog.show_advanced_dialog(this.active_window, this);
+
             }
         });
         this.add_action (action_a);
@@ -546,7 +547,7 @@ public class MangoJuice : Adw.Application {
 
         var advanced_action = new GLib.SimpleAction("advanced", null);
         advanced_action.activate.connect(() => {
-            if (window != null) AdvancedDialog.show_advanced_dialog(window);
+            if (window != null) AdvancedDialog.show_advanced_dialog(this.active_window, this);
         });
         this.add_action(advanced_action);
 
