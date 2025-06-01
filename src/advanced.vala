@@ -8,6 +8,13 @@ public class AdvancedDialog : Adw.Dialog {
     List<string> filtered_config_lines;
     ListBox list_box;
 
+    string[] allowed_prefixes = { "custom_text_center=", "custom_text=", "gpu_stats", "vram", "cpu_stats",
+    "core_load", "ram", "io_read", "io_write", "procmem", "swap", "fan", "fps", "fps_metrics=avg,0.01",
+    "fps_metrics=avg,0.1", "version", "gamemode", "vkbasalt", "exec_name", "fsr", "hdr", "vulkan_driver",
+    "engine_version", "refresh_rate", "resolution", "arch", "present_mode", "display_server", "show_fps_limit",
+    "frame_timing", "frame_count", "battery", "battery_watt", "battery_time", "device_battery_icon",
+    "device_battery=gamepad,mouse", "network", "media_player", "wine", "winesync" };
+
     public static void show_advanced_dialog(Gtk.Window parent_window, MangoJuice app) {
         var advanced_dialog = new AdvancedDialog(parent_window, app);
         advanced_dialog.set_content_width(1000);
@@ -53,10 +60,10 @@ public class AdvancedDialog : Adw.Dialog {
         var scrolled_window = new Gtk.ScrolledWindow ();
         scrolled_window.set_hexpand (true);
         scrolled_window.set_vexpand (true);
-
+    
         var clamp = new Adw.Clamp ();
         var group = new Adw.PreferencesGroup ();
-
+    
         list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
         list_box.set_hexpand (true);
@@ -65,74 +72,36 @@ public class AdvancedDialog : Adw.Dialog {
         list_box.set_margin_top (12);
         list_box.set_margin_bottom (12);
         list_box.add_css_class ("boxed-list");
-
+    
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         config_file = config_dir.get_child ("MangoHud.conf");
-
+    
         if (config_file.query_exists ()) {
             try {
                 var input_stream = config_file.read ();
                 var data_stream = new DataInputStream (input_stream);
                 string line;
-
+    
                 all_config_lines = new List<string> ();
                 filtered_config_lines = new List<string> ();
-
+    
                 while ((line = data_stream.read_line ()) != null) {
                     all_config_lines.append (line);
-
+                
                     if (!line.contains ("color") &&
-                    !line.contains ("fps_limit_method=") &&
-                    !line.contains ("media_player_format=") &&
-                    !line.contains ("fps_value=")) {
-                        if (line.has_prefix ("custom_text_center=") ||
-                            line.has_prefix ("custom_text=") ||
-                            line.has_prefix ("gpu_stats") ||
-                            line.has_prefix ("vram") ||
-                            line.has_prefix ("cpu_stats") ||
-                            line.has_prefix ("core_load") ||
-                            line.has_prefix ("ram") ||
-                            line.has_prefix ("io_read") ||
-                            line.has_prefix ("io_write") ||
-                            line.has_prefix ("procmem") ||
-                            line.has_prefix ("swap") ||
-                            line.has_prefix ("fan") ||
-                            line.has_prefix ("fps") ||
-                            line.has_prefix ("fps_metrics=avg,0.01") ||
-                            line.has_prefix ("fps_metrics=avg,0.1") ||
-                            line.has_prefix ("version") ||
-                            line.has_prefix ("gamemode") ||
-                            line.has_prefix ("vkbasalt") ||
-                            line.has_prefix ("exec_name") ||
-                            line.has_prefix ("fsr") ||
-                            line.has_prefix ("hdr") ||
-                            line.has_prefix ("vulkan_driver") ||
-                            line.has_prefix ("engine_version") ||
-                            line.has_prefix ("refresh_rate") ||
-                            line.has_prefix ("resolution") ||
-                            line.has_prefix ("arch") ||
-                            line.has_prefix ("present_mode") ||
-                            line.has_prefix ("display_server") ||
-                            line.has_prefix ("display_server") ||
-                            line.has_prefix ("show_fps_limit") ||
-                            line.has_prefix ("frame_timing") ||
-                            line.has_prefix ("frame_count") ||
-                            line.has_prefix ("battery") ||
-                            line.has_prefix ("battery_watt") ||
-                            line.has_prefix ("battery_time") ||
-                            line.has_prefix ("device_battery_icon") ||
-                            line.has_prefix ("device_battery=gamepad,mouse") ||
-                            line.has_prefix ("network") ||
-                            line.has_prefix ("media_player") ||
-                            line.has_prefix ("wine") ||
-                            line.has_suffix ("#custom_command") ||
-                            line.has_prefix ("winesync")) {
-                            filtered_config_lines.append (line);
-                            add_config_row (list_box, line);
+                        !line.contains ("fps_limit_method=") &&
+                        !line.contains ("media_player_format=") &&
+                        !line.contains ("fps_value=")) {
+                        
+                        foreach (var prefix in allowed_prefixes) {
+                            if (line.has_prefix(prefix) || line.has_suffix ("#custom_command")) {
+                                filtered_config_lines.append (line);
+                                add_config_row (list_box, line);
+                                break;
+                            }
                         }
                     }
                 }
-
                 input_stream.close ();
             } catch (Error e) {
                 print (_("Error when selecting a file: %s\n"), e.message);
@@ -140,33 +109,29 @@ public class AdvancedDialog : Adw.Dialog {
         } else {
             print (_("MangoHud.conf does not exist at: %s\n"), config_file.get_path ());
         }
-
+    
         clamp.set_child (list_box);
         group.add (clamp);
-
         scrolled_window.set_child (group);
-
-        var outer_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
-        outer_box.set_margin_bottom(12);
-        outer_box.append (scrolled_window);
-
-        var button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-        button_box.set_halign (Gtk.Align.CENTER);
-        button_box.set_margin_top (6);
-        
+    
+        var overlay = new Gtk.Overlay ();
+        overlay.set_child (scrolled_window);
+    
         var add_space_button = new Gtk.Button.with_label (_("Add space"));
         add_space_button.add_css_class ("suggested-action");
+        add_space_button.set_halign (Gtk.Align.CENTER);
+        add_space_button.set_valign (Gtk.Align.END);
+        add_space_button.set_margin_bottom (16);
         add_space_button.clicked.connect (() => {
             var space_line = "custom_text=  #space";
             filtered_config_lines.append (space_line);
             add_config_row (list_box, space_line);
             save_config_to_file (list_box);
         });
-        
-        button_box.append (add_space_button);
-        outer_box.append (button_box);
-        
-        return outer_box;
+    
+        overlay.add_overlay (add_space_button);
+    
+        return overlay;
     }
 
     public void add_config_row (ListBox list_box, string line) {
