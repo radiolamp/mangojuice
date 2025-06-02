@@ -1250,4 +1250,7 @@ msgid "Size, MiB/s"
 msgstr "Tamanho, MiB/s"  
 
 msgid "Virtual memory"  
-msgstr "Memória virtual"  
+msgstr "Memória virtual"
+
+msgid "Add space"
+msgstr "Adicionar espaço"

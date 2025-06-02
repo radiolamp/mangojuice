@@ -1366,3 +1366,6 @@ msgstr ""
 
 msgid "Virtual memory"
 msgstr ""
+
+msgid "Add space"
+msgstr ""

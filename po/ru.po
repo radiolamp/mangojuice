@@ -1379,4 +1379,7 @@ msgid "Size, MiB/s"
 msgstr "Размер, МиБ/с"  
 
 msgid "Virtual memory"  
-msgstr "Виртуальная память"  
+msgstr "Виртуальная память"
+
+msgid "Add space"
+msgstr "Добавить пробел"
