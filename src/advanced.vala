@@ -155,10 +155,8 @@ public class AdvancedDialog : Adw.Dialog {
         up_button.set_valign (Align.CENTER);
         up_button.has_frame = false;
         up_button.clicked.connect (() => {
-            disable_scroll (list_box);
             move_row_up (list_box, action_row);
             save_config_to_file (list_box);
-            enable_scroll (list_box);
         });
         action_row.add_suffix (up_button);
     
@@ -168,10 +166,8 @@ public class AdvancedDialog : Adw.Dialog {
         down_button.set_valign (Align.CENTER);
         down_button.has_frame = false;
         down_button.clicked.connect (() => {
-            disable_scroll (list_box);
             move_row_down (list_box, action_row);
             save_config_to_file (list_box);
-            enable_scroll (list_box);
         });
         action_row.add_suffix (down_button);
 
@@ -181,10 +177,8 @@ public class AdvancedDialog : Adw.Dialog {
         delete_button.set_valign (Align.CENTER);
         delete_button.has_frame = false;
         delete_button.clicked.connect (() => {
-            disable_scroll (list_box);
             list_box.remove (action_row);
             save_config_to_file (list_box);
-            enable_scroll (list_box);
         });
         action_row.add_suffix (delete_button);
 
@@ -193,94 +187,94 @@ public class AdvancedDialog : Adw.Dialog {
         list_box.append (action_row);
     }
 
-    void disable_scroll (ListBox list_box) {
-        var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
-        if (scrolled_window != null) {
-            scrolled_window.get_vadjustment ().set_value (scrolled_window.get_vadjustment ().get_value ());
-            scrolled_window.set_sensitive (false);
+    void enable_drag_and_drop(Gtk.Widget widget, ListBox list_box, ListBoxRow row) {
+        var drag_source = new Gtk.DragSource();
+        drag_source.set_actions(Gdk.DragAction.MOVE);
+
+        drag_source.drag_begin.connect((source, drag) => {
+            row.add_css_class("card");
+            var paintable = new Gtk.WidgetPaintable(row);
+            drag_source.set_icon(paintable, 0, 0);
+        });
+
+        drag_source.drag_end.connect((source, drag) => {
+            row.remove_css_class("card");
+            clear_drop_highlight(list_box);
+        });
+
+        drag_source.prepare.connect((source, x, y) => {
+            Value value = Value(typeof(ListBoxRow));
+            value.set_object(row);
+            return new Gdk.ContentProvider.for_value(value);
+        });
+    
+        widget.add_controller(drag_source);
+
+        var drop_target = new Gtk.DropTarget(typeof(ListBoxRow), Gdk.DragAction.MOVE);
+
+        drop_target.drop.connect((target, value, x, y) => {
+            var source_row = value.get_object() as ListBoxRow;
+            var dest_row = list_box.get_row_at_y((int)y);
+            
+            if (source_row == null || dest_row == null || source_row == dest_row) {
+                return false;
+            }
+
+            var scrolled_window = get_scrolled_parent(list_box);
+            double scroll_position = 0;
+            if (scrolled_window != null) {
+                scroll_position = get_scroll_position(scrolled_window);
+            }
+
+            int source_index = get_row_index(list_box, source_row);
+            int dest_index = get_row_index(list_box, dest_row);
+
+            if (source_index < dest_index) {
+                dest_index++;
+            }
+
+            list_box.remove(source_row);
+            list_box.insert(source_row, dest_index);
+            save_config_to_file(list_box);
+
+            if (scrolled_window != null) {
+                restore_scroll_position(scrolled_window, scroll_position);
+            }
+    
+            return true;
+        });
+
+        drop_target.enter.connect((target, x, y) => {
+            update_drop_highlight(list_box, (int)y);
+            return Gdk.DragAction.MOVE;
+        });
+
+        drop_target.motion.connect((target, x, y) => {
+            update_drop_highlight(list_box, (int)y);
+            return Gdk.DragAction.MOVE;
+        });
+
+        drop_target.leave.connect((target) => {
+            clear_drop_highlight(list_box);
+        });
+    
+        list_box.add_controller(drop_target);
+    }
+
+    private void update_drop_highlight(ListBox list_box, int y) {
+        var dest_row = list_box.get_row_at_y(y);
+        if (dest_row != null) {
+            clear_drop_highlight(list_box);
+            dest_row.add_css_class("accent");
         }
     }
 
-    void enable_scroll (ListBox list_box) {
-        var scrolled_window = list_box.get_ancestor (typeof (Gtk.ScrolledWindow)) as Gtk.ScrolledWindow;
-        if (scrolled_window != null) {
-            scrolled_window.set_sensitive (true);
+    private void clear_drop_highlight(ListBox list_box) {
+        var child = list_box.get_first_child();
+        while (child != null) {
+            child.remove_css_class("accent");
+            child = child.get_next_sibling();
         }
-    }
-
-    void enable_drag_and_drop (Gtk.Widget widget, ListBox list_box, ListBoxRow row) {
-        var drag_source = new Gtk.DragSource ();
-        drag_source.set_actions (Gdk.DragAction.MOVE);
-    
-        drag_source.drag_begin.connect ((source, drag) => {
-            row.add_css_class ("card");
-            var paintable = new Gtk.WidgetPaintable (row);
-            drag_source.set_icon (paintable, 0, 0);
-        });
-    
-        drag_source.drag_end.connect ((source, drag) => {
-            row.remove_css_class ("card");
-        });
-    
-        drag_source.prepare.connect ((source, x, y) => {
-            Value value = Value (typeof (ListBoxRow));
-            disable_scroll (list_box);
-            value.set_object (row);
-            enable_scroll (list_box);
-            return new Gdk.ContentProvider.for_value (value);
-        });
-    
-        widget.add_controller (drag_source);
-    
-        var drop_target = new Gtk.DropTarget (typeof (ListBoxRow), Gdk.DragAction.MOVE);
-        drop_target.drop.connect ((target, value, x, y) => {
-            var source_row = value.get_object () as ListBoxRow;
-            var dest_row = list_box.get_row_at_y ((int)y);
-            if (source_row != null && dest_row != null && source_row != dest_row) {
-                int dest_index = get_row_index (list_box, dest_row);
-                list_box.remove (source_row);
-                list_box.insert (source_row, dest_index);
-                save_config_to_file (list_box);
-                return true;
-            }
-            return false;
-        });
-    
-        drop_target.enter.connect ((target, x, y) => {
-            var dest_row = list_box.get_row_at_y ((int)y);
-            if (dest_row != null) {
-                dest_row.add_css_class ("accent");
-            }
-            return Gdk.DragAction.MOVE;
-        });
-    
-        drag_source.drag_end.connect ((source, drag) => {
-            row.remove_css_class ("card");
-    
-            var child = list_box.get_first_child ();
-            while (child != null) {
-                child.remove_css_class ("accent");
-                child = child.get_next_sibling ();
-            }
-        });
-    
-        drop_target.motion.connect ((target, x, y) => {
-            var dest_row = list_box.get_row_at_y ((int)y);
-            if (dest_row != null) {
-                var child = list_box.get_first_child ();
-                while (child != null) {
-                    if (child == dest_row) {
-                        child.add_css_class ("accent");
-                    } else {
-                        child.remove_css_class ("accent");
-                    }
-                    child = child.get_next_sibling ();
-                }
-            }
-            return Gdk.DragAction.MOVE;
-        });
-    
-        list_box.add_controller (drop_target);
     }
 
     int get_row_index (ListBox list_box, ListBoxRow row) {
@@ -305,19 +299,57 @@ public class AdvancedDialog : Adw.Dialog {
     }
 
     void move_row_up (ListBox list_box, ListBoxRow row) {
-        int index = get_row_index (list_box, row);
-        if (index > 0) {
-            list_box.remove (row);
-            list_box.insert (row, index - 1);
+        var scrolled_window = get_scrolled_parent(list_box);
+        if (scrolled_window != null) {
+            double vpos = get_scroll_position(scrolled_window);
+    
+            int index = get_row_index (list_box, row);
+            if (index > 0) {
+                list_box.remove (row);
+                list_box.insert (row, index - 1);
+            }
+    
+            restore_scroll_position(scrolled_window, vpos);
         }
     }
-
+    
     void move_row_down (ListBox list_box, ListBoxRow row) {
-        int index = get_row_index (list_box, row);
-        if (index < get_row_count (list_box) - 1) {
-            list_box.remove (row);
-            list_box.insert (row, index + 1);
+        var scrolled_window = get_scrolled_parent(list_box);
+        if (scrolled_window != null) {
+            double vpos = get_scroll_position(scrolled_window);
+    
+            int index = get_row_index (list_box, row);
+            if (index < get_row_count (list_box) - 1) {
+                list_box.remove (row);
+                list_box.insert (row, index + 1);
+            }
+    
+            restore_scroll_position(scrolled_window, vpos);
         }
+    }
+    
+    Gtk.ScrolledWindow? get_scrolled_parent(Gtk.Widget widget) {
+        Gtk.Widget? parent = widget.get_parent();
+        while (parent != null) {
+            if (parent is Gtk.ScrolledWindow) {
+                return parent as Gtk.ScrolledWindow;
+            }
+            parent = parent.get_parent();
+        }
+        return null;
+    }
+    
+    double get_scroll_position(Gtk.ScrolledWindow scrolled_window) {
+        var vadjustment = scrolled_window.get_vadjustment();
+        return vadjustment.get_value();
+    }
+    
+    void restore_scroll_position(Gtk.ScrolledWindow scrolled_window, double value) {
+        var vadjustment = scrolled_window.get_vadjustment();
+        Idle.add(() => {
+            vadjustment.set_value(value);
+            return false;
+        });
     }
 
     void save_config_to_file (ListBox list_box) {
