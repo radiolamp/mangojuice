@@ -7,6 +7,7 @@ public class AdvancedDialog : Adw.Dialog {
     List<string> all_config_lines;
     List<string> filtered_config_lines;
     ListBox list_box;
+    private Gtk.ListBoxRow? drop_indicator_row = null;
 
     string[] allowed_prefixes = { "custom_text_center=", "custom_text=", "gpu_stats", "vram", "cpu_stats",
     "core_load", "ram", "io_read", "io_write", "procmem", "swap", "fan", "fps", "fps_metrics=avg,0.01",
@@ -261,19 +262,20 @@ public class AdvancedDialog : Adw.Dialog {
         list_box.add_controller(drop_target);
     }
 
-    private void update_drop_highlight(ListBox list_box, int y) {
-        var dest_row = list_box.get_row_at_y(y);
+    private void update_drop_highlight (ListBox list_box, int y) {
+        clear_drop_highlight (list_box);
+    
+        var dest_row = list_box.get_row_at_y (y);
         if (dest_row != null) {
-            clear_drop_highlight(list_box);
-            dest_row.add_css_class("accent");
+            drop_indicator_row = dest_row;
+            drop_indicator_row.add_css_class ("row-drop-indicator");
         }
     }
-
-    private void clear_drop_highlight(ListBox list_box) {
-        var child = list_box.get_first_child();
-        while (child != null) {
-            child.remove_css_class("accent");
-            child = child.get_next_sibling();
+    
+    private void clear_drop_highlight (ListBox list_box) {
+        if (drop_indicator_row != null) {
+            drop_indicator_row.remove_css_class ("row-drop-indicator");
+            drop_indicator_row = null;
         }
     }
 

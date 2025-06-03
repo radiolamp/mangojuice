@@ -1,3 +1,7 @@
 .love-hover {
     color: rgb(245, 94, 119);
 }
+.row-drop-indicator {
+    border-top: 2px solid @accent_color;
+}
+
