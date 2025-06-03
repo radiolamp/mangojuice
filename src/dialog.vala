@@ -466,18 +466,18 @@ namespace AboutDialog {
             center.set_hexpand(true);
             center.set_vexpand(true);
 
-            var image = new Gtk.Image.from_resource(
-                "/io/github/radiolamp/mangojuice/images/" + icons[i] + ".png"
-            );
-            image.set_hexpand(true);
-            image.set_vexpand(true);
-
+            var picture = new Gtk.Picture();
+            picture.set_resource("/io/github/radiolamp/mangojuice/images/" + icons[i] + ".png");
+            picture.set_hexpand(true);
+            picture.set_vexpand(true);
+            picture.set_can_shrink(false);
+        
             var label = new Gtk.Label(titles[i]);
             label.add_css_class("title-2");
             label.set_margin_top(10);
             label.set_margin_bottom(10);
 
-            center.append(image);
+            center.append(picture);
             center.append(label);
             page.append(center);
 
