@@ -74,6 +74,15 @@ namespace AboutDialog {
         info_button.add_css_class("circular");
         info_button.set_tooltip_text(_("To get ready presets, click on the title."));
         header_bar.pack_start(info_button);
+        
+        var popover = new Gtk.Popover();
+        var popover_label = new Gtk.Label(_("To get ready presets, click on the title."));
+        popover.set_child(popover_label);
+        popover.set_parent(info_button);
+        
+        info_button.clicked.connect(() => {
+            popover.popup();
+        });
     
         var presets_button = new Gtk.Button();
         presets_button.set_hexpand(true);
