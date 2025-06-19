@@ -47,6 +47,14 @@
   </developer>
   <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
+    <release version="0.8.6" date="2025-06-30">
+      <description>
+        <p>Minor update</p>
+        <ul>
+          <li>Update to GTK 4.19 and сorrection of bugs.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.8.5" date="2025-05-27">
       <description>
         <p>Profiles and sorting</p>
