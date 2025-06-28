@@ -191,18 +191,18 @@ public class AdvancedDialog : Adw.Dialog {
     void enable_drag_and_drop(Gtk.Widget widget, ListBox list_box, ListBoxRow row) {
         var drag_source = new Gtk.DragSource();
         drag_source.set_actions(Gdk.DragAction.MOVE);
-
+    
         drag_source.drag_begin.connect((source, drag) => {
             row.add_css_class("card");
             var paintable = new Gtk.WidgetPaintable(row);
             drag_source.set_icon(paintable, 0, 0);
         });
-
+    
         drag_source.drag_end.connect((source, drag) => {
             row.remove_css_class("card");
             clear_drop_highlight(list_box);
         });
-
+    
         drag_source.prepare.connect((source, x, y) => {
             Value value = Value(typeof(ListBoxRow));
             value.set_object(row);
@@ -210,9 +210,9 @@ public class AdvancedDialog : Adw.Dialog {
         });
     
         widget.add_controller(drag_source);
-
+    
         var drop_target = new Gtk.DropTarget(typeof(ListBoxRow), Gdk.DragAction.MOVE);
-
+    
         drop_target.drop.connect((target, value, x, y) => {
             var source_row = value.get_object() as ListBoxRow;
             var dest_row = list_box.get_row_at_y((int)y);
@@ -220,41 +220,42 @@ public class AdvancedDialog : Adw.Dialog {
             if (source_row == null || dest_row == null || source_row == dest_row) {
                 return false;
             }
-
+    
             var scrolled_window = get_scrolled_parent(list_box);
             double scroll_position = 0;
             if (scrolled_window != null) {
                 scroll_position = get_scroll_position(scrolled_window);
             }
-
+    
             int source_index = get_row_index(list_box, source_row);
             int dest_index = get_row_index(list_box, dest_row);
-
-            if (source_index < dest_index) {
-                dest_index++;
-            }
-
+    
             list_box.remove(source_row);
+            
+            if (source_index < dest_index) {
+                dest_index--;
+            }
+            
             list_box.insert(source_row, dest_index);
             save_config_to_file(list_box);
-
+    
             if (scrolled_window != null) {
                 restore_scroll_position(scrolled_window, scroll_position);
             }
     
             return true;
         });
-
+    
         drop_target.enter.connect((target, x, y) => {
             update_drop_highlight(list_box, (int)y);
             return Gdk.DragAction.MOVE;
         });
-
+    
         drop_target.motion.connect((target, x, y) => {
             update_drop_highlight(list_box, (int)y);
             return Gdk.DragAction.MOVE;
         });
-
+    
         drop_target.leave.connect((target) => {
             clear_drop_highlight(list_box);
         });
