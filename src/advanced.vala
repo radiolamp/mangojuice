@@ -14,7 +14,7 @@ public class AdvancedDialog : Adw.Dialog {
     "fps_metrics=avg,0.1", "version", "gamemode", "vkbasalt", "exec_name", "fsr", "hdr", "vulkan_driver",
     "engine_version", "refresh_rate", "resolution", "arch", "present_mode", "display_server", "show_fps_limit",
     "frame_timing", "frame_count", "battery", "battery_watt", "battery_time", "device_battery_icon",
-    "device_battery=gamepad,mouse", "network", "media_player", "wine", "winesync" };
+    "device_battery=gamepad,mouse", "network", "media_player", "wine", "winesync", "time" };
 
     public static void show_advanced_dialog(Gtk.Window parent_window, MangoJuice app) {
         var advanced_dialog = new AdvancedDialog(parent_window, app);
@@ -485,6 +485,8 @@ public class AdvancedDialog : Adw.Dialog {
                 return _("Version");
             case "winesync":
                 return _("Winesync");
+            case "time":
+                return _("Watch");
             default:
                 return _("Other");
         }
