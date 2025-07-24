@@ -2135,7 +2135,7 @@ public class MangoJuice : Adw.Application {
                     }
                 } else if (is_vkcube_available ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
-                    Process.spawn_command_line_async ("mangohud vkcube");
+                    Process.spawn_command_line_async ("mangohud vkcube --wsi xcb");
                 } else if (is_glxgears_available ()) {
                     Process.spawn_command_line_sync ("pkill glxgears");
                     Process.spawn_command_line_async ("mangohud glxgears");
