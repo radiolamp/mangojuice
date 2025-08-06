@@ -2797,79 +2797,36 @@ public class MangoJuice : Adw.Application {
         return Environment.get_variable ("FLATPAK_ID") != null;
     }
 
-    //static int main (string[] args) {
-    //    Intl.setlocale (LocaleCategory.ALL, "");
-    //    Intl.textdomain ("mangojuice");
-    //    Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
-    //    Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
+//    static int main (string[] args) {
+//        Intl.setlocale (LocaleCategory.ALL, "");
+//        Intl.textdomain ("mangojuice");
+//        Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
+//        Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
 //
-    //    var app = new MangoJuice ();
-    //    return app.run (args);
-    //}
+//        var app = new MangoJuice ();
+//        return app.run (args);
+//    }
 
     static int main (string[] args) {
-    Intl.setlocale (LocaleCategory.ALL, "");
-    Intl.textdomain ("mangojuice");
-
-    // Сначала пробуем стандартный путь
-    string default_path = Config.GNOMELOCALEDIR;
-    string mo_file = Path.build_filename(default_path, Config.GETTEXT_PACKAGE, "LC_MESSAGES", Config.GETTEXT_PACKAGE + ".mo");
-
-    if (FileUtils.test(mo_file, FileTest.EXISTS)) {
-        Intl.bindtextdomain(Config.GETTEXT_PACKAGE, default_path);
-        stdout.printf("Using standard translation path: %s\n", mo_file);
-    } else {
-        // Если не найдено стандартным способом, ищем через which
-        try {
-            string output;
-            int exit_status;
-            
-            // Ищем через which (для бинарных файлов) и locate (для mo-файлов)
-            Process.spawn_command_line_sync("which mangojuice", out output, null, out exit_status);
-            
-            if (exit_status == 0 && output != null && output.strip() != "") {
-                string binary_path = output.strip();
-                string binary_dir = Path.get_dirname(binary_path);
-                
-                // Проверяем возможные пути относительно расположения бинарника
-                string[] possible_mo_paths = {
-                    Path.build_filename(binary_dir, "../share/locale"),
-                    Path.build_filename(binary_dir, "../../share/locale"),
-                    Path.build_filename(binary_dir, "../translations"),
-                    "/usr/share/locale",
-                    "/usr/local/share/locale"
-                };
-
-                foreach (string path in possible_mo_paths) {
-                    string test_mo = Path.build_filename(path, Config.GETTEXT_PACKAGE, "LC_MESSAGES", Config.GETTEXT_PACKAGE + ".mo");
-                    if (FileUtils.test(test_mo, FileTest.EXISTS)) {
-                        Intl.bindtextdomain(Config.GETTEXT_PACKAGE, path);
-                        stdout.printf("Found translation via which at: %s\n", test_mo);
-                        break;
-                    }
-                }
-            } else {
-                // Если which не сработал, пробуем locate
-                Process.spawn_command_line_sync("locate " + Config.GETTEXT_PACKAGE + ".mo | head -n 1", 
-                                              out output, null, out exit_status);
-                
-                if (exit_status == 0 && output != null && output.strip() != "") {
-                    string found_path = output.strip();
-                    string domain_path = Path.get_dirname(Path.get_dirname(Path.get_dirname(found_path)));
-                    Intl.bindtextdomain(Config.GETTEXT_PACKAGE, domain_path);
-                    stdout.printf("Found translation via locate at: %s\n", found_path);
-                } else {
-                    stderr.printf("Could not find translation file for '%s'\n", Config.GETTEXT_PACKAGE);
-                    stderr.printf("Tried which and locate commands\n");
-                }
+        Intl.setlocale (LocaleCategory.ALL, "");
+        Intl.textdomain ("mangojuice");
+        
+        string[] locale_dirs = {
+            Path.build_filename(Config.GNOMELOCALEDIR, ".."),
+            Config.GNOMELOCALEDIR,
+            Path.build_filename(Environment.get_user_data_dir(), "locale")
+        };
+        
+        foreach (string dir in locale_dirs) {
+            if (FileUtils.test(dir, FileTest.IS_DIR)) {
+                Intl.bindtextdomain ("mangojuice", dir);
+                debug("Using translation directory: %s", dir);
             }
-        } catch (Error e) {
-            stderr.printf("Error searching for translations: %s\n", e.message);
         }
+        
+        Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
+        
+        var app = new MangoJuice ();
+        return app.run (args);
     }
-
-    Intl.bind_textdomain_codeset("mangojuice", "UTF-8");
-    var app = new MangoJuice();
-    return app.run(args);
-}
 }
