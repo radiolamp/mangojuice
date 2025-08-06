@@ -2797,13 +2797,120 @@ public class MangoJuice : Adw.Application {
         return Environment.get_variable ("FLATPAK_ID") != null;
     }
 
-    static int main (string[] args) {
-        Intl.setlocale (LocaleCategory.ALL, "");
-        Intl.textdomain ("mangojuice");
-        Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
-        Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
+    //static int main (string[] args) {
+    //    Intl.setlocale (LocaleCategory.ALL, "");
+    //    Intl.textdomain ("mangojuice");
+    //    Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
+    //    Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
+//
+    //    var app = new MangoJuice ();
+    //    return app.run (args);
+    //}
 
-        var app = new MangoJuice ();
-        return app.run (args);
+static int main (string[] args) {
+    Intl.setlocale (LocaleCategory.ALL, "");
+    Intl.textdomain ("mangojuice");
+
+    // Стандартный путь
+    string default_mo_path = Path.build_filename(
+        Config.GNOMELOCALEDIR, 
+        Config.GETTEXT_PACKAGE, 
+        "LC_MESSAGES", 
+        Config.GETTEXT_PACKAGE + ".mo"
+    );
+
+    if (FileUtils.test(default_mo_path, FileTest.EXISTS)) {
+        Intl.bindtextdomain(Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
+        stdout.printf("✔ Перевод найден (стандартный путь): %s\n", default_mo_path);
+    } else {
+        stdout.printf("Поиск перевода в системе...\n");
+
+        // Где ищем переводы
+        string[] search_roots = { "/usr/share/locale", "/usr/local/share/locale" };
+        string[] search_patterns = {
+            // Вариант 1: /{root}/{lang}/LC_MESSAGES/{package}.mo
+            "%s/%s/LC_MESSAGES/%s.mo",
+            // Вариант 2: /{root}/{package}/LC_MESSAGES/{package}.mo
+            "%s/%s/LC_MESSAGES/%s.mo"
+        };
+
+        string? found_path = null;
+
+        // Сначала проверим известные языки
+        string[] try_languages = { "ru_RU", "pt_BR", "en_US" };
+
+        foreach (string root in search_roots) {
+            // Проверка по языкам
+            foreach (string lang in try_languages) {
+                string mo_path = Path.build_filename(root, lang, "LC_MESSAGES", Config.GETTEXT_PACKAGE + ".mo");
+                if (FileUtils.test(mo_path, FileTest.EXISTS)) {
+                    found_path = mo_path;
+                    break;
+                }
+            }
+
+            if (found_path != null) break;
+
+            // Полный рекурсивный поиск
+            try {
+                var dir = File.new_for_path(root);
+                var enumerator = dir.enumerate_children(
+                    "standard::*", 
+                    FileQueryInfoFlags.NOFOLLOW_SYMLINKS
+                );
+
+                FileInfo info;
+                while ((info = enumerator.next_file()) != null) {
+                    if (info.get_file_type() == FileType.DIRECTORY) {
+                        string lang = info.get_name();
+                        string mo_path = Path.build_filename(root, lang, "LC_MESSAGES", Config.GETTEXT_PACKAGE + ".mo");
+                        
+                        if (FileUtils.test(mo_path, FileTest.EXISTS)) {
+                            found_path = mo_path;
+                            break;
+                        }
+                    }
+                }
+            } catch (Error e) {
+                stderr.printf("Ошибка при сканировании %s: %s\n", root, e.message);
+            }
+
+            if (found_path != null) break;
+        }
+
+        if (found_path != null) {
+            string domain_path = Path.get_dirname(Path.get_dirname(Path.get_dirname(found_path)));
+            Intl.bindtextdomain(Config.GETTEXT_PACKAGE, domain_path);
+            stdout.printf("✔ Перевод найден: %s\n", found_path);
+            stdout.printf("   (Domain path: %s)\n", domain_path);
+        } else {
+            // Последняя попытка - использовать locate
+            try {
+                string output;
+                Process.spawn_command_line_sync(
+                    "locate " + Config.GETTEXT_PACKAGE + ".mo",
+                    out output
+                );
+                
+                if (output != null && output.strip() != "") {
+                    stderr.printf("Возможные расположения (найдено через locate):\n%s\n", output);
+                } else {
+                    stderr.printf("✖ Файл перевода не найден.\n");
+                    stderr.printf("Но файлы существуют по путям:\n");
+                    stderr.printf("  /usr/share/locale/pt_BR/LC_MESSAGES/mangojuice.mo\n");
+                    stderr.printf("  /usr/share/locale/ru_RU/LC_MESSAGES/mangojuice.mo\n");
+                    stderr.printf("Проверьте:\n");
+                    stderr.printf("1. Правильность Config.GETTEXT_PACKAGE: сейчас '%s'\n", Config.GETTEXT_PACKAGE);
+                    stderr.printf("2. Права доступа к файлам\n");
+                }
+            } catch (Error e) {
+                stderr.printf("Ошибка при поиске через locate: %s\n", e.message);
+            }
+        }
     }
+
+    Intl.bind_textdomain_codeset("mangojuice", "UTF-8");
+    var app = new MangoJuice();
+    return app.run(args);
+}
 }
