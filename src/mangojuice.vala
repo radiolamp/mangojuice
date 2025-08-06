@@ -2797,35 +2797,12 @@ public class MangoJuice : Adw.Application {
         return Environment.get_variable ("FLATPAK_ID") != null;
     }
 
-//    static int main (string[] args) {
-//        Intl.setlocale (LocaleCategory.ALL, "");
-//        Intl.textdomain ("mangojuice");
-//        Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
-//        Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
-//
-//        var app = new MangoJuice ();
-//        return app.run (args);
-//    }
-
     static int main (string[] args) {
         Intl.setlocale (LocaleCategory.ALL, "");
         Intl.textdomain ("mangojuice");
-        
-        string[] locale_dirs = {
-            Path.build_filename(Config.GNOMELOCALEDIR, ".."),
-            Config.GNOMELOCALEDIR,
-            Path.build_filename(Environment.get_user_data_dir(), "locale")
-        };
-        
-        foreach (string dir in locale_dirs) {
-            if (FileUtils.test(dir, FileTest.IS_DIR)) {
-                Intl.bindtextdomain ("mangojuice", dir);
-                debug("Using translation directory: %s", dir);
-            }
-        }
-        
+        Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
         Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
-        
+
         var app = new MangoJuice ();
         return app.run (args);
     }
