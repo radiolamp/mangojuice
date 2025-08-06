@@ -2734,7 +2734,7 @@ public class MangoJuice : Adw.Application {
     }
 
     async bool check_vkbasalt_installed_async () {
-        string[] paths = { "/usr/lib/libvkbasalt.so", "/usr/lib/x86_64-linux-gnu/libvkbasalt.so", "/usr/local/lib/libvkbasalt.so" };
+        string[] paths = { "/usr/lib/libvkbasalt.so", "/usr/lib/x86_64-linux-gnu/libvkbasalt.so", "/usr/local/lib/libvkbasalt.so", "/usr/lib64/vkbasalt/libvkbasalt.so" };
         foreach (var path in paths) {
             if (FileUtils.test (path, FileTest.EXISTS)) {
                 return true;
