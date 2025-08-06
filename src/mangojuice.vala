@@ -2826,7 +2826,7 @@ static int main (string[] args) {
         stdout.printf("Поиск перевода в системе...\n");
 
         // Где ищем переводы
-        string[] search_roots = { "/usr/share/locale", "/usr/local/share/locale" };
+        string[] search_roots = { "/usr/share/locale", "/usr/local/share/locale", "/share/locale", "/local/share/locale" };
         string[] search_patterns = {
             // Вариант 1: /{root}/{lang}/LC_MESSAGES/{package}.mo
             "%s/%s/LC_MESSAGES/%s.mo",
