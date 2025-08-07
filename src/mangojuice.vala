@@ -2797,48 +2797,16 @@ public class MangoJuice : Adw.Application {
         return Environment.get_variable ("FLATPAK_ID") != null;
     }
 
-    //static int main (string[] args) {
-    //    Intl.setlocale (LocaleCategory.ALL, "");
-    //    Intl.textdomain ("mangojuice");
-    //    Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
-    //    Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
-//
-    //    var app = new MangoJuice ();
-    //    return app.run (args);
-    //}
+    static int main(string[] args) {
+        Intl.setlocale(LocaleCategory.ALL, "");
+        Intl.textdomain("mangojuice");
+        string locale_dir = Environment.get_variable("APPDIR") != null 
+            ? Path.build_filename(Environment.get_variable("APPDIR"), "share/locale")
+            : Config.GNOMELOCALEDIR;
 
-static int main(string[] args) {
-    Intl.setlocale(LocaleCategory.ALL, "");
-    Intl.textdomain("mangojuice");
-
-    string[] possible_locale_dirs = {
-        // 1. AppImage-путь (если APPDIR задан)
-        Environment.get_variable("APPDIR") != null 
-            ? Path.build_filename(Environment.get_variable("APPDIR"), "share/locale") 
-            : "",
-
-        // 2. Классический Linux-путь (если установлено в систему)
-        "/usr/share/locale",
-        "/usr/local/share/locale",
-
-        // 3. Пользовательский каталог (~/.local/share/locale)
-        Path.build_filename(Environment.get_user_data_dir(), "locale"),
-
-        // 4. Относительно текущей директории (для тестов)
-        "./share/locale"
-    };
-
-    foreach (string dir in possible_locale_dirs) {
-        if (dir != "" && FileUtils.test(dir, FileTest.IS_DIR)) {
-            Intl.bindtextdomain("mangojuice", dir);
-            debug("Using translations from: %s", dir);
-            break; // Используем первый найденный
-        }
+        Intl.bindtextdomain("mangojuice", locale_dir);
+        Intl.bind_textdomain_codeset("mangojuice", "UTF-8");
+        var app = new MangoJuice();
+        return app.run(args);
     }
-
-    Intl.bind_textdomain_codeset("mangojuice", "UTF-8");
-
-    var app = new MangoJuice();
-    return app.run(args);
-}
 }
