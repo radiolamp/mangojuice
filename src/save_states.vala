@@ -372,10 +372,15 @@ public class SaveStates {
                 update_parameter (data_stream, "gl_vsync", opengl_config_value);
             }
 
-            if (mango_juice.filter_dropdown.selected_item != null) {
-                var filter_value = (mango_juice.filter_dropdown.selected_item as StringObject)?.get_string () ?? "";
-                if (filter_value != "none") {
-                    data_stream.put_string ("%s #filters\n".printf (filter_value));
+            string[] filter_values = {"none", "bicubic", "trilinear", "retro"};
+
+            if (mango_juice.filter_dropdown.selected != Gtk.INVALID_LIST_POSITION) {
+                int selected = (int)mango_juice.filter_dropdown.selected;
+                if (selected >= 0 && selected < filter_values.length) {
+                    string filter_value = filter_values[selected];
+                    if (filter_value != _("none")) {
+                        data_stream.put_string("%s #filters\n".printf(filter_value));
+                    }
                 }
             }
 

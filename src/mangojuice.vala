@@ -279,10 +279,14 @@ public class MangoJuice : Adw.Application {
     public string[] opengl_values = { _("Unset"), _("Adaptive"), _("OFF"), _("ON"), _("Mailbox") };
     public string[] opengl_config_values = { "", "-1", "0", "1", "n" };
 
-    private const string[] POSITION_VALUES = {
+    const string[] POSITION_VALUES = {
         "top-left", "top-center", "top-right",
         "middle-left", "middle-right",
         "bottom-left", "bottom-center", "bottom-right"
+    };
+    
+    const string[] FILTER_VALUES = {
+        "none", "bicubic", "trilinear", "retro"
     };
 
     // Other Variables
@@ -1981,15 +1985,25 @@ public class MangoJuice : Adw.Application {
         var filters_label = create_label (_("Filters"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         performance_box.append (filters_label);
 
-        var filter_model = new Gtk.StringList (null);
-        foreach (var item in new string[] { "none", "bicubic", "trilinear", "retro" }) {
-            filter_model.append (item);
+        var filter_labels = new string[] {
+            _("None"), _("Bicubic"), _("Trilinear"), _("Retro")
+        };
+                
+        var filter_model = new Gtk.StringList(null);
+        foreach (var label in filter_labels) {
+            filter_model.append(label);
         }
-        filter_dropdown = new DropDown (filter_model, null);
-        filter_dropdown.set_valign (Align.START);
-        filter_dropdown.set_hexpand (true);
-        filter_dropdown.notify["selected"].connect (() => {
-            save_config ();
+                
+        filter_dropdown = new DropDown(filter_model, null) {
+            valign = Align.START,
+            hexpand = true
+        };
+        
+        filter_dropdown.notify["selected-item"].connect(() => {
+            int selected = (int)filter_dropdown.selected;
+            if (selected >= 0 && selected < FILTER_VALUES.length) {
+                save_config();
+            }
         });
 
         var af_widget = create_scale_entry_widget (_("Anisotropic"), _("Filtering"), 0, 16, 0);

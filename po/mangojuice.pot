@@ -1384,3 +1384,15 @@ msgstr ""
 
 msgid "Mailbox"
 msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Bicubic"
+msgstr ""
+
+msgid "Trilinear"
+msgstr ""
+
+msgid "Retro"
+msgstr ""

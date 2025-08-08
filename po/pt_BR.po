@@ -1278,3 +1278,15 @@ msgstr "Inferior central"
 
 msgid "Bottom Right"
 msgstr "Inferior direito"
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid "Bicubic"
+msgstr "Bicúbica"
+
+msgid "Trilinear"
+msgstr "Trilinear"
+
+msgid "Retro"
+msgstr "Retrô"

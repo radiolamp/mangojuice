@@ -187,11 +187,13 @@ public class LoadStates {
                     }
                 }
 
-                if (line.contains ("#filters")) {
-                    var filter_value = line.split ("#filters")[0].strip ();
-                    for (uint i = 0; i < mango_juice.filter_dropdown.model.get_n_items (); i++) {
-                        var item = mango_juice.filter_dropdown.model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == filter_value) {
+                if (line.contains("#filters")) {
+                    var filter_value = line.split("#filters")[0].strip();
+                
+                    string[] filter_values = {"none", "bicubic", "trilinear", "retro"};
+                
+                    for (uint i = 0; i < filter_values.length; i++) {
+                        if (filter_values[i] == filter_value) {
                             mango_juice.filter_dropdown.selected = i;
                             break;
                         }

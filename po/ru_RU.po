@@ -1422,3 +1422,15 @@ msgstr "Включен"
 
 msgid "Mailbox"
 msgstr "Без лимита"
+
+msgid "None"
+msgstr "Нет"
+
+msgid "Bicubic"
+msgstr "Бикубическая"
+
+msgid "Trilinear"
+msgstr "Трилинейная"
+
+msgid "Retro"
+msgstr "Ретро"
