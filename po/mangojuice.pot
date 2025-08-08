@@ -1369,3 +1369,18 @@ msgstr ""
 
 msgid "Add space"
 msgstr ""
+
+msgid "Unset"
+msgstr ""
+
+msgid "Adaptive"
+msgstr ""
+
+msgid "OFF"
+msgstr ""
+
+msgid "ON"
+msgstr ""
+
+msgid "Mailbox"
+msgstr ""

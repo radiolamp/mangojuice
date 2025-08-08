@@ -274,19 +274,15 @@ public class MangoJuice : Adw.Application {
     };
 
     // Vulkan and OpenGL Values
-    public string[] vulkan_values = { "Unset", "Adaptive", "OFF", "ON", "Mailbox" };
+    public string[] vulkan_values = { _("Unset"), _("Adaptive"), _("OFF"), _("ON"), _("Mailbox") };
     public string[] vulkan_config_values = { "", "0", "1", "3", "2" };
-    public string[] opengl_values = { "Unset", "Adaptive", "OFF", "ON", "Mailbox" };
+    public string[] opengl_values = { _("Unset"), _("Adaptive"), _("OFF"), _("ON"), _("Mailbox") };
     public string[] opengl_config_values = { "", "-1", "0", "1", "n" };
 
     private const string[] POSITION_VALUES = {
         "top-left", "top-center", "top-right",
         "middle-left", "middle-right",
         "bottom-left", "bottom-center", "bottom-right"
-    };
-
-    private const string[] FPS_LIMIT_METHOD_VALUES = {
-        "late", "early"
     };
 
     // Other Variables
@@ -1886,7 +1882,7 @@ public class MangoJuice : Adw.Application {
         var limiters_label = create_label (_("Limiters FPS"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         performance_box.append (limiters_label);
 
-        var fps_limit_method_model = new Gtk.StringList (null);///
+        var fps_limit_method_model = new Gtk.StringList (null);
         foreach (var item in new string[] { "late", "early" }) {
             fps_limit_method_model.append (item);
         }
@@ -1962,12 +1958,15 @@ public class MangoJuice : Adw.Application {
 
         var vulkan_label = new Label ("Vulkan");
         vulkan_label.set_halign (Align.END);
+        vulkan_label.set_ellipsize (Pango.EllipsizeMode.END);
 
         var opengl_label = new Label ("OpenGL");
         opengl_label.set_halign (Align.END);
+        opengl_label.set_ellipsize (Pango.EllipsizeMode.END);
 
         var vsync_box = new FlowBox ();
         vsync_box.set_max_children_per_line (5);
+        vsync_box.set_min_children_per_line (4);
         vsync_box.set_margin_start (FLOW_BOX_MARGIN);
         vsync_box.set_margin_end (FLOW_BOX_MARGIN);
         vsync_box.set_margin_top (FLOW_BOX_MARGIN);

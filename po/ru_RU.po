@@ -1407,3 +1407,18 @@ msgstr "Снизу по центру"
 
 msgid "Bottom Right"
 msgstr "Снизу справа"
+
+msgid "Unset"
+msgstr "Не задано"
+
+msgid "Adaptive"
+msgstr "Адаптивный"
+
+msgid "OFF"
+msgstr "Выключен"
+
+msgid "ON"
+msgstr "Включен"
+
+msgid "Mailbox"
+msgstr "Без лимита"
