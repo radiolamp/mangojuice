@@ -146,7 +146,7 @@ public class AdvancedDialog : Adw.Dialog {
         }
         action_row.subtitle = line;
 
-        var drag_icon = new Gtk.Image.from_icon_name("list-drag-handle-symbolic");
+        var drag_icon = new Gtk.Image.from_icon_name("io.github.radiolamp.mangojuice.list-drag-handle-symbolic");
         drag_icon.add_css_class("dim-label");
         action_row.add_prefix (drag_icon);
     
