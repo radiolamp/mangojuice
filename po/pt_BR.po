@@ -1254,3 +1254,27 @@ msgstr "Memória virtual"
 
 msgid "Add space"
 msgstr "Adicionar espaço"
+
+msgid "Top Left"
+msgstr "Superior esquerdo"
+
+msgid "Top Center"
+msgstr "Superior central"
+
+msgid "Top Right"
+msgstr "Superior direito"
+
+msgid "Middle Left"
+msgstr "Meio esquerdo"
+
+msgid "Middle Right"
+msgstr "Meio direito"
+
+msgid "Bottom Left"
+msgstr "Inferior esquerdo"
+
+msgid "Bottom Center"
+msgstr "Inferior central"
+
+msgid "Bottom Right"
+msgstr "Inferior direito"

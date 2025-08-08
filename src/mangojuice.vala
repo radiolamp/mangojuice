@@ -279,6 +279,11 @@ public class MangoJuice : Adw.Application {
     public string[] opengl_values = { "Unset", "Adaptive", "OFF", "ON", "Mailbox" };
     public string[] opengl_config_values = { "", "-1", "0", "1", "n" };
 
+    private const string[] POSITION_VALUES = {
+        "top-left", "top-center", "top-right",
+        "middle-left", "middle-right",
+        "bottom-left", "bottom-center", "bottom-right"
+    };
 
     // Other Variables
     bool test_button_pressed = false;
@@ -1083,26 +1088,32 @@ public class MangoJuice : Adw.Application {
         });
         combined_flow_box.insert (alpha_widget.widget, -1);
 
-        var position_model = new Gtk.StringList (null);
-        foreach (var item in new string[] {
-            "top-left", "top-center", "top-right",
-            "middle-left", "middle-right",
-            "bottom-left", "bottom-center", "bottom-right"
-        }) {
-            position_model.append (item);
+        var position_labels = new string[] {
+            _("Top Left"), _("Top Center"), _("Top Right"),
+            _("Middle Left"), _("Middle Right"),
+            _("Bottom Left"), _("Bottom Center"), _("Bottom Right")
+        };
+        
+        var position_model = new Gtk.StringList(null);
+        foreach (var label in position_labels) {
+            position_model.append(label);
         }
-        position_dropdown = new DropDown (position_model, null) {
+        
+        position_dropdown = new DropDown(position_model, null) {
             valign = Align.CENTER,
             hexpand = true
         };
-        position_dropdown.notify["selected-item"].connect (() => {
-            SaveStates.update_position_in_file ((position_dropdown.selected_item as StringObject)?.get_string () ?? "");
-        });
 
+        position_dropdown.notify["selected-item"].connect(() => {
+            int selected = (int)position_dropdown.selected;
+            if (selected >= 0 && selected < POSITION_VALUES.length) {
+                SaveStates.update_position_in_file(POSITION_VALUES[selected]);
+            }
+        });
+        
         var position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         position_pair.append (new Label (_("Position")));
         position_pair.append (position_dropdown);
-
         combined_flow_box.insert (position_pair, -1);
 
         var colums_widget = create_scale_entry_widget (_("Columns"), _("Number of columns"), 1, 6, 3);

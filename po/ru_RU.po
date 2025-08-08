@@ -1383,3 +1383,27 @@ msgstr "Виртуальная память"
 
 msgid "Add space"
 msgstr "Добавить пробел"
+
+msgid "Top Left"
+msgstr "Сверху слева"
+
+msgid "Top Center"
+msgstr "Сверху по центру"
+
+msgid "Top Right"
+msgstr "Сверху справа"
+
+msgid "Middle Left"
+msgstr "Посередине слева"
+
+msgid "Middle Right"
+msgstr "Посередине справа"
+
+msgid "Bottom Left"
+msgstr "Снизу слева"
+
+msgid "Bottom Center"
+msgstr "Снизу по центру"
+
+msgid "Bottom Right"
+msgstr "Снизу справа"

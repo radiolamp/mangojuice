@@ -246,13 +246,27 @@ public class LoadStates {
                     }
                 }
 
-                if (line.has_prefix ("position=")) {
-                    var position_value = line.substring ("position=".length);
-                    for (uint i = 0; i < mango_juice.position_dropdown.model.get_n_items (); i++) {
-                        var item = mango_juice.position_dropdown.model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == position_value) {
-                            mango_juice.position_dropdown.selected = i;
-                            break;
+
+                if (line.has_prefix("position=")) {
+                    var position_value = line.substring("position=".length);
+                    var position_mapping = new Gee.HashMap<string, string>();
+                    position_mapping["top-left"] = _("Top Left");
+                    position_mapping["top-center"] = _("Top Center");
+                    position_mapping["top-right"] = _("Top Right");
+                    position_mapping["middle-left"] = _("Middle Left");
+                    position_mapping["middle-right"] = _("Middle Right");
+                    position_mapping["bottom-left"] = _("Bottom Left");
+                    position_mapping["bottom-center"] = _("Bottom Center");
+                    position_mapping["bottom-right"] = _("Bottom Right");
+                    string? translated_label = position_mapping[position_value];
+                    if (translated_label != null && mango_juice.position_dropdown != null) {
+                        var model = mango_juice.position_dropdown.model as Gtk.StringList;
+                        for (uint i = 0; i < model.get_n_items(); i++) {
+                            string? item = model.get_string(i);
+                            if (item == translated_label) {
+                                mango_juice.position_dropdown.selected = i;
+                                break;
+                            }
                         }
                     }
                 }
