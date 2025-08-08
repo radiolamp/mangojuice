@@ -1434,3 +1434,12 @@ msgstr "Трилинейная"
 
 msgid "Retro"
 msgstr "Ретро"
+
+msgid "Title"
+msgstr "Название"
+
+msgid "Artist"
+msgstr "Исполнитель"
+
+msgid "Album"
+msgstr "Альбом"

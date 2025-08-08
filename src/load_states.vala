@@ -510,44 +510,42 @@ public class LoadStates {
                     mango_juice.gpu_entry.text = line.substring ("gpu_list=".length);
                 }
 
+                const string[] FORMAT_VALUES = { "title", "artist", "album", "none" };
+                
                 if (line.has_prefix("media_player_format=")) {
                     var format_str = line.substring("media_player_format=".length).strip();
-
                     if (format_str.has_prefix("{") && format_str.has_suffix("}")) {
                         format_str = format_str.substring(1, format_str.length-2);
                     }
-
                     string[] format_parts = format_str.split("};{");
-
-                    for (int i = 0; i < 3; i++) {
+                    
+                    for (int i = 0; i < 3 && i < mango_juice.media_format_dropdowns.size; i++) {
                         string part = "none";
                         if (i < format_parts.length) {
                             part = format_parts[i].strip();
                         }
+                        
+                        var dropdown = mango_juice.media_format_dropdowns.get(i);
 
-                        if (i < mango_juice.media_format_dropdowns.size) {
-                            var dropdown = mango_juice.media_format_dropdowns.get(i);
-                            var model = dropdown.model as Gtk.StringList;
+                        int selected_index = -1;
+                        for (int j = 0; j < FORMAT_VALUES.length; j++) {
+                            if (FORMAT_VALUES[j] == part) {
+                                selected_index = j;
+                                break;
+                            }
+                        }
 
-                            bool found = false;
-                            for (uint j = 0; j < model.get_n_items(); j++) {
-                                var item = model.get_item(j) as StringObject;
-                                if (item != null && item.get_string() == part) {
-                                    dropdown.selected = j;
-                                    found = true;
+                        if (selected_index == -1) {
+                            for (int j = 0; j < FORMAT_VALUES.length; j++) {
+                                if (FORMAT_VALUES[j] == "none") {
+                                    selected_index = j;
                                     break;
                                 }
                             }
-
-                            if (!found && part == "none") {
-                                for (uint j = 0; j < model.get_n_items(); j++) {
-                                    var item = model.get_item(j) as StringObject;
-                                    if (item != null && item.get_string() == "none") {
-                                        dropdown.selected = j;
-                                        break;
-                                    }
-                                }
-                            }
+                        }
+                        
+                        if (selected_index != -1) {
+                            dropdown.selected = selected_index;
                         }
                     }
                 }

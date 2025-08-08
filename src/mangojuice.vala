@@ -289,6 +289,9 @@ public class MangoJuice : Adw.Application {
         "none", "bicubic", "trilinear", "retro"
     };
 
+    const string[] FORMAT_VALUES = { "title", "artist", "album", "none" };
+    string[] format_labels = { _("Title"), _("Artist"), _("Album"), _("None") };
+
     // Other Variables
     bool test_button_pressed = false;
     public ResetManager reset_manager;
@@ -1249,29 +1252,32 @@ public class MangoJuice : Adw.Application {
         visual_box.append (media_label);
 
         var format_options = new Gtk.StringList (null);
-        string[] options = { "title", "artist", "album", "none" };
-        foreach (var option in options) {
-            format_options.append (option);
+        foreach (var label in format_labels) {
+            format_options.append (label);
         }
-
+        
         media_format_dropdowns = new Gee.ArrayList<DropDown>();
-
         for (int i = 0; i < 3; i++) {
             var dropdown = new DropDown (format_options, null) {
                 hexpand = true,
-                selected = i < options.length - 1 ? i : 0
+                selected = i < FORMAT_VALUES.length - 1 ? i : 0
             };
+            
             dropdown.notify["selected"].connect (() => {
                 var values = new string[3];
                 for (int j = 0; j < 3 && j < media_format_dropdowns.size; j++) {
-                    values[j] = (media_format_dropdowns.get(j).selected_item as StringObject)?.get_string() ?? "";
+                    int selected = (int)media_format_dropdowns.get(j).selected;
+                    if (selected >= 0 && selected < FORMAT_VALUES.length) {
+                        values[j] = FORMAT_VALUES[selected];
+                    } else {
+                        values[j] = "none";
+                    }
                 }
-
                 string media_format = "{%s};{%s};{%s}".printf(values[0], values[1], values[2]);
                 SaveStates.update_media_player_format_in_file(media_format);
                 save_config();
             });
-
+            
             media_format_dropdowns.add(dropdown);
         }
 

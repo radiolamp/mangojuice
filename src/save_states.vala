@@ -555,14 +555,17 @@ public class SaveStates {
                 update_parameter (data_stream, "battery_color", battery_color);
             }
 
+            const string[] FORMAT_VALUES = { "title", "artist", "album", "none" };
+            
             if (mango_juice.media_format_dropdowns != null) {
                 var active_values = new Gee.ArrayList<string>();
-
                 foreach (var dropdown in mango_juice.media_format_dropdowns) {
-                    var selected_item = dropdown.selected_item as StringObject;
-                    string? value = selected_item?.get_string();
-                    if (value != null && value != "" && value != "none") {
-                        active_values.add(value);
+                    int selected = (int)dropdown.selected;
+                    if (selected >= 0 && selected < FORMAT_VALUES.length) {
+                        string english_value = FORMAT_VALUES[selected];
+                        if (english_value != "none") {
+                            active_values.add(english_value);
+                        }
                     }
                 }
                 

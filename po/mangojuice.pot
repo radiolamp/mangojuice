@@ -1396,3 +1396,12 @@ msgstr ""
 
 msgid "Retro"
 msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Artist"
+msgstr ""
+
+msgid "Album"
+msgstr ""
