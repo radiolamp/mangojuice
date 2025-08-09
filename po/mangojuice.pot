@@ -1405,3 +1405,6 @@ msgstr ""
 
 msgid "Album"
 msgstr ""
+
+msgid "Global VkBasalt"
+msgstr ""

@@ -79,7 +79,7 @@ public class OtherBox : Box {
         create_scale_with_entry (flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
         create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
 
-        vkbasalt_global_button = new Button.with_label ("Global VkBasalt");
+        vkbasalt_global_button = new Button.with_label (_("Global VkBasalt"));
         vkbasalt_global_button.set_margin_top (FLOW_BOX_MARGIN);
         vkbasalt_global_button.set_margin_end (FLOW_BOX_MARGIN);
         vkbasalt_global_button.set_margin_start (FLOW_BOX_MARGIN);

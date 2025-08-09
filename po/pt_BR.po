@@ -1299,3 +1299,6 @@ msgstr "Artista"
 
 msgid "Album"
 msgstr "Álbum"
+
+msgid "Global VkBasalt"
+msgstr "Global VkBasalt"
