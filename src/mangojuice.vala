@@ -1897,6 +1897,7 @@ public class MangoJuice : Adw.Application {
             fps_limit_method_model.append (item);
         }
         fps_limit_method = new DropDown (fps_limit_method_model, null);
+        fps_limit_method.notify["selected-item"].connect(save_config);
 
         fps_limit_entry_1 = new Entry ();
         fps_limit_entry_1.input_purpose = InputPurpose.NUMBER;
