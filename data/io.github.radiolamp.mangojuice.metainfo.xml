@@ -11,6 +11,7 @@
     </p>
   </description>
   <url type="homepage">https://github.com/radiolamp/mangojuice</url>
+  <url type="vcs-browser">https://github.com/radiolamp/mangojuice</url>
   <url type="bugtracker">https://github.com/radiolamp/mangojuice/issues</url>
   <screenshots>
     <screenshot type="default">
