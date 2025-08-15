@@ -2,15 +2,14 @@
     "version": "2.0.0",
     "tasks": [
         {
-          "label": "build and run",
-          "type": "shell",
-          "command": "rm -rf ./build/ && meson setup build --reconfigure -Dis_devel=true --buildtype=debug && ninja -C build && ./build/src/mangojuice",
-          "group": {
-              "kind": "build",
-              "isDefault": true
-          },
-          "problemMatcher": []
-
+            "label": "build and run",
+            "type": "shell",
+            "command": "rm -rf ./build/ && meson setup build --reconfigure -Dis_devel=true --buildtype=debug && ninja -C build && ./build/src/mangojuice",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
         }
     ]
 }
