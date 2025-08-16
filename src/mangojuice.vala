@@ -2862,21 +2862,23 @@ public class MangoJuice : Adw.Application {
         private string _shortcut = "";
         private Gtk.Label _display_label;
         private bool _is_recording = false;
+        private string _previous_shortcut = "";
         
         public signal void shortcut_changed(string new_shortcut);
-    
+        
         public string shortcut {
             get { return _shortcut; }
             set {
                 _shortcut = value;
+                _previous_shortcut = value;
                 _display_label.label = value;
             }
         }
-    
+        
         public bool is_recording {
             get { return _is_recording; }
         }
-    
+        
         public ShortcutRecorder() {
             Object();
             
@@ -2889,55 +2891,52 @@ public class MangoJuice : Adw.Application {
                 if (!_is_recording) {
                     start_recording();
                 } else {
-                    stop_recording();
+                    cancel_recording();
                 }
             });
         }
-    
+        
         private void start_recording() {
             _is_recording = true;
+            _previous_shortcut = _shortcut;
             _shortcut = "";
             _display_label.label = _("Press shortcut...");
             this.add_css_class("suggested-action");
             this.grab_focus();
         }
-    
+        
         private void stop_recording() {
             _is_recording = false;
             _display_label.label = _shortcut != "" ? _shortcut : _("Press to record");
             this.remove_css_class("suggested-action");
         }
-    
+        
+        private void cancel_recording() {
+            _shortcut = _previous_shortcut;
+            stop_recording();
+        }
+        
         public bool handle_key_event(uint keyval, Gdk.ModifierType state) {
             if (!_is_recording) return false;
             
             var key = Gdk.keyval_name(keyval) ?? "Unknown";
-            var modifiers = new StringBuilder();
             
             string[] IGNORED_KEYS = {
                 "Control_L", "Control_R", "Shift_L", "Shift_R",
                 "Alt_L", "Alt_R", "Super_L", "Super_R"
             };
-    
+        
             foreach (string ignored in IGNORED_KEYS) {
                 if (key == ignored) return true;
             }
-    
-            bool has_modifier = (state & Gdk.ModifierType.CONTROL_MASK) != 0 ||
-                               (state & Gdk.ModifierType.SHIFT_MASK) != 0 ||
-                               (state & Gdk.ModifierType.ALT_MASK) != 0 ||
-                               (state & Gdk.ModifierType.SUPER_MASK) != 0;
-    
-            if (!has_modifier) {
-                stop_recording();
-                return true;
-            }
-    
+        
+            var modifiers = new StringBuilder();
+            
             if ((state & Gdk.ModifierType.CONTROL_MASK) != 0) modifiers.append("Ctrl+");
             if ((state & Gdk.ModifierType.SHIFT_MASK) != 0) modifiers.append("Shift+");
             if ((state & Gdk.ModifierType.ALT_MASK) != 0) modifiers.append("Alt+");
             if ((state & Gdk.ModifierType.SUPER_MASK) != 0) modifiers.append("Super+");
-    
+        
             _shortcut = modifiers.str + key;
             shortcut_changed(_shortcut);
             stop_recording();
