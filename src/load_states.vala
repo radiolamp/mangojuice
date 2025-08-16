@@ -283,10 +283,18 @@ public class LoadStates {
                     }
                 }
 
-                if (line.has_prefix ("toggle_hud=")) {
-                    var toggle_hud_value = line.substring ("toggle_hud=".length);
-                    mango_juice.toggle_hud_entry.text = toggle_hud_value;
-                }
+                //if (line.has_prefix ("toggle_hud=")) {
+                //    var toggle_hud_value = line.substring ("toggle_hud=".length);
+                //    mango_juice.toggle_hud_entry.text = toggle_hud_value;
+                //}
+
+if (line.has_prefix ("toggle_hud=")) {
+    var toggle_hud_value = line.substring ("toggle_hud=".length);
+    mango_juice.toggle_hud_entry.text = toggle_hud_value;
+    if (mango_juice.toggle_posic != null) {
+        mango_juice.toggle_posic.shortcut = toggle_hud_value;
+    }
+}
 
                 if (line.has_prefix ("font_size=")) {
                     if (mango_juice.font_size_scale != null) {

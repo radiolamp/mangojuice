@@ -27,11 +27,19 @@ public class ResetManager {
         reset_scales ();
         reset_color_buttons ();
         reset_custom_switch ();
+        reset_shortcut_recorder();
     }
 
     void reset_switches (Switch[] switches) {
         foreach (var sw in switches) {
             sw.active = false;
+        }
+    }
+
+    void reset_shortcut_recorder() {
+        if (app.toggle_posic != null) {
+            app.toggle_posic.shortcut = "Shift_R+F12";
+            app.toggle_hud_entry.text = "Shift_R+F12";
         }
     }
 

@@ -108,7 +108,7 @@ public class MangoJuice : Adw.Application {
     public  Label             fps_sampling_period_value_label;
     public  Button            mangohud_global_button;
     public  Gee.ArrayList<DropDown> media_format_dropdowns { get; set; }
-
+    public ShortcutRecorder toggle_posic;
     bool        mangohud_global_enabled = false;
     public bool is_loading              = false;
 
@@ -1148,19 +1148,42 @@ public class MangoJuice : Adw.Application {
 
         var attrs = new Pango.AttrList ();
         attrs.insert (Pango.attr_weight_new (Pango.Weight.BOLD));
-
-        toggle_hud_entry.attributes = attrs;
-
-        toggle_hud_entry.set_size_request (20, -1);
-        toggle_hud_entry.changed.connect (() => {
-            SaveStates.update_toggle_hud_in_file (toggle_hud_entry.text);
-            save_config ();
+    
+        this.toggle_posic = new ShortcutRecorder() {
+            tooltip_text = _("Click to record a new HUD toggle shortcut"),
+            hexpand = true
+        };
+        
+        /// Связь между toggle_hud_entry и toggle_posic
+        toggle_hud_entry.changed.connect(() => {
+            if (this.toggle_posic.shortcut != toggle_hud_entry.text) {
+                this.toggle_posic.shortcut = toggle_hud_entry.text;
+            }
+        });
+        
+        if (toggle_hud_entry.text != "") {
+            this.toggle_posic.shortcut = toggle_hud_entry.text;
+        }
+        
+        this.toggle_posic.shortcut_changed.connect((toggle_hud_value) => {
+            toggle_hud_entry.text = toggle_hud_value;
+            SaveStates.update_toggle_hud_in_file(toggle_hud_value);
+            save_config();
         });
 
-        var toggle_hud_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        toggle_hud_pair.append (new Label (_("Hide the HUD")));
-        toggle_hud_pair.append (toggle_hud_entry);
-        combined_flow_box.insert (toggle_hud_pair, -1);
+        var toggle_hud_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        toggle_hud_box.append(new Label(_("Hide HUD:")));
+        toggle_hud_box.append(toggle_posic);
+        combined_flow_box.insert(toggle_hud_box, -1);
+        
+        var key_controller = new EventControllerKey();
+        key_controller.key_pressed.connect((keyval, keycode, state) => {
+            if (toggle_posic.is_recording) {
+                return toggle_posic.handle_key_event(keyval, state);
+            }
+            return false;
+        });
+        toggle_posic.add_controller(key_controller);
 
         visual_box.append (combined_flow_box);
 
@@ -2833,6 +2856,94 @@ public class MangoJuice : Adw.Application {
 
     public bool is_flatpak () {
         return Environment.get_variable ("FLATPAK_ID") != null;
+    }
+
+    public class ShortcutRecorder : Gtk.Button {
+        private string _shortcut = "";
+        private Gtk.Label _display_label;
+        private bool _is_recording = false;
+        
+        public signal void shortcut_changed(string new_shortcut);
+    
+        public string shortcut {
+            get { return _shortcut; }
+            set {
+                _shortcut = value;
+                _display_label.label = value;
+            }
+        }
+    
+        public bool is_recording {
+            get { return _is_recording; }
+        }
+    
+        public ShortcutRecorder() {
+            Object();
+            
+            _display_label = new Gtk.Label(_("Press to record")) {
+                halign = Gtk.Align.CENTER
+            };
+            this.child = _display_label;
+            
+            this.clicked.connect(() => {
+                if (!_is_recording) {
+                    start_recording();
+                } else {
+                    stop_recording();
+                }
+            });
+        }
+    
+        private void start_recording() {
+            _is_recording = true;
+            _shortcut = "";
+            _display_label.label = _("Press shortcut...");
+            this.add_css_class("suggested-action");
+            this.grab_focus();
+        }
+    
+        private void stop_recording() {
+            _is_recording = false;
+            _display_label.label = _shortcut != "" ? _shortcut : _("Press to record");
+            this.remove_css_class("suggested-action");
+        }
+    
+        public bool handle_key_event(uint keyval, Gdk.ModifierType state) {
+            if (!_is_recording) return false;
+            
+            var key = Gdk.keyval_name(keyval) ?? "Unknown";
+            var modifiers = new StringBuilder();
+            
+            string[] IGNORED_KEYS = {
+                "Control_L", "Control_R", "Shift_L", "Shift_R",
+                "Alt_L", "Alt_R", "Super_L", "Super_R"
+            };
+    
+            foreach (string ignored in IGNORED_KEYS) {
+                if (key == ignored) return true;
+            }
+    
+            bool has_modifier = (state & Gdk.ModifierType.CONTROL_MASK) != 0 ||
+                               (state & Gdk.ModifierType.SHIFT_MASK) != 0 ||
+                               (state & Gdk.ModifierType.ALT_MASK) != 0 ||
+                               (state & Gdk.ModifierType.SUPER_MASK) != 0;
+    
+            if (!has_modifier) {
+                stop_recording();
+                return true;
+            }
+    
+            if ((state & Gdk.ModifierType.CONTROL_MASK) != 0) modifiers.append("Ctrl+");
+            if ((state & Gdk.ModifierType.SHIFT_MASK) != 0) modifiers.append("Shift+");
+            if ((state & Gdk.ModifierType.ALT_MASK) != 0) modifiers.append("Alt+");
+            if ((state & Gdk.ModifierType.SUPER_MASK) != 0) modifiers.append("Super+");
+    
+            _shortcut = modifiers.str + key;
+            shortcut_changed(_shortcut);
+            stop_recording();
+            
+            return true;
+        }
     }
 
     static int main(string[] args) {
