@@ -2914,8 +2914,10 @@ public class MangoJuice : Adw.Application {
         public ShortcutRecorder() {
             Object();
             
-            _display_label = new Gtk.Label(_("Press to record")) {
-                halign = Gtk.Align.CENTER
+            _display_label = new Gtk.Label("") {
+                halign = Gtk.Align.CENTER,
+                margin_start = 6,
+                margin_end = 6
             };
             this.child = _display_label;
             
@@ -2939,7 +2941,7 @@ public class MangoJuice : Adw.Application {
         
         private void stop_recording() {
             _is_recording = false;
-            _display_label.label = _shortcut != "" ? _shortcut : _("Press to record");
+            _display_label.label = _shortcut != "" ? _shortcut : "";
             this.remove_css_class("suggested-action");
         }
         
@@ -2950,25 +2952,50 @@ public class MangoJuice : Adw.Application {
         
         public bool handle_key_event(uint keyval, Gdk.ModifierType state) {
             if (!_is_recording) return false;
+    
+            if (keyval == Gdk.Key.Escape) {
+                cancel_recording();
+                return true;
+            }
             
             var key = Gdk.keyval_name(keyval) ?? "Unknown";
             
             string[] IGNORED_KEYS = {
                 "Control_L", "Control_R", "Shift_L", "Shift_R",
-                "Alt_L", "Alt_R", "Super_L", "Super_R"
+                "Alt_L", "Alt_R", "Super_L", "Super_R", "Meta_L", "Meta_R",
+                "ISO_Level3_Shift", "Mode_switch", "Num_Lock", "Caps_Lock"
             };
-        
+            
             foreach (string ignored in IGNORED_KEYS) {
                 if (key == ignored) return true;
             }
-        
+            
+            if (key.has_prefix("KP_")) {
+                key = key.substring(3);
+            }
+            else if (key.has_prefix("kr")) {
+                key = key.substring(2);
+            }
+            
+            if (key.length == 1 && key[0].isalpha()) {
+                key = key.up();
+            }
+            
             var modifiers = new StringBuilder();
             
-            if ((state & Gdk.ModifierType.CONTROL_MASK) != 0) modifiers.append("Ctrl+");
-            if ((state & Gdk.ModifierType.SHIFT_MASK) != 0) modifiers.append("Shift+");
-            if ((state & Gdk.ModifierType.ALT_MASK) != 0) modifiers.append("Alt+");
-            if ((state & Gdk.ModifierType.SUPER_MASK) != 0) modifiers.append("Super+");
-        
+            if ((state & Gdk.ModifierType.CONTROL_MASK) != 0) {
+                modifiers.append(key == "Control_R" ? "Control_R+" : "Control_L+");
+            }
+            if ((state & Gdk.ModifierType.SHIFT_MASK) != 0) {
+                modifiers.append(key == "Shift_R" ? "Shift_R+" : "Shift_L+");
+            }
+            if ((state & Gdk.ModifierType.ALT_MASK) != 0) {
+                modifiers.append(key == "Alt_R" ? "Alt_R+" : "Alt_L+");
+            }
+            if ((state & Gdk.ModifierType.SUPER_MASK) != 0) {
+                modifiers.append(key == "Super_R" ? "Super_R+" : "Super_L+");
+            }
+            
             _shortcut = modifiers.str + key;
             shortcut_changed(_shortcut);
             stop_recording();
