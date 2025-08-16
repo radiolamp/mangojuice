@@ -50,13 +50,7 @@ public class LoadStates {
 
                 if (line.has_prefix ("toggle_logging=")) {
                     var logs_key = line.substring ("toggle_logging=".length);
-                    for (uint i = 0; i < mango_juice.logs_key_model.get_n_items (); i++) {
-                        var item = mango_juice.logs_key_model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == logs_key) {
-                            mango_juice.logs_key_combo.selected = i;
-                            break;
-                        }
-                    }
+                    mango_juice.logs_key_recorder.shortcut = logs_key;
                 }
 
                 if (line.has_prefix("toggle_hud_position=")) {
@@ -137,14 +131,10 @@ public class LoadStates {
                     }
                 }
 
-                if (line.has_prefix ("toggle_fps_limit=")) {
-                    var toggle_fps_limit_value = line.substring ("toggle_fps_limit=".length);
-                    for (uint i = 0; i < mango_juice.toggle_fps_limit.model.get_n_items (); i++) {
-                        var item = mango_juice.toggle_fps_limit.model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == toggle_fps_limit_value) {
-                            mango_juice.toggle_fps_limit.selected = i;
-                            break;
-                        }
+                if (line.has_prefix("toggle_fps_limit=")) {
+                    var toggle_fps_limit_value = line.substring("toggle_fps_limit=".length).strip();
+                    if (mango_juice.toggle_fps_limit_recorder != null) {
+                        mango_juice.toggle_fps_limit_recorder.shortcut = toggle_fps_limit_value;
                     }
                 }
 

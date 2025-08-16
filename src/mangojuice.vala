@@ -31,9 +31,7 @@ public class MangoJuice : Adw.Application {
     Label[] inform_labels;
     public  Entry             custom_command_entry;
     public  Entry             custom_logs_path_entry;
-    public  DropDown          logs_key_combo;
     public  DropDown          fps_limit_method;
-    public  DropDown          toggle_fps_limit;
     public  DropDown          vulkan_dropdown;
     public  DropDown          opengl_dropdown;
     public  Scale             duracion_scale;
@@ -42,7 +40,6 @@ public class MangoJuice : Adw.Application {
     public  Entry             duracion_entry;
     public  Entry             autostart_entry;
     public  Entry             interval_entry;
-    public  Gtk.StringList    logs_key_model;
     public  DropDown          filter_dropdown;
     public  Scale             af;
     public  Scale             picmip;
@@ -107,8 +104,10 @@ public class MangoJuice : Adw.Application {
     public  Label             fps_sampling_period_value_label;
     public  Button            mangohud_global_button;
     public  Gee.ArrayList<DropDown> media_format_dropdowns { get; set; }
-    public ShortcutRecorder toggle_posic;
-    public ShortcutRecorder toggle_hud_key_recorder;
+    public  ShortcutRecorder  toggle_posic;
+    public  ShortcutRecorder  toggle_hud_key_recorder;
+    public  ShortcutRecorder  toggle_fps_limit_recorder;
+    public  ShortcutRecorder  logs_key_recorder;
     bool        mangohud_global_enabled = false;
     public bool is_loading              = false;
 
@@ -947,13 +946,24 @@ public class MangoJuice : Adw.Application {
         check_file_permissions_async.begin (intel_power_fix_button);
         restart_vkcube_or_glxgears ();
 
-        logs_key_model = new Gtk.StringList (null);
-        foreach (var item in new string[] { "Shift_L+F2", "Shift_L+F3", "Shift_L+F4", "Shift_L+F5" }) {
-            logs_key_model.append (item);
-        }
-        logs_key_combo = new DropDown (logs_key_model, null);
-        logs_key_combo.notify["selected-item"].connect (() => {
-            SaveStates.update_logs_key_in_file ((logs_key_combo.selected_item as StringObject)?.get_string () ?? "");
+        logs_key_recorder = new ShortcutRecorder() {
+            tooltip_text = _("Click to record logs shortcut"),
+            hexpand = true,
+            shortcut = "Shift_L+F2"
+        };
+
+        var key_controller = new Gtk.EventControllerKey();
+        key_controller.key_pressed.connect((keyval, keycode, state) => {
+            if (logs_key_recorder.is_recording) {
+                return logs_key_recorder.handle_key_event(keyval, state);
+            }
+            return false;
+        });
+        logs_key_recorder.add_controller(key_controller);
+        
+        logs_key_recorder.shortcut_changed.connect((shortcut_value) => {
+            SaveStates.update_logs_key_in_file(shortcut_value);
+            save_config();
         });
 
         reset_button = new Button () {
@@ -1010,7 +1020,7 @@ public class MangoJuice : Adw.Application {
         };
         pair1.append (custom_command_box);
         pair1.append (logs_key_label);
-        pair1.append (logs_key_combo);
+        pair1.append (logs_key_recorder);
         custom_command_flow_box.insert (pair1, -1);
 
         var pair2 = new Box (Orientation.HORIZONTAL, 5);
@@ -1174,14 +1184,14 @@ public class MangoJuice : Adw.Application {
         toggle_hud_box.append(toggle_posic);
         combined_flow_box.insert(toggle_hud_box, -1);
         
-        var key_controller = new EventControllerKey();
-        key_controller.key_pressed.connect((keyval, keycode, state) => {
+        var toggle_hud_key_controller = new EventControllerKey();
+        toggle_hud_key_controller.key_pressed.connect((keyval, keycode, state) => {
             if (toggle_posic.is_recording) {
                 return toggle_posic.handle_key_event(keyval, state);
             }
             return false;
         });
-        toggle_posic.add_controller(key_controller);
+        toggle_posic.add_controller(toggle_hud_key_controller);
 
         visual_box.append (combined_flow_box);
 
@@ -1957,14 +1967,31 @@ public class MangoJuice : Adw.Application {
             save_config ();
         });
 
-        var toggle_fps_limit_model = new Gtk.StringList (null);
-        foreach (var item in new string[] { "Shift_L+F1", "Shift_L+F2", "Shift_L+F3", "Shift_L+F4" }) {
-            toggle_fps_limit_model.append (item);
-        }
-        toggle_fps_limit = new DropDown (toggle_fps_limit_model, null);
+        toggle_fps_limit_recorder = new ShortcutRecorder() {
+            tooltip_text = _("Click to record FPS limit toggle shortcut"),
+            hexpand = true,
+            shortcut = "Shift_L+F1"
+        };
+
+        var key_controller = new Gtk.EventControllerKey();
+        key_controller.key_pressed.connect((keyval, keycode, state) => {
+            if (toggle_fps_limit_recorder.is_recording) {
+                return toggle_fps_limit_recorder.handle_key_event(keyval, state);
+            }
+            return false;
+        });
+        toggle_fps_limit_recorder.add_controller(key_controller);
+        
+        toggle_fps_limit_recorder.shortcut_changed.connect((shortcut_value) => {
+            save_config();
+        });
+        
+        var toggle_fps_limit_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        toggle_fps_limit_box.append(toggle_fps_limit_recorder);
 
         var limiters_box = new FlowBox ();
         limiters_box.set_max_children_per_line (5);
+        limiters_box.set_homogeneous (true);
         limiters_box.set_margin_start (FLOW_BOX_MARGIN);
         limiters_box.set_margin_end (FLOW_BOX_MARGIN);
         limiters_box.set_margin_top (FLOW_BOX_MARGIN);
@@ -1974,7 +2001,7 @@ public class MangoJuice : Adw.Application {
         limiters_box.append (fps_limit_entry_1_box);
         limiters_box.append (fps_limit_entry_2_box);
         limiters_box.append (fps_limit_entry_3_box);
-        limiters_box.append (toggle_fps_limit);
+        limiters_box.append(toggle_fps_limit_box);
         performance_box.append (limiters_box);
 
         var vsync_label = create_label (_("VSync"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);

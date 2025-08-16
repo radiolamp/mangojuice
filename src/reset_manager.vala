@@ -36,14 +36,22 @@ public class ResetManager {
         }
     }
 
-    void reset_shortcut_recorders() {
+    public void reset_shortcut_recorders() {
         if (app.toggle_hud_key_recorder != null) {
             app.toggle_hud_key_recorder.shortcut = "Shift_R+F11";
         }
         
         if (app.toggle_posic != null) {
-            app.toggle_posic.shortcut = "Shift_R+F11";
+            app.toggle_posic.shortcut = "Shift_R+F12";
             app.toggle_hud_entry.text = "Shift_R+F12";
+        }
+    
+        if (app.toggle_fps_limit_recorder != null) {
+            app.toggle_fps_limit_recorder.shortcut = "Shift_L+F1";
+        }
+
+        if (app.logs_key_recorder != null) {
+            app.logs_key_recorder.shortcut = "Shift_L+F2";
         }
     }
 
@@ -77,9 +85,7 @@ public class ResetManager {
     }
 
     void reset_dropdowns () {
-        app.logs_key_combo.selected = 0;
         app.fps_limit_method.selected = 0;
-        app.toggle_fps_limit.selected = 0;
         app.vulkan_dropdown.selected = 0;
         app.opengl_dropdown.selected = 0;
         app.filter_dropdown.selected = 0;

@@ -319,9 +319,13 @@ public class SaveStates {
             int[] wine_order = {0, 1};
             save_switches_to_file (data_stream, mango_juice.wine_switches, mango_juice.wine_config_vars, wine_order);
 
-            if (mango_juice.logs_key_combo.selected_item != null) {
-                var logs_key = (mango_juice.logs_key_combo.selected_item as StringObject)?.get_string () ?? "";
-                update_parameter (data_stream, "toggle_logging", logs_key);
+          //  if (mango_juice.logs_key_combo.selected_item != null) {
+          //      var logs_key = (mango_juice.logs_key_combo.selected_item as StringObject)?.get_string () ?? "";
+          //      update_parameter (data_stream, "toggle_logging", logs_key);
+          //  }
+
+            if (mango_juice.logs_key_recorder.shortcut != null && mango_juice.logs_key_recorder.shortcut != "") {
+                update_parameter(data_stream, "toggle_logging", mango_juice.logs_key_recorder.shortcut);
             }
 
             if (mango_juice.toggle_hud_key_recorder.shortcut != null && mango_juice.toggle_hud_key_recorder.shortcut != "") {
@@ -347,9 +351,8 @@ public class SaveStates {
                 update_parameter (data_stream, "fps_limit_method", fps_limit_method_value);
             }
 
-            if (mango_juice.toggle_fps_limit.selected_item != null) {
-                var toggle_fps_limit_value = (mango_juice.toggle_fps_limit.selected_item as StringObject)?.get_string () ?? "";
-                update_parameter (data_stream, "toggle_fps_limit", toggle_fps_limit_value);
+            if (mango_juice.toggle_fps_limit_recorder != null && mango_juice.toggle_fps_limit_recorder.shortcut != null) {
+                update_parameter(data_stream, "toggle_fps_limit", mango_juice.toggle_fps_limit_recorder.shortcut);
             }
 
             var fps_limit_1 = mango_juice.fps_limit_entry_1.text;
