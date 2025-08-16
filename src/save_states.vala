@@ -324,9 +324,8 @@ public class SaveStates {
                 update_parameter (data_stream, "toggle_logging", logs_key);
             }
 
-            if (mango_juice.toggle_hud_key_combo.selected_item != null) {
-                var toggle_hud_position = (mango_juice.toggle_hud_key_combo.selected_item as StringObject)?.get_string () ?? "";
-                update_parameter (data_stream, "toggle_hud_position", toggle_hud_position);
+            if (mango_juice.toggle_hud_key_recorder.shortcut != null && mango_juice.toggle_hud_key_recorder.shortcut != "") {
+                update_parameter(data_stream, "toggle_hud_position", mango_juice.toggle_hud_key_recorder.shortcut);
             }
 
             if (mango_juice.duracion_scale != null && (int)mango_juice.duracion_scale.get_value () != 0) {

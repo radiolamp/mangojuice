@@ -32,7 +32,6 @@ public class MangoJuice : Adw.Application {
     public  Entry             custom_command_entry;
     public  Entry             custom_logs_path_entry;
     public  DropDown          logs_key_combo;
-    public  DropDown          toggle_hud_key_combo;
     public  DropDown          fps_limit_method;
     public  DropDown          toggle_fps_limit;
     public  DropDown          vulkan_dropdown;
@@ -109,6 +108,7 @@ public class MangoJuice : Adw.Application {
     public  Button            mangohud_global_button;
     public  Gee.ArrayList<DropDown> media_format_dropdowns { get; set; }
     public ShortcutRecorder toggle_posic;
+    public ShortcutRecorder toggle_hud_key_recorder;
     bool        mangohud_global_enabled = false;
     public bool is_loading              = false;
 
@@ -296,7 +296,6 @@ public class MangoJuice : Adw.Application {
     bool test_button_pressed = false;
     public ResetManager reset_manager;
     public Gee.ArrayList<Label> label_pool = new Gee.ArrayList<Label> ();
-    public Gtk.StringList toggle_hud_key_model;
 
     public MangoJuice () {
         Object (application_id: "io.github.radiolamp.mangojuice", flags: ApplicationFlags.DEFAULT_FLAGS);
@@ -1153,8 +1152,7 @@ public class MangoJuice : Adw.Application {
             tooltip_text = _("Click to record a new HUD toggle shortcut"),
             hexpand = true
         };
-        
-        /// Связь между toggle_hud_entry и toggle_posic
+
         toggle_hud_entry.changed.connect(() => {
             if (this.toggle_posic.shortcut != toggle_hud_entry.text) {
                 this.toggle_posic.shortcut = toggle_hud_entry.text;
@@ -1172,7 +1170,7 @@ public class MangoJuice : Adw.Application {
         });
 
         var toggle_hud_box = new Box(Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-        toggle_hud_box.append(new Label(_("Hide HUD:")));
+        toggle_hud_box.append(new Label(_("Hide HUD")));
         toggle_hud_box.append(toggle_posic);
         combined_flow_box.insert(toggle_hud_box, -1);
         
@@ -1211,28 +1209,35 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_offset_y_in_file ("%d".printf ((int)offset_y_scale.get_value ()));
         });
 
-        toggle_hud_key_model = new Gtk.StringList (null);
-        foreach (var item in new string[] { "Shift_R+F11", "Shift_R+F10", "Shift_R+F9", "Shift_R+F8" }) {
-            toggle_hud_key_model.append (item);
-        }
-
-        toggle_hud_key_combo = new DropDown (toggle_hud_key_model, null) {
-            hexpand = true
-        };
-
-        toggle_hud_key_combo.notify["selected-item"].connect (() => {
-            SaveStates.update_toggle_hud_key_in_file ((toggle_hud_key_combo.selected_item as StringObject)?.get_string () ?? "");
-            save_config ();
-        });
-
         var toggle_position_label = new Label (_("Toggle position")) {
             halign = Align.START
         };
+        
+        this.toggle_hud_key_recorder = new ShortcutRecorder() {
+            tooltip_text = _("Click to record a new toggle position shortcut"),
+            hexpand = true,
+            shortcut = "Shift_R+F11"
+        };
 
+        key_controller = new Gtk.EventControllerKey();
+        key_controller.key_pressed.connect((keyval, keycode, state) => {
+            if (toggle_hud_key_recorder.is_recording) {
+                return toggle_hud_key_recorder.handle_key_event(keyval, state);
+            }
+            return false;
+        });
+
+        toggle_hud_key_recorder.add_controller(key_controller);
+
+        toggle_hud_key_recorder.shortcut_changed.connect((shortcut_value) => {
+            debug("New shortcut recorded: %s", shortcut_value);
+            SaveStates.update_toggle_hud_key_in_file(shortcut_value);
+            save_config();
+        });
+        
         var toggle_position_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         toggle_position_pair.append (toggle_position_label);
-        toggle_position_pair.append (toggle_hud_key_combo);
-
+        toggle_position_pair.append (this.toggle_hud_key_recorder);
         combined_flow_box.insert (toggle_position_pair, -1);
 
         var offset_x_pair = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);

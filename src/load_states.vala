@@ -59,15 +59,9 @@ public class LoadStates {
                     }
                 }
 
-                if (line.has_prefix ("toggle_hud_position=")) {
-                    var toggle_hud_position = line.substring ("toggle_hud_position=".length);
-                    for (uint i = 0; i < mango_juice.toggle_hud_key_model.get_n_items (); i++) {
-                        var item = mango_juice.toggle_hud_key_model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == toggle_hud_position) {
-                            mango_juice.toggle_hud_key_combo.selected = i;
-                            break;
-                        }
-                    }
+                if (line.has_prefix("toggle_hud_position=")) {
+                    var toggle_hud_position = line.substring("toggle_hud_position=".length);
+                    mango_juice.toggle_hud_key_recorder.shortcut = toggle_hud_position;
                 }
 
                 if (line.has_prefix ("pci_dev=")) {
@@ -77,7 +71,7 @@ public class LoadStates {
                         selected_pci_address = selected_pci_address.replace ("0000:", "");
 
                         var model = mango_juice.gpu_dropdown.model;
-
+ 
                         uint index = 0;
                         bool found = false;
                         for (uint i = 0; i < model.get_n_items (); i++) {
