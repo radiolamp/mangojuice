@@ -319,11 +319,6 @@ public class SaveStates {
             int[] wine_order = {0, 1};
             save_switches_to_file (data_stream, mango_juice.wine_switches, mango_juice.wine_config_vars, wine_order);
 
-          //  if (mango_juice.logs_key_combo.selected_item != null) {
-          //      var logs_key = (mango_juice.logs_key_combo.selected_item as StringObject)?.get_string () ?? "";
-          //      update_parameter (data_stream, "toggle_logging", logs_key);
-          //  }
-
             if (mango_juice.logs_key_recorder.shortcut != null && mango_juice.logs_key_recorder.shortcut != "") {
                 update_parameter(data_stream, "toggle_logging", mango_juice.logs_key_recorder.shortcut);
             }
