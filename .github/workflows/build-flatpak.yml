@@ -2,11 +2,11 @@ name: Flatpak Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "hotkey" ]
     paths-ignore:
       - '**/README.md'
   pull_request:
-    branches: [ "main" ]
+    branches: [ "hotkey" ]
     types: [ "review_requested", "ready_for_review" ]
   workflow_dispatch:
 
