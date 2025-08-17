@@ -2952,7 +2952,7 @@ public class MangoJuice : Adw.Application {
         
         public bool handle_key_event(uint keyval, Gdk.ModifierType state) {
             if (!_is_recording) return false;
-    
+        
             if (keyval == Gdk.Key.Escape) {
                 cancel_recording();
                 return true;
@@ -2968,6 +2968,21 @@ public class MangoJuice : Adw.Application {
             
             foreach (string ignored in IGNORED_KEYS) {
                 if (key == ignored) return true;
+            }
+        
+            if ((state & Gdk.ModifierType.SHIFT_MASK) != 0) {
+                switch (key) {
+                    case "exclam": key = "1"; break;
+                    case "at": key = "2"; break;
+                    case "numbersign": key = "3"; break;
+                    case "dollar": key = "4"; break;
+                    case "percent": key = "5"; break;
+                    case "asciicircum": key = "6"; break;
+                    case "ampersand": key = "7"; break;
+                    case "asterisk": key = "8"; break;
+                    case "parenleft": key = "9"; break;
+                    case "parenright": key = "0"; break;
+                }
             }
             
             if (key.has_prefix("KP_")) {
