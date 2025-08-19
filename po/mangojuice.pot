@@ -1408,3 +1408,9 @@ msgstr ""
 
 msgid "Global VkBasalt"
 msgstr ""
+
+msgid "Edit shortcut manually"
+msgstr ""
+
+msgid "Click to record shortcut"
+msgstr ""

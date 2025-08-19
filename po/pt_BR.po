@@ -1302,3 +1302,9 @@ msgstr "Álbum"
 
 msgid "Global VkBasalt"
 msgstr "Global VkBasalt"
+
+msgid "Edit shortcut manually"
+msgstr "Editar atalho manualmente"
+
+msgid "Click to record shortcut"
+msgstr "Clique para gravar o atalho"
