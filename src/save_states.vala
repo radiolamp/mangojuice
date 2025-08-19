@@ -408,8 +408,26 @@ public class SaveStates {
             }
 
             if (mango_juice.position_dropdown.selected_item != null) {
-                var position_value = (mango_juice.position_dropdown.selected_item as StringObject)?.get_string () ?? "";
-                update_parameter (data_stream, "position", position_value);
+                var position_label = (mango_juice.position_dropdown.selected_item as StringObject)?.get_string () ?? "";
+                string position_value = position_label;
+                if (position_label == _("Top Left")) {
+                    position_value = "top-left";
+                } else if (position_label == _("Top Center")) {
+                    position_value = "top-center";
+                } else if (position_label == _("Top Right")) {
+                    position_value = "top-right";
+                } else if (position_label == _("Middle Left")) {
+                    position_value = "middle-left";
+                } else if (position_label == _("Middle Right")) {
+                    position_value = "middle-right";
+                } else if (position_label == _("Bottom Left")) {
+                    position_value = "bottom-left";
+                } else if (position_label == _("Bottom Center")) {
+                    position_value = "bottom-center";
+                } else if (position_label == _("Bottom Right")) {
+                    position_value = "bottom-right";
+                }
+                update_parameter(data_stream, "position", position_value);
             }
 
             if (mango_juice.colums_scale != null) {
@@ -602,4 +620,5 @@ public class SaveStates {
             }
         }
     }
+        
 }

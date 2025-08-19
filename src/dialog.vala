@@ -360,7 +360,7 @@ namespace AboutDialog {
                     if (is_wayland) {
                         Process.spawn_command_line_async (base_cmd + " mangohud vkcube-wayland");
                     } else {
-                        Process.spawn_command_line_async (base_cmd + " mangohud vkcube");
+                        Process.spawn_command_line_async (base_cmd + " mangohud vkcube --wsi xcb");
                     }
                 } else if (app.is_vkcube_available ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
