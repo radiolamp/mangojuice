@@ -1,5 +1,4 @@
 /* dialog  // Licence:  GPL-v3.0 */
-
 using Gtk;
 using Adw;
 
