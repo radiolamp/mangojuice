@@ -2890,64 +2890,125 @@ public class MangoJuice : Adw.Application {
         return Environment.get_variable ("FLATPAK_ID") != null;
     }
 
-    public class ShortcutRecorder : Gtk.Button {
-        private string _shortcut = "";
-        private Gtk.Label _display_label;
-        private bool _is_recording = false;
-        private string _previous_shortcut = "";
-        
-        public signal void shortcut_changed(string new_shortcut);
-        
-        public string shortcut {
-            get { return _shortcut; }
-            set {
-                _shortcut = value;
-                _previous_shortcut = value;
-                _display_label.label = value;
-            }
+public class ShortcutRecorder : Gtk.Box {
+    private string _shortcut = "";
+    private Gtk.Button _record_button;
+    private Gtk.Button _edit_button;
+    private Gtk.Label _display_label;
+    private Gtk.Entry _entry;
+    private bool _is_recording = false;
+    private string _previous_shortcut = "";
+    
+    public signal void shortcut_changed(string new_shortcut);
+    
+    public string shortcut {
+        get { return _shortcut; }
+        set {
+            _shortcut = value;
+            _previous_shortcut = value;
+            update_display();
         }
-        
-        public bool is_recording {
-            get { return _is_recording; }
-        }
-        
-        public ShortcutRecorder() {
-            Object();
+    }
+    
+    public bool is_recording {
+        get { return _is_recording; }
+    }
+    
+    public ShortcutRecorder() {
+        Object(orientation: Gtk.Orientation.HORIZONTAL, spacing: 0);
+    
+            this.add_css_class("linked");
+    
+            _record_button = new Gtk.Button();
+            _record_button.hexpand = (true);
+            _display_label = new Gtk.Label("");
+            _record_button.child = _display_label;
+    
+            _edit_button = new Gtk.Button.from_icon_name("document-edit-symbolic");
+            _edit_button.tooltip_text = "Edit shortcut manually";
+    
+            _entry = new Gtk.Entry();
+            _entry.visible = false;
+            _entry.primary_icon_name = "input-keyboard-symbolic";
+            _entry.secondary_icon_name = "edit-clear-symbolic";
+            _entry.secondary_icon_activatable = true;
+    
+            append(_record_button);
+            append(_edit_button);
+            append(_entry);
+    
+            _record_button.clicked.connect(() => {
+                if (!_is_recording) start_recording();
+                else cancel_recording();
+            });
             
-            _display_label = new Gtk.Label("") {
-                halign = Gtk.Align.CENTER,
-                margin_start = 6,
-                margin_end = 6
-            };
-            this.child = _display_label;
+            _edit_button.clicked.connect(() => {
+                start_editing();
+            });
             
-            this.clicked.connect(() => {
-                if (!_is_recording) {
-                    start_recording();
-                } else {
-                    cancel_recording();
+            _entry.activate.connect(() => {
+                apply_editing();
+            });
+            
+            _entry.icon_release.connect((pos) => {
+                if (pos == Gtk.EntryIconPosition.SECONDARY) {
+                    cancel_editing();
                 }
             });
+        }
+        
+        private void update_display() {
+            _display_label.label = _shortcut;
         }
         
         private void start_recording() {
             _is_recording = true;
             _previous_shortcut = _shortcut;
             _shortcut = "";
-            _display_label.label = _("Press shortcut...");
-            this.add_css_class("suggested-action");
-            this.grab_focus();
+            
+            var image = new Gtk.Image.from_icon_name("input-keyboard-symbolic");
+            image.pixel_size = 16;
+            _record_button.child = image;
+            
+            _record_button.add_css_class("suggested-action");
+            _record_button.grab_focus();
         }
         
         private void stop_recording() {
             _is_recording = false;
-            _display_label.label = _shortcut != "" ? _shortcut : "";
-            this.remove_css_class("suggested-action");
+            _record_button.child = _display_label;
+            update_display();
+            _record_button.remove_css_class("suggested-action");
         }
         
         private void cancel_recording() {
             _shortcut = _previous_shortcut;
             stop_recording();
+        }
+        
+        private void start_editing() {
+            _entry.text = _shortcut;
+            _entry.visible = true;
+            _record_button.visible = false;
+            _edit_button.visible = false;
+            _entry.grab_focus();
+        }
+        
+        private void apply_editing() {
+            _shortcut = _entry.text.strip();
+            shortcut_changed(_shortcut);
+            finish_editing();
+        }
+        
+        private void cancel_editing() {
+            finish_editing();
+        }
+        
+        private void finish_editing() {
+            _entry.visible = false;
+            _record_button.visible = true;
+            _edit_button.visible = true;
+            update_display();
         }
         
         public bool handle_key_event(uint keyval, Gdk.ModifierType state) {
@@ -2961,13 +3022,11 @@ public class MangoJuice : Adw.Application {
             var key = Gdk.keyval_name(keyval) ?? "Unknown";
             
             string[] IGNORED_KEYS = {
-                "Control_L", "Control_R", "Shift_L", "Shift_R",
-                "Alt_L", "Alt_R", "Super_L", "Super_R", "Meta_L", "Meta_R",
-                "ISO_Level3_Shift", "Mode_switch", "Num_Lock", "Caps_Lock"
+                "Control", "Shift", "Alt", "Super", "Meta", "Num_Lock", "Caps_Lock"
             };
             
             foreach (string ignored in IGNORED_KEYS) {
-                if (key == ignored) return true;
+                if (key.has_prefix(ignored)) return true;
             }
         
             if ((state & Gdk.ModifierType.SHIFT_MASK) != 0) {
@@ -2985,31 +3044,17 @@ public class MangoJuice : Adw.Application {
                 }
             }
             
-            if (key.has_prefix("KP_")) {
-                key = key.substring(3);
-            }
-            else if (key.has_prefix("kr")) {
-                key = key.substring(2);
-            }
+            if (key.has_prefix("KP_")) key = key.substring(3);
+            else if (key.has_prefix("kr")) key = key.substring(2);
             
-            if (key.length == 1 && key[0].isalpha()) {
-                key = key.up();
-            }
+            if (key.length == 1 && key[0].isalpha()) key = key.up();
             
             var modifiers = new StringBuilder();
             
-            if ((state & Gdk.ModifierType.CONTROL_MASK) != 0) {
-                modifiers.append(key == "Control_R" ? "Control_R+" : "Control_L+");
-            }
-            if ((state & Gdk.ModifierType.SHIFT_MASK) != 0) {
-                modifiers.append(key == "Shift_R" ? "Shift_R+" : "Shift_L+");
-            }
-            if ((state & Gdk.ModifierType.ALT_MASK) != 0) {
-                modifiers.append(key == "Alt_R" ? "Alt_R+" : "Alt_L+");
-            }
-            if ((state & Gdk.ModifierType.SUPER_MASK) != 0) {
-                modifiers.append(key == "Super_R" ? "Super_R+" : "Super_L+");
-            }
+            if ((state & Gdk.ModifierType.CONTROL_MASK) != 0) modifiers.append("Control+");
+            if ((state & Gdk.ModifierType.SHIFT_MASK) != 0) modifiers.append("Shift+");
+            if ((state & Gdk.ModifierType.ALT_MASK) != 0) modifiers.append("Alt+");
+            if ((state & Gdk.ModifierType.SUPER_MASK) != 0) modifiers.append("Super+");
             
             _shortcut = modifiers.str + key;
             shortcut_changed(_shortcut);
