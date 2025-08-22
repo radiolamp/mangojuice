@@ -319,14 +319,12 @@ public class SaveStates {
             int[] wine_order = {0, 1};
             save_switches_to_file (data_stream, mango_juice.wine_switches, mango_juice.wine_config_vars, wine_order);
 
-            if (mango_juice.logs_key_combo.selected_item != null) {
-                var logs_key = (mango_juice.logs_key_combo.selected_item as StringObject)?.get_string () ?? "";
-                update_parameter (data_stream, "toggle_logging", logs_key);
+            if (mango_juice.logs_key_recorder.shortcut != null && mango_juice.logs_key_recorder.shortcut != "") {
+                update_parameter(data_stream, "toggle_logging", mango_juice.logs_key_recorder.shortcut);
             }
 
-            if (mango_juice.toggle_hud_key_combo.selected_item != null) {
-                var toggle_hud_position = (mango_juice.toggle_hud_key_combo.selected_item as StringObject)?.get_string () ?? "";
-                update_parameter (data_stream, "toggle_hud_position", toggle_hud_position);
+            if (mango_juice.toggle_hud_key_recorder.shortcut != null && mango_juice.toggle_hud_key_recorder.shortcut != "") {
+                update_parameter(data_stream, "toggle_hud_position", mango_juice.toggle_hud_key_recorder.shortcut);
             }
 
             if (mango_juice.duracion_scale != null && (int)mango_juice.duracion_scale.get_value () != 0) {
@@ -348,9 +346,8 @@ public class SaveStates {
                 update_parameter (data_stream, "fps_limit_method", fps_limit_method_value);
             }
 
-            if (mango_juice.toggle_fps_limit.selected_item != null) {
-                var toggle_fps_limit_value = (mango_juice.toggle_fps_limit.selected_item as StringObject)?.get_string () ?? "";
-                update_parameter (data_stream, "toggle_fps_limit", toggle_fps_limit_value);
+            if (mango_juice.toggle_fps_limit_recorder != null && mango_juice.toggle_fps_limit_recorder.shortcut != null) {
+                update_parameter(data_stream, "toggle_fps_limit", mango_juice.toggle_fps_limit_recorder.shortcut);
             }
 
             var fps_limit_1 = mango_juice.fps_limit_entry_1.text;
@@ -411,8 +408,26 @@ public class SaveStates {
             }
 
             if (mango_juice.position_dropdown.selected_item != null) {
-                var position_value = (mango_juice.position_dropdown.selected_item as StringObject)?.get_string () ?? "";
-                update_parameter (data_stream, "position", position_value);
+                var position_label = (mango_juice.position_dropdown.selected_item as StringObject)?.get_string () ?? "";
+                string position_value = position_label;
+                if (position_label == _("Top Left")) {
+                    position_value = "top-left";
+                } else if (position_label == _("Top Center")) {
+                    position_value = "top-center";
+                } else if (position_label == _("Top Right")) {
+                    position_value = "top-right";
+                } else if (position_label == _("Middle Left")) {
+                    position_value = "middle-left";
+                } else if (position_label == _("Middle Right")) {
+                    position_value = "middle-right";
+                } else if (position_label == _("Bottom Left")) {
+                    position_value = "bottom-left";
+                } else if (position_label == _("Bottom Center")) {
+                    position_value = "bottom-center";
+                } else if (position_label == _("Bottom Right")) {
+                    position_value = "bottom-right";
+                }
+                update_parameter(data_stream, "position", position_value);
             }
 
             if (mango_juice.colums_scale != null) {
@@ -605,4 +620,5 @@ public class SaveStates {
             }
         }
     }
+        
 }

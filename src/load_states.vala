@@ -50,24 +50,12 @@ public class LoadStates {
 
                 if (line.has_prefix ("toggle_logging=")) {
                     var logs_key = line.substring ("toggle_logging=".length);
-                    for (uint i = 0; i < mango_juice.logs_key_model.get_n_items (); i++) {
-                        var item = mango_juice.logs_key_model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == logs_key) {
-                            mango_juice.logs_key_combo.selected = i;
-                            break;
-                        }
-                    }
+                    mango_juice.logs_key_recorder.shortcut = logs_key;
                 }
 
-                if (line.has_prefix ("toggle_hud_position=")) {
-                    var toggle_hud_position = line.substring ("toggle_hud_position=".length);
-                    for (uint i = 0; i < mango_juice.toggle_hud_key_model.get_n_items (); i++) {
-                        var item = mango_juice.toggle_hud_key_model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == toggle_hud_position) {
-                            mango_juice.toggle_hud_key_combo.selected = i;
-                            break;
-                        }
-                    }
+                if (line.has_prefix("toggle_hud_position=")) {
+                    var toggle_hud_position = line.substring("toggle_hud_position=".length);
+                    mango_juice.toggle_hud_key_recorder.shortcut = toggle_hud_position;
                 }
 
                 if (line.has_prefix ("pci_dev=")) {
@@ -77,7 +65,7 @@ public class LoadStates {
                         selected_pci_address = selected_pci_address.replace ("0000:", "");
 
                         var model = mango_juice.gpu_dropdown.model;
-
+ 
                         uint index = 0;
                         bool found = false;
                         for (uint i = 0; i < model.get_n_items (); i++) {
@@ -143,14 +131,10 @@ public class LoadStates {
                     }
                 }
 
-                if (line.has_prefix ("toggle_fps_limit=")) {
-                    var toggle_fps_limit_value = line.substring ("toggle_fps_limit=".length);
-                    for (uint i = 0; i < mango_juice.toggle_fps_limit.model.get_n_items (); i++) {
-                        var item = mango_juice.toggle_fps_limit.model.get_item (i) as StringObject;
-                        if (item != null && item.get_string () == toggle_fps_limit_value) {
-                            mango_juice.toggle_fps_limit.selected = i;
-                            break;
-                        }
+                if (line.has_prefix("toggle_fps_limit=")) {
+                    var toggle_fps_limit_value = line.substring("toggle_fps_limit=".length).strip();
+                    if (mango_juice.toggle_fps_limit_recorder != null) {
+                        mango_juice.toggle_fps_limit_recorder.shortcut = toggle_fps_limit_value;
                     }
                 }
 
@@ -286,6 +270,9 @@ public class LoadStates {
                 if (line.has_prefix ("toggle_hud=")) {
                     var toggle_hud_value = line.substring ("toggle_hud=".length);
                     mango_juice.toggle_hud_entry.text = toggle_hud_value;
+                    if (mango_juice.toggle_posic != null) {
+                        mango_juice.toggle_posic.shortcut = toggle_hud_value;
+                    }
                 }
 
                 if (line.has_prefix ("font_size=")) {
