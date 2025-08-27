@@ -48,6 +48,22 @@
   </developer>
   <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
+    <release version="0.8.7" date="2025-08-31">
+      <description>
+        <p>Interface improvements and bug fixes</p>
+        <ul>
+          <li>Update to GTK 4.19 and сorrection of bugs.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.8.6" date="2025-08-31">
+      <description>
+        <p>Interface improvements and bug fixes</p>
+        <ul>
+          <li>Update to GTK 4.19 and сorrection of bugs.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.8.6" date="2025-07-24">
       <description>
         <p>Minor update</p>
