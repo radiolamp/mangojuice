@@ -1934,7 +1934,7 @@ public class MangoJuice : Adw.Application {
         performance_box.append (limiters_label);
 
         var fps_limit_method_model = new Gtk.StringList (null);
-        foreach (var item in new string[] { "late", "early" }) {
+        foreach (var item in new string[] { _("late"), _("early") }) {
             fps_limit_method_model.append (item);
         }
         fps_limit_method = new DropDown (fps_limit_method_model, null);

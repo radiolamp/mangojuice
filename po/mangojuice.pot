@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mangojuice\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-28 12:35+0300\n"
+"POT-Creation-Date: 2025-08-28 12:40+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1240,6 +1240,14 @@ msgstr ""
 
 #: src/mangojuice.vala:1933
 msgid "Limiters FPS"
+msgstr ""
+
+#: src/mangojuice.vala:1937
+msgid "late"
+msgstr ""
+
+#: src/mangojuice.vala:1937
+msgid "early"
 msgstr ""
 
 #: src/mangojuice.vala:1945

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.8.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-28 12:35+0300\n"
-"PO-Revision-Date: 2025-05-27 01:37+0300\n"
+"POT-Creation-Date: 2025-08-28 12:40+0300\n"
+"PO-Revision-Date: 2025-08-28 12:47+0300\n"
 "Last-Translator: David Sultaniiazov <x1z53@alt-gnome.ru>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -34,7 +34,7 @@ msgstr "Mango Juice"
 
 #: data/io.github.radiolamp.mangojuice.metainfo.xml:7
 msgid "Customizable performance display"
-msgstr ""
+msgstr "Изменяемое отображение производительности"
 
 #: data/io.github.radiolamp.mangojuice.metainfo.xml:9
 msgid ""
@@ -127,9 +127,8 @@ msgid "RAM"
 msgstr "ОЗУ"
 
 #: src/advanced.vala:425 src/advanced.vala:427
-#, fuzzy
 msgid "Disk"
-msgstr "Чтение с диска"
+msgstr "Диск"
 
 #: src/advanced.vala:429 src/mangojuice.vala:184
 msgid "Resident memory"
@@ -707,7 +706,7 @@ msgstr "Максимальный нагрев"
 
 #: src/mangojuice.vala:230
 msgid "Speed, RPM"
-msgstr "Скорость, об./мин."
+msgstr "Скорость, об./мин"
 
 #: src/mangojuice.vala:230
 msgid "GPU name"
@@ -900,17 +899,14 @@ msgid "Frames per second"
 msgstr "Кадры в секунду"
 
 #: src/mangojuice.vala:270
-#, fuzzy, c-format
 msgid "1% is lower than"
 msgstr "1% меньше, чем"
 
 #: src/mangojuice.vala:271
-#, fuzzy, c-format
 msgid "0.1% is lower than"
 msgstr "0.1% меньше, чем"
 
 #: src/mangojuice.vala:271
-#, fuzzy, c-format
 msgid "1% and 0.1% lower than"
 msgstr "1% и 0.1% меньше, чем"
 
@@ -1128,9 +1124,8 @@ msgid "Key shortcuts"
 msgstr "Горячие клавиши"
 
 #: src/mangojuice.vala:1162
-#, fuzzy
 msgid "Click to record a new HUD toggle shortcut"
-msgstr "Нажмите, чтобы записать сочетание клавиш"
+msgstr "Нажмите, чтобы записать новое сочетание клавиш для переключения HUD"
 
 #: src/mangojuice.vala:1198
 msgid "Offset X"
@@ -1153,9 +1148,9 @@ msgid "Toggle position"
 msgstr "Смена позиции"
 
 #: src/mangojuice.vala:1227
-#, fuzzy
 msgid "Click to record a new toggle position shortcut"
-msgstr "Нажмите, чтобы записать сочетание клавиш"
+msgstr ""
+"Нажмите, чтобы записать новое сочетание клавиш для переключения положения"
 
 #: src/mangojuice.vala:1261
 msgid "Font"
@@ -1263,6 +1258,14 @@ msgstr "Миллисекунды"
 msgid "Limiters FPS"
 msgstr "Ограничители частоты обновления"
 
+#: src/mangojuice.vala:1937
+msgid "late"
+msgstr "позже"
+
+#: src/mangojuice.vala:1937
+msgid "early"
+msgstr "раньше"
+
 #: src/mangojuice.vala:1945
 msgid "Limit 1"
 msgstr "Лимит 1"
@@ -1276,9 +1279,9 @@ msgid "Limit 3"
 msgstr "Лимит 3"
 
 #: src/mangojuice.vala:1971
-#, fuzzy
 msgid "Click to record FPS limit toggle shortcut"
-msgstr "Нажмите, чтобы записать сочетание клавиш"
+msgstr ""
+"Нажмите, чтобы записать сочетание клавиш для переключения ограничения FPS"
 
 #: src/mangojuice.vala:2007
 msgid "VSync"
@@ -1483,7 +1486,7 @@ msgstr "Системный VkBasalt"
 
 #: src/save_states.vala:378
 msgid "none"
-msgstr ""
+msgstr "ничего"
 
 #: src/save_states.vala:445
 msgid "Select Font"
