@@ -24,7 +24,7 @@
 
 **Flathub:**
 
-<a href="https://flathub.org/ru/apps/io.github.radiolamp.mangojuice">
+<a href="https://flathub.org/apps/io.github.radiolamp.mangojuice">
   <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
 </a>
 
