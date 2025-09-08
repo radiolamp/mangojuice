@@ -18,6 +18,7 @@ public class OtherBox : Box {
     public ArrayList<Label> labels { get; set; }
     public Button vkbasalt_global_button { get; set; }
     public bool vkbasalt_global_enabled { get; set; }
+    public Entry hotkey_entry;
 
     HashMap<string, ArrayList<Scale>> switch_scale_map;
     HashMap<string, ArrayList<Entry>> switch_entry_map;
@@ -25,17 +26,14 @@ public class OtherBox : Box {
 
     public OtherBox () {
         Object (orientation: Orientation.VERTICAL, spacing: 12);
-
         scales = new ArrayList<Scale> ();
         entries = new ArrayList<Entry> ();
         scale_labels = new ArrayList<Label> ();
         switches = new ArrayList<Switch> ();
         labels = new ArrayList<Label> ();
-
         switch_scale_map = new HashMap<string, ArrayList<Scale>> ();
         switch_entry_map = new HashMap<string, ArrayList<Entry>> ();
         switch_reset_map = new HashMap<string, ArrayList<Button>> ();
-
         string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
         string[] label_texts = { "CAS", "DLS", "FXAA", "SMAA", "LUT" };
         string[] label_texts_2 = {
@@ -45,9 +43,7 @@ public class OtherBox : Box {
             _("Subpixel Morphological Antialiasing"),
             _("Color LookUp Table")
         };
-
         create_switches_and_labels (this, "VkBasalt", switches, labels, config_vars, label_texts, label_texts_2);
-
         foreach (var switch_widget in switches) {
             switch_widget.state_set.connect ((state) => {
                 OtherSave.save_states (this);
@@ -55,14 +51,12 @@ public class OtherBox : Box {
                 return false;
             });
         }
-
         var flow_box = new FlowBox ();
         flow_box.set_homogeneous (true);
         flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
         flow_box.set_max_children_per_line (2);
         this.append (flow_box);
-
         create_scale_with_entry (flow_box, "CAS Sharpness",         -1.0, 1.0,    0.01,  0.0,    "%.2f", "cas");
         create_scale_with_entry (flow_box, "DLS Sharpness",         0.0,  1.0,    0.01,  0.5,    "%.2f", "dls");
         create_scale_with_entry (flow_box, "FXAA Quality Subpix",   0.0,  1.0,    0.01,  0.75,   "%.2f", "fxaa");
@@ -73,18 +67,46 @@ public class OtherBox : Box {
         create_scale_with_entry (flow_box, "SMAA Max Search Steps", 0,    112,    1,     8,      "%d",   "smaa");
         create_scale_with_entry (flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
         create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
-
+        
+        // Создаем отдельный FlowBox для кнопок и поля ввода
+        var buttons_flow_box = new FlowBox ();
+        buttons_flow_box.set_homogeneous (true);
+        buttons_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        buttons_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        buttons_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        buttons_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        buttons_flow_box.set_selection_mode (SelectionMode.NONE);
+        buttons_flow_box.set_max_children_per_line (3); // Максимум 3 элемента в строке
+        buttons_flow_box.set_min_children_per_line (1); // Минимум 1 элемент в строке
+        
         vkbasalt_global_button = new Button.with_label (_("Global VkBasalt"));
-        vkbasalt_global_button.set_margin_top (FLOW_BOX_MARGIN);
-        vkbasalt_global_button.set_margin_end (FLOW_BOX_MARGIN);
-        vkbasalt_global_button.set_margin_start (FLOW_BOX_MARGIN);
-        vkbasalt_global_button.set_margin_bottom (FLOW_BOX_MARGIN);
+        buttons_flow_box.append (vkbasalt_global_button);
+        
+        hotkey_entry = new Entry ();
+        hotkey_entry.set_placeholder_text (_("hotkey"));
+        hotkey_entry.set_width_chars (10);
+        hotkey_entry.set_text ("Home");
+        hotkey_entry.set_alignment (0.5f);
+        hotkey_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.PRIMARY, "input-keyboard-symbolic");
+        hotkey_entry.set_tooltip_text (_("Only 1 key. Only X11/Xwayland."));
+        hotkey_entry.set_icon_activatable (Gtk.EntryIconPosition.PRIMARY, false);
+        hotkey_entry.changed.connect (() => {
+            OtherSave.save_states (this);
+        });
+        
+        buttons_flow_box.append (hotkey_entry);
+        
+        var additional_button = new Button.with_label (_("Reshade"));
+        additional_button.set_visible (false);
+        buttons_flow_box.append (additional_button);
+        
+        this.append (buttons_flow_box);
+        
         vkbasalt_global_button.clicked.connect (on_vkbasalt_global_button_clicked);
-        this.append (vkbasalt_global_button);
-
+        // additional_button.clicked.connect (on_additional_button_clicked);
+        
         check_vkbasalt_global_status ();
         OtherLoad.load_states (this);
-
         foreach (var switch_widget in switches) {
             update_scale_entry_reset_state (switch_widget);
         }
@@ -118,6 +140,8 @@ public class OtherBox : Box {
         var adjustment = new Adjustment (initial_value, min, max, step, step, 0.0);
         var scale = new Scale (Orientation.HORIZONTAL, adjustment);
         scale.set_hexpand (true);
+        scale.set_margin_start (6);
+        scale.set_margin_end (6);
         scale.set_size_request (200, -1);
 
         var entry = new Entry ();
@@ -170,7 +194,6 @@ public class OtherBox : Box {
             }
         });
 
-        // Добавляем обработчики фокуса для показа/скрытия кнопки
         var focus_controller = new EventControllerFocus ();
         focus_controller.enter.connect (() => {
             reset_button.set_visible (true);
@@ -223,7 +246,6 @@ public class OtherBox : Box {
             }
             foreach (var reset_button in reset_buttons) {
                 reset_button.set_sensitive (is_active);
-                // Скрываем кнопку, если переключатель не активен
                 if (!is_active) {
                     reset_button.set_visible (false);
                 }

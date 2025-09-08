@@ -29,6 +29,7 @@ public class OtherLoad {
             string line;
             bool[] found = new bool[10]; // Массив для отслеживания найденных параметров
             bool effectsFound = false;
+            bool hotkeyFound = false;
 
             string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
 
@@ -73,6 +74,13 @@ public class OtherLoad {
                         }
                     }
                     effectsFound = true;
+                }
+                else if (line.has_prefix ("toggleKey=")) {
+                    string hotkey = line.split ("=")[1].strip ();
+                    if (other_box.hotkey_entry != null) {
+                        other_box.hotkey_entry.set_text (hotkey);
+                    }
+                    hotkeyFound = true;
                 }
             }
 

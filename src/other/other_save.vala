@@ -23,7 +23,11 @@ public class OtherSave {
         try {
             file_stream_write = new DataOutputStream (config_file.replace (null, false, FileCreateFlags.NONE));
 
-            // Сохраняем значения Scale и Entry, если они активны
+            string hotkey = other_box.hotkey_entry.get_text ().strip ();
+            if (hotkey != "" && hotkey != "Home") {
+                file_stream_write.put_string ("toggleKey=%s\n".printf (other_box.hotkey_entry.get_text ()));
+            }
+
             save_scale_value_if_active (file_stream_write, "casSharpness", other_box.scales[0], other_box.entries[0], "%.2f", other_box, "cas");
             save_scale_value_if_active (file_stream_write, "dlsSharpness", other_box.scales[1], other_box.entries[1], "%.2f", other_box, "dls");
             save_scale_value_if_active (file_stream_write, "dlsDenoise", other_box.scales[2], other_box.entries[2], "%.2f", other_box, "dls");
@@ -31,8 +35,6 @@ public class OtherSave {
             save_scale_value_if_active (file_stream_write, "fxaaEdgeThreshold", other_box.scales[4], other_box.entries[4], "%.3f", other_box, "fxaa");
             save_scale_value_if_active (file_stream_write, "fxaaEdgeThresholdMin", other_box.scales[5], other_box.entries[5], "%.4f", other_box, "fxaa");
             save_scale_value_if_active (file_stream_write, "smaaThreshold", other_box.scales[6], other_box.entries[6], "%.2f", other_box, "smaa");
-
-            // Сохраняем целочисленные значения, если они активны
             save_int_scale_value_if_active (file_stream_write, "smaaMaxSearchSteps", other_box.scales[7], other_box.entries[7], other_box, "smaa");
             save_int_scale_value_if_active (file_stream_write, "smaaMaxSearchStepsDiag", other_box.scales[8], other_box.entries[8], other_box, "smaa");
             save_int_scale_value_if_active (file_stream_write, "smaaCornerRounding", other_box.scales[9], other_box.entries[9], other_box, "smaa");
