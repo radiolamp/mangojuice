@@ -7,7 +7,7 @@ public class OtherBox : Box {
     const int MAX_WIDTH_CHARS = 6;
     const int WIDTH_CHARS = 4;
     const int FLOW_BOX_MARGIN = 12;
-    const int FLOW_BOX_ROW_SPACING = 6;
+    const int FLOW_BOX_ROW_SPACING = 12;
     const int FLOW_BOX_COLUMN_SPACING = 6;
     const int MAIN_BOX_SPACING = 6;
 
@@ -58,11 +58,6 @@ public class OtherBox : Box {
 
         var flow_box = new FlowBox ();
         flow_box.set_homogeneous (true);
-        flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
-        flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
-        flow_box.set_margin_top (FLOW_BOX_MARGIN);
-        flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        flow_box.set_margin_start (FLOW_BOX_MARGIN);
         flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
         flow_box.set_max_children_per_line (2);
@@ -114,50 +109,84 @@ public class OtherBox : Box {
         var label = new Label (label_text);
         label.set_halign (Align.START);
         label.set_hexpand (true);
-        label.add_css_class ("title-4");
-        label.set_margin_start (16);
-        label.set_valign (Align.START);
+        label.set_markup ("<b>%s</b>".printf (label_text));
+        label.set_margin_start (12);
 
-        var scale_entry_button_box = new Box (Orientation.HORIZONTAL, 12);
+        var scale_entry_button_box = new Box (Orientation.HORIZONTAL, 0);
         scale_entry_button_box.set_hexpand (true);
 
         var adjustment = new Adjustment (initial_value, min, max, step, step, 0.0);
         var scale = new Scale (Orientation.HORIZONTAL, adjustment);
         scale.set_hexpand (true);
-        scale.set_valign (Align.CENTER);
+        scale.set_size_request (200, -1);
 
         var entry = new Entry ();
         entry.set_max_width_chars (MAX_WIDTH_CHARS);
         entry.set_width_chars (WIDTH_CHARS);
-        entry.set_halign (Align.END);
         entry.set_hexpand (false);
         entry.set_valign (Align.CENTER);
-        entry.set_text (format.printf (initial_value).replace (",", "."));
+        entry.set_input_purpose (InputPurpose.NUMBER);
+        entry.add_css_class ("linked");
 
         var reset_button = new Button.from_icon_name ("view-refresh-symbolic");
-        reset_button.set_halign (Align.END);
+        reset_button.set_focusable (false);
         reset_button.set_valign (Align.CENTER);
+        reset_button.add_css_class ("linked");
+        reset_button.set_visible (false);
         reset_button.set_tooltip_text ("Сбросить значение по умолчанию");
-        reset_button.set_margin_end (16);
+
+        var entry_container = new Box (Orientation.HORIZONTAL, 0);
+        entry_container.append (entry);
+        entry_container.append (reset_button);
+        entry_container.add_css_class ("linked");
+
+        bool is_updating = false;
 
         scale.value_changed.connect (() => {
-            update_entry_from_scale (scale, entry, format);
-            OtherSave.save_states (this);
+            if (!is_updating) {
+                is_updating = true;
+                GLib.Idle.add (() => {
+                    update_entry_from_scale (scale, entry, format);
+                    OtherSave.save_states (this);
+                    is_updating = false;
+                    return false;
+                });
+            }
         });
 
         entry.activate.connect (() => {
-            update_scale_from_entry (scale, entry, min, max, format);
+            if (!is_updating) {
+                update_scale_from_entry (scale, entry, min, max, format);
+            }
         });
 
         reset_button.clicked.connect (() => {
-            scale.set_value (initial_value);
-            update_entry_from_scale (scale, entry, format);
-            OtherSave.save_states (this);
+            if (!is_updating) {
+                is_updating = true;
+                scale.set_value (initial_value);
+                update_entry_from_scale (scale, entry, format);
+                OtherSave.save_states (this);
+                is_updating = false;
+            }
         });
 
+        // Добавляем обработчики фокуса для показа/скрытия кнопки
+        var focus_controller = new EventControllerFocus ();
+        focus_controller.enter.connect (() => {
+            reset_button.set_visible (true);
+        });
+        focus_controller.leave.connect (() => {
+            Timeout.add (300, () => {
+                if (!reset_button.has_focus) {
+                    reset_button.set_visible (false);
+                }
+                return false;
+            });
+        });
+        entry.add_controller (focus_controller);
+
         scale_entry_button_box.append (scale);
-        scale_entry_button_box.append (entry);
-        scale_entry_button_box.append (reset_button);
+        scale_entry_button_box.append (entry_container);
 
         main_box.append (label);
         main_box.append (scale_entry_button_box);
@@ -194,6 +223,10 @@ public class OtherBox : Box {
             }
             foreach (var reset_button in reset_buttons) {
                 reset_button.set_sensitive (is_active);
+                // Скрываем кнопку, если переключатель не активен
+                if (!is_active) {
+                    reset_button.set_visible (false);
+                }
             }
         }
     }
@@ -224,7 +257,7 @@ public class OtherBox : Box {
 
     void create_switches_and_labels (Box parent_box, string title, ArrayList<Switch> switches, ArrayList<Label> labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
         var label = new Label (title);
-        label.add_css_class("title-3");
+        label.add_css_class("title-4");
         label.set_margin_top (FLOW_BOX_MARGIN);
         label.set_margin_start (FLOW_BOX_MARGIN);
         label.set_margin_end (FLOW_BOX_MARGIN);
