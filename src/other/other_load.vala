@@ -34,7 +34,6 @@ public class OtherLoad {
                              .get_child ("vkBasalt");
         var config_file = config_dir.get_child ("vkBasalt.conf");
 
-        // Если директория или файл конфигурации не существуют, создаем их с настройками по умолчанию
         if (!config_dir.query_exists () || !config_file.query_exists ()) {
             create_default_config (config_dir, config_file);
             return result;
@@ -82,8 +81,7 @@ public class OtherLoad {
                     found[9] = true;
                 } else if (line.has_prefix ("effects = ")) {
                     string[] effects = line.split (" = ")[1].split (":");
-                    
-                    // Обрабатываем стандартные переключатели VkBasalt
+
                     for (int i = 0; i < other_box.switches.size; i++) {
                         if (contains_string (effects, config_vars[i])) {
                             other_box.switches[i].set_active (true);
@@ -91,13 +89,10 @@ public class OtherLoad {
                             other_box.switches[i].set_active (false);
                         }
                     }
-                    
-                    // Сохраняем состояния reshade-шейдеров
+
                     foreach (string effect in effects) {
-                        // Пропускаем стандартные эффекты VkBasalt
                         if (!contains_string (config_vars, effect)) {
                             result.reshade_states[effect] = true;
-                            print ("Found reshade effect: %s = true\n", effect);
                         }
                     }
                     
@@ -126,37 +121,25 @@ public class OtherLoad {
                     if (parts.length == 2) {
                         string shader_name = parts[0].strip();
                         string shader_value = parts[1].strip();
-                        
-                        // Сохраняем состояние шейдера (true/false)
+
                         if (shader_value == "true" || shader_value == "false") {
                             result.reshade_states[shader_name] = (shader_value == "true");
-                            print ("Found shader state: %s = %s\n", shader_name, shader_value);
                         }
-                        // Или сохраняем путь к шейдеру
                         else if (shader_value.has_suffix (".fx")) {
                             if (!other_box.reshade_shaders.contains(shader_name)) {
                                 other_box.reshade_shaders.add(shader_name);
                             }
-                            print ("Found shader path: %s = %s\n", shader_name, shader_value);
                         }
                     }
                 }
             }
 
-            // Устанавливаем значения по умолчанию для не найденных параметров
             set_default_values (other_box, found);
 
-            // Если эффекты не найдены, отключаем все стандартные переключатели
             if (!effectsFound) {
                 foreach (var switch_widget in other_box.switches) {
                     switch_widget.set_active (false);
                 }
-            }
-
-            // Выводим отладочную информацию
-            print ("Loaded reshade states: %d\n", result.reshade_states.size);
-            foreach (var entry in result.reshade_states.entries) {
-                print ("  %s = %s\n", entry.key, entry.value.to_string());
             }
 
         } catch (Error e) {
@@ -167,17 +150,14 @@ public class OtherLoad {
     }
 
     public static void apply_reshade_states (OtherBox other_box, Gee.HashMap<string, bool> reshade_states) {
-        print ("Applying reshade states to %d switches\n", other_box.reshade_switches.size);
         
         foreach (var switch_widget in other_box.reshade_switches) {
             string shader_name = switch_widget.get_name ().replace("reshade_", "");
             
             if (reshade_states.has_key (shader_name)) {
                 bool state = reshade_states[shader_name];
-                print ("Setting %s to %s\n", shader_name, state.to_string());
                 switch_widget.set_active (state);
             } else {
-                // Устанавливаем значение по умолчанию (false)
                 switch_widget.set_active (false);
             }
         }

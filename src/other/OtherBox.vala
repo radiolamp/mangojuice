@@ -31,8 +31,9 @@ public class OtherBox : Box {
     HashMap<string, ArrayList<Entry>> switch_entry_map;
     HashMap<string, ArrayList<Button>> switch_reset_map;
     
-    private Label reshade_section_label;
-    private FlowBox reshade_flow_box;
+    Label reshade_section_label;
+    FlowBox reshade_flow_box;
+    bool is_loading = false;
 
     public OtherBox () {
         Object (orientation: Orientation.VERTICAL, spacing: 12);
@@ -63,8 +64,10 @@ public class OtherBox : Box {
         create_switches_and_labels (this, "VkBasalt", switches, labels, config_vars, label_texts, label_texts_2);
         foreach (var switch_widget in switches) {
             switch_widget.state_set.connect ((state) => {
-                OtherSave.save_states (this);
-                restart_vkcube();
+                if (!is_loading) {
+                    OtherSave.save_states (this);
+                    restart_vkcube();
+                }
                 update_scale_entry_reset_state (switch_widget);
                 return false;
             });
@@ -108,7 +111,9 @@ public class OtherBox : Box {
         hotkey_entry.set_tooltip_text (_("Only 1 key. Only X11/Xwayland."));
         hotkey_entry.set_icon_activatable (Gtk.EntryIconPosition.PRIMARY, false);
         hotkey_entry.changed.connect (() => {
-            OtherSave.save_states (this);
+            if (!is_loading) {
+                OtherSave.save_states (this);
+            }
         });
         
         buttons_flow_box.append (hotkey_entry);
@@ -122,9 +127,10 @@ public class OtherBox : Box {
         vkbasalt_global_button.clicked.connect (on_vkbasalt_global_button_clicked);
         
         check_vkbasalt_global_status ();
-        
-        // Загружаем состояния только один раз
+
+        is_loading = true;
         load_result = OtherLoad.load_states (this);
+        is_loading = false;
         
         foreach (var switch_widget in switches) {
             update_scale_entry_reset_state (switch_widget);
@@ -136,8 +142,7 @@ public class OtherBox : Box {
             reshade_texture_path = load_result.reshade_texture_path;
             reshade_include_path = load_result.reshade_include_path;
         }
-        
-        // Если в кнопке уже есть путь (не стандартный текст), показываем секцию
+
         if (reshade_button.get_label() != _("Reshade")) {
             create_reshade_section();
         }
@@ -155,13 +160,11 @@ public class OtherBox : Box {
         reshade_flow_box.set_margin_start (FLOW_BOX_MARGIN);
         reshade_flow_box.set_margin_end (FLOW_BOX_MARGIN);
         reshade_flow_box.set_selection_mode (SelectionMode.NONE);
-        reshade_flow_box.set_max_children_per_line (3);
-        
-        // Очищаем предыдущие переключатели
+        reshade_flow_box.set_max_children_per_line (5);
+
         reshade_switches.clear();
         reshade_labels.clear();
-        
-        // Создаем переключатели для каждого шейдера
+
         foreach (string shader_name in reshade_shaders) {
             var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
             row_box.set_hexpand (true);
@@ -184,15 +187,19 @@ public class OtherBox : Box {
             reshade_flow_box.insert (row_box, -1);
             
             switch_widget.state_set.connect ((state) => {
-                OtherSave.save_states (this);
-                restart_vkcube();
+                if (!is_loading) {
+                    OtherSave.save_states (this);
+                    restart_vkcube();
+                }
                 return false;
             });
         }
         
         this.append (reshade_flow_box);
 
+        is_loading = true;
         OtherLoad.apply_reshade_states(this, load_result.reshade_states);
+        is_loading = false;
     }
     
     void hide_reshade_section() {
@@ -229,21 +236,18 @@ public class OtherBox : Box {
                 File? folder = folder_chooser.select_folder.end (res);
                 if (folder != null) {
                     string folder_path = folder.get_path ();
-                    
-                    // Сохраняем предыдущие состояния переключателей
+
                     var previous_states = new Gee.HashMap<string, bool>();
                     foreach (var switch_widget in reshade_switches) {
                         string shader_name = switch_widget.get_name ().replace("reshade_", "");
                         previous_states[shader_name] = switch_widget.get_active();
                     }
-                    
-                    // Обновляем текст кнопки с выбранным путем
+
                     reshade_button.set_label (folder_path);
                     reshade_folders_path = "%s/".printf(folder_path);
                     reshade_texture_path = "%s/textures".printf(folder_path);
                     reshade_include_path = "%s/shaders".printf(folder_path);
-                    
-                    // Загружаем шейдеры из новой папки
+
                     reshade_shaders.clear();
                     File shaders_folder = folder.get_child ("shaders");
                     
@@ -269,12 +273,12 @@ public class OtherBox : Box {
                             print (_("Error reading shaders folder: %s\n"), e.message);
                         }
                     }
-    
-                    // Обновляем секцию с переключателями
+
                     update_reshade_section();
-    
-                    // Восстанавливаем предыдущие состояния переключателей
+
+                    is_loading = true;
                     OtherLoad.apply_reshade_states(this, previous_states);
+                    is_loading = false;
                     
                     OtherSave.save_states (this);
                     
@@ -303,23 +307,15 @@ public class OtherBox : Box {
         return false;
     }
 
-private void restart_vkcube() {
-    try {
-        string stdout;
-        string stderr;
-        int exit_status;
-        
-        Process.spawn_command_line_sync("pgrep vkcube", out stdout, out stderr, out exit_status);
-        
-        if (exit_status == 0) {
+    void restart_vkcube() {
+        try {
             Process.spawn_command_line_sync("pkill vkcube");
             Thread.usleep(1000);
             Process.spawn_command_line_async("bash -c 'ENABLE_VKBASALT=1 mangohud vkcube --wsi xcb'");
+        } catch (Error e) {
+            stderr.printf("Ошибка при перезапуске vkcube: %s\n", e.message);
         }
-    } catch (Error e) {
-        stderr.printf("Ошибка при перезапуске vkcube: %s\n", e.message);
     }
-}
 
     public bool is_reshade_switch_active (string shader_name) {
         foreach (var switch_widget in reshade_switches) {
@@ -380,7 +376,9 @@ private void restart_vkcube() {
                 is_updating = true;
                 GLib.Idle.add (() => {
                     update_entry_from_scale (scale, entry, format);
-                    OtherSave.save_states (this);
+                    if (!is_loading) {
+                        OtherSave.save_states (this);
+                    }
                     is_updating = false;
                     return false;
                 });
@@ -398,7 +396,9 @@ private void restart_vkcube() {
                 is_updating = true;
                 scale.set_value (initial_value);
                 update_entry_from_scale (scale, entry, format);
-                OtherSave.save_states (this);
+                if (!is_loading) {
+                    OtherSave.save_states (this);
+                }
                 is_updating = false;
             }
         });
@@ -629,7 +629,7 @@ private void restart_vkcube() {
         });
     }
 
-    private Label create_label (string text, Align halign, string[] style_classes, int margin = 0) {
+    Label create_label (string text, Align halign, string[] style_classes, int margin = 0) {
         var label = new Label (text);
         label.set_halign (halign);
         label.set_hexpand (true);
