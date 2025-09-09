@@ -65,7 +65,6 @@ public class OtherBox : Box {
         flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
         flow_box.set_max_children_per_line (2);
-        create_reshade_switches_section ();
         this.append (flow_box);
         create_scale_with_entry (flow_box, "CAS Sharpness",         -1.0, 1.0,    0.01,  0.0,    "%.2f", "cas");
         create_scale_with_entry (flow_box, "DLS Sharpness",         0.0,  1.0,    0.01,  0.5,    "%.2f", "dls");
@@ -78,7 +77,6 @@ public class OtherBox : Box {
         create_scale_with_entry (flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
         create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");    
         
-        // Создаем отдельный FlowBox для кнопок и поля ввода
         var buttons_flow_box = new FlowBox ();
         buttons_flow_box.set_homogeneous (true);
         buttons_flow_box.set_margin_top (FLOW_BOX_MARGIN);
@@ -123,6 +121,9 @@ public class OtherBox : Box {
     }
 
     void create_reshade_switches_section () {
+        var reshade_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        this.append (reshade_label);
+        
         var reshade_flow_box = new FlowBox ();
         reshade_flow_box.set_homogeneous (true);
         reshade_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
@@ -133,36 +134,50 @@ public class OtherBox : Box {
         reshade_flow_box.set_margin_end (FLOW_BOX_MARGIN);
         reshade_flow_box.set_selection_mode (SelectionMode.NONE);
         reshade_flow_box.set_max_children_per_line (3);
-
+        
         foreach (string shader_name in reshade_shaders) {
             var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
             row_box.set_hexpand (true);
             row_box.set_valign (Align.CENTER);
-
             var switch_widget = new Switch ();
             switch_widget.set_valign (Align.CENTER);
             switch_widget.set_name ("reshade_" + shader_name);
             reshade_switches.add (switch_widget);
-
             var label = new Label (shader_name);
             label.set_halign (Align.START);
             label.set_hexpand (true);
             label.set_ellipsize (Pango.EllipsizeMode.END);
             label.set_max_width_chars (20);
             reshade_labels.add (label);
-
             row_box.append (switch_widget);
             row_box.append (label);
             reshade_flow_box.insert (row_box, -1);
-
             switch_widget.state_set.connect ((state) => {
                 OtherSave.save_states (this);
                 restart_vkcube();
                 return false;
             });
         }
-
         this.append (reshade_flow_box);
+    }
+    
+    private Label create_label (string text, Align halign, string[] style_classes, int margin = 0) {
+        var label = new Label (text);
+        label.set_halign (halign);
+        label.set_hexpand (true);
+        
+        foreach (string style_class in style_classes) {
+            label.add_css_class (style_class);
+        }
+        
+        if (margin > 0) {
+            label.set_margin_top (margin);
+            label.set_margin_bottom (margin);
+            label.set_margin_start (margin);
+            label.set_margin_end (margin);
+        }
+        
+        return label;
     }
 
     void on_reshade_button_clicked () {
