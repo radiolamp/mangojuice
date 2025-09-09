@@ -16,6 +16,8 @@ public class OtherBox : Box {
     public ArrayList<Label> scale_labels { get; set; }
     public ArrayList<Switch> switches { get; set; }
     public ArrayList<Label> labels { get; set; }
+    public ArrayList<Switch> reshade_switches { get; set; }
+    public ArrayList<Label> reshade_labels { get; set; }
     public Button vkbasalt_global_button { get; set; }
     public bool vkbasalt_global_enabled { get; set; }
     public Entry hotkey_entry;
@@ -34,6 +36,8 @@ public class OtherBox : Box {
         scale_labels = new ArrayList<Label> ();
         switches = new ArrayList<Switch> ();
         labels = new ArrayList<Label> ();
+        reshade_switches = new ArrayList<Switch> ();
+        reshade_labels = new ArrayList<Label> ();
         reshade_shaders = new Gee.ArrayList<string> ();
         switch_scale_map = new HashMap<string, ArrayList<Scale>> ();
         switch_entry_map = new HashMap<string, ArrayList<Entry>> ();
@@ -71,6 +75,9 @@ public class OtherBox : Box {
         create_scale_with_entry (flow_box, "SMAA Max Search Steps", 0,    112,    1,     8,      "%d",   "smaa");
         create_scale_with_entry (flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
         create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
+        
+        // Создаем блок для переключателей ReShade
+        create_reshade_switches_section ();
         
         // Создаем отдельный FlowBox для кнопок и поля ввода
         var buttons_flow_box = new FlowBox ();
@@ -115,63 +122,121 @@ public class OtherBox : Box {
         }
     }
 
-    void on_reshade_button_clicked () {
-        // Создаем диалог выбора папки
-        var folder_chooser = new Gtk.FileDialog ();
-        folder_chooser.title = _("Select Reshade folder");
-        
-        // Получаем родительское окно
-        Gtk.Window? parent_window = this.get_root () as Gtk.Window;
-        
-        folder_chooser.select_folder.begin (parent_window, null, (obj, res) => {
-            try {
-                File? folder = folder_chooser.select_folder.end (res);
-                if (folder != null) {
-                    string folder_path = folder.get_path ();
-                    
-                    // Сохраняем пути
-                    reshade_texture_path = "%s/textures".printf(folder_path);
-                    reshade_include_path = "%s/shaders".printf(folder_path);
-                    
-                    // Ищем .fx файлы в папке shaders
-                    reshade_shaders.clear();
-                    File shaders_folder = folder.get_child ("shaders");
-                    
-                    if (shaders_folder.query_exists ()) {
-                        try {
-                            FileEnumerator enumerator = shaders_folder.enumerate_children (
-                                "standard::name,standard::type", 
-                                FileQueryInfoFlags.NONE
-                            );
+    void create_reshade_switches_section () {
+        var reshade_flow_box = new FlowBox ();
+        reshade_flow_box.set_homogeneous (true);
+        reshade_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        reshade_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
+        reshade_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_selection_mode (SelectionMode.NONE);
+        reshade_flow_box.set_max_children_per_line (3);
+
+        foreach (string shader_name in reshade_shaders) {
+            var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+            row_box.set_hexpand (true);
+            row_box.set_valign (Align.CENTER);
+
+            var switch_widget = new Switch ();
+            switch_widget.set_valign (Align.CENTER);
+            switch_widget.set_name ("reshade_" + shader_name);
+            reshade_switches.add (switch_widget);
+
+            var label = new Label (shader_name);
+            label.set_halign (Align.START);
+            label.set_hexpand (true);
+            label.set_ellipsize (Pango.EllipsizeMode.END);
+            label.set_max_width_chars (20);
+            reshade_labels.add (label);
+
+            row_box.append (switch_widget);
+            row_box.append (label);
+            reshade_flow_box.insert (row_box, -1);
+
+            switch_widget.state_set.connect ((state) => {
+                OtherSave.save_states (this);
+                return false;
+            });
+        }
+
+        this.append (reshade_flow_box);
+    }
+
+void on_reshade_button_clicked () {
+    var folder_chooser = new Gtk.FileDialog ();
+    folder_chooser.title = _("Select Reshade folder");
+    
+    Gtk.Window? parent_window = this.get_root () as Gtk.Window;
+    
+    folder_chooser.select_folder.begin (parent_window, null, (obj, res) => {
+        try {
+            File? folder = folder_chooser.select_folder.end (res);
+            if (folder != null) {
+                string folder_path = folder.get_path ();
+                
+                reshade_texture_path = "%s/textures".printf(folder_path);
+                reshade_include_path = "%s/shaders".printf(folder_path);
+                
+                reshade_shaders.clear();
+                File shaders_folder = folder.get_child ("shaders");
+                
+                if (shaders_folder.query_exists ()) {
+                    try {
+                        FileEnumerator enumerator = shaders_folder.enumerate_children (
+                            "standard::name,standard::type", 
+                            FileQueryInfoFlags.NONE
+                        );
+                        
+                        FileInfo file_info;
+                        
+                        while ((file_info = enumerator.next_file ()) != null) {
+                            string filename = file_info.get_name ();
                             
-                            FileInfo file_info;
-                            
-                            // Перебираем все .fx файлы
-                            while ((file_info = enumerator.next_file ()) != null) {
-                                string filename = file_info.get_name ();
-                                
-                                if (filename.has_suffix (".fx")) {
-                                    string name_without_extension = filename.substring (0, filename.length - 3);
-                                    reshade_shaders.add (name_without_extension);
-                                }
+                            if (filename.has_suffix (".fx")) {
+                                string name_without_extension = filename.substring (0, filename.length - 3);
+                                reshade_shaders.add (name_without_extension);
                             }
-                            
-                        } catch (Error e) {
-                            print (_("Error reading shaders folder: %s\n"), e.message);
                         }
+                        
+                    } catch (Error e) {
+                        print (_("Error reading shaders folder: %s\n"), e.message);
                     }
-                    
-                    // Сохраняем настройки
-                    OtherSave.save_states (this);
-                    
-                    // Показываем сообщение об успехе
-                    show_info_dialog (_("Reshade folder selected successfully"), 
-                                    _("Shader effects: %d").printf(reshade_shaders.size));
                 }
-            } catch (Error e) {
-                print (_("Error selecting folder: %s\n"), e.message);
+                
+                // Сохраняем текущее состояние переключателей перед удалением
+                var previous_states = new Gee.HashMap<string, bool>();
+                foreach (var switch_widget in reshade_switches) {
+                    string shader_name = switch_widget.get_name ().replace("reshade_", "");
+                    previous_states[shader_name] = switch_widget.get_active();
+                }
+                
+                remove_reshade_section();
+                create_reshade_switches_section();
+                
+                // Восстанавливаем состояние переключателей
+                foreach (var switch_widget in reshade_switches) {
+                    string shader_name = switch_widget.get_name ().replace("reshade_", "");
+                    if (previous_states.has_key(shader_name)) {
+                        switch_widget.set_active(previous_states[shader_name]);
+                    }
+                }
+                
+                OtherSave.save_states (this);
+                
+                show_info_dialog (_("Reshade folder selected successfully"), 
+                                _("Shader effects: %d").printf(reshade_shaders.size));
             }
-        });
+        } catch (Error e) {
+            print (_("Error selecting folder: %s\n"), e.message);
+        }
+    });
+}
+
+    void remove_reshade_section () {
+        reshade_switches.clear();
+        reshade_labels.clear();
     }
 
     void show_info_dialog (string title, string message) {
@@ -184,6 +249,15 @@ public class OtherBox : Box {
     public bool is_switch_active (string switch_name) {
         foreach (var switch_widget in switches) {
             if (switch_widget.get_name () == switch_name) {
+                return switch_widget.get_active ();
+            }
+        }
+        return false;
+    }
+
+    public bool is_reshade_switch_active (string shader_name) {
+        foreach (var switch_widget in reshade_switches) {
+            if (switch_widget.get_name () == "reshade_" + shader_name) {
                 return switch_widget.get_active ();
             }
         }
@@ -386,12 +460,14 @@ public class OtherBox : Box {
             label1.set_halign (Align.START);
             label1.set_hexpand (false);
             label1.set_ellipsize (Pango.EllipsizeMode.END);
+            label1.set_max_width_chars (20);
 
             var label2 = new Label (label_texts_2[i]);
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
             label2.set_ellipsize (Pango.EllipsizeMode.END);
+            label2.set_max_width_chars (25);
 
             label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
             label2.set_markup ("<span size='9000'>%s</span>".printf (label_texts_2[i]));
