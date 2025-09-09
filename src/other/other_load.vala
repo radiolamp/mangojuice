@@ -4,6 +4,20 @@ using Gee;
 
 public class OtherLoad {
 
+    public class LoadResult {
+        public Gee.HashMap<string, bool> reshade_states { get; set; }
+        public string reshade_folders_path { get; set; }
+        public string reshade_texture_path { get; set; }
+        public string reshade_include_path { get; set; }
+        
+        public LoadResult() {
+            reshade_states = new Gee.HashMap<string, bool> ();
+            reshade_folders_path = "";
+            reshade_texture_path = "";
+            reshade_include_path = "";
+        }
+    }
+
     private static bool contains_string (string[] array, string target) {
         foreach (string item in array) {
             if (item == target) {
@@ -13,7 +27,8 @@ public class OtherLoad {
         return false;
     }
 
-    public static void load_states (OtherBox other_box) {
+    public static LoadResult load_states (OtherBox other_box) {
+        var result = new LoadResult();
         var config_dir = File.new_for_path (Environment.get_home_dir ())
                              .get_child (".config")
                              .get_child ("vkBasalt");
@@ -22,12 +37,13 @@ public class OtherLoad {
         // Если директория или файл конфигурации не существуют, создаем их с настройками по умолчанию
         if (!config_dir.query_exists () || !config_file.query_exists ()) {
             create_default_config (config_dir, config_file);
+            return result;
         }
 
         try {
             var file_stream = new DataInputStream (config_file.read ());
             string line;
-            bool[] found = new bool[10]; // Массив для отслеживания найденных параметров
+            bool[] found = new bool[10];
             bool effectsFound = false;
             bool hotkeyFound = false;
 
@@ -66,13 +82,25 @@ public class OtherLoad {
                     found[9] = true;
                 } else if (line.has_prefix ("effects = ")) {
                     string[] effects = line.split (" = ")[1].split (":");
+                    
+                    // Обрабатываем стандартные переключатели VkBasalt
                     for (int i = 0; i < other_box.switches.size; i++) {
                         if (contains_string (effects, config_vars[i])) {
-                            if (i < other_box.switches.size) {
-                                other_box.switches[i].set_active (true);
-                            }
+                            other_box.switches[i].set_active (true);
+                        } else {
+                            other_box.switches[i].set_active (false);
                         }
                     }
+                    
+                    // Сохраняем состояния reshade-шейдеров
+                    foreach (string effect in effects) {
+                        // Пропускаем стандартные эффекты VkBasalt
+                        if (!contains_string (config_vars, effect)) {
+                            result.reshade_states[effect] = true;
+                            print ("Found reshade effect: %s = true\n", effect);
+                        }
+                    }
+                    
                     effectsFound = true;
                 }
                 else if (line.has_prefix ("toggleKey=")) {
@@ -83,19 +111,13 @@ public class OtherLoad {
                     hotkeyFound = true;
                 }
                 else if (line.has_prefix ("reshadeTexturePath = ")) {
-                    string path = line.substring ("reshadeTexturePath = ".length).strip ();
-                    other_box.reshade_texture_path = path;
+                    result.reshade_texture_path = line.substring ("reshadeTexturePath = ".length).strip ();
                 }
                 else if (line.has_prefix ("reshadeIncludePath = ")) {
-                    string path = line.substring ("reshadeIncludePath = ".length).strip ();
-                    other_box.reshade_include_path = path;
+                    result.reshade_include_path = line.substring ("reshadeIncludePath = ".length).strip ();
                 }
                 else if (line.has_prefix ("#reshadeFoldersPath = ")) {
-                    string path = line.substring ("#reshadeFoldersPath = ".length).strip ();
-                    other_box.reshade_folders_path = path;
-                    if (other_box.reshade_button != null && path != "") {
-                        other_box.reshade_button.set_label (path);
-                    }
+                    result.reshade_folders_path = line.substring ("#reshadeFoldersPath = ".length).strip ();
                 }
                 else if (line.has_suffix (" #effects")) {
                     string clean_line = line.replace(" #effects", "").strip();
@@ -103,59 +125,97 @@ public class OtherLoad {
                     
                     if (parts.length == 2) {
                         string shader_name = parts[0].strip();
-                        if (!other_box.reshade_shaders.contains(shader_name)) {
-                            other_box.reshade_shaders.add(shader_name);
+                        string shader_value = parts[1].strip();
+                        
+                        // Сохраняем состояние шейдера (true/false)
+                        if (shader_value == "true" || shader_value == "false") {
+                            result.reshade_states[shader_name] = (shader_value == "true");
+                            print ("Found shader state: %s = %s\n", shader_name, shader_value);
+                        }
+                        // Или сохраняем путь к шейдеру
+                        else if (shader_value.has_suffix (".fx")) {
+                            if (!other_box.reshade_shaders.contains(shader_name)) {
+                                other_box.reshade_shaders.add(shader_name);
+                            }
+                            print ("Found shader path: %s = %s\n", shader_name, shader_value);
                         }
                     }
                 }
             }
 
-            // Устанавливаем значения по умолчанию, если параметры не найдены
-            if (!found[0]) set_default_scale_value     (other_box.scales[0], other_box.entries[0], 0,      "%.2f");
-            if (!found[1]) set_default_scale_value     (other_box.scales[1], other_box.entries[1], 0,      "%.2f");
-            if (!found[2]) set_default_scale_value     (other_box.scales[2], other_box.entries[2], 0,      "%.2f");
-            if (!found[3]) set_default_scale_value     (other_box.scales[3], other_box.entries[3], 0.75,   "%.2f");
-            if (!found[4]) set_default_scale_value     (other_box.scales[4], other_box.entries[4], 0.125,  "%.3f");
-            if (!found[5]) set_default_scale_value     (other_box.scales[5], other_box.entries[5], 0.0833, "%.4f");
-            if (!found[6]) set_default_scale_value     (other_box.scales[6], other_box.entries[6], 0.05,   "%.2f");
-            if (!found[7]) set_default_int_scale_value (other_box.scales[7], other_box.entries[7], 8);
-            if (!found[8]) set_default_int_scale_value (other_box.scales[8], other_box.entries[8], 0);
-            if (!found[9]) set_default_int_scale_value (other_box.scales[9], other_box.entries[9], 25);
+            // Устанавливаем значения по умолчанию для не найденных параметров
+            set_default_values (other_box, found);
 
-            // Если эффекты не найдены, отключаем все переключатели
+            // Если эффекты не найдены, отключаем все стандартные переключатели
             if (!effectsFound) {
-                for (int i = 0; i < other_box.switches.size; i++) {
-                    other_box.switches[i].set_active (false);
+                foreach (var switch_widget in other_box.switches) {
+                    switch_widget.set_active (false);
                 }
             }
+
+            // Выводим отладочную информацию
+            print ("Loaded reshade states: %d\n", result.reshade_states.size);
+            foreach (var entry in result.reshade_states.entries) {
+                print ("  %s = %s\n", entry.key, entry.value.to_string());
+            }
+
         } catch (Error e) {
             stderr.printf ("Ошибка при чтении файла: %s\n", e.message);
         }
+        
+        return result;
     }
 
-    // Метод для создания конфигурационного файла с настройками по умолчанию
+    public static void apply_reshade_states (OtherBox other_box, Gee.HashMap<string, bool> reshade_states) {
+        print ("Applying reshade states to %d switches\n", other_box.reshade_switches.size);
+        
+        foreach (var switch_widget in other_box.reshade_switches) {
+            string shader_name = switch_widget.get_name ().replace("reshade_", "");
+            
+            if (reshade_states.has_key (shader_name)) {
+                bool state = reshade_states[shader_name];
+                print ("Setting %s to %s\n", shader_name, state.to_string());
+                switch_widget.set_active (state);
+            } else {
+                // Устанавливаем значение по умолчанию (false)
+                switch_widget.set_active (false);
+            }
+        }
+    }
+
+    private static void set_default_values (OtherBox other_box, bool[] found) {
+        if (!found[0]) set_default_scale_value     (other_box.scales[0], other_box.entries[0], 0,      "%.2f");
+        if (!found[1]) set_default_scale_value     (other_box.scales[1], other_box.entries[1], 0.5,    "%.2f");
+        if (!found[2]) set_default_scale_value     (other_box.scales[2], other_box.entries[2], 0.17,   "%.2f");
+        if (!found[3]) set_default_scale_value     (other_box.scales[3], other_box.entries[3], 0.75,   "%.2f");
+        if (!found[4]) set_default_scale_value     (other_box.scales[4], other_box.entries[4], 0.125,  "%.3f");
+        if (!found[5]) set_default_scale_value     (other_box.scales[5], other_box.entries[5], 0.0833, "%.4f");
+        if (!found[6]) set_default_scale_value     (other_box.scales[6], other_box.entries[6], 0.05,   "%.2f");
+        if (!found[7]) set_default_int_scale_value (other_box.scales[7], other_box.entries[7], 8);
+        if (!found[8]) set_default_int_scale_value (other_box.scales[8], other_box.entries[8], 0);
+        if (!found[9]) set_default_int_scale_value (other_box.scales[9], other_box.entries[9], 25);
+    }
+
     private static void create_default_config (File config_dir, File config_file) {
         try {
-            // Создаем директорию, если она не существует
             if (!config_dir.query_exists ()) {
                 config_dir.make_directory_with_parents ();
             }
 
-            // Создаем файл и записываем настройки по умолчанию
             var file_stream = new DataOutputStream (config_file.create (FileCreateFlags.REPLACE_DESTINATION));
 
-            // Записываем значения по умолчанию
             file_stream.put_string ("# Config Generated by MangoJuice #\n");
             file_stream.put_string ("casSharpness=0.00\n");
             file_stream.put_string ("dlsSharpness=0.50\n");
             file_stream.put_string ("dlsDenoise=0.17\n");
             file_stream.put_string ("fxaaQualitySubpix=0.75\n");
             file_stream.put_string ("fxaaEdgeThreshold=0.125\n");
-            file_stream.put_string ("fxaaEdgeThresholdMin=0.0000\n");
+            file_stream.put_string ("fxaaEdgeThresholdMin=0.0833\n");
             file_stream.put_string ("smaaThreshold=0.05\n");
             file_stream.put_string ("smaaMaxSearchSteps=8\n");
             file_stream.put_string ("smaaMaxSearchStepsDiag=0\n");
             file_stream.put_string ("smaaCornerRounding=25\n");
+            file_stream.put_string ("effects = \n");
 
             file_stream.close ();
         } catch (Error e) {
@@ -163,7 +223,6 @@ public class OtherLoad {
         }
     }
 
-    // Вспомогательный метод для загрузки дробных значений
     private static void load_scale_value (string line, Scale scale, Entry entry, string format) {
         string value_str = line.split ("=")[1].replace (",", ".");
         double value = double.parse (value_str);
@@ -175,10 +234,8 @@ public class OtherLoad {
         }
     }
 
-    // Вспомогательный метод для загрузки целочисленных значений
     private static void load_int_scale_value (string line, Scale scale, Entry entry) {
         string value_str = line.split ("=")[1].replace (",", ".");
-        // Убираем дробную часть, если она есть
         if (value_str.contains (".")) {
             value_str = value_str.split (".")[0];
         }
@@ -191,7 +248,6 @@ public class OtherLoad {
         }
     }
 
-    // Вспомогательный метод для установки значений по умолчанию для дробных значений
     private static void set_default_scale_value (Scale scale, Entry entry, double default_value, string format) {
         if (scale != null) {
             scale.set_value (default_value);
@@ -201,7 +257,6 @@ public class OtherLoad {
         }
     }
 
-    // Вспомогательный метод для установки значений по умолчанию для целочисленных значений
     private static void set_default_int_scale_value (Scale scale, Entry entry, int default_value) {
         if (scale != null) {
             scale.set_value (default_value);

@@ -24,6 +24,7 @@ public class OtherBox : Box {
     public string reshade_texture_path { get; set; }
     public string reshade_folders_path { get; set; }
     public string reshade_include_path { get; set; }
+    public OtherLoad.LoadResult load_result { get; set; }
     public Gee.ArrayList<string> reshade_shaders { get; set; }
     public Button reshade_button;
     HashMap<string, ArrayList<Scale>> switch_scale_map;
@@ -120,10 +121,19 @@ public class OtherBox : Box {
         vkbasalt_global_button.clicked.connect (on_vkbasalt_global_button_clicked);
         
         check_vkbasalt_global_status ();
-        OtherLoad.load_states (this);
+        
+        // Загружаем состояния только один раз
+        load_result = OtherLoad.load_states (this);
         
         foreach (var switch_widget in switches) {
             update_scale_entry_reset_state (switch_widget);
+        }
+
+        if (load_result.reshade_folders_path != "") {
+            reshade_button.set_label (load_result.reshade_folders_path);
+            reshade_folders_path = load_result.reshade_folders_path;
+            reshade_texture_path = load_result.reshade_texture_path;
+            reshade_include_path = load_result.reshade_include_path;
         }
         
         // Если в кнопке уже есть путь (не стандартный текст), показываем секцию
@@ -133,11 +143,8 @@ public class OtherBox : Box {
     }
 
     void create_reshade_section() {
-        // Создаем заголовок секции
         reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         this.append (reshade_section_label);
-        
-        // Создаем FlowBox для переключателей
         reshade_flow_box = new FlowBox ();
         reshade_flow_box.set_homogeneous (true);
         reshade_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
@@ -149,7 +156,7 @@ public class OtherBox : Box {
         reshade_flow_box.set_selection_mode (SelectionMode.NONE);
         reshade_flow_box.set_max_children_per_line (3);
         
-        // Очищаем предыдущие переключатели (если были)
+        // Очищаем предыдущие переключатели
         reshade_switches.clear();
         reshade_labels.clear();
         
@@ -183,31 +190,29 @@ public class OtherBox : Box {
         }
         
         this.append (reshade_flow_box);
+        
+        // Применяем сохраненные состояния ПОСЛЕ создания всех переключателей
+        OtherLoad.apply_reshade_states(this, load_result.reshade_states);
     }
     
     void hide_reshade_section() {
-        // Удаляем заголовок секции
         if (reshade_section_label != null) {
             this.remove(reshade_section_label);
             reshade_section_label = null;
         }
         
-        // Удаляем FlowBox с переключателями
         if (reshade_flow_box != null) {
             this.remove(reshade_flow_box);
             reshade_flow_box = null;
         }
         
-        // Очищаем списки переключателей и меток
         reshade_switches.clear();
         reshade_labels.clear();
     }
     
-    void update_reshade_section() {
-        // Сначала скрываем текущую секцию
+    public void update_reshade_section() {
         hide_reshade_section();
-        
-        // Если в кнопке есть путь (не стандартный текст), показываем секцию заново
+
         if (reshade_button.get_label() != _("Reshade")) {
             create_reshade_section();
         }
@@ -269,12 +274,7 @@ public class OtherBox : Box {
                     update_reshade_section();
     
                     // Восстанавливаем предыдущие состояния переключателей
-                    foreach (var switch_widget in reshade_switches) {
-                        string shader_name = switch_widget.get_name ().replace("reshade_", "");
-                        if (previous_states.has_key(shader_name)) {
-                            switch_widget.set_active(previous_states[shader_name]);
-                        }
-                    }
+                    OtherLoad.apply_reshade_states(this, previous_states);
                     
                     OtherSave.save_states (this);
                     
