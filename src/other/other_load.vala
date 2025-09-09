@@ -82,6 +82,14 @@ public class OtherLoad {
                     }
                     hotkeyFound = true;
                 }
+                else if (line.has_prefix ("reshadeTexturePath = ")) {
+                    string path = line.substring ("reshadeTexturePath = ".length).strip ();
+                    other_box.reshade_texture_path = path;
+                }
+                else if (line.has_prefix ("reshadeIncludePath = ")) {
+                    string path = line.substring ("reshadeIncludePath = ".length).strip ();
+                    other_box.reshade_include_path = path;
+                }
                 else if (line.has_prefix ("#reshadeFoldersPath = ")) {
                     string path = line.substring ("#reshadeFoldersPath = ".length).strip ();
                     other_box.reshade_folders_path = path;

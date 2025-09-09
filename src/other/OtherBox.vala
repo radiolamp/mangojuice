@@ -29,6 +29,9 @@ public class OtherBox : Box {
     HashMap<string, ArrayList<Scale>> switch_scale_map;
     HashMap<string, ArrayList<Entry>> switch_entry_map;
     HashMap<string, ArrayList<Button>> switch_reset_map;
+    
+    private Label reshade_section_label;
+    private FlowBox reshade_flow_box;
 
     public OtherBox () {
         Object (orientation: Orientation.VERTICAL, spacing: 12);
@@ -43,6 +46,10 @@ public class OtherBox : Box {
         switch_scale_map = new HashMap<string, ArrayList<Scale>> ();
         switch_entry_map = new HashMap<string, ArrayList<Entry>> ();
         switch_reset_map = new HashMap<string, ArrayList<Button>> ();
+        
+        reshade_section_label = null;
+        reshade_flow_box = null;
+        
         string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
         string[] label_texts = { "CAS", "DLS", "FXAA", "SMAA", "LUT" };
         string[] label_texts_2 = {
@@ -118,13 +125,20 @@ public class OtherBox : Box {
         foreach (var switch_widget in switches) {
             update_scale_entry_reset_state (switch_widget);
         }
+        
+        // Если в кнопке уже есть путь (не стандартный текст), показываем секцию
+        if (reshade_button.get_label() != _("Reshade")) {
+            create_reshade_section();
+        }
     }
 
-    void create_reshade_switches_section () {
-        var reshade_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
-        this.append (reshade_label);
+    void create_reshade_section() {
+        // Создаем заголовок секции
+        reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+        this.append (reshade_section_label);
         
-        var reshade_flow_box = new FlowBox ();
+        // Создаем FlowBox для переключателей
+        reshade_flow_box = new FlowBox ();
         reshade_flow_box.set_homogeneous (true);
         reshade_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
         reshade_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
@@ -135,49 +149,68 @@ public class OtherBox : Box {
         reshade_flow_box.set_selection_mode (SelectionMode.NONE);
         reshade_flow_box.set_max_children_per_line (3);
         
+        // Очищаем предыдущие переключатели (если были)
+        reshade_switches.clear();
+        reshade_labels.clear();
+        
+        // Создаем переключатели для каждого шейдера
         foreach (string shader_name in reshade_shaders) {
             var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
             row_box.set_hexpand (true);
             row_box.set_valign (Align.CENTER);
+            
             var switch_widget = new Switch ();
             switch_widget.set_valign (Align.CENTER);
             switch_widget.set_name ("reshade_" + shader_name);
             reshade_switches.add (switch_widget);
+            
             var label = new Label (shader_name);
             label.set_halign (Align.START);
             label.set_hexpand (true);
             label.set_ellipsize (Pango.EllipsizeMode.END);
             label.set_max_width_chars (20);
             reshade_labels.add (label);
+            
             row_box.append (switch_widget);
             row_box.append (label);
             reshade_flow_box.insert (row_box, -1);
+            
             switch_widget.state_set.connect ((state) => {
                 OtherSave.save_states (this);
                 restart_vkcube();
                 return false;
             });
         }
+        
         this.append (reshade_flow_box);
     }
     
-    private Label create_label (string text, Align halign, string[] style_classes, int margin = 0) {
-        var label = new Label (text);
-        label.set_halign (halign);
-        label.set_hexpand (true);
-        
-        foreach (string style_class in style_classes) {
-            label.add_css_class (style_class);
+    void hide_reshade_section() {
+        // Удаляем заголовок секции
+        if (reshade_section_label != null) {
+            this.remove(reshade_section_label);
+            reshade_section_label = null;
         }
         
-        if (margin > 0) {
-            label.set_margin_top (margin);
-            label.set_margin_bottom (margin);
-            label.set_margin_start (margin);
-            label.set_margin_end (margin);
+        // Удаляем FlowBox с переключателями
+        if (reshade_flow_box != null) {
+            this.remove(reshade_flow_box);
+            reshade_flow_box = null;
         }
         
-        return label;
+        // Очищаем списки переключателей и меток
+        reshade_switches.clear();
+        reshade_labels.clear();
+    }
+    
+    void update_reshade_section() {
+        // Сначала скрываем текущую секцию
+        hide_reshade_section();
+        
+        // Если в кнопке есть путь (не стандартный текст), показываем секцию заново
+        if (reshade_button.get_label() != _("Reshade")) {
+            create_reshade_section();
+        }
     }
 
     void on_reshade_button_clicked () {
@@ -192,12 +225,20 @@ public class OtherBox : Box {
                 if (folder != null) {
                     string folder_path = folder.get_path ();
                     
+                    // Сохраняем предыдущие состояния переключателей
+                    var previous_states = new Gee.HashMap<string, bool>();
+                    foreach (var switch_widget in reshade_switches) {
+                        string shader_name = switch_widget.get_name ().replace("reshade_", "");
+                        previous_states[shader_name] = switch_widget.get_active();
+                    }
+                    
                     // Обновляем текст кнопки с выбранным путем
                     reshade_button.set_label (folder_path);
                     reshade_folders_path = "%s/".printf(folder_path);
                     reshade_texture_path = "%s/textures".printf(folder_path);
                     reshade_include_path = "%s/shaders".printf(folder_path);
                     
+                    // Загружаем шейдеры из новой папки
                     reshade_shaders.clear();
                     File shaders_folder = folder.get_child ("shaders");
                     
@@ -224,15 +265,10 @@ public class OtherBox : Box {
                         }
                     }
     
-                    var previous_states = new Gee.HashMap<string, bool>();
-                    foreach (var switch_widget in reshade_switches) {
-                        string shader_name = switch_widget.get_name ().replace("reshade_", "");
-                        previous_states[shader_name] = switch_widget.get_active();
-                    }
-                    
-                    remove_reshade_section();
-                    create_reshade_switches_section();
+                    // Обновляем секцию с переключателями
+                    update_reshade_section();
     
+                    // Восстанавливаем предыдущие состояния переключателей
                     foreach (var switch_widget in reshade_switches) {
                         string shader_name = switch_widget.get_name ().replace("reshade_", "");
                         if (previous_states.has_key(shader_name)) {
@@ -249,11 +285,6 @@ public class OtherBox : Box {
                 print (_("Error selecting folder: %s\n"), e.message);
             }
         });
-    }
-
-    void remove_reshade_section () {
-        reshade_switches.clear();
-        reshade_labels.clear();
     }
 
     void show_info_dialog (string title, string message) {
@@ -587,5 +618,24 @@ public class OtherBox : Box {
             }
             dialog.destroy ();
         });
+    }
+
+    private Label create_label (string text, Align halign, string[] style_classes, int margin = 0) {
+        var label = new Label (text);
+        label.set_halign (halign);
+        label.set_hexpand (true);
+        
+        foreach (string style_class in style_classes) {
+            label.add_css_class (style_class);
+        }
+        
+        if (margin > 0) {
+            label.set_margin_top (margin);
+            label.set_margin_bottom (margin);
+            label.set_margin_start (margin);
+            label.set_margin_end (margin);
+        }
+        
+        return label;
     }
 }
