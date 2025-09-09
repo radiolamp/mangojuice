@@ -22,9 +22,10 @@ public class OtherBox : Box {
     public bool vkbasalt_global_enabled { get; set; }
     public Entry hotkey_entry;
     public string reshade_texture_path { get; set; }
+    public string reshade_folders_path { get; set; }
     public string reshade_include_path { get; set; }
     public Gee.ArrayList<string> reshade_shaders { get; set; }
-
+    public Button reshade_button;
     HashMap<string, ArrayList<Scale>> switch_scale_map;
     HashMap<string, ArrayList<Entry>> switch_entry_map;
     HashMap<string, ArrayList<Button>> switch_reset_map;
@@ -64,6 +65,7 @@ public class OtherBox : Box {
         flow_box.set_margin_end (FLOW_BOX_MARGIN);
         flow_box.set_selection_mode (SelectionMode.NONE);
         flow_box.set_max_children_per_line (2);
+        create_reshade_switches_section ();
         this.append (flow_box);
         create_scale_with_entry (flow_box, "CAS Sharpness",         -1.0, 1.0,    0.01,  0.0,    "%.2f", "cas");
         create_scale_with_entry (flow_box, "DLS Sharpness",         0.0,  1.0,    0.01,  0.5,    "%.2f", "dls");
@@ -76,8 +78,6 @@ public class OtherBox : Box {
         create_scale_with_entry (flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
         create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
         
-        // Создаем блок для переключателей ReShade
-        create_reshade_switches_section ();
         
         // Создаем отдельный FlowBox для кнопок и поля ввода
         var buttons_flow_box = new FlowBox ();
@@ -106,10 +106,10 @@ public class OtherBox : Box {
         });
         
         buttons_flow_box.append (hotkey_entry);
-    
-        var additional_button = new Button.with_label (_("Reshade"));
-        buttons_flow_box.append (additional_button);
-        additional_button.clicked.connect (on_reshade_button_clicked);
+
+        reshade_button = new Button.with_label (_("Reshade"));
+        buttons_flow_box.append (reshade_button);
+        reshade_button.clicked.connect (on_reshade_button_clicked);
         
         this.append (buttons_flow_box);
         
@@ -117,6 +117,7 @@ public class OtherBox : Box {
         
         check_vkbasalt_global_status ();
         OtherLoad.load_states (this);
+        
         foreach (var switch_widget in switches) {
             update_scale_entry_reset_state (switch_widget);
         }
@@ -164,75 +165,76 @@ public class OtherBox : Box {
         this.append (reshade_flow_box);
     }
 
-void on_reshade_button_clicked () {
-    var folder_chooser = new Gtk.FileDialog ();
-    folder_chooser.title = _("Select Reshade folder");
-    
-    Gtk.Window? parent_window = this.get_root () as Gtk.Window;
-    
-    folder_chooser.select_folder.begin (parent_window, null, (obj, res) => {
-        try {
-            File? folder = folder_chooser.select_folder.end (res);
-            if (folder != null) {
-                string folder_path = folder.get_path ();
-                
-                reshade_texture_path = "%s/textures".printf(folder_path);
-                reshade_include_path = "%s/shaders".printf(folder_path);
-                
-                reshade_shaders.clear();
-                File shaders_folder = folder.get_child ("shaders");
-                
-                if (shaders_folder.query_exists ()) {
-                    try {
-                        FileEnumerator enumerator = shaders_folder.enumerate_children (
-                            "standard::name,standard::type", 
-                            FileQueryInfoFlags.NONE
-                        );
-                        
-                        FileInfo file_info;
-                        
-                        while ((file_info = enumerator.next_file ()) != null) {
-                            string filename = file_info.get_name ();
+    void on_reshade_button_clicked () {
+        var folder_chooser = new Gtk.FileDialog ();
+        folder_chooser.title = _("Select Reshade folder");
+        
+        Gtk.Window? parent_window = this.get_root () as Gtk.Window;
+        
+        folder_chooser.select_folder.begin (parent_window, null, (obj, res) => {
+            try {
+                File? folder = folder_chooser.select_folder.end (res);
+                if (folder != null) {
+                    string folder_path = folder.get_path ();
+                    
+                    // Обновляем текст кнопки с выбранным путем
+                    reshade_button.set_label (folder_path);
+                    reshade_folders_path = "%s/".printf(folder_path);
+                    reshade_texture_path = "%s/textures".printf(folder_path);
+                    reshade_include_path = "%s/shaders".printf(folder_path);
+                    
+                    reshade_shaders.clear();
+                    File shaders_folder = folder.get_child ("shaders");
+                    
+                    if (shaders_folder.query_exists ()) {
+                        try {
+                            FileEnumerator enumerator = shaders_folder.enumerate_children (
+                                "standard::name,standard::type", 
+                                FileQueryInfoFlags.NONE
+                            );
                             
-                            if (filename.has_suffix (".fx")) {
-                                string name_without_extension = filename.substring (0, filename.length - 3);
-                                reshade_shaders.add (name_without_extension);
+                            FileInfo file_info;
+                            
+                            while ((file_info = enumerator.next_file ()) != null) {
+                                string filename = file_info.get_name ();
+                                
+                                if (filename.has_suffix (".fx")) {
+                                    string name_without_extension = filename.substring (0, filename.length - 3);
+                                    reshade_shaders.add (name_without_extension);
+                                }
                             }
+                            
+                        } catch (Error e) {
+                            print (_("Error reading shaders folder: %s\n"), e.message);
                         }
-                        
-                    } catch (Error e) {
-                        print (_("Error reading shaders folder: %s\n"), e.message);
                     }
-                }
-                
-                // Сохраняем текущее состояние переключателей перед удалением
-                var previous_states = new Gee.HashMap<string, bool>();
-                foreach (var switch_widget in reshade_switches) {
-                    string shader_name = switch_widget.get_name ().replace("reshade_", "");
-                    previous_states[shader_name] = switch_widget.get_active();
-                }
-                
-                remove_reshade_section();
-                create_reshade_switches_section();
-                
-                // Восстанавливаем состояние переключателей
-                foreach (var switch_widget in reshade_switches) {
-                    string shader_name = switch_widget.get_name ().replace("reshade_", "");
-                    if (previous_states.has_key(shader_name)) {
-                        switch_widget.set_active(previous_states[shader_name]);
+    
+                    var previous_states = new Gee.HashMap<string, bool>();
+                    foreach (var switch_widget in reshade_switches) {
+                        string shader_name = switch_widget.get_name ().replace("reshade_", "");
+                        previous_states[shader_name] = switch_widget.get_active();
                     }
+                    
+                    remove_reshade_section();
+                    create_reshade_switches_section();
+    
+                    foreach (var switch_widget in reshade_switches) {
+                        string shader_name = switch_widget.get_name ().replace("reshade_", "");
+                        if (previous_states.has_key(shader_name)) {
+                            switch_widget.set_active(previous_states[shader_name]);
+                        }
+                    }
+                    
+                    OtherSave.save_states (this);
+                    
+                    show_info_dialog (_("Reshade folder selected successfully"), 
+                                    _("Shader effects: %d").printf(reshade_shaders.size));
                 }
-                
-                OtherSave.save_states (this);
-                
-                show_info_dialog (_("Reshade folder selected successfully"), 
-                                _("Shader effects: %d").printf(reshade_shaders.size));
+            } catch (Error e) {
+                print (_("Error selecting folder: %s\n"), e.message);
             }
-        } catch (Error e) {
-            print (_("Error selecting folder: %s\n"), e.message);
-        }
-    });
-}
+        });
+    }
 
     void remove_reshade_section () {
         reshade_switches.clear();

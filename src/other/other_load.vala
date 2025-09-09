@@ -90,6 +90,13 @@ public class OtherLoad {
                     string path = line.substring ("reshadeIncludePath = ".length).strip ();
                     other_box.reshade_include_path = path;
                 }
+                else if (line.has_prefix ("#reshadeFoldersPath = ")) {
+                    string path = line.substring ("#reshadeFoldersPath = ".length).strip ();
+                    other_box.reshade_folders_path = path;
+                    if (other_box.reshade_button != null && path != "") {
+                        other_box.reshade_button.set_label (path);
+                    }
+                }
                 else if (line.has_suffix (" #effects")) {
                     string clean_line = line.replace(" #effects", "").strip();
                     string[] parts = clean_line.split(" = ", 2);

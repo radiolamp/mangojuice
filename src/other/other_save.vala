@@ -53,18 +53,17 @@ public class OtherSave {
                 file_stream_write.put_string (effects_line);
             }
 
-            // Сохраняем настройки Reshade, если они есть
             if (other_box.reshade_texture_path != null && other_box.reshade_include_path != null) {
+                string folders_path = other_box.reshade_include_path.replace("/shaders", "");
+                file_stream_write.put_string ("#reshadeFoldersPath = %s\n".printf(folders_path));
                 file_stream_write.put_string ("reshadeTexturePath = %s\n".printf(other_box.reshade_texture_path));
                 file_stream_write.put_string ("reshadeIncludePath = %s\n".printf(other_box.reshade_include_path));
                 
-                // Сохраняем шейдеры
                 foreach (string shader in other_box.reshade_shaders) {
                     file_stream_write.put_string ("%s = %s/shaders/%s.fx #effects\n".printf(shader, 
-                        other_box.reshade_include_path.replace("/shaders", ""), shader));
+                        folders_path, shader));
                 }
                 
-                // Добавляем строку переключения шейдеров, если есть шейдеры
                 if (other_box.reshade_shaders.size > 0) {
                     string switch_line = "# Switch = ";
                     bool first = true;
