@@ -60,7 +60,7 @@ public class OtherSave {
                 
                 // Сохраняем шейдеры
                 foreach (string shader in other_box.reshade_shaders) {
-                    file_stream_write.put_string ("%s = %s/shaders/%s.fx\n".printf(shader, 
+                    file_stream_write.put_string ("%s = %s/shaders/%s.fx #effects\n".printf(shader, 
                         other_box.reshade_include_path.replace("/shaders", ""), shader));
                 }
                 

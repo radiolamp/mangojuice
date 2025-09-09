@@ -82,6 +82,25 @@ public class OtherLoad {
                     }
                     hotkeyFound = true;
                 }
+                else if (line.has_prefix ("reshadeTexturePath = ")) {
+                    string path = line.substring ("reshadeTexturePath = ".length).strip ();
+                    other_box.reshade_texture_path = path;
+                }
+                else if (line.has_prefix ("reshadeIncludePath = ")) {
+                    string path = line.substring ("reshadeIncludePath = ".length).strip ();
+                    other_box.reshade_include_path = path;
+                }
+                else if (line.has_suffix (" #effects")) {
+                    string clean_line = line.replace(" #effects", "").strip();
+                    string[] parts = clean_line.split(" = ", 2);
+                    
+                    if (parts.length == 2) {
+                        string shader_name = parts[0].strip();
+                        if (!other_box.reshade_shaders.contains(shader_name)) {
+                            other_box.reshade_shaders.add(shader_name);
+                        }
+                    }
+                }
             }
 
             // Устанавливаем значения по умолчанию, если параметры не найдены
