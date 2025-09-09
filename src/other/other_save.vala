@@ -1,4 +1,4 @@
-/* other_save  // Licence:  GPL-v3.0 */
+/* OtherSave.vala // Licence:  GPL-v3.0 */
 using Gtk;
 using Gee;
 
@@ -25,7 +25,7 @@ public class OtherSave {
 
             string hotkey = other_box.hotkey_entry.get_text ().strip ();
             if (hotkey != "" && hotkey != "Home") {
-                file_stream_write.put_string ("toggleKey=%s\n".printf (other_box.hotkey_entry.get_text ()));
+                file_stream_write.put_string ("toggleKey=%s\n".printf (hotkey));
             }
 
             save_scale_value_if_active (file_stream_write, "casSharpness", other_box.scales[0], other_box.entries[0], "%.2f", other_box, "cas");
@@ -51,6 +51,32 @@ public class OtherSave {
             if (!active_effects.is_empty) {
                 string effects_line = "effects = " + string.joinv (":", (string[]) active_effects.to_array ()) + "\n";
                 file_stream_write.put_string (effects_line);
+            }
+
+            // Сохраняем настройки Reshade, если они есть
+            if (other_box.reshade_texture_path != null && other_box.reshade_include_path != null) {
+                file_stream_write.put_string ("reshadeTexturePath = %s\n".printf(other_box.reshade_texture_path));
+                file_stream_write.put_string ("reshadeIncludePath = %s\n".printf(other_box.reshade_include_path));
+                
+                // Сохраняем шейдеры
+                foreach (string shader in other_box.reshade_shaders) {
+                    file_stream_write.put_string ("%s = %s/shaders/%s.fx\n".printf(shader, 
+                        other_box.reshade_include_path.replace("/shaders", ""), shader));
+                }
+                
+                // Добавляем строку переключения шейдеров, если есть шейдеры
+                if (other_box.reshade_shaders.size > 0) {
+                    string switch_line = "# Switch = ";
+                    bool first = true;
+                    foreach (string shader in other_box.reshade_shaders) {
+                        if (!first) {
+                            switch_line += ", ";
+                        }
+                        switch_line += shader;
+                        first = false;
+                    }
+                    file_stream_write.put_string (switch_line + "\n");
+                }
             }
 
         } catch (Error e) {

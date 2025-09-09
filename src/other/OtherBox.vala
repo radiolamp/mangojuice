@@ -19,6 +19,9 @@ public class OtherBox : Box {
     public Button vkbasalt_global_button { get; set; }
     public bool vkbasalt_global_enabled { get; set; }
     public Entry hotkey_entry;
+    public string reshade_texture_path { get; set; }
+    public string reshade_include_path { get; set; }
+    public Gee.ArrayList<string> reshade_shaders { get; set; }
 
     HashMap<string, ArrayList<Scale>> switch_scale_map;
     HashMap<string, ArrayList<Entry>> switch_entry_map;
@@ -31,6 +34,7 @@ public class OtherBox : Box {
         scale_labels = new ArrayList<Label> ();
         switches = new ArrayList<Switch> ();
         labels = new ArrayList<Label> ();
+        reshade_shaders = new Gee.ArrayList<string> ();
         switch_scale_map = new HashMap<string, ArrayList<Scale>> ();
         switch_entry_map = new HashMap<string, ArrayList<Entry>> ();
         switch_reset_map = new HashMap<string, ArrayList<Button>> ();
@@ -96,77 +100,11 @@ public class OtherBox : Box {
         
         buttons_flow_box.append (hotkey_entry);
     
-var additional_button = new Button.with_label (_("Reshade"));
-buttons_flow_box.append (additional_button);
-additional_button.clicked.connect (() => {
-    // Создаем диалог выбора папки с новым API
-    var folder_chooser = new Gtk.FileDialog ();
-    folder_chooser.title = "Выберите папку Reshade";
-    
-    // Получаем родительское окно
-    Gtk.Window? parent_window = this.get_root () as Gtk.Window;
-    
-    folder_chooser.select_folder.begin (parent_window, null, (obj, res) => {
-        try {
-            File? folder = folder_chooser.select_folder.end (res);
-            if (folder != null) {
-                string folder_path = folder.get_path ();
-                
-                // Формируем вывод в нужном формате
-                print ("reshadeTexturePath = %s/textures\n", folder_path);
-                print ("reshadeIncludePath = %s/shaders\n", folder_path);
-                
-                // Ищем .fx файлы в папке shaders
-                File shaders_folder = folder.get_child ("shaders");
-                Gee.ArrayList<string> shader_names = new Gee.ArrayList<string> ();
-                
-                if (shaders_folder.query_exists ()) {
-                    try {
-                        FileEnumerator enumerator = shaders_folder.enumerate_children (
-                            "standard::name,standard::type", 
-                            FileQueryInfoFlags.NONE
-                        );
-                        
-                        FileInfo file_info;
-                        
-                        // Перебираем все .fx файлы
-                        while ((file_info = enumerator.next_file ()) != null) {
-                            string filename = file_info.get_name ();
-                            
-                            if (filename.has_suffix (".fx")) {
-                                string name_without_extension = filename.substring (0, filename.length - 3);
-                                print ("%s = %s/shaders/%s\n", name_without_extension, folder_path, filename);
-                                shader_names.add (name_without_extension);
-                            }
-                        }
-                        
-                    } catch (Error e) {
-                        print ("Ошибка при чтении папки shaders: %s\n", e.message);
-                    }
-                } else {
-                    print ("# Папка shaders не существует, .fx файлы не найдены\n");
-                }
-                
-                // Добавляем строку переключения шейдеров
-                if (shader_names.size > 0) {
-                    string switch_line = "# Switch = ";
-                    bool first = true;
-                    foreach (string shader_name in shader_names) {
-                        if (!first) {
-                            switch_line += ", ";
-                        }
-                        switch_line += shader_name;
-                        first = false;
-                    }
-                    print ("%s\n", switch_line);
-                }
-            }
-        } catch (Error e) {
-            print ("Ошибка при выборе папки: %s\n", e.message);
-        }
-    });
-});
-this.append (buttons_flow_box);
+        var additional_button = new Button.with_label (_("Reshade"));
+        buttons_flow_box.append (additional_button);
+        additional_button.clicked.connect (on_reshade_button_clicked);
+        
+        this.append (buttons_flow_box);
         
         vkbasalt_global_button.clicked.connect (on_vkbasalt_global_button_clicked);
         
@@ -175,6 +113,72 @@ this.append (buttons_flow_box);
         foreach (var switch_widget in switches) {
             update_scale_entry_reset_state (switch_widget);
         }
+    }
+
+    void on_reshade_button_clicked () {
+        // Создаем диалог выбора папки
+        var folder_chooser = new Gtk.FileDialog ();
+        folder_chooser.title = _("Select Reshade folder");
+        
+        // Получаем родительское окно
+        Gtk.Window? parent_window = this.get_root () as Gtk.Window;
+        
+        folder_chooser.select_folder.begin (parent_window, null, (obj, res) => {
+            try {
+                File? folder = folder_chooser.select_folder.end (res);
+                if (folder != null) {
+                    string folder_path = folder.get_path ();
+                    
+                    // Сохраняем пути
+                    reshade_texture_path = "%s/textures".printf(folder_path);
+                    reshade_include_path = "%s/shaders".printf(folder_path);
+                    
+                    // Ищем .fx файлы в папке shaders
+                    reshade_shaders.clear();
+                    File shaders_folder = folder.get_child ("shaders");
+                    
+                    if (shaders_folder.query_exists ()) {
+                        try {
+                            FileEnumerator enumerator = shaders_folder.enumerate_children (
+                                "standard::name,standard::type", 
+                                FileQueryInfoFlags.NONE
+                            );
+                            
+                            FileInfo file_info;
+                            
+                            // Перебираем все .fx файлы
+                            while ((file_info = enumerator.next_file ()) != null) {
+                                string filename = file_info.get_name ();
+                                
+                                if (filename.has_suffix (".fx")) {
+                                    string name_without_extension = filename.substring (0, filename.length - 3);
+                                    reshade_shaders.add (name_without_extension);
+                                }
+                            }
+                            
+                        } catch (Error e) {
+                            print (_("Error reading shaders folder: %s\n"), e.message);
+                        }
+                    }
+                    
+                    // Сохраняем настройки
+                    OtherSave.save_states (this);
+                    
+                    // Показываем сообщение об успехе
+                    show_info_dialog (_("Reshade folder selected successfully"), 
+                                    _("Shader effects: %d").printf(reshade_shaders.size));
+                }
+            } catch (Error e) {
+                print (_("Error selecting folder: %s\n"), e.message);
+            }
+        });
+    }
+
+    void show_info_dialog (string title, string message) {
+        var dialog = new Adw.AlertDialog (title, message);
+        dialog.add_response ("ok", "OK");
+        dialog.set_default_response ("ok");
+        dialog.present (this.get_root () as Gtk.Window);
     }
 
     public bool is_switch_active (string switch_name) {
