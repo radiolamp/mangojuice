@@ -64,6 +64,7 @@ public class OtherBox : Box {
         foreach (var switch_widget in switches) {
             switch_widget.state_set.connect ((state) => {
                 OtherSave.save_states (this);
+                restart_vkcube();
                 update_scale_entry_reset_state (switch_widget);
                 return false;
             });
@@ -190,8 +191,7 @@ public class OtherBox : Box {
         }
         
         this.append (reshade_flow_box);
-        
-        // Применяем сохраненные состояния ПОСЛЕ создания всех переключателей
+
         OtherLoad.apply_reshade_states(this, load_result.reshade_states);
     }
     
@@ -303,14 +303,23 @@ public class OtherBox : Box {
         return false;
     }
 
-    private void restart_vkcube() {
-        try {
-            Process.spawn_command_line_sync ("pkill vkcube");
-            Process.spawn_command_line_async ("bash -c 'ENABLE_VKBASALT=1 mangohud vkcube --wsi xcb'");
-        } catch (Error e) {
-            stderr.printf ("Ошибка при перезапуске vkcube: %s\n", e.message);
+private void restart_vkcube() {
+    try {
+        string stdout;
+        string stderr;
+        int exit_status;
+        
+        Process.spawn_command_line_sync("pgrep vkcube", out stdout, out stderr, out exit_status);
+        
+        if (exit_status == 0) {
+            Process.spawn_command_line_sync("pkill vkcube");
+            Thread.usleep(1000);
+            Process.spawn_command_line_async("bash -c 'ENABLE_VKBASALT=1 mangohud vkcube --wsi xcb'");
         }
+    } catch (Error e) {
+        stderr.printf("Ошибка при перезапуске vkcube: %s\n", e.message);
     }
+}
 
     public bool is_reshade_switch_active (string shader_name) {
         foreach (var switch_widget in reshade_switches) {
