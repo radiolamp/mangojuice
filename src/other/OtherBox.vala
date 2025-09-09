@@ -76,8 +76,8 @@ public class OtherBox : Box {
         buttons_flow_box.set_margin_start (FLOW_BOX_MARGIN);
         buttons_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         buttons_flow_box.set_selection_mode (SelectionMode.NONE);
-        buttons_flow_box.set_max_children_per_line (3); // Максимум 3 элемента в строке
-        buttons_flow_box.set_min_children_per_line (1); // Минимум 1 элемент в строке
+        buttons_flow_box.set_max_children_per_line (3);
+        buttons_flow_box.set_min_children_per_line (1);
         
         vkbasalt_global_button = new Button.with_label (_("Global VkBasalt"));
         buttons_flow_box.append (vkbasalt_global_button);
@@ -95,15 +95,80 @@ public class OtherBox : Box {
         });
         
         buttons_flow_box.append (hotkey_entry);
-        
-        var additional_button = new Button.with_label (_("Reshade"));
-        additional_button.set_visible (false);
-        buttons_flow_box.append (additional_button);
-        
-        this.append (buttons_flow_box);
+    
+var additional_button = new Button.with_label (_("Reshade"));
+buttons_flow_box.append (additional_button);
+additional_button.clicked.connect (() => {
+    // Создаем диалог выбора папки с новым API
+    var folder_chooser = new Gtk.FileDialog ();
+    folder_chooser.title = "Выберите папку Reshade";
+    
+    // Получаем родительское окно
+    Gtk.Window? parent_window = this.get_root () as Gtk.Window;
+    
+    folder_chooser.select_folder.begin (parent_window, null, (obj, res) => {
+        try {
+            File? folder = folder_chooser.select_folder.end (res);
+            if (folder != null) {
+                string folder_path = folder.get_path ();
+                
+                // Формируем вывод в нужном формате
+                print ("reshadeTexturePath = %s/textures\n", folder_path);
+                print ("reshadeIncludePath = %s/shaders\n", folder_path);
+                
+                // Ищем .fx файлы в папке shaders
+                File shaders_folder = folder.get_child ("shaders");
+                Gee.ArrayList<string> shader_names = new Gee.ArrayList<string> ();
+                
+                if (shaders_folder.query_exists ()) {
+                    try {
+                        FileEnumerator enumerator = shaders_folder.enumerate_children (
+                            "standard::name,standard::type", 
+                            FileQueryInfoFlags.NONE
+                        );
+                        
+                        FileInfo file_info;
+                        
+                        // Перебираем все .fx файлы
+                        while ((file_info = enumerator.next_file ()) != null) {
+                            string filename = file_info.get_name ();
+                            
+                            if (filename.has_suffix (".fx")) {
+                                string name_without_extension = filename.substring (0, filename.length - 3);
+                                print ("%s = %s/shaders/%s\n", name_without_extension, folder_path, filename);
+                                shader_names.add (name_without_extension);
+                            }
+                        }
+                        
+                    } catch (Error e) {
+                        print ("Ошибка при чтении папки shaders: %s\n", e.message);
+                    }
+                } else {
+                    print ("# Папка shaders не существует, .fx файлы не найдены\n");
+                }
+                
+                // Добавляем строку переключения шейдеров
+                if (shader_names.size > 0) {
+                    string switch_line = "# Switch = ";
+                    bool first = true;
+                    foreach (string shader_name in shader_names) {
+                        if (!first) {
+                            switch_line += ", ";
+                        }
+                        switch_line += shader_name;
+                        first = false;
+                    }
+                    print ("%s\n", switch_line);
+                }
+            }
+        } catch (Error e) {
+            print ("Ошибка при выборе папки: %s\n", e.message);
+        }
+    });
+});
+this.append (buttons_flow_box);
         
         vkbasalt_global_button.clicked.connect (on_vkbasalt_global_button_clicked);
-        // additional_button.clicked.connect (on_additional_button_clicked);
         
         check_vkbasalt_global_status ();
         OtherLoad.load_states (this);
