@@ -76,8 +76,7 @@ public class OtherBox : Box {
         create_scale_with_entry (flow_box, "SMAA Threshold",        0.0,  0.5,    0.01,  0.05,   "%.2f", "smaa");
         create_scale_with_entry (flow_box, "SMAA Max Search Steps", 0,    112,    1,     8,      "%d",   "smaa");
         create_scale_with_entry (flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
-        create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
-        
+        create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");    
         
         // Создаем отдельный FlowBox для кнопок и поля ввода
         var buttons_flow_box = new FlowBox ();
@@ -158,6 +157,7 @@ public class OtherBox : Box {
 
             switch_widget.state_set.connect ((state) => {
                 OtherSave.save_states (this);
+                restart_vkcube();
                 return false;
             });
         }
@@ -255,6 +255,15 @@ public class OtherBox : Box {
             }
         }
         return false;
+    }
+
+    private void restart_vkcube() {
+        try {
+            Process.spawn_command_line_sync ("pkill vkcube");
+            Process.spawn_command_line_async ("bash -c 'ENABLE_VKBASALT=1 mangohud vkcube --wsi xcb'");
+        } catch (Error e) {
+            stderr.printf ("Ошибка при перезапуске vkcube: %s\n", e.message);
+        }
     }
 
     public bool is_reshade_switch_active (string shader_name) {

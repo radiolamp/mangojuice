@@ -39,12 +39,24 @@ public class OtherSave {
             save_int_scale_value_if_active (file_stream_write, "smaaMaxSearchStepsDiag", other_box.scales[8], other_box.entries[8], other_box, "smaa");
             save_int_scale_value_if_active (file_stream_write, "smaaCornerRounding", other_box.scales[9], other_box.entries[9], other_box, "smaa");
 
-            // Сохраняем активные эффекты
+            // Сохраняем активные эффекты (основные + ReShade шейдеры)
             var active_effects = new Gee.ArrayList<string> ();
+            
+            // Основные эффекты
             string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
             for (int i = 0; i < other_box.switches.size; i++) {
                 if (other_box.switches[i].get_active ()) {
                     active_effects.add (config_vars[i]);
+                }
+            }
+            
+            // ReShade шейдеры
+            for (int i = 0; i < other_box.reshade_switches.size; i++) {
+                if (other_box.reshade_switches[i].get_active ()) {
+                    // Получаем имя шейдера из имени переключателя
+                    string switch_name = other_box.reshade_switches[i].get_name ();
+                    string shader_name = switch_name.replace("reshade_", "");
+                    active_effects.add (shader_name);
                 }
             }
 
@@ -62,19 +74,6 @@ public class OtherSave {
                 foreach (string shader in other_box.reshade_shaders) {
                     file_stream_write.put_string ("%s = %s/shaders/%s.fx #effects\n".printf(shader, 
                         folders_path, shader));
-                }
-                
-                if (other_box.reshade_shaders.size > 0) {
-                    string switch_line = "# Switch = ";
-                    bool first = true;
-                    foreach (string shader in other_box.reshade_shaders) {
-                        if (!first) {
-                            switch_line += ", ";
-                        }
-                        switch_line += shader;
-                        first = false;
-                    }
-                    file_stream_write.put_string (switch_line + "\n");
                 }
             }
 
