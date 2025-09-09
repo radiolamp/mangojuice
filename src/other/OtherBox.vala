@@ -118,9 +118,16 @@ public class OtherBox : Box {
         
         buttons_flow_box.append (hotkey_entry);
 
-        reshade_button = new Button.with_label (_("Reshade"));
-        buttons_flow_box.append (reshade_button);
-        reshade_button.clicked.connect (on_reshade_button_clicked);
+        var reshade_label = new Label(_("Reshade"));
+        reshade_label.set_ellipsize(Pango.EllipsizeMode.END);
+        reshade_label.set_max_width_chars(20);
+        reshade_label.set_hexpand(true);
+        reshade_label.set_halign(Align.CENTER);
+        
+        reshade_button = new Button();
+        reshade_button.set_child(reshade_label);
+        buttons_flow_box.append(reshade_button);
+        reshade_button.clicked.connect(on_reshade_button_clicked);
         
         this.append (buttons_flow_box);
         
@@ -137,15 +144,37 @@ public class OtherBox : Box {
         }
 
         if (load_result.reshade_folders_path != "") {
-            reshade_button.set_label (load_result.reshade_folders_path);
+            set_reshade_button_text(load_result.reshade_folders_path);
             reshade_folders_path = load_result.reshade_folders_path;
             reshade_texture_path = load_result.reshade_texture_path;
             reshade_include_path = load_result.reshade_include_path;
         }
 
-        if (reshade_button.get_label() != _("Reshade")) {
+        if (get_reshade_button_text() != _("Reshade")) {
             create_reshade_section();
         }
+    }
+
+    public void set_reshade_button_text(string text) {
+        var current_child = reshade_button.get_child();
+        if (current_child is Label) {
+            ((Label) current_child).set_text(text);
+        } else {
+            var label = new Label(text);
+            label.set_ellipsize(Pango.EllipsizeMode.END);
+            label.set_max_width_chars(20);
+            label.set_hexpand(true);
+            label.set_halign(Align.CENTER);
+            reshade_button.set_child(label);
+        }
+    }
+
+    public string get_reshade_button_text() {
+        var child = reshade_button.get_child();
+        if (child is Label) {
+            return ((Label) child).get_text();
+        }
+        return "";
     }
 
     void create_reshade_section() {
@@ -220,7 +249,7 @@ public class OtherBox : Box {
     public void update_reshade_section() {
         hide_reshade_section();
 
-        if (reshade_button.get_label() != _("Reshade")) {
+        if (get_reshade_button_text() != _("Reshade")) {
             create_reshade_section();
         }
     }
@@ -243,7 +272,7 @@ public class OtherBox : Box {
                         previous_states[shader_name] = switch_widget.get_active();
                     }
 
-                    reshade_button.set_label (folder_path);
+                    set_reshade_button_text(folder_path);
                     reshade_folders_path = "%s/".printf(folder_path);
                     reshade_texture_path = "%s/textures".printf(folder_path);
                     reshade_include_path = "%s/shaders".printf(folder_path);
