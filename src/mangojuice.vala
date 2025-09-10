@@ -1791,35 +1791,51 @@ public class MangoJuice : Adw.Application {
         visual_box.append(font_button);
     }
 
+    static Gee.List<string>? font_cache = null;
+    
     public Gee.List<string> find_fonts () {
+        if (font_cache != null) {
+            return font_cache;
+        }
+        
         var fonts = new Gee.ArrayList<string> ();
         try {
             string[] argv = { "fc-list", ":", "file" };
             int exit_status;
             string standard_output;
             string standard_error;
-            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, out standard_output, out standard_error, out exit_status);
-            if (exit_status == 0) {
+            
+            Process.spawn_sync (null, argv, null, SpawnFlags.SEARCH_PATH, null, 
+                               out standard_output, out standard_error, out exit_status);
+            
+            if (exit_status == 0 && standard_output != null) {
                 string[] lines = standard_output.split ("\n");
-                var regex = new Regex (".*\\.(ttf|otf|ttc)$", RegexCompileFlags.OPTIMIZE);
+                
                 foreach (var line in lines) {
-                    if (line.strip () != "") {
-                        string[] parts = line.split (":");
-                        if (parts.length > 0) {
-                            string font_path = parts[0].strip ();
-                            if (regex.match (font_path) && !font_path.contains ("/run/host/user-fonts/")) {
-                                fonts.add (font_path);
-                            }
-                        }
+                    if (line == null || line.strip () == "") continue;
+                    
+                    int colon_index = line.index_of_char(':');
+                    if (colon_index <= 0) continue;
+                    
+                    string font_path = line[0:colon_index].strip ();
+                    
+                    if (font_path.has_suffix(".ttf") || 
+                        font_path.has_suffix(".otf") || 
+                        font_path.has_suffix(".ttc")) {
+                        fonts.add (font_path);
                     }
                 }
-            } else {
-                stderr.printf (_("Error executing fc-list: %s\n"), standard_error);
+                font_cache = fonts;
             }
         } catch (Error e) {
             stderr.printf (_("Error when searching for fonts: %s\n"), e.message);
         }
+        
         return fonts;
+    }
+    
+    public void clear_font_cache () {
+        font_cache = null;
     }
 
     public string find_font_path_by_name (string font_name, Gee.List<string> fonts) {
