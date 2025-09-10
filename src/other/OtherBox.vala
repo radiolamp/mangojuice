@@ -16,13 +16,26 @@ public class OtherBox : Box {
     public ArrayList<Label> scale_labels { get; set; }
     public ArrayList<Switch> switches { get; set; }
     public ArrayList<Label> labels { get; set; }
+    public ArrayList<Switch> reshade_switches { get; set; }
+    public ArrayList<Label> reshade_labels { get; set; }
     public Button vkbasalt_global_button { get; set; }
     public bool vkbasalt_global_enabled { get; set; }
     public Entry hotkey_entry;
-
+    public string reshade_texture_path { get; set; }
+    public string reshade_folders_path { get; set; }
+    public string reshade_include_path { get; set; }
+    public OtherLoad.LoadResult load_result { get; set; }
+    public Gee.ArrayList<string> reshade_shaders { get; set; }
+    public Button reshade_button;
+    public Button reshade_clear_button;
     HashMap<string, ArrayList<Scale>> switch_scale_map;
     HashMap<string, ArrayList<Entry>> switch_entry_map;
     HashMap<string, ArrayList<Button>> switch_reset_map;
+    
+    Label reshade_section_label;
+    FlowBox reshade_flow_box;
+    FlowBox main_flow_box;
+    bool is_loading = false;
 
     public OtherBox () {
         Object (orientation: Orientation.VERTICAL, spacing: 12);
@@ -31,9 +44,17 @@ public class OtherBox : Box {
         scale_labels = new ArrayList<Label> ();
         switches = new ArrayList<Switch> ();
         labels = new ArrayList<Label> ();
+        reshade_switches = new ArrayList<Switch> ();
+        reshade_labels = new ArrayList<Label> ();
+        reshade_shaders = new Gee.ArrayList<string> ();
         switch_scale_map = new HashMap<string, ArrayList<Scale>> ();
         switch_entry_map = new HashMap<string, ArrayList<Entry>> ();
         switch_reset_map = new HashMap<string, ArrayList<Button>> ();
+        
+        reshade_section_label = null;
+        reshade_flow_box = null;
+        main_flow_box = null;
+        
         string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
         string[] label_texts = { "CAS", "DLS", "FXAA", "SMAA", "LUT" };
         string[] label_texts_2 = {
@@ -46,29 +67,45 @@ public class OtherBox : Box {
         create_switches_and_labels (this, "VkBasalt", switches, labels, config_vars, label_texts, label_texts_2);
         foreach (var switch_widget in switches) {
             switch_widget.state_set.connect ((state) => {
-                OtherSave.save_states (this);
+                if (!is_loading) {
+                    OtherSave.save_states (this);
+                    restart_vkcube();
+                }
                 update_scale_entry_reset_state (switch_widget);
                 return false;
             });
         }
-        var flow_box = new FlowBox ();
-        flow_box.set_homogeneous (true);
-        flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        flow_box.set_selection_mode (SelectionMode.NONE);
-        flow_box.set_max_children_per_line (2);
-        this.append (flow_box);
-        create_scale_with_entry (flow_box, "CAS Sharpness",         -1.0, 1.0,    0.01,  0.0,    "%.2f", "cas");
-        create_scale_with_entry (flow_box, "DLS Sharpness",         0.0,  1.0,    0.01,  0.5,    "%.2f", "dls");
-        create_scale_with_entry (flow_box, "FXAA Quality Subpix",   0.0,  1.0,    0.01,  0.75,   "%.2f", "fxaa");
-        create_scale_with_entry (flow_box, "DLS Denoise",           0.0,  1.0,    0.01,  0.17,   "%.2f", "dls");
-        create_scale_with_entry (flow_box, "FXAA Edge Threshold",   0.0,  0.333,  0.01,  0.125,  "%.3f", "fxaa");
-        create_scale_with_entry (flow_box, "FXAA Threshold Min",    0.0,  0.0833, 0.001, 0.0833, "%.4f", "fxaa");
-        create_scale_with_entry (flow_box, "SMAA Threshold",        0.0,  0.5,    0.01,  0.05,   "%.2f", "smaa");
-        create_scale_with_entry (flow_box, "SMAA Max Search Steps", 0,    112,    1,     8,      "%d",   "smaa");
-        create_scale_with_entry (flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
-        create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
+
+        main_flow_box = new FlowBox ();
+        main_flow_box.set_homogeneous (true);
+        main_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        main_flow_box.set_selection_mode (SelectionMode.NONE);
+        main_flow_box.set_max_children_per_line (2);
+        this.append (main_flow_box);
+
+        create_scale_with_entry (main_flow_box, "CAS Sharpness",         -1.0, 1.0,    0.01,  0.0,    "%.2f", "cas");
+        create_scale_with_entry (main_flow_box, "DLS Sharpness",         0.0,  1.0,    0.01,  0.5,    "%.2f", "dls");
+        create_scale_with_entry (main_flow_box, "FXAA Quality Subpix",   0.0,  1.0,    0.01,  0.75,   "%.2f", "fxaa");
+        create_scale_with_entry (main_flow_box, "DLS Denoise",           0.0,  1.0,    0.01,  0.17,   "%.2f", "dls");
+        create_scale_with_entry (main_flow_box, "FXAA Edge Threshold",   0.0,  0.333,  0.01,  0.125,  "%.3f", "fxaa");
+        create_scale_with_entry (main_flow_box, "FXAA Threshold Min",    0.0,  0.0833, 0.001, 0.0833, "%.4f", "fxaa");
+        create_scale_with_entry (main_flow_box, "SMAA Threshold",        0.0,  0.5,    0.01,  0.05,   "%.2f", "smaa");
+        create_scale_with_entry (main_flow_box, "SMAA Max Search Steps", 0,    112,    1,     8,      "%d",   "smaa");
+        create_scale_with_entry (main_flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
+        create_scale_with_entry (main_flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
+
+        reshade_flow_box = new FlowBox ();
+        reshade_flow_box.set_homogeneous (true);
+        reshade_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        reshade_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
+        reshade_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_selection_mode (SelectionMode.NONE);
+        reshade_flow_box.set_max_children_per_line (5);
+        this.append (reshade_flow_box);
         
-        // Создаем отдельный FlowBox для кнопок и поля ввода
         var buttons_flow_box = new FlowBox ();
         buttons_flow_box.set_homogeneous (true);
         buttons_flow_box.set_margin_top (FLOW_BOX_MARGIN);
@@ -76,14 +113,14 @@ public class OtherBox : Box {
         buttons_flow_box.set_margin_start (FLOW_BOX_MARGIN);
         buttons_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
         buttons_flow_box.set_selection_mode (SelectionMode.NONE);
-        buttons_flow_box.set_max_children_per_line (3); // Максимум 3 элемента в строке
-        buttons_flow_box.set_min_children_per_line (1); // Минимум 1 элемент в строке
+        buttons_flow_box.set_max_children_per_line (3);
+        buttons_flow_box.set_min_children_per_line (1);
         
         vkbasalt_global_button = new Button.with_label (_("Global VkBasalt"));
         buttons_flow_box.append (vkbasalt_global_button);
         
         hotkey_entry = new Entry ();
-        hotkey_entry.set_placeholder_text (_("hotkey"));
+        hotkey_entry.set_placeholder_text (_("Hotkey"));
         hotkey_entry.set_width_chars (10);
         hotkey_entry.set_text ("Home");
         hotkey_entry.set_alignment (0.5f);
@@ -91,30 +128,259 @@ public class OtherBox : Box {
         hotkey_entry.set_tooltip_text (_("Only 1 key. Only X11/Xwayland."));
         hotkey_entry.set_icon_activatable (Gtk.EntryIconPosition.PRIMARY, false);
         hotkey_entry.changed.connect (() => {
-            OtherSave.save_states (this);
+            if (!is_loading) {
+                OtherSave.save_states (this);
+            }
         });
         
         buttons_flow_box.append (hotkey_entry);
+
+        var reshade_container = new Box(Orientation.HORIZONTAL, 0);
+        reshade_container.add_css_class("linked");
         
-        var additional_button = new Button.with_label (_("Reshade"));
-        additional_button.set_visible (false);
-        buttons_flow_box.append (additional_button);
+        var reshade_label = new Label(_("Add Reshade"));
+        reshade_label.set_ellipsize(Pango.EllipsizeMode.END);
+        reshade_label.set_max_width_chars(20);
+        reshade_label.set_hexpand(true);
+        reshade_label.set_halign(Align.CENTER);
+        
+        reshade_button = new Button();
+        reshade_button.set_child(reshade_label);
+        reshade_button.clicked.connect(on_reshade_button_clicked);
+        reshade_container.append(reshade_button);
+        
+        reshade_clear_button = new Button.from_icon_name("edit-clear-symbolic");
+        reshade_clear_button.set_tooltip_text(_("Clear Reshade path"));
+        reshade_clear_button.set_sensitive(false);
+        reshade_clear_button.clicked.connect(on_reshade_clear_button_clicked);
+        reshade_container.append(reshade_clear_button);
+        
+        buttons_flow_box.append(reshade_container);
         
         this.append (buttons_flow_box);
         
         vkbasalt_global_button.clicked.connect (on_vkbasalt_global_button_clicked);
-        // additional_button.clicked.connect (on_additional_button_clicked);
         
         check_vkbasalt_global_status ();
-        OtherLoad.load_states (this);
+
+        is_loading = true;
+        load_result = OtherLoad.load_states (this);
+        is_loading = false;
+        
         foreach (var switch_widget in switches) {
             update_scale_entry_reset_state (switch_widget);
         }
+
+        if (load_result.reshade_folders_path != "") {
+            set_reshade_button_text(load_result.reshade_folders_path);
+            reshade_folders_path = load_result.reshade_folders_path;
+            reshade_texture_path = load_result.reshade_texture_path;
+            reshade_include_path = load_result.reshade_include_path;
+            reshade_clear_button.set_sensitive(true);
+
+            reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+            this.insert_child_after(reshade_section_label, main_flow_box);
+            
+            populate_reshade_flow_box();
+        }
+    }
+
+    void populate_reshade_flow_box() {
+        reshade_switches.clear();
+        reshade_labels.clear();
+        reshade_flow_box.remove_all();
+
+        foreach (string shader_name in reshade_shaders) {
+            var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+            row_box.set_hexpand (true);
+            row_box.set_valign (Align.CENTER);
+            
+            var switch_widget = new Switch ();
+            switch_widget.set_valign (Align.CENTER);
+            switch_widget.set_name ("reshade_" + shader_name);
+            reshade_switches.add (switch_widget);
+            
+            var label = new Label (shader_name);
+            label.set_halign (Align.START);
+            label.set_hexpand (true);
+            label.set_ellipsize (Pango.EllipsizeMode.END);
+            label.set_max_width_chars (20);
+            reshade_labels.add (label);
+            label.set_markup ("<b>%s</b>".printf (shader_name));
+            row_box.append (switch_widget);
+            row_box.append (label);
+            reshade_flow_box.insert (row_box, -1);
+            
+            switch_widget.state_set.connect ((state) => {
+                if (!is_loading) {
+                    OtherSave.save_states (this);
+                    restart_vkcube();
+                }
+                return false;
+            });
+        }
+        
+        is_loading = true;
+        OtherLoad.apply_reshade_states(this, load_result.reshade_states);
+        is_loading = false;
+    }
+
+    void on_reshade_clear_button_clicked() {
+        set_reshade_button_text(_("Reshade"));
+        reshade_folders_path = "";
+        reshade_texture_path = "";
+        reshade_include_path = "";
+        reshade_shaders.clear();
+        
+        reshade_clear_button.set_sensitive(false);
+        hide_reshade_section();
+        
+        if (!is_loading) {
+            OtherSave.save_states(this);
+        }
+    }
+
+    public void set_reshade_button_text(string text) {
+        var current_child = reshade_button.get_child();
+        if (current_child is Label) {
+            ((Label) current_child).set_text(text);
+        } else {
+            var label = new Label(text);
+            label.set_ellipsize(Pango.EllipsizeMode.END);
+            label.set_max_width_chars(20);
+            label.set_hexpand(true);
+            label.set_halign(Align.CENTER);
+            reshade_button.set_child(label);
+        }
+
+        reshade_clear_button.set_sensitive(text != _("Reshade"));
+    }
+
+    public string get_reshade_button_text() {
+        var child = reshade_button.get_child();
+        if (child is Label) {
+            return ((Label) child).get_text();
+        }
+        return "";
+    }
+
+    void hide_reshade_section() {
+        if (reshade_section_label != null) {
+            this.remove(reshade_section_label);
+            reshade_section_label = null;
+        }
+        
+        reshade_flow_box.remove_all();
+        reshade_switches.clear();
+        reshade_labels.clear();
+    }
+    
+    public void update_reshade_section() {
+        hide_reshade_section();
+
+        if (get_reshade_button_text() != _("Reshade")) {
+            reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+            this.insert_child_after(reshade_section_label, main_flow_box);
+            populate_reshade_flow_box();
+        }
+    }
+
+    void on_reshade_button_clicked () {
+        var folder_chooser = new Gtk.FileDialog ();
+        folder_chooser.title = _("Select Reshade folder");
+        
+        Gtk.Window? parent_window = this.get_root () as Gtk.Window;
+        
+        folder_chooser.select_folder.begin (parent_window, null, (obj, res) => {
+            try {
+                File? folder = folder_chooser.select_folder.end (res);
+                if (folder != null) {
+                    string folder_path = folder.get_path ();
+
+                    var previous_states = new Gee.HashMap<string, bool>();
+                    foreach (var switch_widget in reshade_switches) {
+                        string shader_name = switch_widget.get_name ().replace("reshade_", "");
+                        previous_states[shader_name] = switch_widget.get_active();
+                    }
+
+                    set_reshade_button_text(folder_path);
+                    reshade_folders_path = "%s/".printf(folder_path);
+                    reshade_texture_path = "%s/textures".printf(folder_path);
+                    reshade_include_path = "%s/shaders".printf(folder_path);
+
+                    reshade_shaders.clear();
+                    File shaders_folder = folder.get_child ("shaders");
+                    
+                    if (shaders_folder.query_exists ()) {
+                        try {
+                            FileEnumerator enumerator = shaders_folder.enumerate_children (
+                                "standard::name,standard::type", 
+                                FileQueryInfoFlags.NONE
+                            );
+                            
+                            FileInfo file_info;
+                            
+                            while ((file_info = enumerator.next_file ()) != null) {
+                                string filename = file_info.get_name ();
+                                
+                                if (filename.has_suffix (".fx")) {
+                                    string name_without_extension = filename.substring (0, filename.length - 3);
+                                    reshade_shaders.add (name_without_extension);
+                                }
+                            }
+                            
+                        } catch (Error e) {
+                            print (_("Error reading shaders folder: %s\n"), e.message);
+                        }
+                    }
+
+                    reshade_clear_button.set_sensitive(true);
+                    update_reshade_section();
+
+                    is_loading = true;
+                    OtherLoad.apply_reshade_states(this, previous_states);
+                    is_loading = false;
+                    
+                    OtherSave.save_states (this);
+                    
+                    show_info_dialog (_("Reshade folder selected successfully"), 
+                                    _("Shader effects: %d").printf(reshade_shaders.size));
+                }
+            } catch (Error e) {
+                print (_("Error selecting folder: %s\n"), e.message);
+            }
+        });
+    }
+
+    void show_info_dialog (string title, string message) {
+        var dialog = new Adw.AlertDialog (title, message);
+        dialog.add_response ("ok", "OK");
+        dialog.set_default_response ("ok");
+        dialog.present (this.get_root () as Gtk.Window);
     }
 
     public bool is_switch_active (string switch_name) {
         foreach (var switch_widget in switches) {
             if (switch_widget.get_name () == switch_name) {
+                return switch_widget.get_active ();
+            }
+        }
+        return false;
+    }
+
+    void restart_vkcube() {
+        try {
+            Process.spawn_command_line_sync("pkill vkcube");
+            Thread.usleep(1000);
+            Process.spawn_command_line_async("bash -c 'ENABLE_VKBASALT=1 mangohud vkcube --wsi xcb'");
+        } catch (Error e) {
+            stderr.printf("Ошибка при перезапуске vkcube: %s\n", e.message);
+        }
+    }
+
+    public bool is_reshade_switch_active (string shader_name) {
+        foreach (var switch_widget in reshade_switches) {
+            if (switch_widget.get_name () == "reshade_" + shader_name) {
                 return switch_widget.get_active ();
             }
         }
@@ -171,7 +437,9 @@ public class OtherBox : Box {
                 is_updating = true;
                 GLib.Idle.add (() => {
                     update_entry_from_scale (scale, entry, format);
-                    OtherSave.save_states (this);
+                    if (!is_loading) {
+                        OtherSave.save_states (this);
+                    }
                     is_updating = false;
                     return false;
                 });
@@ -189,7 +457,9 @@ public class OtherBox : Box {
                 is_updating = true;
                 scale.set_value (initial_value);
                 update_entry_from_scale (scale, entry, format);
-                OtherSave.save_states (this);
+                if (!is_loading) {
+                    OtherSave.save_states (this);
+                }
                 is_updating = false;
             }
         });
@@ -317,12 +587,14 @@ public class OtherBox : Box {
             label1.set_halign (Align.START);
             label1.set_hexpand (false);
             label1.set_ellipsize (Pango.EllipsizeMode.END);
+            label1.set_max_width_chars (20);
 
             var label2 = new Label (label_texts_2[i]);
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
             label2.set_ellipsize (Pango.EllipsizeMode.END);
+            label2.set_max_width_chars (25);
 
             label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
             label2.set_markup ("<span size='9000'>%s</span>".printf (label_texts_2[i]));
@@ -416,5 +688,24 @@ public class OtherBox : Box {
             }
             dialog.destroy ();
         });
+    }
+
+    Label create_label (string text, Align halign, string[] style_classes, int margin = 0) {
+        var label = new Label (text);
+        label.set_halign (halign);
+        label.set_hexpand (true);
+        
+        foreach (string style_class in style_classes) {
+            label.add_css_class (style_class);
+        }
+        
+        if (margin > 0) {
+            label.set_margin_top (margin);
+            label.set_margin_bottom (margin);
+            label.set_margin_start (margin);
+            label.set_margin_end (margin);
+        }
+        
+        return label;
     }
 }

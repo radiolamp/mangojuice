@@ -1,4 +1,4 @@
-/* other_save  // Licence:  GPL-v3.0 */
+/* OtherSave.vala // Licence:  GPL-v3.0 */
 using Gtk;
 using Gee;
 
@@ -25,7 +25,7 @@ public class OtherSave {
 
             string hotkey = other_box.hotkey_entry.get_text ().strip ();
             if (hotkey != "" && hotkey != "Home") {
-                file_stream_write.put_string ("toggleKey=%s\n".printf (other_box.hotkey_entry.get_text ()));
+                file_stream_write.put_string ("toggleKey=%s\n".printf (hotkey));
             }
 
             save_scale_value_if_active (file_stream_write, "casSharpness", other_box.scales[0], other_box.entries[0], "%.2f", other_box, "cas");
@@ -39,18 +39,42 @@ public class OtherSave {
             save_int_scale_value_if_active (file_stream_write, "smaaMaxSearchStepsDiag", other_box.scales[8], other_box.entries[8], other_box, "smaa");
             save_int_scale_value_if_active (file_stream_write, "smaaCornerRounding", other_box.scales[9], other_box.entries[9], other_box, "smaa");
 
-            // Сохраняем активные эффекты
+            // Сохраняем активные эффекты (основные + ReShade шейдеры)
             var active_effects = new Gee.ArrayList<string> ();
+            
+            // Основные эффекты
             string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
             for (int i = 0; i < other_box.switches.size; i++) {
                 if (other_box.switches[i].get_active ()) {
                     active_effects.add (config_vars[i]);
                 }
             }
+            
+            // ReShade шейдеры
+            for (int i = 0; i < other_box.reshade_switches.size; i++) {
+                if (other_box.reshade_switches[i].get_active ()) {
+                    // Получаем имя шейдера из имени переключателя
+                    string switch_name = other_box.reshade_switches[i].get_name ();
+                    string shader_name = switch_name.replace("reshade_", "");
+                    active_effects.add (shader_name);
+                }
+            }
 
             if (!active_effects.is_empty) {
                 string effects_line = "effects = " + string.joinv (":", (string[]) active_effects.to_array ()) + "\n";
                 file_stream_write.put_string (effects_line);
+            }
+
+            if (other_box.reshade_texture_path != null && other_box.reshade_include_path != null) {
+                string folders_path = other_box.reshade_include_path.replace("/shaders", "");
+                file_stream_write.put_string ("#reshadeFoldersPath = %s\n".printf(folders_path));
+                file_stream_write.put_string ("reshadeTexturePath = %s\n".printf(other_box.reshade_texture_path));
+                file_stream_write.put_string ("reshadeIncludePath = %s\n".printf(other_box.reshade_include_path));
+                
+                foreach (string shader in other_box.reshade_shaders) {
+                    file_stream_write.put_string ("%s = %s/shaders/%s.fx #effects\n".printf(shader, 
+                        folders_path, shader));
+                }
             }
 
         } catch (Error e) {
