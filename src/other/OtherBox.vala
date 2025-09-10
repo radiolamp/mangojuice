@@ -27,6 +27,7 @@ public class OtherBox : Box {
     public OtherLoad.LoadResult load_result { get; set; }
     public Gee.ArrayList<string> reshade_shaders { get; set; }
     public Button reshade_button;
+    public Button reshade_clear_button;
     HashMap<string, ArrayList<Scale>> switch_scale_map;
     HashMap<string, ArrayList<Entry>> switch_entry_map;
     HashMap<string, ArrayList<Button>> switch_reset_map;
@@ -118,6 +119,10 @@ public class OtherBox : Box {
         
         buttons_flow_box.append (hotkey_entry);
 
+        // Создаем контейнер для кнопок Reshade с классом linked
+        var reshade_container = new Box(Orientation.HORIZONTAL, 0);
+        reshade_container.add_css_class("linked");
+        
         var reshade_label = new Label(_("Reshade"));
         reshade_label.set_ellipsize(Pango.EllipsizeMode.END);
         reshade_label.set_max_width_chars(20);
@@ -126,8 +131,16 @@ public class OtherBox : Box {
         
         reshade_button = new Button();
         reshade_button.set_child(reshade_label);
-        buttons_flow_box.append(reshade_button);
         reshade_button.clicked.connect(on_reshade_button_clicked);
+        reshade_container.append(reshade_button);
+        
+        reshade_clear_button = new Button.from_icon_name("edit-clear-symbolic");
+        reshade_clear_button.set_tooltip_text(_("Clear Reshade path"));
+        reshade_clear_button.set_sensitive(false);
+        reshade_clear_button.clicked.connect(on_reshade_clear_button_clicked);
+        reshade_container.append(reshade_clear_button);
+        
+        buttons_flow_box.append(reshade_container);
         
         this.append (buttons_flow_box);
         
@@ -148,10 +161,26 @@ public class OtherBox : Box {
             reshade_folders_path = load_result.reshade_folders_path;
             reshade_texture_path = load_result.reshade_texture_path;
             reshade_include_path = load_result.reshade_include_path;
+            reshade_clear_button.set_sensitive(true);
         }
 
         if (get_reshade_button_text() != _("Reshade")) {
             create_reshade_section();
+        }
+    }
+
+    void on_reshade_clear_button_clicked() {
+        set_reshade_button_text(_("Reshade"));
+        reshade_folders_path = "";
+        reshade_texture_path = "";
+        reshade_include_path = "";
+        reshade_shaders.clear();
+        
+        reshade_clear_button.set_sensitive(false);
+        hide_reshade_section();
+        
+        if (!is_loading) {
+            OtherSave.save_states(this);
         }
     }
 
@@ -167,6 +196,9 @@ public class OtherBox : Box {
             label.set_halign(Align.CENTER);
             reshade_button.set_child(label);
         }
+        
+        // Обновляем чувствительность кнопки очистки
+        reshade_clear_button.set_sensitive(text != _("Reshade"));
     }
 
     public string get_reshade_button_text() {
@@ -210,7 +242,7 @@ public class OtherBox : Box {
             label.set_ellipsize (Pango.EllipsizeMode.END);
             label.set_max_width_chars (20);
             reshade_labels.add (label);
-            
+            label.set_markup ("<b>%s</b>".printf (shader_name));
             row_box.append (switch_widget);
             row_box.append (label);
             reshade_flow_box.insert (row_box, -1);
@@ -303,6 +335,7 @@ public class OtherBox : Box {
                         }
                     }
 
+                    reshade_clear_button.set_sensitive(true);
                     update_reshade_section();
 
                     is_loading = true;
