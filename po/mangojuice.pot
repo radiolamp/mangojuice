@@ -1414,3 +1414,24 @@ msgstr ""
 
 msgid "Click to record shortcut"
 msgstr ""
+
+msgid "Add Reshade"
+msgstr ""
+
+msgid "Clear Reshade path"
+msgstr ""
+
+msgid "Hotkey"
+msgstr ""
+
+msgid "Only 1 key. Only X11/Xwayland."
+msgstr ""
+
+msgid "ReShade Shaders"
+msgstr ""
+
+msgid "Reshade folder selected successfully"
+msgstr ""
+
+msgid "Error selecting folder:"
+msgstr ""

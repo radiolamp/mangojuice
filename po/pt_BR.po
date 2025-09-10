@@ -1308,3 +1308,24 @@ msgstr "Editar atalho manualmente"
 
 msgid "Click to record shortcut"
 msgstr "Clique para gravar o atalho"
+
+msgid "Add Reshade"
+msgstr "Adicionar Reshade"
+
+msgid "Clear Reshade path"
+msgstr "Limpar caminho do Reshade"
+
+msgid "Hotkey"
+msgstr "Tecla de atalho"
+
+msgid "Only 1 key. Only X11/Xwayland."
+msgstr "Apenas 1 tecla. Apenas X11/Xwayland."
+
+msgid "ReShade Shaders"
+msgstr "Shaders do ReShade"
+
+msgid "Reshade folder selected successfully"
+msgstr "Pasta do Reshade selecionada com sucesso"
+
+msgid "Error selecting folder:"
+msgstr "Erro ao selecionar a pasta:"

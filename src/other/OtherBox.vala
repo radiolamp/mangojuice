@@ -120,7 +120,7 @@ public class OtherBox : Box {
         buttons_flow_box.append (vkbasalt_global_button);
         
         hotkey_entry = new Entry ();
-        hotkey_entry.set_placeholder_text (_("hotkey"));
+        hotkey_entry.set_placeholder_text (_("Hotkey"));
         hotkey_entry.set_width_chars (10);
         hotkey_entry.set_text ("Home");
         hotkey_entry.set_alignment (0.5f);
@@ -138,7 +138,7 @@ public class OtherBox : Box {
         var reshade_container = new Box(Orientation.HORIZONTAL, 0);
         reshade_container.add_css_class("linked");
         
-        var reshade_label = new Label(_("Reshade"));
+        var reshade_label = new Label(_("Add Reshade"));
         reshade_label.set_ellipsize(Pango.EllipsizeMode.END);
         reshade_label.set_max_width_chars(20);
         reshade_label.set_hexpand(true);

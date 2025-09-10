@@ -1452,3 +1452,24 @@ msgstr "Редактировать сочетание клавиш"
 
 msgid "Click to record shortcut"
 msgstr "Нажмите, чтобы записать сочетание клавиш"
+
+msgid "Add Reshade"
+msgstr "Добавить Reshade"
+
+msgid "Clear Reshade path"
+msgstr "Очистить путь к Reshade"
+
+msgid "Hotkey"
+msgstr "Горячая клавиша"
+
+msgid "Only 1 key. Only X11/Xwayland."
+msgstr "Только 1 клавиша. Только X11/Xwayland."
+
+msgid "ReShade Shaders"
+msgstr "Шейдеры ReShade"
+
+msgid "Reshade folder selected successfully"
+msgstr "Папка Reshade успешно выбрана"
+
+msgid "Error selecting folder:"
+msgstr "Ошибка при выборе папки:"
