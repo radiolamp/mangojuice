@@ -76,7 +76,6 @@ public class OtherBox : Box {
             });
         }
 
-        // Основной flow_box для scale элементов
         main_flow_box = new FlowBox ();
         main_flow_box.set_homogeneous (true);
         main_flow_box.set_margin_end (FLOW_BOX_MARGIN);
@@ -95,7 +94,6 @@ public class OtherBox : Box {
         create_scale_with_entry (main_flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
         create_scale_with_entry (main_flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
 
-        // Создаем reshade_flow_box ДО кнопок
         reshade_flow_box = new FlowBox ();
         reshade_flow_box.set_homogeneous (true);
         reshade_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
@@ -137,7 +135,6 @@ public class OtherBox : Box {
         
         buttons_flow_box.append (hotkey_entry);
 
-        // Создаем контейнер для кнопок Reshade с классом linked
         var reshade_container = new Box(Orientation.HORIZONTAL, 0);
         reshade_container.add_css_class("linked");
         
@@ -180,13 +177,10 @@ public class OtherBox : Box {
             reshade_texture_path = load_result.reshade_texture_path;
             reshade_include_path = load_result.reshade_include_path;
             reshade_clear_button.set_sensitive(true);
-            
-            // Создаем заголовок для reshade
+
             reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
-            // Вставляем заголовок перед reshade_flow_box
             this.insert_child_after(reshade_section_label, main_flow_box);
             
-            // Заполняем reshade_flow_box
             populate_reshade_flow_box();
         }
     }
@@ -258,8 +252,7 @@ public class OtherBox : Box {
             label.set_halign(Align.CENTER);
             reshade_button.set_child(label);
         }
-        
-        // Обновляем чувствительность кнопки очистки
+
         reshade_clear_button.set_sensitive(text != _("Reshade"));
     }
 
@@ -286,12 +279,8 @@ public class OtherBox : Box {
         hide_reshade_section();
 
         if (get_reshade_button_text() != _("Reshade")) {
-            // Создаем заголовок для reshade
             reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
-            // Вставляем заголовок перед reshade_flow_box
             this.insert_child_after(reshade_section_label, main_flow_box);
-            
-            // Заполняем reshade_flow_box
             populate_reshade_flow_box();
         }
     }
