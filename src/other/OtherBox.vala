@@ -34,6 +34,7 @@ public class OtherBox : Box {
     
     Label reshade_section_label;
     FlowBox reshade_flow_box;
+    FlowBox main_flow_box;
     bool is_loading = false;
 
     public OtherBox () {
@@ -52,6 +53,7 @@ public class OtherBox : Box {
         
         reshade_section_label = null;
         reshade_flow_box = null;
+        main_flow_box = null;
         
         string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
         string[] label_texts = { "CAS", "DLS", "FXAA", "SMAA", "LUT" };
@@ -73,22 +75,38 @@ public class OtherBox : Box {
                 return false;
             });
         }
-        var flow_box = new FlowBox ();
-        flow_box.set_homogeneous (true);
-        flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        flow_box.set_selection_mode (SelectionMode.NONE);
-        flow_box.set_max_children_per_line (2);
-        this.append (flow_box);
-        create_scale_with_entry (flow_box, "CAS Sharpness",         -1.0, 1.0,    0.01,  0.0,    "%.2f", "cas");
-        create_scale_with_entry (flow_box, "DLS Sharpness",         0.0,  1.0,    0.01,  0.5,    "%.2f", "dls");
-        create_scale_with_entry (flow_box, "FXAA Quality Subpix",   0.0,  1.0,    0.01,  0.75,   "%.2f", "fxaa");
-        create_scale_with_entry (flow_box, "DLS Denoise",           0.0,  1.0,    0.01,  0.17,   "%.2f", "dls");
-        create_scale_with_entry (flow_box, "FXAA Edge Threshold",   0.0,  0.333,  0.01,  0.125,  "%.3f", "fxaa");
-        create_scale_with_entry (flow_box, "FXAA Threshold Min",    0.0,  0.0833, 0.001, 0.0833, "%.4f", "fxaa");
-        create_scale_with_entry (flow_box, "SMAA Threshold",        0.0,  0.5,    0.01,  0.05,   "%.2f", "smaa");
-        create_scale_with_entry (flow_box, "SMAA Max Search Steps", 0,    112,    1,     8,      "%d",   "smaa");
-        create_scale_with_entry (flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
-        create_scale_with_entry (flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");    
+
+        // Основной flow_box для scale элементов
+        main_flow_box = new FlowBox ();
+        main_flow_box.set_homogeneous (true);
+        main_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        main_flow_box.set_selection_mode (SelectionMode.NONE);
+        main_flow_box.set_max_children_per_line (2);
+        this.append (main_flow_box);
+
+        create_scale_with_entry (main_flow_box, "CAS Sharpness",         -1.0, 1.0,    0.01,  0.0,    "%.2f", "cas");
+        create_scale_with_entry (main_flow_box, "DLS Sharpness",         0.0,  1.0,    0.01,  0.5,    "%.2f", "dls");
+        create_scale_with_entry (main_flow_box, "FXAA Quality Subpix",   0.0,  1.0,    0.01,  0.75,   "%.2f", "fxaa");
+        create_scale_with_entry (main_flow_box, "DLS Denoise",           0.0,  1.0,    0.01,  0.17,   "%.2f", "dls");
+        create_scale_with_entry (main_flow_box, "FXAA Edge Threshold",   0.0,  0.333,  0.01,  0.125,  "%.3f", "fxaa");
+        create_scale_with_entry (main_flow_box, "FXAA Threshold Min",    0.0,  0.0833, 0.001, 0.0833, "%.4f", "fxaa");
+        create_scale_with_entry (main_flow_box, "SMAA Threshold",        0.0,  0.5,    0.01,  0.05,   "%.2f", "smaa");
+        create_scale_with_entry (main_flow_box, "SMAA Max Search Steps", 0,    112,    1,     8,      "%d",   "smaa");
+        create_scale_with_entry (main_flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
+        create_scale_with_entry (main_flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
+
+        // Создаем reshade_flow_box ДО кнопок
+        reshade_flow_box = new FlowBox ();
+        reshade_flow_box.set_homogeneous (true);
+        reshade_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
+        reshade_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
+        reshade_flow_box.set_margin_top (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_margin_start (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_margin_end (FLOW_BOX_MARGIN);
+        reshade_flow_box.set_selection_mode (SelectionMode.NONE);
+        reshade_flow_box.set_max_children_per_line (5);
+        this.append (reshade_flow_box);
         
         var buttons_flow_box = new FlowBox ();
         buttons_flow_box.set_homogeneous (true);
@@ -162,11 +180,55 @@ public class OtherBox : Box {
             reshade_texture_path = load_result.reshade_texture_path;
             reshade_include_path = load_result.reshade_include_path;
             reshade_clear_button.set_sensitive(true);
+            
+            // Создаем заголовок для reshade
+            reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+            // Вставляем заголовок перед reshade_flow_box
+            this.insert_child_after(reshade_section_label, main_flow_box);
+            
+            // Заполняем reshade_flow_box
+            populate_reshade_flow_box();
         }
+    }
 
-        if (get_reshade_button_text() != _("Reshade")) {
-            create_reshade_section();
+    void populate_reshade_flow_box() {
+        reshade_switches.clear();
+        reshade_labels.clear();
+        reshade_flow_box.remove_all();
+
+        foreach (string shader_name in reshade_shaders) {
+            var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+            row_box.set_hexpand (true);
+            row_box.set_valign (Align.CENTER);
+            
+            var switch_widget = new Switch ();
+            switch_widget.set_valign (Align.CENTER);
+            switch_widget.set_name ("reshade_" + shader_name);
+            reshade_switches.add (switch_widget);
+            
+            var label = new Label (shader_name);
+            label.set_halign (Align.START);
+            label.set_hexpand (true);
+            label.set_ellipsize (Pango.EllipsizeMode.END);
+            label.set_max_width_chars (20);
+            reshade_labels.add (label);
+            label.set_markup ("<b>%s</b>".printf (shader_name));
+            row_box.append (switch_widget);
+            row_box.append (label);
+            reshade_flow_box.insert (row_box, -1);
+            
+            switch_widget.state_set.connect ((state) => {
+                if (!is_loading) {
+                    OtherSave.save_states (this);
+                    restart_vkcube();
+                }
+                return false;
+            });
         }
+        
+        is_loading = true;
+        OtherLoad.apply_reshade_states(this, load_result.reshade_states);
+        is_loading = false;
     }
 
     void on_reshade_clear_button_clicked() {
@@ -209,71 +271,13 @@ public class OtherBox : Box {
         return "";
     }
 
-    void create_reshade_section() {
-        reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
-        this.append (reshade_section_label);
-        reshade_flow_box = new FlowBox ();
-        reshade_flow_box.set_homogeneous (true);
-        reshade_flow_box.set_row_spacing (FLOW_BOX_ROW_SPACING);
-        reshade_flow_box.set_column_spacing (FLOW_BOX_COLUMN_SPACING);
-        reshade_flow_box.set_margin_top (FLOW_BOX_MARGIN);
-        reshade_flow_box.set_margin_bottom (FLOW_BOX_MARGIN);
-        reshade_flow_box.set_margin_start (FLOW_BOX_MARGIN);
-        reshade_flow_box.set_margin_end (FLOW_BOX_MARGIN);
-        reshade_flow_box.set_selection_mode (SelectionMode.NONE);
-        reshade_flow_box.set_max_children_per_line (5);
-
-        reshade_switches.clear();
-        reshade_labels.clear();
-
-        foreach (string shader_name in reshade_shaders) {
-            var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            row_box.set_hexpand (true);
-            row_box.set_valign (Align.CENTER);
-            
-            var switch_widget = new Switch ();
-            switch_widget.set_valign (Align.CENTER);
-            switch_widget.set_name ("reshade_" + shader_name);
-            reshade_switches.add (switch_widget);
-            
-            var label = new Label (shader_name);
-            label.set_halign (Align.START);
-            label.set_hexpand (true);
-            label.set_ellipsize (Pango.EllipsizeMode.END);
-            label.set_max_width_chars (20);
-            reshade_labels.add (label);
-            label.set_markup ("<b>%s</b>".printf (shader_name));
-            row_box.append (switch_widget);
-            row_box.append (label);
-            reshade_flow_box.insert (row_box, -1);
-            
-            switch_widget.state_set.connect ((state) => {
-                if (!is_loading) {
-                    OtherSave.save_states (this);
-                    restart_vkcube();
-                }
-                return false;
-            });
-        }
-        
-        this.append (reshade_flow_box);
-
-        is_loading = true;
-        OtherLoad.apply_reshade_states(this, load_result.reshade_states);
-        is_loading = false;
-    }
-    
     void hide_reshade_section() {
         if (reshade_section_label != null) {
             this.remove(reshade_section_label);
             reshade_section_label = null;
         }
         
-        if (reshade_flow_box != null) {
-            this.remove(reshade_flow_box);
-            reshade_flow_box = null;
-        }
-        
+        reshade_flow_box.remove_all();
         reshade_switches.clear();
         reshade_labels.clear();
     }
@@ -282,7 +286,13 @@ public class OtherBox : Box {
         hide_reshade_section();
 
         if (get_reshade_button_text() != _("Reshade")) {
-            create_reshade_section();
+            // Создаем заголовок для reshade
+            reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
+            // Вставляем заголовок перед reshade_flow_box
+            this.insert_child_after(reshade_section_label, main_flow_box);
+            
+            // Заполняем reshade_flow_box
+            populate_reshade_flow_box();
         }
     }
 
