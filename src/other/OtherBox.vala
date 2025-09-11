@@ -20,7 +20,7 @@ public class OtherBox : Box {
     public ArrayList<Label> reshade_labels { get; set; }
     public Button vkbasalt_global_button { get; set; }
     public bool vkbasalt_global_enabled { get; set; }
-    public Entry hotkey_entry;
+    public ShortcutRecorder hotkey_recorder;
     public string reshade_texture_path { get; set; }
     public string reshade_folders_path { get; set; }
     public string reshade_include_path { get; set; }
@@ -119,21 +119,28 @@ public class OtherBox : Box {
         vkbasalt_global_button = new Button.with_label (_("Global VkBasalt"));
         buttons_flow_box.append (vkbasalt_global_button);
         
-        hotkey_entry = new Entry ();
-        hotkey_entry.set_placeholder_text (_("Hotkey"));
-        hotkey_entry.set_width_chars (10);
-        hotkey_entry.set_text ("Home");
-        hotkey_entry.set_alignment (0.5f);
-        hotkey_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.PRIMARY, "input-keyboard-symbolic");
-        hotkey_entry.set_tooltip_text (_("Only 1 key. Only X11/Xwayland."));
-        hotkey_entry.set_icon_activatable (Gtk.EntryIconPosition.PRIMARY, false);
-        hotkey_entry.changed.connect (() => {
+        hotkey_recorder = new ShortcutRecorder() {
+            tooltip_text = _("Click to record VkBasalt toggle shortcut"),
+            hexpand = true,
+            shortcut = "Home"
+        };
+
+        var key_controller = new Gtk.EventControllerKey();
+        key_controller.key_pressed.connect((keyval, keycode, state) => {
+            if (hotkey_recorder.is_recording) {
+                return hotkey_recorder.handle_key_event_with_code(keyval, 0, state);
+            }
+            return false;
+        });
+        hotkey_recorder.add_controller(key_controller);
+        
+        hotkey_recorder.shortcut_changed.connect((shortcut_value) => {
             if (!is_loading) {
                 OtherSave.save_states (this);
             }
         });
         
-        buttons_flow_box.append (hotkey_entry);
+        buttons_flow_box.append (hotkey_recorder);
 
         var reshade_container = new Box(Orientation.HORIZONTAL, 0);
         reshade_container.add_css_class("linked");
@@ -707,5 +714,152 @@ public class OtherBox : Box {
         }
         
         return label;
+    }
+}
+
+public class ShortcutRecorder : Gtk.Box {
+    private Gtk.Button _record_button;
+    private Gtk.Label _display_label;
+    private Gtk.Button _edit_button;
+    private Gtk.Entry _entry;
+    private string _shortcut = "";
+    private bool _is_recording = false;
+
+    public string shortcut {
+        get { return _shortcut; }
+        set { 
+            _shortcut = value;
+            update_display();
+        }
+    }
+    
+    public bool is_recording {
+        get { return _is_recording; }
+    }
+
+    public signal void shortcut_changed(string shortcut);
+
+    public ShortcutRecorder() {
+        Object(orientation: Gtk.Orientation.HORIZONTAL, spacing: 0);
+        
+        this.add_css_class("linked");
+
+        _record_button = new Gtk.Button();
+        _record_button.hexpand = true;
+        _display_label = new Gtk.Label("");
+        _record_button.child = _display_label;
+
+        _edit_button = new Gtk.Button.from_icon_name("document-edit-symbolic");
+        _edit_button.tooltip_text = _("Edit shortcut manually");
+
+        _entry = new Gtk.Entry();
+        _entry.visible = false;
+        _entry.primary_icon_name = "input-keyboard-symbolic";
+        _entry.secondary_icon_name = "edit-clear-symbolic";
+        _entry.secondary_icon_activatable = true;
+
+        append(_record_button);
+        append(_edit_button);
+        append(_entry);
+
+        _record_button.clicked.connect(() => {
+            if (!_is_recording) start_recording();
+            else cancel_recording();
+        });
+        
+        _edit_button.clicked.connect(() => {
+            start_editing();
+        });
+        
+        _entry.activate.connect(() => {
+            apply_editing();
+        });
+        
+        _entry.icon_release.connect((pos) => {
+            if (pos == Gtk.EntryIconPosition.SECONDARY) {
+                cancel_editing();
+            }
+        });
+    }
+    
+    private void update_display() {
+        _display_label.label = _shortcut;
+    }
+    
+    private void start_recording() {
+        _is_recording = true;
+        
+        var image = new Gtk.Image.from_icon_name("input-keyboard-symbolic");
+        image.pixel_size = 16;
+        _record_button.child = image;
+        
+        _record_button.add_css_class("suggested-action");
+        _record_button.grab_focus();
+    }
+    
+    private void stop_recording() {
+        _is_recording = false;
+        _record_button.child = _display_label;
+        update_display();
+        _record_button.remove_css_class("suggested-action");
+    }
+    
+    private void cancel_recording() {
+        stop_recording();
+    }
+    
+    private void start_editing() {
+        _entry.text = _shortcut;
+        _entry.visible = true;
+        _record_button.visible = false;
+        _edit_button.visible = false;
+        _entry.grab_focus();
+    }
+    
+    private void apply_editing() {
+        _shortcut = _entry.text.strip();
+        shortcut_changed(_shortcut);
+        finish_editing();
+    }
+    
+    private void cancel_editing() {
+        finish_editing();
+    }
+    
+    private void finish_editing() {
+        _entry.visible = false;
+        _record_button.visible = true;
+        _edit_button.visible = true;
+        update_display();
+    }
+    
+    public bool handle_key_event(uint keyval, Gdk.ModifierType state) {
+        return handle_key_event_with_code(keyval, 0, state);
+    }
+    
+    public bool handle_key_event_with_code(uint keyval, uint keycode, Gdk.ModifierType state) {
+        if (!_is_recording) return false;
+        if (keyval == Gdk.Key.Escape) {
+            cancel_recording();
+            return true;
+        }
+        
+        var key = Gdk.keyval_name(keyval) ?? "Unknown";
+
+        string[] IGNORED_KEYS = {
+            "Control_L", "Control_R", "Shift_L", "Shift_R", 
+            "Alt_L", "Alt_R", "Super_L", "Super_R", "Meta_L", "Meta_R",
+            "Num_Lock", "Caps_Lock", "Scroll_Lock", "ISO_Level3_Shift", 
+            "Mode_switch", "Multi_key"
+        };
+        
+        foreach (string ignored in IGNORED_KEYS) {
+            if (key == ignored) return true;
+        }
+
+        _shortcut = key;
+        shortcut_changed(_shortcut);
+        stop_recording();
+        return true;
     }
 }

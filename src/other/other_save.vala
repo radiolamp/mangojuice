@@ -23,7 +23,7 @@ public class OtherSave {
         try {
             file_stream_write = new DataOutputStream (config_file.replace (null, false, FileCreateFlags.NONE));
 
-            string hotkey = other_box.hotkey_entry.get_text ().strip ();
+            string hotkey = other_box.hotkey_recorder.shortcut.strip ();
             if (hotkey != "" && hotkey != "Home") {
                 file_stream_write.put_string ("toggleKey=%s\n".printf (hotkey));
             }

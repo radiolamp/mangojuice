@@ -100,8 +100,8 @@ public class OtherLoad {
                 }
                 else if (line.has_prefix ("toggleKey=")) {
                     string hotkey = line.split ("=")[1].strip ();
-                    if (other_box.hotkey_entry != null) {
-                        other_box.hotkey_entry.set_text (hotkey);
+                    if (other_box.hotkey_recorder != null) {
+                        other_box.hotkey_recorder.shortcut = hotkey;
                     }
                     hotkeyFound = true;
                 }
