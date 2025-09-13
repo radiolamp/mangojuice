@@ -6,3 +6,6 @@
     border-top: 50px solid alpha(@accent_color, 0.2);
 }
 
+flowboxchild {
+    background: none;
+}
