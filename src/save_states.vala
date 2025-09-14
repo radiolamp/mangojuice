@@ -3,6 +3,17 @@ using Gtk;
 using Gee;
 
 public class SaveStates {
+    // Кеш для пути к конфигурационному файлу
+    private static File? config_file_cache = null;
+    
+    private static File get_config_file() {
+        if (config_file_cache == null) {
+            var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+            config_file_cache = config_dir.get_child ("MangoHud.conf");
+        }
+        return config_file_cache;
+    }
+
     public static void update_parameter (DataOutputStream data_stream, string parameter_name, string parameter_value) throws Error {
         if (
           parameter_value == "" ||
@@ -162,8 +173,7 @@ public class SaveStates {
     }
 
     static void update_file (string prefix, string value) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
+        var file = get_config_file();
         if (!file.query_exists ()) {
             return;
         }
@@ -189,9 +199,35 @@ public class SaveStates {
         }
     }
 
+    static void save_color_setting (DataOutputStream data_stream, Gtk.ColorDialogButton? color_button, string setting_name, MangoJuice mango_juice) throws Error {
+        if (color_button != null) {
+            var color = mango_juice.rgba_to_hex (color_button.get_rgba ());
+            if (color != "") {
+                update_parameter(data_stream, setting_name, color);
+            }
+        }
+    }
+    
+    static void save_multi_color_setting (DataOutputStream data_stream, 
+                                                 Gtk.ColorDialogButton? color_button_1, 
+                                                 Gtk.ColorDialogButton? color_button_2, 
+                                                 Gtk.ColorDialogButton? color_button_3, 
+                                                 string setting_name, 
+                                                 MangoJuice mango_juice) throws Error {
+        if (color_button_1 != null && color_button_2 != null && color_button_3 != null) {
+            var color_1 = mango_juice.rgba_to_hex (color_button_1.get_rgba ());
+            var color_2 = mango_juice.rgba_to_hex (color_button_2.get_rgba ());
+            var color_3 = mango_juice.rgba_to_hex (color_button_3.get_rgba ());
+            
+            if (color_1 != "" && color_2 != "" && color_3 != "") {
+                update_parameter(data_stream, setting_name, "%s,%s,%s".printf(color_1, color_2, color_3));
+            }
+        }
+    }
+
     public static void save_states_to_file (MangoJuice mango_juice) {
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
+        var file = get_config_file();
         bool is_horizontal = mango_juice.custom_switch.active;
 
         try {
@@ -284,6 +320,7 @@ public class SaveStates {
             system_end.add (5);
             order_map.set ("system_end", system_end);
 
+            // Исправленные вызовы save_switches_to_file с правильными типами
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
 
             int[] cpu_order = {0, 1, 2, 3, 4, 5, 6, 7, 8};
@@ -293,8 +330,8 @@ public class SaveStates {
             save_switches_to_file (data_stream, mango_juice.memory_switches, mango_juice.memory_config_vars, memory_order);
 
             if (Config.IS_DEVEL) {
-            int[] git_order = {0, 1, 2};
-            save_switches_to_file (data_stream, mango_juice.git_switches, mango_juice.git_config_vars, git_order);
+                int[] git_order = {0, 1, 2};
+                save_switches_to_file (data_stream, mango_juice.git_switches, mango_juice.git_config_vars, git_order);
             }
 
             save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_start").to_array ());
@@ -457,17 +494,13 @@ public class SaveStates {
 
             update_parameter (data_stream, "gpu_text", mango_juice.gpu_text_entry.text);
 
-            if (mango_juice.gpu_color_button != null) {
-                var gpu_color = mango_juice.rgba_to_hex (mango_juice.gpu_color_button.get_rgba ());
-                update_parameter (data_stream, "gpu_color", gpu_color);
-            }
+            // Используем новый метод для обработки цветов GPU
+            save_color_setting(data_stream, mango_juice.gpu_color_button, "gpu_color", mango_juice);
 
             update_parameter (data_stream, "cpu_text", mango_juice.cpu_text_entry.text);
 
-            if (mango_juice.cpu_color_button != null) {
-                var cpu_color = mango_juice.rgba_to_hex (mango_juice.cpu_color_button.get_rgba ());
-                update_parameter (data_stream, "cpu_color", cpu_color);
-            }
+            // Используем новый метод для обработки цветов CPU
+            save_color_setting(data_stream, mango_juice.cpu_color_button, "cpu_color", mango_juice);
 
             if (mango_juice.fps_value_entry_1 != null && mango_juice.fps_value_entry_2 != null) {
                 var fps_value_1 = mango_juice.fps_value_entry_1.text;
@@ -477,14 +510,13 @@ public class SaveStates {
                 }
             }
 
-            if (mango_juice.fps_color_button_1 != null && mango_juice.fps_color_button_2 != null && mango_juice.fps_color_button_3 != null) {
-                var fps_color_1 = mango_juice.rgba_to_hex (mango_juice.fps_color_button_1.get_rgba ());
-                var fps_color_2 = mango_juice.rgba_to_hex (mango_juice.fps_color_button_2.get_rgba ());
-                var fps_color_3 = mango_juice.rgba_to_hex (mango_juice.fps_color_button_3.get_rgba ());
-                if (fps_color_1 != "" && fps_color_2 != "" && fps_color_3 != "") {
-                    update_parameter (data_stream, "fps_color", "%s,%s,%s".printf (fps_color_1, fps_color_2, fps_color_3));
-                }
-            }
+            // Используем новый метод для обработки цветов FPS
+            save_multi_color_setting(data_stream, 
+                                   mango_juice.fps_color_button_1, 
+                                   mango_juice.fps_color_button_2, 
+                                   mango_juice.fps_color_button_3, 
+                                   "fps_color", 
+                                   mango_juice);
 
             if (mango_juice.gpu_load_value_entry_1 != null && mango_juice.gpu_load_value_entry_2 != null) {
                 var gpu_load_value_1 = mango_juice.gpu_load_value_entry_1.text;
@@ -494,14 +526,13 @@ public class SaveStates {
                 }
             }
 
-            if (mango_juice.gpu_load_color_button_1 != null && mango_juice.gpu_load_color_button_2 != null && mango_juice.gpu_load_color_button_3 != null) {
-                var gpu_load_color_1 = mango_juice.rgba_to_hex (mango_juice.gpu_load_color_button_1.get_rgba ());
-                var gpu_load_color_2 = mango_juice.rgba_to_hex (mango_juice.gpu_load_color_button_2.get_rgba ());
-                var gpu_load_color_3 = mango_juice.rgba_to_hex (mango_juice.gpu_load_color_button_3.get_rgba ());
-                if (gpu_load_color_1 != "" && gpu_load_color_2 != "" && gpu_load_color_3 != "") {
-                    update_parameter (data_stream, "gpu_load_color", "%s,%s,%s".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3));
-                }
-            }
+            // Используем новый метод для обработки цветов GPU Load
+            save_multi_color_setting(data_stream, 
+                                   mango_juice.gpu_load_color_button_1, 
+                                   mango_juice.gpu_load_color_button_2, 
+                                   mango_juice.gpu_load_color_button_3, 
+                                   "gpu_load_color", 
+                                   mango_juice);
 
             if (mango_juice.cpu_load_value_entry_1 != null && mango_juice.cpu_load_value_entry_2 != null) {
                 var cpu_load_value_1 = mango_juice.cpu_load_value_entry_1.text;
@@ -511,64 +542,25 @@ public class SaveStates {
                 }
             }
 
-            if (mango_juice.cpu_load_color_button_1 != null && mango_juice.cpu_load_color_button_2 != null && mango_juice.cpu_load_color_button_3 != null) {
-                var cpu_load_color_1 = mango_juice.rgba_to_hex (mango_juice.cpu_load_color_button_1.get_rgba ());
-                var cpu_load_color_2 = mango_juice.rgba_to_hex (mango_juice.cpu_load_color_button_2.get_rgba ());
-                var cpu_load_color_3 = mango_juice.rgba_to_hex (mango_juice.cpu_load_color_button_3.get_rgba ());
-                if (cpu_load_color_1 != "" && cpu_load_color_2 != "" && cpu_load_color_3 != "") {
-                    update_parameter (data_stream, "cpu_load_color", "%s,%s,%s".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3));
-                }
-            }
+            // Используем новый метод для обработки цветов CPU Load
+            save_multi_color_setting(data_stream, 
+                                   mango_juice.cpu_load_color_button_1, 
+                                   mango_juice.cpu_load_color_button_2, 
+                                   mango_juice.cpu_load_color_button_3, 
+                                   "cpu_load_color", 
+                                   mango_juice);
 
-            if (mango_juice.background_color_button != null) {
-                var background_color = mango_juice.rgba_to_hex (mango_juice.background_color_button.get_rgba ());
-                update_parameter (data_stream, "background_color", background_color);
-            }
-
-            if (mango_juice.frametime_color_button != null) {
-                var frametime_color = mango_juice.rgba_to_hex (mango_juice.frametime_color_button.get_rgba ());
-                update_parameter (data_stream, "frametime_color", frametime_color);
-            }
-
-            if (mango_juice.vram_color_button != null) {
-                var vram_color = mango_juice.rgba_to_hex (mango_juice.vram_color_button.get_rgba ());
-                update_parameter (data_stream, "vram_color", vram_color);
-            }
-
-            if (mango_juice.ram_color_button != null) {
-                var ram_color = mango_juice.rgba_to_hex (mango_juice.ram_color_button.get_rgba ());
-                update_parameter (data_stream, "ram_color", ram_color);
-            }
-
-            if (mango_juice.wine_color_button != null) {
-                var wine_color = mango_juice.rgba_to_hex (mango_juice.wine_color_button.get_rgba ());
-                update_parameter (data_stream, "wine_color", wine_color);
-            }
-
-            if (mango_juice.engine_color_button != null) {
-                var engine_color = mango_juice.rgba_to_hex (mango_juice.engine_color_button.get_rgba ());
-                update_parameter (data_stream, "engine_color", engine_color);
-            }
-
-            if (mango_juice.text_color_button != null) {
-                var text_color = mango_juice.rgba_to_hex (mango_juice.text_color_button.get_rgba ());
-                update_parameter (data_stream, "text_color", text_color);
-            }
-
-            if (mango_juice.media_player_color_button != null) {
-                var media_player_color = mango_juice.rgba_to_hex (mango_juice.media_player_color_button.get_rgba ());
-                update_parameter (data_stream, "media_player_color", media_player_color);
-            }
-
-            if (mango_juice.network_color_button != null) {
-                var network_color = mango_juice.rgba_to_hex (mango_juice.network_color_button.get_rgba ());
-                update_parameter (data_stream, "network_color", network_color);
-            }
-
-            if (mango_juice.battery_color_button != null) {
-                var battery_color = mango_juice.rgba_to_hex (mango_juice.battery_color_button.get_rgba ());
-                update_parameter (data_stream, "battery_color", battery_color);
-            }
+            // Используем новый метод для обработки одиночных цветов
+            save_color_setting(data_stream, mango_juice.background_color_button, "background_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.frametime_color_button, "frametime_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.vram_color_button, "vram_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.ram_color_button, "ram_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.wine_color_button, "wine_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.engine_color_button, "engine_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.text_color_button, "text_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.media_player_color_button, "media_player_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.network_color_button, "network_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.battery_color_button, "battery_color", mango_juice);
 
             const string[] FORMAT_VALUES = { "title", "artist", "album", "none" };
             
@@ -610,7 +602,7 @@ public class SaveStates {
     public static void save_switches_to_file (DataOutputStream data_stream, Switch[] switches, string[] config_vars, int[] order) {
         for (int i = 0; i < order.length; i++) {
             int index = order[i];
-            if (switches[index].active) {
+            if (index < switches.length && switches[index].active) {
                 try {
                     string config_var = config_vars[index];
                     data_stream.put_string ("%s\n".printf (config_var));
