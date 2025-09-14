@@ -3,10 +3,10 @@ using Gtk;
 using Gee;
 
 public class SaveStates {
-    // Кеш для пути к конфигурационному файлу
-    private static File? config_file_cache = null;
+
+    static File? config_file_cache = null;
     
-    private static File get_config_file() {
+    static File get_config_file() {
         if (config_file_cache == null) {
             var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
             config_file_cache = config_dir.get_child ("MangoHud.conf");
@@ -320,7 +320,6 @@ public class SaveStates {
             system_end.add (5);
             order_map.set ("system_end", system_end);
 
-            // Исправленные вызовы save_switches_to_file с правильными типами
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
 
             int[] cpu_order = {0, 1, 2, 3, 4, 5, 6, 7, 8};
@@ -494,12 +493,10 @@ public class SaveStates {
 
             update_parameter (data_stream, "gpu_text", mango_juice.gpu_text_entry.text);
 
-            // Используем новый метод для обработки цветов GPU
             save_color_setting(data_stream, mango_juice.gpu_color_button, "gpu_color", mango_juice);
 
             update_parameter (data_stream, "cpu_text", mango_juice.cpu_text_entry.text);
 
-            // Используем новый метод для обработки цветов CPU
             save_color_setting(data_stream, mango_juice.cpu_color_button, "cpu_color", mango_juice);
 
             if (mango_juice.fps_value_entry_1 != null && mango_juice.fps_value_entry_2 != null) {
@@ -510,7 +507,6 @@ public class SaveStates {
                 }
             }
 
-            // Используем новый метод для обработки цветов FPS
             save_multi_color_setting(data_stream, 
                                    mango_juice.fps_color_button_1, 
                                    mango_juice.fps_color_button_2, 
@@ -526,7 +522,6 @@ public class SaveStates {
                 }
             }
 
-            // Используем новый метод для обработки цветов GPU Load
             save_multi_color_setting(data_stream, 
                                    mango_juice.gpu_load_color_button_1, 
                                    mango_juice.gpu_load_color_button_2, 
@@ -542,7 +537,6 @@ public class SaveStates {
                 }
             }
 
-            // Используем новый метод для обработки цветов CPU Load
             save_multi_color_setting(data_stream, 
                                    mango_juice.cpu_load_color_button_1, 
                                    mango_juice.cpu_load_color_button_2, 
@@ -550,7 +544,6 @@ public class SaveStates {
                                    "cpu_load_color", 
                                    mango_juice);
 
-            // Используем новый метод для обработки одиночных цветов
             save_color_setting(data_stream, mango_juice.background_color_button, "background_color", mango_juice);
             save_color_setting(data_stream, mango_juice.frametime_color_button, "frametime_color", mango_juice);
             save_color_setting(data_stream, mango_juice.vram_color_button, "vram_color", mango_juice);
@@ -598,7 +591,6 @@ public class SaveStates {
         }
     }
 
-    // Метод для сохранения состояний переключателей в файл
     public static void save_switches_to_file (DataOutputStream data_stream, Switch[] switches, string[] config_vars, int[] order) {
         for (int i = 0; i < order.length; i++) {
             int index = order[i];
