@@ -1362,9 +1362,10 @@ public class MangoJuice : Adw.Application {
     }
 
     void initialize_color_controls (Box visual_box) {
+        
         var color_label = create_label (_("Color"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (color_label);
-
+    
         var color_flow_box = new FlowBox () {
             homogeneous = true,
             max_children_per_line = 9,
@@ -1376,47 +1377,61 @@ public class MangoJuice : Adw.Application {
             margin_bottom = FLOW_BOX_MARGIN,
             selection_mode = SelectionMode.NONE
         };
-
+    
         var color_dialog = new ColorDialog ();
-
+    
+        var gpu_linked_box = new Box (Orientation.HORIZONTAL, 0);
+        gpu_linked_box.add_css_class("linked");
+        
+        var cpu_linked_box = new Box (Orientation.HORIZONTAL, 0);
+        cpu_linked_box.add_css_class("linked");
+    
         gpu_color_button = new ColorDialogButton (color_dialog);
         setup_color_button(gpu_color_button, "#2e9762");
         gpu_color_button.notify["rgba"].connect (() => {
             var rgba = gpu_color_button.get_rgba ().copy ();
             SaveStates.update_gpu_color_in_file (rgba_to_hex (rgba));
         });
-
+    
         cpu_color_button = new ColorDialogButton (color_dialog);
         setup_color_button(cpu_color_button, "#2e97cb");
         cpu_color_button.notify["rgba"].connect (() => {
             var rgba = cpu_color_button.get_rgba ().copy ();
             SaveStates.update_cpu_color_in_file (rgba_to_hex (rgba));
         });
-
+    
         gpu_text_entry = new Entry ();
-        var gpu_text_entry_box = create_entry_with_clear_button (gpu_text_entry, _("GPU custom name"), "");
+        gpu_text_entry.placeholder_text = _("GPU custom name");
+        gpu_text_entry.hexpand = true; 
         gpu_text_entry.changed.connect (() => {
             SaveStates.update_gpu_text_in_file (gpu_text_entry.text);
             save_config ();
         });
-
+    
         cpu_text_entry = new Entry ();
-        var cpu_text_entry_box = create_entry_with_clear_button (cpu_text_entry, _("CPU custom name"), "");
+        cpu_text_entry.placeholder_text = _("CPU custom name");
+        cpu_text_entry.hexpand = true; 
         cpu_text_entry.changed.connect (() => {
             SaveStates.update_cpu_text_in_file (cpu_text_entry.text);
             save_config ();
         });
-
-        var color_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING) {
+    
+        gpu_linked_box.append (gpu_text_entry);
+        gpu_linked_box.append (gpu_color_button);
+        
+        cpu_linked_box.append (cpu_text_entry);
+        cpu_linked_box.append (cpu_color_button);
+    
+        var color_box = new FlowBox () {
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
             margin_top = FLOW_BOX_MARGIN,
-            margin_bottom = FLOW_BOX_MARGIN
+            margin_bottom = FLOW_BOX_MARGIN,
+            selection_mode = SelectionMode.NONE,
+            max_children_per_line = 2
         };
-        color_box.append (gpu_text_entry_box);
-        color_box.append (gpu_color_button);
-        color_box.append (cpu_text_entry_box);
-        color_box.append (cpu_color_button);
+        color_box.append (gpu_linked_box);
+        color_box.append (cpu_linked_box);
         visual_box.append (color_box);
 
         var fps_clarge_label = create_label (_("FPS color levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
