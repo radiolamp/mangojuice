@@ -1095,15 +1095,15 @@ public class MangoJuice : Adw.Application {
         });
         combined_flow_box.insert (borders_widget.widget, -1);
 
-        var alpha_widget = create_scale_entry_widget (_("Alpha"), _("Transparency"), 0, 100, 50);
+        var alpha_widget = create_scale_entry_widget (_("Alpha"), _("Transparency"), 0, 10, 5);
         alpha_scale = alpha_widget.scale;
         alpha_entry = alpha_widget.entry;
-        alpha_value_label = new Label ("50") {
+        alpha_value_label = new Label ("5") {
             width_chars = 3
         };
         alpha_scale.value_changed.connect (() => {
             double value = alpha_scale.get_value ();
-            alpha_value_label.label = "%.1f".printf (value / 100.0);
+            alpha_value_label.label = "%.1f".printf (value / 10.0);
             save_config ();
         });
         combined_flow_box.insert (alpha_widget.widget, -1);

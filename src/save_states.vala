@@ -448,7 +448,7 @@ public class SaveStates {
             }
 
             if (mango_juice.alpha_scale != null) {
-                double alpha_value = mango_juice.alpha_scale.get_value () / 100.0;
+                double alpha_value = mango_juice.alpha_scale.get_value () / 10.0;
                 string alpha_value_str = "%.1f".printf (alpha_value).replace (",", ".");
                 update_parameter (data_stream, "background_alpha", alpha_value_str);
             }

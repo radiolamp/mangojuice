@@ -231,7 +231,7 @@ public class LoadStates {
                 if (line.has_prefix ("background_alpha=")) {
                     if (mango_juice.alpha_scale != null) {
                         double alpha_value = double.parse (line.substring ("background_alpha=".length));
-                        mango_juice.alpha_scale.set_value (alpha_value * 100);
+                        mango_juice.alpha_scale.set_value (alpha_value * 10);
                         if (mango_juice.alpha_value_label != null) {
                             mango_juice.alpha_value_label.label = "%.1f".printf (alpha_value);
                         }

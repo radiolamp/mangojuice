@@ -118,7 +118,7 @@ public class ResetManager {
         if (app.af != null) app.af.set_value(0);
         if (app.picmip != null) app.picmip.set_value(0);
         if (app.borders_scale != null) app.borders_scale.set_value(0);
-        if (app.alpha_scale != null) app.alpha_scale.set_value(50);
+        if (app.alpha_scale != null) app.alpha_scale.set_value(5);
         if (app.colums_scale != null) app.colums_scale.set_value(3);
         if (app.font_size_scale != null) app.font_size_scale.set_value(24);
         if (app.offset_x_scale != null) app.offset_x_scale.set_value(0);
