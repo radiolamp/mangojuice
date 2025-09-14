@@ -1473,3 +1473,6 @@ msgstr "Папка Reshade успешно выбрана"
 
 msgid "Error selecting folder:"
 msgstr "Ошибка при выборе папки:"
+
+msgid "Enter MangoHud variables separated by commas"
+msgstr "Вводите переменные MangoHud через запятую"

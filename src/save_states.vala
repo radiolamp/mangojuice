@@ -249,10 +249,20 @@ public class SaveStates {
                     data_stream.put_string ("pci_dev=%s\n".printf (selected_pci_address));
                 }
             }
-
-            var custom_command = mango_juice.custom_command_entry.text;
+           
+           var custom_command = mango_juice.custom_command_entry.text;
             if (custom_command != "") {
-                data_stream.put_string ("%s #custom_command\n".printf (custom_command));
+                if (custom_command.contains (",")) {
+                    string[] commands = custom_command.split (",");
+                    foreach (string cmd in commands) {
+                        string trimmed_cmd = cmd.strip ();
+                        if (trimmed_cmd != "") {
+                            data_stream.put_string ("%s #custom_command\n".printf (trimmed_cmd));
+                        }
+                    }
+                } else {
+                    data_stream.put_string ("%s #custom_command\n".printf (custom_command));
+                }
             }
 
             if (mango_juice.offset_x_scale != null) {

@@ -1435,3 +1435,6 @@ msgstr ""
 
 msgid "Error selecting folder:"
 msgstr ""
+
+msgid "Enter MangoHud variables separated by commas"
+msgstr ""

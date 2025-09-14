@@ -29,6 +29,9 @@ public class LoadStates {
             var data_stream = new DataInputStream (file_stream);
             string line;
 
+            // Создаем список для сбора всех custom команд
+            var custom_commands = new Gee.ArrayList<string>();
+
             while ((line = yield data_stream.read_line_async ()) != null) {
                 load_switch_from_file (line, mango_juice.gpu_switches,         mango_juice.gpu_config_vars);
                 load_switch_from_file (line, mango_juice.cpu_switches,         mango_juice.cpu_config_vars);
@@ -43,9 +46,12 @@ public class LoadStates {
                 load_switch_from_file (line, mango_juice.inform_switches,      mango_juice.inform_config_vars);
                 load_switch_from_file (line, mango_juice.options_switches,     mango_juice.options_config_vars);
 
+                // Собираем custom команды в список
                 if (line.contains("#custom_command")) {
-                    var custom_command_value = line.split(" #custom_command")[0].strip();
-                    mango_juice.custom_command_entry.text = custom_command_value;
+                    var custom_command_value = line.split("#custom_command")[0].strip();
+                    if (custom_command_value != "") {
+                        custom_commands.add(custom_command_value);
+                    }
                 }
 
                 if (line.has_prefix ("toggle_logging=")) {
@@ -537,6 +543,11 @@ public class LoadStates {
                     }
                 }
             }
+
+            if (custom_commands.size > 0) {
+                mango_juice.custom_command_entry.text = string.joinv(", ", (string[]) custom_commands.to_array());
+            }
+
         } catch (Error e) {
             stderr.printf ("Error reading the file: %s\n", e.message);
         }

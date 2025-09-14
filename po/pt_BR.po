@@ -1329,3 +1329,6 @@ msgstr "Pasta do Reshade selecionada com sucesso"
 
 msgid "Error selecting folder:"
 msgstr "Erro ao selecionar a pasta:"
+
+msgid "Enter MangoHud variables separated by commas"
+msgstr "Digite as variáveis do MangoHud separadas por vírgulas"

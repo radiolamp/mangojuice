@@ -916,6 +916,7 @@ public class MangoJuice : Adw.Application {
     void initialize_custom_controls (Box extras_box, Box visual_box) {
         custom_command_entry = new Entry ();
         var custom_command_box = create_entry_with_clear_button (custom_command_entry, _("MangoHud variable"), "");
+        custom_command_entry.tooltip_text = _("Enter MangoHud variables separated by commas");
         custom_command_entry.changed.connect (() => {
             save_config ();
         });
