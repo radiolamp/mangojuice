@@ -204,7 +204,7 @@ namespace AboutDialog {
     
     Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice app, Adw.ToastOverlay toast_overlay, owned DeleteCallback on_delete, string initial_name = _("Profile"), bool is_existing_profile = false) {
         string profile_name = initial_name;
-    
+        
         if (!is_existing_profile) {
             if (profile_name.has_suffix(".exe")) {
                 profile_name = "wine-" + profile_name.substring(0, profile_name.length - 4);
@@ -213,13 +213,13 @@ namespace AboutDialog {
             }
             create_profile_config(profile_name);
         }
-    
+        
         var row = new Adw.ActionRow();
         row.set_title(profile_name);
         row.set_activatable(true);
         row.set_selectable(false);
         row.set_tooltip_text(_("Profile preview"));
-    
+        
         var edit_btn = new Gtk.Button();
         edit_btn.set_icon_name("document-edit-symbolic");
         edit_btn.set_focusable(false);
@@ -227,7 +227,7 @@ namespace AboutDialog {
         edit_btn.add_css_class("circular");
         edit_btn.set_tooltip_text(_("Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe. Attention case is important!"));
         edit_btn.set_valign(Gtk.Align.CENTER);
-    
+        
         var reset_btn = new Gtk.Button();
         reset_btn.set_icon_name("view-refresh-symbolic");
         reset_btn.set_focusable(false);
@@ -235,7 +235,7 @@ namespace AboutDialog {
         reset_btn.add_css_class("circular");
         reset_btn.set_tooltip_text(_("Overwrite profile"));
         reset_btn.set_valign(Gtk.Align.CENTER);
-    
+        
         var close_btn = new Gtk.Button();
         close_btn.set_icon_name("edit-delete-symbolic");
         close_btn.set_focusable(false);
@@ -243,42 +243,52 @@ namespace AboutDialog {
         close_btn.set_tooltip_text(_("Delete profile"));
         close_btn.set_valign(Gtk.Align.CENTER);
         close_btn.add_css_class("circular");
-    
+        
         var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
         button_box.append(edit_btn);
         button_box.append(reset_btn);
         button_box.append(close_btn);
         row.add_suffix(button_box);
-    
+        
         var entry = new Gtk.Entry();
         entry.set_text(profile_name);
         entry.set_visible(false);
         entry.set_hexpand(true);
         entry.set_valign(Gtk.Align.CENTER);
         row.add_prefix(entry);
-    
+        
         edit_btn.clicked.connect(() => {
             entry.set_text(profile_name);
             row.set_title("");
             entry.set_visible(true);
             entry.grab_focus();
         });
-    
+
+        if (!is_existing_profile) {
+            Timeout.add(100, () => {
+                entry.set_text(profile_name);
+                row.set_title("");
+                entry.set_visible(true);
+                entry.grab_focus();
+                return false;
+            });
+        }
+        
         reset_btn.clicked.connect(() => {
             try {
                 var config_dir = File.new_for_path(Environment.get_home_dir())
                     .get_child(".config")
                     .get_child("MangoHud");
-    
+        
                 var original_config = config_dir.get_child("MangoHud.conf");
                 var profile_config = config_dir.get_child(
                     profile_name.replace(" ", "-") + ".conf"
                 );
-    
+        
                 if (original_config.query_exists()) {
                     original_config.copy(profile_config, FileCopyFlags.OVERWRITE);
                 }
-
+    
                 var toast = new Adw.Toast(_("Changed"));
                 toast.set_timeout(3);
                 toast_overlay.add_toast(toast);
@@ -286,23 +296,23 @@ namespace AboutDialog {
                 warning("Failed to reset profile: %s", e.message);
             }
         });
-    
+        
         entry.activate.connect(() => {
             string new_name = entry.get_text().strip();
-    
+        
             if (new_name.has_suffix(".exe")) {
                 new_name = "wine " + new_name.substring(0, new_name.length - 4);
             }
-    
+        
             if (new_name != "" && new_name != profile_name) {
                 rename_profile_config(profile_name, new_name);
                 profile_name = new_name;
             }
-    
+        
             entry.set_visible(false);
             row.set_title(profile_name);
         });
-    
+        
         var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
         play_btn.add_css_class("flat");
         play_btn.set_tooltip_text(_("Apply the profile to the entire system"));
@@ -319,7 +329,7 @@ namespace AboutDialog {
             toast_overlay.add_toast(toast);
         });
         row.add_prefix(play_btn);
-    
+        
         var focus_controller = new Gtk.EventControllerFocus();
         focus_controller.leave.connect(() => {
             if (entry.get_visible()) {
@@ -327,7 +337,7 @@ namespace AboutDialog {
             }
         });
         entry.add_controller(focus_controller);
-    
+        
         close_btn.clicked.connect(() => {
             delete_profile_config(profile_name);
             group.remove(row);
@@ -336,24 +346,24 @@ namespace AboutDialog {
             toast.set_timeout(3);
             toast_overlay.add_toast(toast);
         });
-
+    
         string? wayland_display = Environment.get_variable("WAYLAND_DISPLAY");
         bool is_wayland = (wayland_display != null && wayland_display != "");
-
+    
         row.activated.connect(() => {
             try {
                 Process.spawn_command_line_async("pkill vkcube");
                 Process.spawn_command_line_async("pkill glxgears");
-    
+                SaveStates.reset_config_file_cache();
                 string config_path = Path.build_filename(
                     Environment.get_home_dir(),
                     ".config",
                     "MangoHud",
                     profile_name.replace(" ", "-") + ".conf"
                 );
-    
+        
                 string base_cmd = @"env MANGOHUD_CONFIGFILE='$config_path' mangohud";
-    
+        
                 if (app.is_flatpak ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
                     if (is_wayland) {
@@ -363,7 +373,7 @@ namespace AboutDialog {
                     }
                 } else if (app.is_vkcube_available ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
-                    Process.spawn_command_line_async (base_cmd + " mangohud vkcube");
+                    Process.spawn_command_line_async (base_cmd + " mangohud vkcube --wsi xcb");
                 } else if (app.is_glxgears_available ()) {
                     Process.spawn_command_line_sync ("pkill glxgears");
                     Process.spawn_command_line_async (base_cmd + " mangohud glxgears");
@@ -372,7 +382,7 @@ namespace AboutDialog {
                 warning("%s", e.message);
             }
         });
-    
+        
         return row;
     }
 

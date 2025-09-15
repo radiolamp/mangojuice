@@ -601,6 +601,10 @@ public class SaveStates {
         }
     }
 
+    public static void reset_config_file_cache() {
+        config_file_cache = null;
+    }
+
     public static void save_switches_to_file (DataOutputStream data_stream, Switch[] switches, string[] config_vars, int[] order) {
         for (int i = 0; i < order.length; i++) {
             int index = order[i];
