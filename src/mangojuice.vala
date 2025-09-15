@@ -1710,20 +1710,21 @@ public class MangoJuice : Adw.Application {
         font_button.set_hexpand(true);
         font_button.set_size_request(100, -1);
 
-        var popover = new Popover();
+        var popover = new Gtk.Popover();
         popover.set_autohide(true);
-        popover.set_has_arrow(false);
+        popover.set_has_arrow(true);
         popover.set_parent(font_button);
+        
+        var popover_box = new Gtk.Box(Orientation.VERTICAL, 6);
 
-        var popover_box = new Box(Orientation.VERTICAL, 5);
-        popover_box.set_margin_top(5);
-        popover_box.set_margin_bottom(5);
-        popover_box.set_margin_start(5);
-        popover_box.set_margin_end(5);
+        popover.add_css_class("menu");
         popover.set_child(popover_box);
 
         var search_entry = new SearchEntry();
         search_entry.set_placeholder_text(_("Search font"));
+        search_entry.set_margin_start(12);
+        search_entry.set_margin_end(12);
+        search_entry.set_margin_top(12);
         popover_box.append(search_entry);
 
         var scroll = new ScrolledWindow();
