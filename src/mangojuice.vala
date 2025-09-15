@@ -1401,62 +1401,87 @@ public class MangoJuice : Adw.Application {
             margin_bottom = FLOW_BOX_MARGIN,
             selection_mode = SelectionMode.NONE
         };
+
+    var color_dialog = new ColorDialog ();
+    var gpu_linked_box = new Box (Orientation.HORIZONTAL, 0);
+    gpu_linked_box.add_css_class("linked");
+            
+    var cpu_linked_box = new Box (Orientation.HORIZONTAL, 0);
+    cpu_linked_box.add_css_class("linked");
+    gpu_color_button = new ColorDialogButton (color_dialog);
+    setup_color_button(gpu_color_button, "#2e9762");
+    gpu_color_button.notify["rgba"].connect (() => {
+        var rgba = gpu_color_button.get_rgba ().copy ();
+        SaveStates.update_gpu_color_in_file (rgba_to_hex (rgba));
+    });
+    cpu_color_button = new ColorDialogButton (color_dialog);
+    setup_color_button(cpu_color_button, "#2e97cb");
+    cpu_color_button.notify["rgba"].connect (() => {
+        var rgba = cpu_color_button.get_rgba ().copy ();
+        SaveStates.update_cpu_color_in_file (rgba_to_hex (rgba));
+    });
     
-        var color_dialog = new ColorDialog ();
+    gpu_text_entry = new Entry ();
+    gpu_text_entry.placeholder_text = _("GPU custom name");
+    gpu_text_entry.hexpand = true; 
+    gpu_text_entry.changed.connect (() => {
+        SaveStates.update_gpu_text_in_file (gpu_text_entry.text);
+        save_config ();
+    });
     
-        var gpu_linked_box = new Box (Orientation.HORIZONTAL, 0);
-        gpu_linked_box.add_css_class("linked");
-        
-        var cpu_linked_box = new Box (Orientation.HORIZONTAL, 0);
-        cpu_linked_box.add_css_class("linked");
+    var gpu_clear_button = new Button() {
+        icon_name = "edit-clear-symbolic",
+        tooltip_text = _("Clear GPU name"),
+        visible = false
+    };
+    gpu_clear_button.clicked.connect(() => {
+        gpu_text_entry.text = "";
+    });
     
-        gpu_color_button = new ColorDialogButton (color_dialog);
-        setup_color_button(gpu_color_button, "#2e9762");
-        gpu_color_button.notify["rgba"].connect (() => {
-            var rgba = gpu_color_button.get_rgba ().copy ();
-            SaveStates.update_gpu_color_in_file (rgba_to_hex (rgba));
-        });
+    gpu_text_entry.notify["text"].connect((obj, pspec) => {
+        gpu_clear_button.visible = gpu_text_entry.text != "";
+    });
     
-        cpu_color_button = new ColorDialogButton (color_dialog);
-        setup_color_button(cpu_color_button, "#2e97cb");
-        cpu_color_button.notify["rgba"].connect (() => {
-            var rgba = cpu_color_button.get_rgba ().copy ();
-            SaveStates.update_cpu_color_in_file (rgba_to_hex (rgba));
-        });
+    cpu_text_entry = new Entry ();
+    cpu_text_entry.placeholder_text = _("CPU custom name");
+    cpu_text_entry.hexpand = true; 
+    cpu_text_entry.changed.connect (() => {
+        SaveStates.update_cpu_text_in_file (cpu_text_entry.text);
+        save_config ();
+    });
     
-        gpu_text_entry = new Entry ();
-        gpu_text_entry.placeholder_text = _("GPU custom name");
-        gpu_text_entry.hexpand = true; 
-        gpu_text_entry.changed.connect (() => {
-            SaveStates.update_gpu_text_in_file (gpu_text_entry.text);
-            save_config ();
-        });
+    var cpu_clear_button = new Button() {
+        icon_name = "edit-clear-symbolic",
+        tooltip_text = _("Clear CPU name"),
+        visible = false
+    };
+    cpu_clear_button.clicked.connect(() => {
+        cpu_text_entry.text = "";
+    });
     
-        cpu_text_entry = new Entry ();
-        cpu_text_entry.placeholder_text = _("CPU custom name");
-        cpu_text_entry.hexpand = true; 
-        cpu_text_entry.changed.connect (() => {
-            SaveStates.update_cpu_text_in_file (cpu_text_entry.text);
-            save_config ();
-        });
+    cpu_text_entry.notify["text"].connect((obj, pspec) => {
+        cpu_clear_button.visible = cpu_text_entry.text != "";
+    });
     
-        gpu_linked_box.append (gpu_text_entry);
-        gpu_linked_box.append (gpu_color_button);
-        
-        cpu_linked_box.append (cpu_text_entry);
-        cpu_linked_box.append (cpu_color_button);
+    gpu_linked_box.append (gpu_text_entry);
+    gpu_linked_box.append (gpu_clear_button);
+    gpu_linked_box.append (gpu_color_button);
+            
+    cpu_linked_box.append (cpu_text_entry);
+    cpu_linked_box.append (cpu_clear_button);
+    cpu_linked_box.append (cpu_color_button);
     
-        var color_box = new FlowBox () {
-            margin_start = FLOW_BOX_MARGIN,
-            margin_end = FLOW_BOX_MARGIN,
-            margin_top = FLOW_BOX_MARGIN,
-            margin_bottom = FLOW_BOX_MARGIN,
-            selection_mode = SelectionMode.NONE,
-            max_children_per_line = 2
-        };
-        color_box.append (gpu_linked_box);
-        color_box.append (cpu_linked_box);
-        visual_box.append (color_box);
+    var color_box = new FlowBox () {
+        margin_start = FLOW_BOX_MARGIN,
+        margin_end = FLOW_BOX_MARGIN,
+        margin_top = FLOW_BOX_MARGIN,
+        margin_bottom = FLOW_BOX_MARGIN,
+        selection_mode = SelectionMode.NONE,
+        max_children_per_line = 2
+    };
+    color_box.append (gpu_linked_box);
+    color_box.append (cpu_linked_box);
+    visual_box.append (color_box);
 
         var fps_clarge_label = create_label (_("FPS color levels"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
         visual_box.append (fps_clarge_label);
