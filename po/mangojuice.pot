@@ -1438,3 +1438,6 @@ msgstr ""
 
 msgid "Enter MangoHud variables separated by commas"
 msgstr ""
+
+msgid "Directory for logs"
+msgstr ""

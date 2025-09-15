@@ -1332,3 +1332,6 @@ msgstr "Erro ao selecionar a pasta:"
 
 msgid "Enter MangoHud variables separated by commas"
 msgstr "Digite as variáveis do MangoHud separadas por vírgulas"
+
+msgid "Directory for logs"
+msgstr "Diretório para logs"

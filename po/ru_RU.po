@@ -1476,3 +1476,6 @@ msgstr "Ошибка при выборе папки:"
 
 msgid "Enter MangoHud variables separated by commas"
 msgstr "Вводите переменные MangoHud через запятую"
+
+msgid "Directory for logs"
+msgstr "Директория для логов"
