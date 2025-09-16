@@ -9,3 +9,12 @@
 flowboxchild {
     background: none;
 }
+
+.profile-row.selected {
+    background-color: alpha(@accent_bg_color, 0.5);
+    border-radius: 10px;
+}
+
+.profile-row.selected:focus {
+    background-color: alpha(@accent_bg_color, 0.7);
+}

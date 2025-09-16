@@ -201,6 +201,8 @@ namespace AboutDialog {
     
         dialog.present(parent_window);
     }
+
+    static Adw.ActionRow? currently_selected_row = null;
     
     Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice app, Adw.ToastOverlay toast_overlay, owned DeleteCallback on_delete, string initial_name = _("Profile"), bool is_existing_profile = false) {
         string profile_name = initial_name;
@@ -219,6 +221,7 @@ namespace AboutDialog {
         row.set_activatable(true);
         row.set_selectable(false);
         row.set_tooltip_text(_("Profile preview"));
+        row.add_css_class("profile-row");
         
         var edit_btn = new Gtk.Button();
         edit_btn.set_icon_name("document-edit-symbolic");
@@ -262,14 +265,27 @@ namespace AboutDialog {
             row.set_title("");
             entry.set_visible(true);
             entry.grab_focus();
+    
+            if (currently_selected_row != null && currently_selected_row != row) {
+                currently_selected_row.remove_css_class("selected");
+            }
+            row.add_css_class("selected");
+            currently_selected_row = row;
         });
-
+    
         if (!is_existing_profile) {
             Timeout.add(100, () => {
                 entry.set_text(profile_name);
                 row.set_title("");
                 entry.set_visible(true);
                 entry.grab_focus();
+    
+                if (currently_selected_row != null && currently_selected_row != row) {
+                    currently_selected_row.remove_css_class("selected");
+                }
+                row.add_css_class("selected");
+                currently_selected_row = row;
+                
                 return false;
             });
         }
@@ -279,12 +295,12 @@ namespace AboutDialog {
                 var config_dir = File.new_for_path(Environment.get_home_dir())
                     .get_child(".config")
                     .get_child("MangoHud");
-        
+    
                 var original_config = config_dir.get_child("MangoHud.conf");
                 var profile_config = config_dir.get_child(
                     profile_name.replace(" ", "-") + ".conf"
                 );
-        
+    
                 if (original_config.query_exists()) {
                     original_config.copy(profile_config, FileCopyFlags.OVERWRITE);
                 }
@@ -299,18 +315,24 @@ namespace AboutDialog {
         
         entry.activate.connect(() => {
             string new_name = entry.get_text().strip();
-        
+    
             if (new_name.has_suffix(".exe")) {
                 new_name = "wine " + new_name.substring(0, new_name.length - 4);
             }
-        
+    
             if (new_name != "" && new_name != profile_name) {
                 rename_profile_config(profile_name, new_name);
                 profile_name = new_name;
             }
-        
+    
             entry.set_visible(false);
             row.set_title(profile_name);
+    
+            if (currently_selected_row != null && currently_selected_row != row) {
+                currently_selected_row.remove_css_class("selected");
+            }
+            row.add_css_class("selected");
+            currently_selected_row = row;
         });
         
         var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
@@ -327,6 +349,10 @@ namespace AboutDialog {
             var toast = new Adw.Toast(_("Applied"));
             toast.set_timeout(3);
             toast_overlay.add_toast(toast);
+            if (currently_selected_row == row) {
+                row.remove_css_class("selected");
+                currently_selected_row = null;
+            }
         });
         row.add_prefix(play_btn);
         
@@ -339,6 +365,10 @@ namespace AboutDialog {
         entry.add_controller(focus_controller);
         
         close_btn.clicked.connect(() => {
+            if (currently_selected_row == row) {
+                currently_selected_row.remove_css_class("selected");
+                currently_selected_row = null;
+            }
             delete_profile_config(profile_name);
             group.remove(row);
             on_delete();
@@ -346,11 +376,17 @@ namespace AboutDialog {
             toast.set_timeout(3);
             toast_overlay.add_toast(toast);
         });
-    
+        
         string? wayland_display = Environment.get_variable("WAYLAND_DISPLAY");
         bool is_wayland = (wayland_display != null && wayland_display != "");
-    
+        
         row.activated.connect(() => {
+            if (currently_selected_row != null && currently_selected_row != row) {
+                currently_selected_row.remove_css_class("selected");
+            }
+            row.add_css_class("selected");
+            currently_selected_row = row;
+            
             try {
                 Process.spawn_command_line_async("pkill vkcube");
                 Process.spawn_command_line_async("pkill glxgears");
@@ -361,9 +397,9 @@ namespace AboutDialog {
                     "MangoHud",
                     profile_name.replace(" ", "-") + ".conf"
                 );
-        
+    
                 string base_cmd = @"env MANGOHUD_CONFIGFILE='$config_path' mangohud";
-        
+    
                 if (app.is_flatpak ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
                     if (is_wayland) {
@@ -382,6 +418,16 @@ namespace AboutDialog {
                 warning("%s", e.message);
             }
         });
+    
+        var click_controller = new Gtk.GestureClick();
+        click_controller.pressed.connect((n_press, x, y) => {
+            if (currently_selected_row != null && currently_selected_row != row) {
+                currently_selected_row.remove_css_class("selected");
+            }
+            row.add_css_class("selected");
+            currently_selected_row = row;
+        });
+        row.add_controller(click_controller);
         
         return row;
     }
