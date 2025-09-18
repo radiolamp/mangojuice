@@ -59,7 +59,7 @@ namespace AboutDialog {
         app_icon.set_halign(Gtk.Align.CENTER);
         icon_container.append(app_icon);
         
-        var description_label = new Gtk.Label(_("Your support helps us continue developing and improving MangoJuice. Choose your preferred method:"));
+        var description_label = new Gtk.Label(_("It is only thanks to your support that Mangojuice lives and develops. If it is not difficult for you, please support the project financially. Any amount will be useful and will go towards development."));
         description_label.set_wrap(true);
         description_label.set_halign(Gtk.Align.CENTER);
         description_label.add_css_class("heading");
