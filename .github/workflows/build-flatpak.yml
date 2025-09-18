@@ -31,8 +31,8 @@ jobs:
       - name: Setup Flatpak
         run: |
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          flatpak install --user -y flathub org.gnome.Platform//49
-          flatpak install --user -y flathub org.gnome.Sdk//49
+          flatpak install --user -y flathub org.gnome.Platform//48
+          flatpak install --user -y flathub org.gnome.Sdk//48
           flatpak install --user -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
 
       - name: Build
