@@ -200,96 +200,91 @@ public class OtherBox : Box {
         reshade_descriptions.clear();
         reshade_flow_box.remove_all();
 
-        var shader_descriptions = new Gee.HashMap<string, string>();
-        shader_descriptions["AdaptiveSharpen"] = _("Adaptive sharpening that adjusts based on local content");
-        shader_descriptions["Border"] = _("Add customizable borders around the image");
-        shader_descriptions["Curves"] = _("RGB curve correction for precise contrast control");
-        shader_descriptions["Daltonize"] = _("Color blindness correction (protanopia, deuteranopia, tritanopia)");
-        shader_descriptions["Defring"] = _("Chromatic aberration correction through channel offset");
-        shader_descriptions["LiftGammaGain"] = _("Professional shadow, midtone, and highlight correction");
-        shader_descriptions["LumaSharpen"] = _("Luminance-based sharpening without color artifacts");
-        shader_descriptions["Monochrome"] = _("Black and white conversion with film presets");
-        shader_descriptions["Sepia"] = _("Vintage sepia effect with tint control");
-        shader_descriptions["Tonemap"] = _("HDR tone mapping for SDR conversion");
-        shader_descriptions["Vignette"] = _("Progressive edge darkening for artistic effect");
-        shader_descriptions["Colourfulness"] = _("Intelligent zonal saturation enhancement");
-        shader_descriptions["4xBRZ"] = _("Specialized upscaling for pixelated retro images");
-        shader_descriptions["Cartoon"] = _("Cartoon effect through edge detection");
-        shader_descriptions["Clarity"] = _("Local unsharp mask with integrated denoising");
-        shader_descriptions["ColorMatrix"] = _("Color transformation using matrix manipulation");
-        shader_descriptions["Comic"] = _("Comic book style effect with enhanced edges and color posterization");
-        shader_descriptions["DPX"] = _("Cinematic DPX grading process emulation");
-        shader_descriptions["FilmGrain"] = _("Procedural film grain with Gaussian noise control");
-        shader_descriptions["Nostalgia"] = _("Color reduction to retro palettes with dithering");
-        shader_descriptions["SmartSharp"] = _("Intelligent depth-based sharpening with bilateral filtering");
-        shader_descriptions["SmartVibrance"] = _("Advanced vibrance algorithm with intelligent saturation control");
-        shader_descriptions["Technicolor"] = _("Vintage Technicolor process simulation");
-        shader_descriptions["Technicolor2"] = _("Enhanced Technicolor effect with additional controls");
-        shader_descriptions["CRT"] = _("Complete CRT monitor simulation with scanlines, curvature, and aperture mask");
-        shader_descriptions["FakeHDR"] = _("HDR simulation with multi-scale bloom and halo effects");
+    var shader_descriptions = new Gee.HashMap<string, string>();
     
-        foreach (string shader_name in reshade_shaders) {
-            var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
-            row_box.set_hexpand (true);
-            row_box.set_valign (Align.CENTER);
-            
-            var switch_widget = new Switch ();
-            switch_widget.set_valign (Align.CENTER);
-            switch_widget.set_name ("reshade_" + shader_name);
-            reshade_switches.add (switch_widget);
-
-            var text_box = new Box (Orientation.VERTICAL, 0);
-            text_box.set_valign (Align.CENTER);
-            text_box.set_halign (Align.START);
-            text_box.set_size_request (160, -1);
-
-            string display_name = shader_name.replace(".fx", "");
-
-            var label1 = new Label (null);
-            label1.set_halign (Align.START);
-            label1.set_hexpand (false);
-            label1.set_ellipsize (Pango.EllipsizeMode.END);
-            label1.set_max_width_chars (20);
-            label1.set_markup ("<b>%s</b>".printf (display_name));
-            reshade_labels.add (label1);
-
-            var label2 = new Label (null);
-            label2.set_halign (Align.START);
-            label2.set_hexpand (false);
-            label2.add_css_class ("dim-label");
-            label2.set_ellipsize (Pango.EllipsizeMode.END);
-            label2.set_max_width_chars (20);
-
-            string description = shader_descriptions.has_key(display_name) 
-                ? shader_descriptions[display_name] 
-                : _("Shaders");
-            
-            label2.set_markup ("<span size='small'>%s</span>".printf (description));
-            reshade_descriptions.add (label2);
-
-            string tooltip_text = shader_descriptions.has_key(display_name)
-                ? "%s: %s".printf(display_name, shader_descriptions[display_name])
-                : display_name;
-            
-            label1.set_tooltip_text (tooltip_text);
-            label2.set_tooltip_text (tooltip_text);
-            text_box.set_tooltip_text (tooltip_text);
-
-            text_box.append (label1);
-            text_box.append (label2);
-
-            row_box.append (switch_widget);
-            row_box.append (text_box);
-            reshade_flow_box.insert (row_box, -1);
-            
-            switch_widget.state_set.connect ((state) => {
-                if (!is_loading) {
-                    OtherSave.save_states (this);
-                    restart_vkcube();
-                }
-                return false;
-            });
-        }
+    shader_descriptions["adaptivesharpen"] = _("Adaptive sharpening that adjusts based on local content");
+    shader_descriptions["border"] = _("Add customizable borders around the image");
+    shader_descriptions["curves"] = _("RGB curve correction for precise contrast control");
+    shader_descriptions["daltonize"] = _("Color blindness correction (protanopia, deuteranopia, tritanopia)");
+    shader_descriptions["defring"] = _("Chromatic aberration correction through channel offset");
+    shader_descriptions["liftgammagain"] = _("Professional shadow, midtone, and highlight correction");
+    shader_descriptions["lumasharpen"] = _("Luminance-based sharpening without color artifacts");
+    shader_descriptions["monochrome"] = _("Black and white conversion with film presets");
+    shader_descriptions["sepia"] = _("Vintage sepia effect with tint control");
+    shader_descriptions["tonemap"] = _("HDR tone mapping for SDR conversion");
+    shader_descriptions["vignette"] = _("Progressive edge darkening for artistic effect");
+    shader_descriptions["colourfulness"] = _("Intelligent zonal saturation enhancement");
+    shader_descriptions["4xbrz"] = _("Specialized upscaling for pixelated retro images");
+    shader_descriptions["cartoon"] = _("Cartoon effect through edge detection");
+    shader_descriptions["clarity"] = _("Local unsharp mask with integrated denoising");
+    shader_descriptions["colormatrix"] = _("Color transformation using matrix manipulation");
+    shader_descriptions["comic"] = _("Comic book style effect with enhanced edges and color posterization");
+    shader_descriptions["dpx"] = _("Cinematic DPX grading process emulation");
+    shader_descriptions["filmgrain"] = _("Procedural film grain with Gaussian noise control");
+    shader_descriptions["nostalgia"] = _("Color reduction to retro palettes with dithering");
+    shader_descriptions["smartsharp"] = _("Intelligent depth-based sharpening with bilateral filtering");
+    shader_descriptions["smartvibrance"] = _("Advanced vibrance algorithm with intelligent saturation control");
+    shader_descriptions["technicolor"] = _("Vintage Technicolor process simulation");
+    shader_descriptions["technicolor2"] = _("Enhanced Technicolor effect with additional controls");
+    shader_descriptions["crt"] = _("Complete CRT monitor simulation with scanlines, curvature, and aperture mask");
+    shader_descriptions["fakehdr"] = _("HDR simulation with multi-scale bloom and halo effects");
+    
+    foreach (string shader_name in reshade_shaders) {
+        var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
+        row_box.set_hexpand (true);
+        row_box.set_valign (Align.CENTER);
+        
+        var switch_widget = new Switch ();
+        switch_widget.set_valign (Align.CENTER);
+        switch_widget.set_name ("reshade_" + shader_name);
+        reshade_switches.add (switch_widget);
+        var text_box = new Box (Orientation.VERTICAL, 0);
+        text_box.set_valign (Align.CENTER);
+        text_box.set_halign (Align.START);
+        text_box.set_size_request (160, -1);
+        string display_name = shader_name.replace(".fx", "");
+        var label1 = new Label (null);
+        label1.set_halign (Align.START);
+        label1.set_hexpand (false);
+        label1.set_ellipsize (Pango.EllipsizeMode.END);
+        label1.set_max_width_chars (20);
+        label1.set_markup ("<b>%s</b>".printf (display_name));
+        reshade_labels.add (label1);
+        var label2 = new Label (null);
+        label2.set_halign (Align.START);
+        label2.set_hexpand (false);
+        label2.add_css_class ("dim-label");
+        label2.set_ellipsize (Pango.EllipsizeMode.END);
+        label2.set_max_width_chars (20);
+    
+        string normalized_name = display_name.down();
+        string description = shader_descriptions.has_key(normalized_name) 
+            ? shader_descriptions[normalized_name] 
+            : _("Shaders");
+        
+        label2.set_markup ("<span size='small'>%s</span>".printf (description));
+        reshade_descriptions.add (label2);
+        string tooltip_text = shader_descriptions.has_key(normalized_name)
+            ? "%s: %s".printf(display_name, shader_descriptions[normalized_name])
+            : display_name;
+        
+        label1.set_tooltip_text (tooltip_text);
+        label2.set_tooltip_text (tooltip_text);
+        text_box.set_tooltip_text (tooltip_text);
+        text_box.append (label1);
+        text_box.append (label2);
+        row_box.append (switch_widget);
+        row_box.append (text_box);
+        reshade_flow_box.insert (row_box, -1);
+        
+        switch_widget.state_set.connect ((state) => {
+            if (!is_loading) {
+                OtherSave.save_states (this);
+                restart_vkcube();
+            }
+            return false;
+        });
+    }
         
         is_loading = true;
         OtherLoad.apply_reshade_states(this, load_result.reshade_states);
