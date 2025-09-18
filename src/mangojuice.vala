@@ -521,12 +521,9 @@ public class MangoJuice : Adw.Application {
         button.add_controller (motion_controller);
 
         button.clicked.connect (() => {
-            try {
-                Process.spawn_async (null, {"xdg-open", "https://radiolamp.github.io/mangojuice-donate/"},
-                                   null, SpawnFlags.SEARCH_PATH, null, null);
-            } catch (Error e) {
-                stderr.printf ("Error when opening the site: %s\n", e.message);
-            }
+            AboutDialog.show_support_dialog.begin(this.active_window, (obj, res) => {
+                AboutDialog.show_support_dialog.end(res);
+            });
         });
 
         return button;
