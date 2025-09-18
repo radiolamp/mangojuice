@@ -25,17 +25,13 @@ namespace AboutDialog {
         dialog.version = Config.VERSION;
         dialog.translator_credits = _("translator-credits");
         dialog.set_developers(developers);
-        dialog.add_link (_("Financial support") + " (Donation Alerts)", "https://www.donationalerts.com/r/radiolamp");
-        dialog.add_link (_("Financial support") + " (Tinkoff)", "https://www.tbank.ru/cf/3PPTstulqEq");
-        dialog.add_link (_("Financial support") + " (Boosty)", "https://boosty.to/radiolamp");
-
         dialog.present (parent_window);
     }
 
     public async void show_support_dialog (Gtk.Window parent_window) {
         var dialog = new Adw.Dialog();
         dialog.set_title(_("Support the Project"));
-        dialog.set_content_width(600);
+        dialog.set_content_width(560);
         dialog.set_content_height(480);
         
         var scrolled_window = new Gtk.ScrolledWindow();
@@ -108,19 +104,6 @@ namespace AboutDialog {
             });
         });
         
-        var tinkoff_btn = new Gtk.Button.with_label(_("Tinkoff"));
-        tinkoff_btn.set_tooltip_text("https://www.tbank.ru/cf/3PPTstulqEq");
-        tinkoff_btn.clicked.connect(() => {
-            var launcher = new Gtk.UriLauncher("https://www.tbank.ru/cf/3PPTstulqEq");
-            launcher.launch.begin(parent_window, null, (obj, res) => {
-                try {
-                    launcher.launch.end(res);
-                } catch (Error e) {
-                    warning("Failed to open Tinkoff: %s", e.message);
-                }
-            });
-        });
-        
         var boosty_btn = new Gtk.Button.with_label(_("Boosty"));
         boosty_btn.set_tooltip_text("https://boosty.to/radiolamp");
         boosty_btn.clicked.connect(() => {
@@ -133,6 +116,58 @@ namespace AboutDialog {
                 }
             });
         });
+
+        var tinkoff_btn = new Gtk.Button.with_label(_("Tinkoff"));
+        tinkoff_btn.set_tooltip_text("https://www.tbank.ru/cf/3PPTstulqEq");
+        tinkoff_btn.clicked.connect(() => {
+            var launcher = new Gtk.UriLauncher("https://www.tbank.ru/cf/3PPTstulqEq");
+            launcher.launch.begin(parent_window, null, (obj, res) => {
+                try {
+                    launcher.launch.end(res);
+                } catch (Error e) {
+                    warning("Failed to open Tinkoff: %s", e.message);
+                }
+            });
+        });
+
+        var ymoney_btn = new Gtk.Button.with_label(_("ЮMoney (Мир)"));
+        ymoney_btn.set_tooltip_text("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
+        ymoney_btn.clicked.connect(() => {
+            var launcher = new Gtk.UriLauncher("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
+            launcher.launch.begin(parent_window, null, (obj, res) => {
+                try {
+                    launcher.launch.end(res);
+                } catch (Error e) {
+                    warning("Failed to open ЮMoney: %s", e.message);
+                }
+            });
+        });
+
+        var sber_btn = new Gtk.Button.with_label(_("Sber (Мир)"));
+        sber_btn.set_tooltip_text("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
+        sber_btn.clicked.connect(() => {
+            var launcher = new Gtk.UriLauncher("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
+            launcher.launch.begin(parent_window, null, (obj, res) => {
+                try {
+                    launcher.launch.end(res);
+                } catch (Error e) {
+                    warning("Failed to open Sber: %s", e.message);
+                }
+            });
+        });
+
+        var telegram_btn = new Gtk.Button.with_label(_("Telegram (TON)"));
+        telegram_btn.set_tooltip_text(_("Click to copy the wallet number"));
+        telegram_btn.clicked.connect(() => {
+            var clipboard = Gdk.Display.get_default().get_clipboard();
+            clipboard.set_text("UQCHkkZx3UT_8A-tAI8Zlu6iuX5WsBYLa0JVC7SK8PfJ3Rqf");
+            string original_text = telegram_btn.get_label();
+            telegram_btn.set_label(_("Copied"));
+            Timeout.add_seconds(1, () => {
+                telegram_btn.set_label(original_text);
+                return false;
+            });
+        });
         
         var donation_child = new Gtk.FlowBoxChild();
         donation_child.set_child(donation_alerts_btn);
@@ -142,10 +177,22 @@ namespace AboutDialog {
         
         var boosty_child = new Gtk.FlowBoxChild();
         boosty_child.set_child(boosty_btn);
+
+        var ymoney_child = new Gtk.FlowBoxChild();
+        ymoney_child.set_child(ymoney_btn);
+
+        var telegram_child = new Gtk.FlowBoxChild();
+        telegram_child.set_child(telegram_btn);
+
+        var sber_child = new Gtk.FlowBoxChild();
+        sber_child.set_child(sber_btn);
         
         flow_box.append(donation_child);
-        flow_box.append(tinkoff_child);
         flow_box.append(boosty_child);
+        flow_box.append(ymoney_child);
+        flow_box.append(tinkoff_child);
+        flow_box.append(telegram_child);
+        flow_box.append(sber_child);
         
         main_box.append(flow_box);
         
