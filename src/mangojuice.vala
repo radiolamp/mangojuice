@@ -108,8 +108,9 @@ public class MangoJuice : Adw.Application {
     public  ShortcutRecorder  toggle_hud_key_recorder;
     public  ShortcutRecorder  toggle_fps_limit_recorder;
     public  ShortcutRecorder  logs_key_recorder;
-    bool        mangohud_global_enabled = false;
-    public bool is_loading              = false;
+    bool    mangohud_global_enabled     = false;
+    public  bool is_loading             = false;
+    bool    first_run                   = false;
 
     ScrolledWindow  other_scrolled_window;
     ViewStack       view_stack;
@@ -125,6 +126,7 @@ public class MangoJuice : Adw.Application {
     const string OPTIONS_TITLE           = _("Options");
     const string BATTERY_TITLE           = _("Battery");
     const string INFORM_TITLE            = _("Information");
+    const string FIRST_RUN_FILE          = ".mangojuice";
     const int    MAIN_BOX_SPACING        = 12;
     const int    FLOW_BOX_ROW_SPACING    = 12;
     const int    FLOW_BOX_COLUMN_SPACING = 12;
@@ -535,6 +537,25 @@ public class MangoJuice : Adw.Application {
         bool glxgears_available = false;
         if (!vkcube_available) {
             glxgears_available = is_glxgears_available ();
+        }
+
+        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config");
+        var first_run_file = config_dir.get_child(FIRST_RUN_FILE);
+        first_run = !first_run_file.query_exists();
+                
+        if (first_run) {
+            Timeout.add(1000, () => {
+                try {
+                    first_run_file.create(FileCreateFlags.NONE);
+                } catch (Error e) {
+                    warning("Could not create first-run file: %s", e.message);
+                }
+                AboutDialog.show_support_dialog.begin(window, (obj, res) => {
+                    AboutDialog.show_support_dialog.end(res);
+                });
+                
+                return false;
+            });
         }
 
         var click_controller = new Gtk.GestureClick();

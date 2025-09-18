@@ -37,7 +37,7 @@ namespace AboutDialog {
         dialog.set_title(_("Support the Project"));
         dialog.set_content_width(600);
         dialog.set_content_height(480);
-    
+        
         var scrolled_window = new Gtk.ScrolledWindow();
         scrolled_window.set_hexpand(true);
         scrolled_window.set_vexpand(true);
@@ -52,12 +52,16 @@ namespace AboutDialog {
         header_bar.set_show_end_title_buttons(true);
         header_bar.add_css_class("flat");
         main_box.append(header_bar);
+    
+        var icon_container = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+        icon_container.set_halign(Gtk.Align.CENTER);
+        icon_container.set_vexpand(true);
+        main_box.append(icon_container);
         
         var app_icon = new Gtk.Image.from_icon_name("io.github.radiolamp.mangojuice");
         app_icon.set_pixel_size(150);
         app_icon.set_halign(Gtk.Align.CENTER);
-        app_icon.set_vexpand (true);
-        main_box.append(app_icon);
+        icon_container.append(app_icon);
         
         var description_label = new Gtk.Label(_("Your support helps us continue developing and improving MangoJuice. Choose your preferred method:"));
         description_label.set_wrap(true);
@@ -83,7 +87,7 @@ namespace AboutDialog {
         flow_box.set_margin_end(24);
         SourceFunc callback = null;
         bool dialog_closed = false;
-    
+        
         dialog.closed.connect(() => {
             dialog_closed = true;
             if (callback != null) {
@@ -144,7 +148,7 @@ namespace AboutDialog {
         flow_box.append(boosty_child);
         
         main_box.append(flow_box);
-    
+        
         var spacer = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
         spacer.set_hexpand(true);
         spacer.set_vexpand(true);
@@ -168,6 +172,12 @@ namespace AboutDialog {
         main_box.append(thanks_box);
     
         dialog.present(parent_window);
+    
+        Timeout.add(500, () => {
+            icon_container.add_css_class("wobble-animation");
+            return Source.REMOVE;
+        });
+        
         while (!dialog_closed) {
             callback = show_support_dialog.callback;
             yield;

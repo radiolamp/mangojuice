@@ -18,3 +18,15 @@ flowboxchild {
 .profile-row.selected:focus {
     background-color: alpha(@accent_bg_color, 0.7);
 }
+
+@keyframes wobble {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.wobble-animation {
+  animation: wobble 1s ease-in-out 1;
+}
