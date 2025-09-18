@@ -151,7 +151,7 @@
               "type": "git",
               "url": "https://github.com/glfw/glfw.git",
               "tag": "3.4",
-              "commit": "7b6aead9fb88b3623e3b3725ebb42670cbe4c579"
+              "commit": "8e15281d34a8b9ee9271ccce38177a3d812456f8"
             }
           ]
         },
