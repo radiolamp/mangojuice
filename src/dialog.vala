@@ -62,6 +62,7 @@ namespace AboutDialog {
         var description_label = new Gtk.Label(_("Your support helps us continue developing and improving MangoJuice. Choose your preferred method:"));
         description_label.set_wrap(true);
         description_label.set_halign(Gtk.Align.CENTER);
+        description_label.add_css_class("heading");
         description_label.set_margin_top(24);
         description_label.set_margin_bottom(48);
         description_label.set_margin_start(24);
