@@ -632,7 +632,7 @@ public class MangoJuice : Adw.Application {
         stderr.printf(_("vkcube not found. If you want a test button, install vulkan-tools.\n") +
                      _("glxgears not found. If you want a test button, install mesa-utils.\n"));
 
-        var toast = new Adw.Toast(_("Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
+        var toast = new Adw.Toast(_("vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable the test button."));
         toast.set_timeout(15);
         toast.dismissed.connect(() => {
             if (is_vkcube_available() && is_glxgears_available()) {

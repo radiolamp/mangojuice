@@ -64,7 +64,7 @@ public class OtherBox : Box {
             _("Subpixel Morphological Antialiasing"),
             _("Color LookUp Table")
         };
-        create_switches_and_labels (this, "VkBasalt", switches, labels, config_vars, label_texts, label_texts_2);
+        create_switches_and_labels (this, "vkBasalt", switches, labels, config_vars, label_texts, label_texts_2);
         foreach (var switch_widget in switches) {
             switch_widget.state_set.connect ((state) => {
                 if (!is_loading) {
@@ -116,11 +116,11 @@ public class OtherBox : Box {
         buttons_flow_box.set_max_children_per_line (3);
         buttons_flow_box.set_min_children_per_line (1);
         
-        vkbasalt_global_button = new Button.with_label (_("Global VkBasalt"));
+        vkbasalt_global_button = new Button.with_label (_("Global vkBasalt"));
         buttons_flow_box.append (vkbasalt_global_button);
         
         hotkey_recorder = new ShortcutRecorder() {
-            tooltip_text = _("Click to record VkBasalt toggle shortcut"),
+            tooltip_text = _("Click to record vkBasalt toggle shortcut"),
             hexpand = true,
             shortcut = "Home"
         };
