@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.8.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-27 01:37+0300\n"
-"PO-Revision-Date: 2025-05-27 01:37+0300\n"
+"POT-Creation-Date: 2025-09-19 13:15+0300\n"
+"PO-Revision-Date: 2025-09-19 13:28+0300\n"
 "Last-Translator: David Sultaniiazov <x1z53@alt-gnome.ru>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -33,8 +33,8 @@ msgid "Mango Juice"
 msgstr "Mango Juice"
 
 #: data/io.github.radiolamp.mangojuice.metainfo.xml:7
-msgid "The MangoHUD customization assistant"
-msgstr "Помощник по настройке MangoHUD"
+msgid "Customizable performance display"
+msgstr "Настраиваемое отображение производительности"
 
 #: data/io.github.radiolamp.mangojuice.metainfo.xml:9
 msgid ""
@@ -46,67 +46,55 @@ msgstr ""
 "которое, в свою очередь, является оверлейным решением для отслеживания "
 "загрузки и других параметров в играх и другом программном обеспечении."
 
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:18
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:19
 msgid "Main interface of MangoJuice"
 msgstr "Основной интерфейс MangoJuice"
 
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:22
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:23
 msgid "Extra"
 msgstr "Дополнительно"
 
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:26
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:27
 msgid "Metric"
 msgstr "Метрика"
 
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:30
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:42 src/mangojuice.vala:425
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:31
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:43 src/mangojuice.vala:437
 msgid "Visual"
 msgstr "Визуальные"
 
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:34 src/mangojuice.vala:487
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:35 src/mangojuice.vala:499
 msgid "Your profiles"
 msgstr "Ваши профили"
 
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:38 src/mangojuice.vala:489
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:39 src/mangojuice.vala:501
 msgid "Change order"
 msgstr "Изменить порядок"
 
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:46
-msgid "Radiolamp"
-msgstr "Radiolamp"
-
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:52
-msgid "Profiles and sorting"
-msgstr "Профили и сортировка"
-
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:54
-msgid "Full update information is available on GitHub."
-msgstr "Полная информация об обновлении доступна на GitHub."
-
-#: data/io.github.radiolamp.mangojuice.metainfo.xml:60
-msgid "Initial release of MangoJuice."
-msgstr "Первый выпуск MangoJuice."
-
-#: src/advanced.vala:31
+#: src/advanced.vala:39
 msgid "The setting is reset when the configuration is changed"
 msgstr "Эта настройка сбрасывается при изменении конфигурации"
 
-#: src/advanced.vala:133 src/mangojuice.vala:2440
+#: src/advanced.vala:108 src/mangojuice.vala:2644
 #, c-format
 msgid "Error when selecting a file: %s\n"
 msgstr "Ошибка при выборе файла: %s\n"
 
-#: src/advanced.vala:136
+#: src/advanced.vala:111
 #, c-format
 msgid "MangoHud.conf does not exist at: %s\n"
 msgstr "MangoHud.conf не существует в: %s\n"
 
-#: src/advanced.vala:345 src/mangojuice.vala:2426 src/mangojuice.vala:2461
+#: src/advanced.vala:121
+msgid "Add space"
+msgstr "Добавить пробел"
+
+#: src/advanced.vala:402 src/mangojuice.vala:2630 src/mangojuice.vala:2665
 #, c-format
 msgid "Error writing to the file: %s\n"
 msgstr "Ошибка при записи в файл: %s\n"
 
-#: src/advanced.vala:352 src/advanced.vala:354 src/mangojuice.vala:1009
+#: src/advanced.vala:409 src/advanced.vala:411 src/mangojuice.vala:1087
 msgid "Your text"
 msgstr "Ваш текст"
 
@@ -114,188 +102,246 @@ msgstr "Ваш текст"
 #. * Labels
 #.
 #. Metrics
-#: src/advanced.vala:356 src/mangojuice.vala:175
+#: src/advanced.vala:413 src/mangojuice.vala:176
 msgid "Load GPU"
 msgstr "Загрузка ГПУ"
 
-#: src/advanced.vala:358 src/mangojuice.vala:178
+#: src/advanced.vala:415 src/mangojuice.vala:179
 msgid "Vulkan Driver"
 msgstr "Драйвер Vulkan"
 
-#: src/advanced.vala:360 src/mangojuice.vala:175 src/mangojuice.vala:1600
+#: src/advanced.vala:417 src/mangojuice.vala:176 src/mangojuice.vala:1756
 msgid "VRAM"
 msgstr "Видеопамять"
 
-#: src/advanced.vala:362 src/mangojuice.vala:181
+#: src/advanced.vala:419 src/mangojuice.vala:182
 msgid "Load CPU"
 msgstr "Загрузка ЦПУ"
 
-#: src/advanced.vala:364 src/mangojuice.vala:181 src/mangojuice.vala:235
+#: src/advanced.vala:421 src/mangojuice.vala:182 src/mangojuice.vala:236
 msgid "Load per core"
 msgstr "Нагрузка на ядро"
 
-#: src/advanced.vala:366 src/mangojuice.vala:185 src/mangojuice.vala:1600
+#: src/advanced.vala:423 src/mangojuice.vala:186 src/mangojuice.vala:1756
 msgid "RAM"
 msgstr "ОЗУ"
 
-#: src/advanced.vala:372 src/mangojuice.vala:186
+#: src/advanced.vala:425 src/advanced.vala:427
+msgid "Disk"
+msgstr "Диск"
+
+#: src/advanced.vala:429 src/mangojuice.vala:186
 msgid "Resident memory"
 msgstr "Резерв памяти"
 
-#: src/advanced.vala:374 src/mangojuice.vala:186
+#: src/advanced.vala:431 src/mangojuice.vala:187
 msgid "Swap"
 msgstr "Подкачка"
 
-#: src/advanced.vala:376 src/mangojuice.vala:196
+#: src/advanced.vala:433 src/mangojuice.vala:197
 msgid "Fan"
 msgstr "Кулер"
 
 #. Performance
-#: src/advanced.vala:378 src/mangojuice.vala:218
+#: src/advanced.vala:435 src/mangojuice.vala:219
 msgid "FPS"
 msgstr "FPS"
 
-#: src/advanced.vala:380 src/mangojuice.vala:219
+#: src/advanced.vala:437 src/mangojuice.vala:220
 msgid "Lowest 0.1%"
 msgstr "Наименьший 0.1%"
 
-#: src/advanced.vala:382 src/mangojuice.vala:218
+#: src/advanced.vala:439 src/mangojuice.vala:219
 msgid "Lowest 1%"
 msgstr "Наименьший 1%"
 
-#: src/advanced.vala:384 src/advanced.vala:426 src/mangojuice.vala:209
+#: src/advanced.vala:441 src/advanced.vala:485 src/mangojuice.vala:210
 msgid "Version"
 msgstr "Версия"
 
-#: src/advanced.vala:386 src/mangojuice.vala:200
+#: src/advanced.vala:443 src/mangojuice.vala:179
+msgid "Engine version"
+msgstr "Версия движка"
+
+#: src/advanced.vala:445 src/mangojuice.vala:201
 msgid "Gamemode"
 msgstr "Gamemode"
 
-#: src/advanced.vala:388 src/mangojuice.vala:200
+#: src/advanced.vala:447 src/mangojuice.vala:201
 msgid "vkBasalt"
 msgstr "vkBasalt"
 
-#: src/advanced.vala:390 src/mangojuice.vala:200
+#: src/advanced.vala:449 src/mangojuice.vala:201
 msgid "Exe name"
 msgstr "Имя процесса"
 
-#: src/advanced.vala:392 src/mangojuice.vala:201
+#: src/advanced.vala:451 src/mangojuice.vala:202
 msgid "FSR"
 msgstr "FSR"
 
-#: src/advanced.vala:394 src/mangojuice.vala:201
+#: src/advanced.vala:453 src/mangojuice.vala:202
 msgid "HDR"
 msgstr "HDR"
 
 #. Extras
-#: src/advanced.vala:396 src/mangojuice.vala:196
+#: src/advanced.vala:455 src/mangojuice.vala:197
 msgid "Refresh rate"
 msgstr "Частота монитора"
 
-#: src/advanced.vala:398 src/mangojuice.vala:196
+#: src/advanced.vala:457 src/mangojuice.vala:197
 msgid "Resolution"
 msgstr "Разрешение"
 
-#: src/advanced.vala:400 src/mangojuice.vala:197
+#: src/advanced.vala:459 src/mangojuice.vala:198
 msgid "Architecture"
 msgstr "Архитектура"
 
-#: src/advanced.vala:402 src/mangojuice.vala:220
+#: src/advanced.vala:461 src/mangojuice.vala:221
 msgid "VPS"
 msgstr "VPS"
 
-#: src/advanced.vala:404 src/mangojuice.vala:196
+#: src/advanced.vala:463 src/mangojuice.vala:197
 msgid "Session type"
 msgstr "Тип сессии"
 
-#: src/advanced.vala:406 src/mangojuice.vala:219
+#: src/advanced.vala:465 src/mangojuice.vala:220
 msgid "Frame limit"
 msgstr "Лимиты кадров"
 
-#: src/advanced.vala:408 src/mangojuice.vala:219
+#: src/advanced.vala:467 src/mangojuice.vala:220
 msgid "Frame graph"
 msgstr "График кадров"
 
-#: src/advanced.vala:410
+#: src/advanced.vala:469
 msgid "Frame"
 msgstr "Кадр"
 
-#: src/advanced.vala:412 src/mangojuice.vala:205
+#: src/advanced.vala:471 src/mangojuice.vala:206
 msgid "Battery charge"
 msgstr "Заряда батареи"
 
-#: src/advanced.vala:414 src/mangojuice.vala:205
+#: src/advanced.vala:473 src/mangojuice.vala:206
 msgid "Battery power"
 msgstr "Мощность батареи"
 
-#: src/advanced.vala:416 src/mangojuice.vala:205
+#: src/advanced.vala:475 src/mangojuice.vala:206
 msgid "Time remain"
 msgstr "Оставшееся время"
 
-#: src/advanced.vala:418
+#: src/advanced.vala:477
 msgid "Battery icon"
 msgstr "Значок батареи"
 
-#: src/advanced.vala:420 src/mangojuice.vala:206
+#: src/advanced.vala:479 src/mangojuice.vala:207
 msgid "Other batteries"
 msgstr "Другие батареи"
 
-#: src/advanced.vala:422 src/mangojuice.vala:197 src/mangojuice.vala:1600
+#: src/advanced.vala:481 src/mangojuice.vala:198 src/mangojuice.vala:1756
 msgid "Network"
 msgstr "Сеть"
 
-#: src/advanced.vala:424 src/mangojuice.vala:212 src/mangojuice.vala:1222
-#: src/mangojuice.vala:1600
+#: src/advanced.vala:483 src/mangojuice.vala:213 src/mangojuice.vala:1335
+#: src/mangojuice.vala:1756
 msgid "Media"
 msgstr "Плеер"
 
-#: src/advanced.vala:428 src/mangojuice.vala:209
+#: src/advanced.vala:487 src/mangojuice.vala:210
 msgid "Winesync"
 msgstr "Синхронизация Wine"
 
-#: src/advanced.vala:430 src/mangojuice.vala:123 src/mangojuice.vala:2000
-#: src/mangojuice.vala:2721
+#: src/advanced.vala:489 src/mangojuice.vala:198
+msgid "Watch"
+msgstr "Отобразить часы"
+
+#: src/advanced.vala:491 src/mangojuice.vala:123 src/mangojuice.vala:2204
+#: src/mangojuice.vala:2925
 msgid "Other"
 msgstr "Прочее"
 
-#: src/dialog.vala:27
+#: src/dialog.vala:26
 msgid "translator-credits"
 msgstr "David Sultaniiazov <x1z53@alt-gnome.ru>"
 
-#: src/dialog.vala:29 src/dialog.vala:30 src/dialog.vala:31
-msgid "Financial support"
-msgstr "Финансовая поддержка"
+#: src/dialog.vala:33
+msgid "Support the Project"
+msgstr "Помощь проекту"
 
-#: src/dialog.vala:75
+#: src/dialog.vala:62
+msgid ""
+"It is only thanks to your support that Mangojuice lives and develops. If it "
+"is not difficult for you, please support the project financially. Any amount "
+"will be useful and will go towards development."
+msgstr ""
+"Только благодаря вашей поддержке Mangojuice живёт и развивается. Если вам не "
+"сложно, пожалуйста, поддержите проект финансово. Любая сумма будет полезна и "
+"пойдёт на развитие."
+
+#: src/dialog.vala:94
+msgid "Donation Alerts"
+msgstr "Donation Alerts"
+
+#: src/dialog.vala:107
+msgid "Boosty"
+msgstr "Boosty"
+
+#: src/dialog.vala:120
+msgid "T-Bank"
+msgstr "Т-Банк"
+
+#: src/dialog.vala:133
+msgid "ЮMoney (Mir)"
+msgstr "ЮMoney (Мир)"
+
+#: src/dialog.vala:146
+msgid "Sber (Mir)"
+msgstr "Sber (Мир)"
+
+#: src/dialog.vala:159
+msgid "Telegram (TON)"
+msgstr "Telegram (TON)"
+
+#: src/dialog.vala:160
+msgid "Click to copy the wallet number"
+msgstr "Нажмите, чтобы скопировать номер кошелька"
+
+#: src/dialog.vala:165
+msgid "Copied"
+msgstr "Скопировано"
+
+#: src/dialog.vala:209
+msgid "Thank you for your support!"
+msgstr "Спасибо за вашу поддержку!"
+
+#: src/dialog.vala:273 src/dialog.vala:277
 msgid "To get ready presets, click on the title."
 msgstr "Чтобы получить подготовленный набор, нажмите на название."
 
-#: src/dialog.vala:83 src/mangojuice.vala:488
+#: src/dialog.vala:290 src/mangojuice.vala:500
 msgid "Presets"
 msgstr "Предустановки"
 
-#: src/dialog.vala:110
+#: src/dialog.vala:317
 msgid "No profiles yet"
 msgstr "Сейчас нет профилей"
 
-#: src/dialog.vala:116
+#: src/dialog.vala:323
 msgid "Add Profile"
 msgstr "Добавить профиль"
 
-#: src/dialog.vala:190 src/mangojuice.vala:2138
+#: src/dialog.vala:397 src/mangojuice.vala:2342
 #, c-format
 msgid "Error when executing the command: %s\n"
 msgstr "Ошибка при выполнении команды: %s\n"
 
-#: src/dialog.vala:197 src/dialog.vala:203
+#: src/dialog.vala:406 src/dialog.vala:412
 msgid "Profile"
 msgstr "Профиль"
 
-#: src/dialog.vala:213
+#: src/dialog.vala:422
 msgid "Profile preview"
 msgstr "Предпросмотр профиля"
 
-#: src/dialog.vala:220
+#: src/dialog.vala:430
 msgid ""
 "Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM."
 "exe. Attention case is important!"
@@ -303,67 +349,67 @@ msgstr ""
 "Переименование. Укажите название игры или name.exe например, для винных игр, "
 "DOOM.exe. Внимание, регистр важен!"
 
-#: src/dialog.vala:228
+#: src/dialog.vala:438
 msgid "Overwrite profile"
 msgstr "Перезаписать профиль"
 
-#: src/dialog.vala:235
+#: src/dialog.vala:445
 msgid "Delete profile"
 msgstr "Удалить профиль"
 
-#: src/dialog.vala:274
+#: src/dialog.vala:507
 msgid "Changed"
 msgstr "Изменено"
 
-#: src/dialog.vala:300
+#: src/dialog.vala:539
 msgid "Apply the profile to the entire system"
 msgstr "Применить профиль ко всей системе"
 
-#: src/dialog.vala:309
+#: src/dialog.vala:548
 msgid "Applied"
 msgstr "Применено"
 
-#: src/dialog.vala:327
+#: src/dialog.vala:574
 msgid "Deleted"
 msgstr "Удалено"
 
-#: src/dialog.vala:409 src/mangojuice.vala:486 src/mangojuice.vala:2433
+#: src/dialog.vala:672 src/mangojuice.vala:498 src/mangojuice.vala:2637
 msgid "Restore"
 msgstr "Восстановить"
 
-#: src/dialog.vala:425
+#: src/dialog.vala:688
 msgid "Apply"
 msgstr "Применить"
 
-#: src/dialog.vala:457 src/dialog.vala:493
+#: src/dialog.vala:720 src/dialog.vala:756
 msgid "Minimal"
 msgstr "Минимальный"
 
-#: src/dialog.vala:457 src/dialog.vala:493 src/load_states.vala:288
-#: src/mangojuice.vala:1619 src/mangojuice.vala:1660 src/mangojuice.vala:1680
-#: src/mangojuice.vala:1702 src/reset_manager.vala:75 src/save_states.vala:424
+#: src/dialog.vala:720 src/dialog.vala:756 src/load_states.vala:297
+#: src/mangojuice.vala:1775 src/mangojuice.vala:1817 src/mangojuice.vala:1837
+#: src/mangojuice.vala:1859 src/reset_manager.vala:111 src/save_states.vala:491
 msgid "Default"
 msgstr "По умолчанию"
 
-#: src/dialog.vala:457 src/dialog.vala:493
+#: src/dialog.vala:720 src/dialog.vala:756
 msgid "Advanced"
 msgstr "Продвинутый"
 
-#: src/dialog.vala:457 src/dialog.vala:493
+#: src/dialog.vala:720 src/dialog.vala:756
 msgid "Full"
 msgstr "Полный"
 
-#: src/dialog.vala:457 src/dialog.vala:493
+#: src/dialog.vala:720 src/dialog.vala:756
 msgid "Only FPS"
 msgstr "Только FPS"
 
-#: src/dialog.vala:494
+#: src/dialog.vala:757
 #, c-format
 msgid "Applying %s layout\n"
 msgstr "Применение профиля %s\n"
 
 #: src/intel_power_fix_handler.vala:16 src/intel_power_fix_handler.vala:69
-#: src/mangojuice.vala:2671
+#: src/mangojuice.vala:2875
 msgid "Warning"
 msgstr "Предупреждение"
 
@@ -407,7 +453,7 @@ msgstr "Перезагрузиться"
 msgid "Error"
 msgstr "Ошибка"
 
-#: src/intel_power_fix_handler.vala:92 src/mangojuice.vala:2674
+#: src/intel_power_fix_handler.vala:92 src/mangojuice.vala:2878
 msgid "OK"
 msgstr "ОК"
 
@@ -435,8 +481,40 @@ msgstr "Сервис существует, но неактивен"
 msgid "Permissions not set"
 msgstr "Права не установлены"
 
+#: src/load_states.vala:245 src/mangojuice.vala:1154 src/save_states.vala:459
+msgid "Top Left"
+msgstr "Сверху слева"
+
+#: src/load_states.vala:246 src/mangojuice.vala:1154 src/save_states.vala:461
+msgid "Top Center"
+msgstr "Сверху по центру"
+
+#: src/load_states.vala:247 src/mangojuice.vala:1154 src/save_states.vala:463
+msgid "Top Right"
+msgstr "Сверху справа"
+
+#: src/load_states.vala:248 src/mangojuice.vala:1155 src/save_states.vala:465
+msgid "Middle Left"
+msgstr "Посередине слева"
+
+#: src/load_states.vala:249 src/mangojuice.vala:1155 src/save_states.vala:467
+msgid "Middle Right"
+msgstr "Посередине справа"
+
+#: src/load_states.vala:250 src/mangojuice.vala:1156 src/save_states.vala:469
+msgid "Bottom Left"
+msgstr "Снизу слева"
+
+#: src/load_states.vala:251 src/mangojuice.vala:1156 src/save_states.vala:471
+msgid "Bottom Center"
+msgstr "Снизу по центру"
+
+#: src/load_states.vala:252 src/mangojuice.vala:1156 src/save_states.vala:473
+msgid "Bottom Right"
+msgstr "Снизу справа"
+
 #. Constants
-#: src/mangojuice.vala:119 src/mangojuice.vala:244
+#: src/mangojuice.vala:119 src/mangojuice.vala:245
 msgid "GPU"
 msgstr "Видеокарта"
 
@@ -456,7 +534,7 @@ msgstr "Git"
 msgid "System"
 msgstr "Система"
 
-#: src/mangojuice.vala:125 src/mangojuice.vala:1600 src/mangojuice.vala:1675
+#: src/mangojuice.vala:125 src/mangojuice.vala:1756 src/mangojuice.vala:1832
 msgid "Wine"
 msgstr "Wine"
 
@@ -464,7 +542,7 @@ msgstr "Wine"
 msgid "Options"
 msgstr "Опциональные"
 
-#: src/mangojuice.vala:127 src/mangojuice.vala:1600
+#: src/mangojuice.vala:127 src/mangojuice.vala:1756
 msgid "Battery"
 msgstr "Батарея"
 
@@ -472,163 +550,171 @@ msgstr "Батарея"
 msgid "Information"
 msgstr "Информация"
 
-#: src/mangojuice.vala:175 src/mangojuice.vala:181
+#: src/mangojuice.vala:176 src/mangojuice.vala:182
 msgid "Color load"
 msgstr "Цветная нагрузка"
 
-#: src/mangojuice.vala:175
+#: src/mangojuice.vala:176
 msgid "Core frequency"
 msgstr "Частота ядра"
 
-#: src/mangojuice.vala:176
+#: src/mangojuice.vala:177
 msgid "Memory frequency"
 msgstr "Частота памяти"
 
-#: src/mangojuice.vala:176 src/mangojuice.vala:182
+#: src/mangojuice.vala:177 src/mangojuice.vala:183
 msgid "Temperature"
 msgstr "Температура"
 
-#: src/mangojuice.vala:176
+#: src/mangojuice.vala:177
 msgid "Memory temperature"
 msgstr "Температура памяти"
 
-#: src/mangojuice.vala:176
+#: src/mangojuice.vala:177
 msgid "Max temperature"
 msgstr "Пик температур"
 
-#: src/mangojuice.vala:177
+#: src/mangojuice.vala:178
 msgid "Fans"
 msgstr "Вентиляторы"
 
-#: src/mangojuice.vala:177
+#: src/mangojuice.vala:178
 msgid "Model"
 msgstr "Модель"
 
-#: src/mangojuice.vala:177 src/mangojuice.vala:182
+#: src/mangojuice.vala:178 src/mangojuice.vala:183
 msgid "Power"
 msgstr "Питание"
 
-#: src/mangojuice.vala:177
+#: src/mangojuice.vala:178
 msgid "Voltage"
 msgstr "Напряжение"
 
-#: src/mangojuice.vala:178
+#: src/mangojuice.vala:179
 msgid "Throttling"
 msgstr "Троттлинг"
 
-#: src/mangojuice.vala:178
+#: src/mangojuice.vala:179
 msgid "Throttling graph"
 msgstr "График троттлинга"
 
-#: src/mangojuice.vala:181
+#: src/mangojuice.vala:182
 msgid "Colored cores"
 msgstr "Цветные ядра"
 
-#: src/mangojuice.vala:181
+#: src/mangojuice.vala:182
 msgid "Diagram"
 msgstr "Диаграма"
 
-#: src/mangojuice.vala:182
+#: src/mangojuice.vala:183
 msgid "Maximum frequency"
 msgstr "Пиковая частота"
 
-#: src/mangojuice.vala:182
+#: src/mangojuice.vala:183
 msgid "Core type"
 msgstr "Тип ядра"
 
 #: src/mangojuice.vala:186
+msgid "Disk read"
+msgstr "Чтение с диска"
+
+#: src/mangojuice.vala:186
+msgid "Disk write"
+msgstr "Запись на диск"
+
+#: src/mangojuice.vala:187
 msgid "General memory"
 msgstr "Общая память"
 
-#: src/mangojuice.vala:190
+#: src/mangojuice.vala:187
+msgid "Virtual memory"
+msgstr "Виртуальная память"
+
+#: src/mangojuice.vala:191
 msgid "GPU efficiency (F/J)"
 msgstr "Эффективность видеокарты (кадры на джоуль)"
 
-#: src/mangojuice.vala:190
+#: src/mangojuice.vala:191
 msgid "GPU energy (J/F)"
 msgstr "Энергия видеокарты (джоуль на кадр)"
 
-#: src/mangojuice.vala:191
+#: src/mangojuice.vala:192
 msgid "Hide FSR sharpness"
 msgstr "Скрыть резкость FSR"
 
-#: src/mangojuice.vala:197
+#: src/mangojuice.vala:198
 msgid "Compact API"
 msgstr "Компактный API"
 
-#: src/mangojuice.vala:197
-msgid "Watch"
-msgstr "Отобразить часы"
-
-#: src/mangojuice.vala:200
+#: src/mangojuice.vala:201
 msgid "HUD Version"
 msgstr "Версия HUD"
 
-#: src/mangojuice.vala:201
+#: src/mangojuice.vala:202
 msgid "Fcat"
 msgstr "Fcat"
 
-#: src/mangojuice.vala:201
+#: src/mangojuice.vala:202
 msgid "Remove paddings"
 msgstr "Удалить отступы"
 
-#: src/mangojuice.vala:202
+#: src/mangojuice.vala:203 src/mangojuice.vala:1226
 msgid "Hide HUD"
 msgstr "Скрыть HUD"
 
-#: src/mangojuice.vala:202
+#: src/mangojuice.vala:203
 msgid "Remove shadows"
 msgstr "Удалить тени"
 
-#: src/mangojuice.vala:202
+#: src/mangojuice.vala:203
 msgid "Font normalization"
 msgstr "Одинаковый размер"
 
-#: src/mangojuice.vala:202
+#: src/mangojuice.vala:203
 msgid "Remove margins"
 msgstr "Удалить поля"
 
-#: src/mangojuice.vala:206
+#: src/mangojuice.vala:207
 msgid "Device icon"
 msgstr "Значок батареи"
 
-#: src/mangojuice.vala:206
+#: src/mangojuice.vala:207
 msgid "More icon"
 msgstr "Другие значки"
 
-#: src/mangojuice.vala:212
+#: src/mangojuice.vala:213
 msgid "Full ON"
 msgstr "Полное включение"
 
-#: src/mangojuice.vala:213
+#: src/mangojuice.vala:214
 msgid "Full log"
 msgstr "Полное логирование"
 
-#: src/mangojuice.vala:213
+#: src/mangojuice.vala:214
 msgid "Upload logs"
 msgstr "Выгрузка логов"
 
-#: src/mangojuice.vala:218
+#: src/mangojuice.vala:219
 msgid "Color FPS"
 msgstr "Цветной FPS"
 
-#: src/mangojuice.vala:219
+#: src/mangojuice.vala:220
 msgid "All lowest"
 msgstr "Все наименьшие"
 
-#: src/mangojuice.vala:219
+#: src/mangojuice.vala:220
 msgid "Detailed Frametime"
 msgstr "Детальный график"
 
-#: src/mangojuice.vala:219
+#: src/mangojuice.vala:220
 msgid "Histogram"
 msgstr "Гистограмма"
 
-#: src/mangojuice.vala:220
+#: src/mangojuice.vala:221
 msgid "Frame Counter"
 msgstr "Счётчик кадров"
 
-#: src/mangojuice.vala:220
+#: src/mangojuice.vala:221
 msgid "°C to °F"
 msgstr "°C в °F"
 
@@ -636,101 +722,101 @@ msgstr "°C в °F"
 #. * Descriptions
 #.
 #. Metrics
-#: src/mangojuice.vala:229 src/mangojuice.vala:235
+#: src/mangojuice.vala:230 src/mangojuice.vala:236
 msgid "Percentage load"
 msgstr "Процент загрузки"
 
-#: src/mangojuice.vala:229 src/mangojuice.vala:235 src/mangojuice.vala:272
+#: src/mangojuice.vala:230 src/mangojuice.vala:236 src/mangojuice.vala:272
 msgid "Color text"
 msgstr "Цвет загрузки"
 
-#: src/mangojuice.vala:229
+#: src/mangojuice.vala:230
 msgid "Amount of video memory"
 msgstr "Количество видеопамяти"
 
-#: src/mangojuice.vala:229 src/mangojuice.vala:230
+#: src/mangojuice.vala:230 src/mangojuice.vala:231
 msgid "Frequency, MHz"
 msgstr "Частота, МГц"
 
-#: src/mangojuice.vala:230
+#: src/mangojuice.vala:231
 msgid "GPU temperature"
 msgstr "Температура ГПУ"
 
-#: src/mangojuice.vala:230
+#: src/mangojuice.vala:231
 msgid "GDDR temperature"
 msgstr "Температура GDDR"
 
-#: src/mangojuice.vala:230
+#: src/mangojuice.vala:231
 msgid "Temperature peak"
 msgstr "Максимальный нагрев"
 
-#: src/mangojuice.vala:231
+#: src/mangojuice.vala:232
 msgid "Speed, RPM"
 msgstr "Скорость, об./мин."
 
-#: src/mangojuice.vala:231
+#: src/mangojuice.vala:232
 msgid "GPU name"
 msgstr "Название ГПУ"
 
-#: src/mangojuice.vala:231 src/mangojuice.vala:236 src/mangojuice.vala:259
+#: src/mangojuice.vala:232 src/mangojuice.vala:237 src/mangojuice.vala:259
 msgid "Consumption, W"
 msgstr "Потребление, Вт"
 
-#: src/mangojuice.vala:231
+#: src/mangojuice.vala:232
 msgid "Consumption, V"
 msgstr "Потребление, В"
 
-#: src/mangojuice.vala:232
+#: src/mangojuice.vala:233
 msgid "Trolling parametrs"
 msgstr "Парамтеры тротлинга"
 
-#: src/mangojuice.vala:232
+#: src/mangojuice.vala:233
 msgid "Curve"
 msgstr "Кривая"
 
-#: src/mangojuice.vala:232
+#: src/mangojuice.vala:233
 msgid "Driver Version"
 msgstr "Версия драйвера"
 
-#: src/mangojuice.vala:235
+#: src/mangojuice.vala:233
+msgid "OpenGL and Vulkan"
+msgstr "OpenGL и Vulkan"
+
+#: src/mangojuice.vala:236
 msgid "All cores"
 msgstr "Все ядра"
 
-#: src/mangojuice.vala:235
+#: src/mangojuice.vala:236
 msgid "Colored cores text"
 msgstr "Цветная нагрузка ядер"
 
-#: src/mangojuice.vala:236
+#: src/mangojuice.vala:237
 msgid "Peak among all cores"
 msgstr "Максимум из всех ядер"
 
-#: src/mangojuice.vala:236
+#: src/mangojuice.vala:237
 msgid "CPU temperature"
 msgstr "Температура ЦПУ"
 
-#: src/mangojuice.vala:236
+#: src/mangojuice.vala:237
 msgid "For new Intel and ARM"
 msgstr "Для новых Intel и ARM"
 
-#: src/mangojuice.vala:239 src/mangojuice.vala:240
+#: src/mangojuice.vala:240 src/mangojuice.vala:241
 msgid "Size, GiB"
 msgstr "Размер, ГиБ"
 
-msgid "Disk read"  
-msgstr "Чтение с диска"  
-
-msgid "Disk write"  
-msgstr "Запись на диск"  
-
-msgid "Input, MiB/s"  
-msgstr "Ввод, МиБ/с"  
-
-msgid "Output, MiB/s"  
-msgstr "Вывод, МиБ/с"  
+#: src/mangojuice.vala:240
+msgid "Input, MiB/s"
+msgstr "Ввод, МиБ/с"
 
 #: src/mangojuice.vala:240
-msgid "Including virtual"
-msgstr "Включая виртуальный"
+msgid "Output, MiB/s"
+msgstr "Вывод, МиБ/с"
+
+#: src/mangojuice.vala:241
+msgid "Size, MiB/s"
+msgstr "Размер, МиБ/с"
 
 #: src/mangojuice.vala:245
 msgid "Gamescope"
@@ -874,7 +960,7 @@ msgstr "1% и 0.1% меньше, чем"
 msgid "FPS limitation"
 msgstr "Ограничение обновления"
 
-#: src/mangojuice.vala:273 src/mangojuice.vala:1600
+#: src/mangojuice.vala:273 src/mangojuice.vala:1756
 msgid "Frametime"
 msgstr "Время кадра"
 
@@ -898,231 +984,297 @@ msgstr "Температура в °F"
 msgid "Present mode"
 msgstr "Режим отображения"
 
-#: src/mangojuice.vala:419
+#. Vulkan and OpenGL Values
+#: src/mangojuice.vala:278 src/mangojuice.vala:280
+msgid "Unset"
+msgstr "Не задано"
+
+#: src/mangojuice.vala:278 src/mangojuice.vala:280
+msgid "Adaptive"
+msgstr "Адаптивный"
+
+#: src/mangojuice.vala:278 src/mangojuice.vala:280
+msgid "OFF"
+msgstr "Выключен"
+
+#: src/mangojuice.vala:278 src/mangojuice.vala:280
+msgid "ON"
+msgstr "Включен"
+
+#: src/mangojuice.vala:278 src/mangojuice.vala:280
+msgid "Mailbox"
+msgstr "Без лимита"
+
+#: src/mangojuice.vala:294
+msgid "Title"
+msgstr "Название"
+
+#: src/mangojuice.vala:294
+msgid "Artist"
+msgstr "Исполнитель"
+
+#: src/mangojuice.vala:294
+msgid "Album"
+msgstr "Альбом"
+
+#: src/mangojuice.vala:294 src/mangojuice.vala:2154
+msgid "None"
+msgstr "Нет"
+
+#: src/mangojuice.vala:431
 msgid "Metrics"
 msgstr "Метрики"
 
-#: src/mangojuice.vala:421
+#: src/mangojuice.vala:433
 msgid "Extras"
 msgstr "Общие"
 
-#: src/mangojuice.vala:423
+#: src/mangojuice.vala:435
 msgid "Performance"
 msgstr "Измерения"
 
-#: src/mangojuice.vala:433
+#: src/mangojuice.vala:445
 msgid "Test"
 msgstr "Тест"
 
-#: src/mangojuice.vala:484 src/mangojuice.vala:2394
+#: src/mangojuice.vala:496 src/mangojuice.vala:2598
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/mangojuice.vala:485
+#: src/mangojuice.vala:497
 msgid "Save As"
 msgstr "Сохранить как"
 
-#: src/mangojuice.vala:490
+#: src/mangojuice.vala:502
 msgid "About"
 msgstr "О программе"
 
-#: src/mangojuice.vala:500
+#: src/mangojuice.vala:512
 msgid "Donate"
 msgstr "Пожертвовать"
 
-#: src/mangojuice.vala:561
+#: src/mangojuice.vala:589
 msgid "MangoHud is not installed. Please install it."
 msgstr "MangoHud не установлен. Пожалуйста, установите его."
 
-#: src/mangojuice.vala:564
+#: src/mangojuice.vala:592
 msgid "Install"
 msgstr "Установить"
 
-#: src/mangojuice.vala:582
+#: src/mangojuice.vala:610
 #, c-format
 msgid "Failed to launch AppStream: %s"
 msgstr "Не удалось запустить AppStream: %s"
 
-#: src/mangojuice.vala:604
+#: src/mangojuice.vala:632
 msgid "vkcube not found. If you want a test button, install vulkan-tools.\n"
 msgstr ""
 "vkcube не найден. Если вам нужна кнопка теста, установите vulkan-tools.\n"
 
-#: src/mangojuice.vala:605
+#: src/mangojuice.vala:633
 msgid "glxgears not found. If you want a test button, install mesa-utils.\n"
 msgstr ""
 "glxgears не найден. Если вам нужна кнопка теста, установите mesa-utils.\n"
 
-#: src/mangojuice.vala:607
+#: src/mangojuice.vala:635
 msgid ""
-"Vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable "
+"vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable "
 "the test button."
 msgstr ""
-"Vkcube и glxgears не найдены. Установите vulkan-tools и mesa-utils, чтобы "
+"vkcube и glxgears не найдены. Установите vulkan-tools и mesa-utils, чтобы "
 "включить кнопку тестирования."
 
-#: src/mangojuice.vala:725
+#: src/mangojuice.vala:764
 #, c-format
 msgid "Error closing test apps: %s\n"
 msgstr "Ошибка при закрытии тестовых приложений: %s\n"
 
-#: src/mangojuice.vala:872
+#: src/mangojuice.vala:913
 msgid "Clear"
 msgstr "Очистить"
 
-#: src/mangojuice.vala:894
+#: src/mangojuice.vala:936
 msgid "MangoHud variable"
 msgstr "Переменные MangoHud"
 
-#: src/mangojuice.vala:900
+#: src/mangojuice.vala:937
+msgid "Enter MangoHud variables separated by commas"
+msgstr "Вводите переменные MangoHud через запятую"
+
+#: src/mangojuice.vala:946
 msgid "Home"
 msgstr "Домашний католог"
 
-#: src/mangojuice.vala:907
+#: src/mangojuice.vala:947
+msgid "Directory for logs"
+msgstr "Директория для логов"
+
+#: src/mangojuice.vala:956
+msgid "Clear path"
+msgstr "Очистить путь"
+
+#: src/mangojuice.vala:965
 msgid "The directory for saving the logging"
 msgstr "Директория для сохранения логов"
 
-#: src/mangojuice.vala:913
+#: src/mangojuice.vala:980
 msgid "Intel Power Fix"
 msgstr "Патч Intel Power"
 
-#: src/mangojuice.vala:936
+#: src/mangojuice.vala:993
+msgid "Click to record shortcut"
+msgstr "Нажмите, чтобы записать сочетание клавиш"
+
+#: src/mangojuice.vala:1014
 msgid "Reset Config"
 msgstr "Сбросить настройки"
 
-#: src/mangojuice.vala:955
+#: src/mangojuice.vala:1033
 msgid "Blacklist: (vkcube, WatchDogs2.exe)"
 msgstr "Чёрный список: (vkcube, WatchDogs2.exe)"
 
-#: src/mangojuice.vala:965
+#: src/mangojuice.vala:1043
 msgid "MangoHud Global"
 msgstr "Системный MangoHud"
 
-#: src/mangojuice.vala:981
+#: src/mangojuice.vala:1059
 msgid "Logs key"
 msgstr "Логирование"
 
-#: src/mangojuice.vala:1005
+#: src/mangojuice.vala:1083
 msgid "Customize"
 msgstr "Кастомизировать"
 
-#: src/mangojuice.vala:1033
+#: src/mangojuice.vala:1111
 msgid "Horizontal HUD"
 msgstr "Горизонтальный HUD"
 
-#: src/mangojuice.vala:1050
+#: src/mangojuice.vala:1128
 msgid "Borders"
 msgstr "Углы"
 
-#: src/mangojuice.vala:1050
+#: src/mangojuice.vala:1128
 msgid "Round"
 msgstr "Скругление"
 
-#: src/mangojuice.vala:1062
+#: src/mangojuice.vala:1140
 msgid "Alpha"
 msgstr "Альфа-канал"
 
-#: src/mangojuice.vala:1062
+#: src/mangojuice.vala:1140
 msgid "Transparency"
 msgstr "Прозрачность"
 
-#: src/mangojuice.vala:1092
+#: src/mangojuice.vala:1177
 msgid "Position"
 msgstr "Расположение"
 
-#: src/mangojuice.vala:1097
+#: src/mangojuice.vala:1181
 msgid "Columns"
 msgstr "Колонки"
 
-#: src/mangojuice.vala:1097
+#: src/mangojuice.vala:1181
 msgid "Number of columns"
 msgstr "Количество колонок"
 
-#: src/mangojuice.vala:1109
+#: src/mangojuice.vala:1193
 msgid "Key shortcuts"
 msgstr "Горячие клавиши"
 
-#: src/mangojuice.vala:1129
-msgid "Hide the HUD"
-msgstr "Скрыть HUD"
+#: src/mangojuice.vala:1205
+msgid "Click to record a new HUD toggle shortcut"
+msgstr "Нажмите, чтобы записать новое сочетание клавиш для переключения HUD"
 
-#: src/mangojuice.vala:1135
+#: src/mangojuice.vala:1241
 msgid "Offset X"
 msgstr "Смещение по X"
 
-#: src/mangojuice.vala:1135
+#: src/mangojuice.vala:1241
 msgid "Horizontal offset"
 msgstr "Горизонтальный сдвиг"
 
-#: src/mangojuice.vala:1147
+#: src/mangojuice.vala:1253
 msgid "Offset Y"
 msgstr "Смещение по Y"
 
-#: src/mangojuice.vala:1147
+#: src/mangojuice.vala:1253
 msgid "Vertical offset"
 msgstr "Вертикальный сдвиг"
 
-#: src/mangojuice.vala:1173
+#: src/mangojuice.vala:1265
 msgid "Toggle position"
 msgstr "Смена позиции"
 
-#: src/mangojuice.vala:1191
+#: src/mangojuice.vala:1270
+msgid "Click to record a new toggle position shortcut"
+msgstr ""
+"Нажмите, чтобы записать новое сочетание клавиш для переключения положения"
+
+#: src/mangojuice.vala:1304
 msgid "Font"
 msgstr "Шрифт"
 
-#: src/mangojuice.vala:1194
+#: src/mangojuice.vala:1307
 msgid "Size"
 msgstr "Размер"
 
-#: src/mangojuice.vala:1194
+#: src/mangojuice.vala:1307
 msgid "Size in pixels"
 msgstr "Размер в пикселях"
 
-#: src/mangojuice.vala:1291
+#: src/mangojuice.vala:1408
 msgid "Color"
 msgstr "Цвет"
 
-#: src/mangojuice.vala:1323
+#: src/mangojuice.vala:1443
 msgid "GPU custom name"
 msgstr "Изменение имени ГПУ"
 
-#: src/mangojuice.vala:1330
+#: src/mangojuice.vala:1452
+msgid "Clear GPU name"
+msgstr "Очистить название ГПУ"
+
+#: src/mangojuice.vala:1464
 msgid "CPU custom name"
 msgstr "Изменение имени ЦПУ"
 
-#: src/mangojuice.vala:1348
+#: src/mangojuice.vala:1473
+msgid "Clear CPU name"
+msgstr "Очистить название ЦПУ"
+
+#: src/mangojuice.vala:1504
 msgid "FPS color levels"
 msgstr "Цвета уровней частоты обновления"
 
-#: src/mangojuice.vala:1352 src/mangojuice.vala:1411 src/mangojuice.vala:1470
+#: src/mangojuice.vala:1508 src/mangojuice.vala:1567 src/mangojuice.vala:1626
 msgid "Medium"
 msgstr "Средний"
 
-#: src/mangojuice.vala:1358 src/mangojuice.vala:1417 src/mangojuice.vala:1476
+#: src/mangojuice.vala:1514 src/mangojuice.vala:1573 src/mangojuice.vala:1632
 msgid "High"
 msgstr "Высокий"
 
-#: src/mangojuice.vala:1407
+#: src/mangojuice.vala:1563
 msgid "GPU level colors"
 msgstr "Цвета уровней ГПУ"
 
-#: src/mangojuice.vala:1466
+#: src/mangojuice.vala:1622
 msgid "CPU level colors"
 msgstr "Цвета уровней ЦПУ"
 
-#: src/mangojuice.vala:1600
+#: src/mangojuice.vala:1756
 msgid "Background"
 msgstr "Фон"
 
-#: src/mangojuice.vala:1600
+#: src/mangojuice.vala:1756
 msgid "Engine"
 msgstr "Движок"
 
-#: src/mangojuice.vala:1600
+#: src/mangojuice.vala:1756
 msgid "Text"
 msgstr "Текст"
 
-#: src/mangojuice.vala:1620
+#: src/mangojuice.vala:1776
 msgid ""
 "If you are going to play through Wine, then you need to select fonts from "
 "the home directory, the system fonts will not work."
@@ -1130,352 +1282,463 @@ msgstr ""
 "Если вы собираетесь играть через Wine, то вам нужно выбрать шрифты из "
 "домашнего каталога, системные шрифты работать не будут."
 
-#: src/mangojuice.vala:1637
+#: src/mangojuice.vala:1791
 msgid "Search font"
 msgstr "Поиск шрифтов"
 
-#: src/mangojuice.vala:1744
-#, c-format
-msgid "Error executing fc-list: %s\n"
-msgstr "Ошибка выполнения fc-list: %s\n"
-
-#: src/mangojuice.vala:1747
+#: src/mangojuice.vala:1915
 #, c-format
 msgid "Error when searching for fonts: %s\n"
 msgstr "Ошибка при поиске шрифтов: %s\n"
 
-#: src/mangojuice.vala:1828
+#: src/mangojuice.vala:2001
 msgid "Logging"
 msgstr "Логирование"
 
-#: src/mangojuice.vala:1841
+#: src/mangojuice.vala:2014
 msgid "Duration"
 msgstr "Длительность"
 
-#: src/mangojuice.vala:1841
+#: src/mangojuice.vala:2014
 msgid "Autostart"
 msgstr "Автозапуск"
 
-#: src/mangojuice.vala:1841
+#: src/mangojuice.vala:2014
 msgid "Interval"
 msgstr "Интервал"
 
-#: src/mangojuice.vala:1842
+#: src/mangojuice.vala:2015
 msgid "Seconds"
 msgstr "Секунды"
 
-#: src/mangojuice.vala:1842 src/mangojuice.vala:2003
+#: src/mangojuice.vala:2015 src/mangojuice.vala:2207
 msgid "Milliseconds"
 msgstr "Миллисекунды"
 
-#: src/mangojuice.vala:1860
+#: src/mangojuice.vala:2033
 msgid "Limiters FPS"
 msgstr "Ограничители частоты обновления"
 
-#: src/mangojuice.vala:1871
+#: src/mangojuice.vala:2045
 msgid "Limit 1"
 msgstr "Лимит 1"
 
-#: src/mangojuice.vala:1880
+#: src/mangojuice.vala:2054
 msgid "Limit 2"
 msgstr "Лимит 2"
 
-#: src/mangojuice.vala:1889
+#: src/mangojuice.vala:2063
 msgid "Limit 3"
 msgstr "Лимит 3"
 
-#: src/mangojuice.vala:1916
+#: src/mangojuice.vala:2071
+msgid "Click to record FPS limit toggle shortcut"
+msgstr ""
+"Нажмите, чтобы записать сочетание клавиш для переключения ограничения "
+"частоты обновления"
+
+#: src/mangojuice.vala:2107
 msgid "VSync"
 msgstr "VSync"
 
-#: src/mangojuice.vala:1956
+#: src/mangojuice.vala:2150
 msgid "Filters"
 msgstr "Фильтры"
 
-#: src/mangojuice.vala:1970
+#: src/mangojuice.vala:2154
+msgid "Bicubic"
+msgstr "Бикубическая"
+
+#: src/mangojuice.vala:2154
+msgid "Trilinear"
+msgstr "Трилинейная"
+
+#: src/mangojuice.vala:2154
+msgid "Retro"
+msgstr "Ретро"
+
+#: src/mangojuice.vala:2174
 msgid "Anisotropic"
 msgstr "Анизотропный"
 
-#: src/mangojuice.vala:1970
+#: src/mangojuice.vala:2174
 msgid "Filtering"
 msgstr "Фильтрация"
 
-#: src/mangojuice.vala:1974
+#: src/mangojuice.vala:2178
 msgid "Mipmap"
 msgstr "Чёткость текстуры"
 
-#: src/mangojuice.vala:1974
+#: src/mangojuice.vala:2178
 msgid "Aliasing"
 msgstr "Сглаживание"
 
-#: src/mangojuice.vala:2003
+#: src/mangojuice.vala:2207
 msgid "FPS Sampling"
 msgstr "Выборка частоты обновления"
 
-#: src/mangojuice.vala:2049
+#: src/mangojuice.vala:2253
 #, c-format
 msgid "Error when restarting vkcube: %s\n"
 msgstr "Ошибка при перезапуске vkcube: %s\n"
 
-#: src/mangojuice.vala:2058
+#: src/mangojuice.vala:2262
 #, c-format
 msgid "Error when restarting glxgears: %s\n"
 msgstr "Ошибка при перезапуске glxgears: %s\n"
 
-#: src/mangojuice.vala:2085 src/mangojuice.vala:2100
+#: src/mangojuice.vala:2289 src/mangojuice.vala:2304
 #, c-format
 msgid "Error checking running processes: %s\n"
 msgstr "Ошибка при проверке запущенных процессов: %s\n"
 
-#: src/mangojuice.vala:2149
+#: src/mangojuice.vala:2353
 msgid "vkBasalt.conf file deleted."
 msgstr "Файл vkBasalt.conf удалён."
 
-#: src/mangojuice.vala:2151
+#: src/mangojuice.vala:2355
 #, c-format
 msgid "Error deleting vkBasalt.conf: %s\n"
 msgstr "Ошибка при удалении vkBasalt.conf: %s\n"
 
-#: src/mangojuice.vala:2154
+#: src/mangojuice.vala:2358
 msgid "vkBasalt.conf file does not exist."
 msgstr "Файл vkBasalt.conf не существует."
 
-#: src/mangojuice.vala:2167
+#: src/mangojuice.vala:2371
 msgid ".MangoHud.backup file deleted."
 msgstr "Файл .MangoHud.backup был удалён."
 
-#: src/mangojuice.vala:2169
+#: src/mangojuice.vala:2373
 #, c-format
 msgid "Error deleting .MangoHud.backup: %s\n"
 msgstr "Ошибка при удалении .MangoHud.backup: %s\n"
 
-#: src/mangojuice.vala:2172
+#: src/mangojuice.vala:2376
 msgid ".MangoHud.backup file does not exist."
 msgstr "Файла .MangoHud.backup не существует."
 
-#: src/mangojuice.vala:2183
+#: src/mangojuice.vala:2387
 #, c-format
 msgid "Error when selecting a folder: %s\n"
 msgstr "Ошибка при выборе папки: %s\n"
 
-#: src/mangojuice.vala:2228
+#: src/mangojuice.vala:2432
 msgid "List GPUs to display"
 msgstr "Список ГПУ для отображения"
 
-#: src/mangojuice.vala:2231
+#: src/mangojuice.vala:2435
 msgid "Video card display order (0,1,2)"
 msgstr "Порядок отображения видеокарт (0,1,2)"
 
-#: src/mangojuice.vala:2235 src/mangojuice.vala:2280 src/save_states.vala:212
+#: src/mangojuice.vala:2439 src/mangojuice.vala:2484 src/save_states.vala:248
 msgid "All video cards"
 msgstr "Все видеокарты"
 
-#: src/mangojuice.vala:2329
+#: src/mangojuice.vala:2533
 msgid "Unknown Videocard"
 msgstr "Неизвестная видеокарта"
 
-#: src/mangojuice.vala:2356
+#: src/mangojuice.vala:2560
 #, c-format
 msgid "Error checking vkcube availability: %s\n"
 msgstr "Ошибка проверки доступности vkcube: %s\n"
 
-#: src/mangojuice.vala:2369
+#: src/mangojuice.vala:2573
 msgid "MangoHud not found. Please install MangoHud to use this application.\n"
 msgstr ""
 "MangoHud не найден. Пожалуйста, установите MangoHud для использования этого "
 "приложения.\n"
 
-#: src/mangojuice.vala:2373
+#: src/mangojuice.vala:2577
 #, c-format
 msgid "Error checking MangoHud availability: %s\n"
 msgstr "Ошибка проверки доступности MangoHud: %s\n"
 
-#: src/mangojuice.vala:2387
+#: src/mangojuice.vala:2591
 #, c-format
 msgid "Error checking glxgears availability: %s\n"
 msgstr "Ошибка проверки доступности glxgears: %s\n"
 
-#: src/mangojuice.vala:2402
+#: src/mangojuice.vala:2606
 #, c-format
 msgid "Error when saving the file: %s\n"
 msgstr "Ошибка при сохранении файла: %s\n"
 
-#: src/mangojuice.vala:2411
+#: src/mangojuice.vala:2615
 msgid "MangoHud.conf does not exist.\n"
 msgstr "MangoHud.conf не существует.\n"
 
-#: src/mangojuice.vala:2432
+#: src/mangojuice.vala:2636
 msgid "Select config file to restore"
 msgstr "Выберите конфигурационный файл для восстановления"
 
-#: src/mangojuice.vala:2459
+#: src/mangojuice.vala:2663
 #, c-format
 msgid "Configuration restored from %s\n"
 msgstr "Конфигурация восстановлена из %s\n"
 
-#: src/mangojuice.vala:2638
+#: src/mangojuice.vala:2842
 #, c-format
 msgid "Error deleting MANGOHUD from /etc/environment: %s\n"
 msgstr "Ошибка при удалении MANGOHUD из /etc/environment: %s\n"
 
-#: src/mangojuice.vala:2651
+#: src/mangojuice.vala:2855
 #, c-format
 msgid "Error adding MANGOHUD to /etc/environment: %s\n"
 msgstr "Ошибка при добавлении MANGOHUD в /etc/environment: %s\n"
 
-#: src/mangojuice.vala:2659
+#: src/mangojuice.vala:2863
 msgid "Failed to modify /etc/environment.\n"
 msgstr "Не удалось изменить /etc/environment.\n"
 
-#: src/mangojuice.vala:2672
+#: src/mangojuice.vala:2876
 msgid "The changes will take effect only after the system is restarted."
 msgstr "Изменения вступят в силу только после перезагрузки системы."
 
-#: src/mangojuice.vala:2675
+#: src/mangojuice.vala:2879
 msgid "Restart"
 msgstr "Перезагрузить"
 
-#: src/mangojuice.vala:2686
+#: src/mangojuice.vala:2890
 #, c-format
 msgid "Error when restarting the system: %s\n"
 msgstr "Ошибка при перезагрузке системы: %s\n"
 
-#: src/mangojuice.vala:2714
+#: src/mangojuice.vala:2918
 #, c-format
 msgid "Error checking the MANGOHUD status: %s\n"
 msgstr "Ошибка при проверке статуса MANGOHUD: %s\n"
 
-#: src/other/OtherBox.vala:42
-msgid "Contrast Adaptive Sharpening"
-msgstr "Адаптивное повышение резкости"
-
-#: src/other/OtherBox.vala:43
-msgid "Denoised Luma Sharpening"
-msgstr "Повышение резкости с шумоподавлением"
-
-#: src/other/OtherBox.vala:44
-msgid "Fast Approximate Anti-Aliasing"
-msgstr "Быстрое приближённое сглаживание"
-
-#: src/other/OtherBox.vala:45
-msgid "Subpixel Morphological Antialiasing"
-msgstr "Субпиксельное морфологическое сглаживание"
-
-#: src/other/OtherBox.vala:46
-msgid "Color LookUp Table"
-msgstr "Таблица поиска цветов"
-
-#: src/save_states.vala:424
-msgid "Select Font"
-msgstr "Выбрать шрифт"
-
-msgid "Engine version"  
-msgstr "Версия движка"  
-
-msgid "OpenGL and Vulkan"  
-msgstr "OpenGL и Vulkan"
-
-msgid "Size, MiB/s"  
-msgstr "Размер, МиБ/с"  
-
-msgid "Virtual memory"  
-msgstr "Виртуальная память"
-
-msgid "Add space"
-msgstr "Добавить пробел"
-
-msgid "Top Left"
-msgstr "Сверху слева"
-
-msgid "Top Center"
-msgstr "Сверху по центру"
-
-msgid "Top Right"
-msgstr "Сверху справа"
-
-msgid "Middle Left"
-msgstr "Посередине слева"
-
-msgid "Middle Right"
-msgstr "Посередине справа"
-
-msgid "Bottom Left"
-msgstr "Снизу слева"
-
-msgid "Bottom Center"
-msgstr "Снизу по центру"
-
-msgid "Bottom Right"
-msgstr "Снизу справа"
-
-msgid "Unset"
-msgstr "Не задано"
-
-msgid "Adaptive"
-msgstr "Адаптивный"
-
-msgid "OFF"
-msgstr "Выключен"
-
-msgid "ON"
-msgstr "Включен"
-
-msgid "Mailbox"
-msgstr "Без лимита"
-
-msgid "None"
-msgstr "Нет"
-
-msgid "Bicubic"
-msgstr "Бикубическая"
-
-msgid "Trilinear"
-msgstr "Трилинейная"
-
-msgid "Retro"
-msgstr "Ретро"
-
-msgid "Title"
-msgstr "Название"
-
-msgid "Artist"
-msgstr "Исполнитель"
-
-msgid "Album"
-msgstr "Альбом"
-
-msgid "Global VkBasalt"
-msgstr "Системный VkBasalt"
-
+#: src/mangojuice.vala:3040 src/other/OtherBox.vala:812
 msgid "Edit shortcut manually"
 msgstr "Редактировать сочетание клавиш"
 
-msgid "Click to record shortcut"
-msgstr "Нажмите, чтобы записать сочетание клавиш"
+#: src/other/OtherBox.vala:61
+msgid "Contrast Adaptive Sharpening"
+msgstr "Адаптивное повышение резкости"
 
+#: src/other/OtherBox.vala:62
+msgid "Denoised Luma Sharpening"
+msgstr "Повышение резкости с шумоподавлением"
+
+#: src/other/OtherBox.vala:63
+msgid "Fast Approximate Anti-Aliasing"
+msgstr "Быстрое приближённое сглаживание"
+
+#: src/other/OtherBox.vala:64
+msgid "Subpixel Morphological Antialiasing"
+msgstr "Субпиксельное морфологическое сглаживание"
+
+#: src/other/OtherBox.vala:65
+msgid "Color LookUp Table"
+msgstr "Таблица поиска цветов"
+
+#: src/other/OtherBox.vala:119
+msgid "Global vkBasalt"
+msgstr "Системный vkBasalt"
+
+#: src/other/OtherBox.vala:123
+msgid "Click to record vkBasalt toggle shortcut"
+msgstr "Нажмите, чтобы записать сочетание клавиш для переключения vkBasalt"
+
+#: src/other/OtherBox.vala:148
 msgid "Add Reshade"
 msgstr "Добавить Reshade"
 
+#: src/other/OtherBox.vala:160
 msgid "Clear Reshade path"
 msgstr "Очистить путь к Reshade"
 
-msgid "Hotkey"
-msgstr "Горячая клавиша"
-
-msgid "Only 1 key. Only X11/Xwayland."
-msgstr "Только 1 клавиша. Только X11/Xwayland."
-
+#: src/other/OtherBox.vala:188 src/other/OtherBox.vala:348
 msgid "ReShade Shaders"
 msgstr "Шейдеры ReShade"
 
+#: src/other/OtherBox.vala:205
+msgid "Adaptive sharpening that adjusts based on local content"
+msgstr ""
+"Адаптивная резкость, настраиваемая в зависимости от локального контента"
+
+#: src/other/OtherBox.vala:206
+msgid "Add customizable borders around the image"
+msgstr "Добавить настраиваемые границы вокруг изображения"
+
+#: src/other/OtherBox.vala:207
+msgid "RGB curve correction for precise contrast control"
+msgstr "Коррекция кривой RGB для точного регулирования контрастности"
+
+#: src/other/OtherBox.vala:208
+msgid "Color blindness correction (protanopia, deuteranopia, tritanopia)"
+msgstr "Коррекция дальтонизма (протанопия, дейтеранопия, тританопия)"
+
+#: src/other/OtherBox.vala:209
+msgid "Chromatic aberration correction through channel offset"
+msgstr "Коррекция хроматических аберраций с помощью смещения канала"
+
+#: src/other/OtherBox.vala:210
+msgid "Professional shadow, midtone, and highlight correction"
+msgstr "Профессиональная коррекция теней, полутонов и бликов"
+
+#: src/other/OtherBox.vala:211
+msgid "Luminance-based sharpening without color artifacts"
+msgstr "Повышение резкости на основе яркости без искажений цвета"
+
+#: src/other/OtherBox.vala:212
+msgid "Black and white conversion with film presets"
+msgstr "Преобразование чёрно-белого изображения с помощью предустановок фильма"
+
+#: src/other/OtherBox.vala:213
+msgid "Vintage sepia effect with tint control"
+msgstr "Винтажный эффект сепии с контролем оттенка"
+
+#: src/other/OtherBox.vala:214
+msgid "HDR tone mapping for SDR conversion"
+msgstr "Отображение тонов в формате HDR для преобразования в SDR"
+
+#: src/other/OtherBox.vala:215
+msgid "Progressive edge darkening for artistic effect"
+msgstr "Постепенное затемнение краёв для создания художественного эффекта"
+
+#: src/other/OtherBox.vala:216
+msgid "Intelligent zonal saturation enhancement"
+msgstr "Интеллектуальное повышение зональной насыщенности"
+
+#: src/other/OtherBox.vala:217
+msgid "Specialized upscaling for pixelated retro images"
+msgstr ""
+"Специализированное масштабирование для пикселизированных ретро-изображений"
+
+#: src/other/OtherBox.vala:218
+msgid "Cartoon effect through edge detection"
+msgstr "Мультяшный эффект благодаря обнаружению краев"
+
+#: src/other/OtherBox.vala:219
+msgid "Local unsharp mask with integrated denoising"
+msgstr "Локальная нерезкая маска со встроенным шумоподавлением"
+
+#: src/other/OtherBox.vala:220
+msgid "Color transformation using matrix manipulation"
+msgstr "Преобразование цвета с помощью матричных манипуляций"
+
+#: src/other/OtherBox.vala:221
+msgid "Comic book style effect with enhanced edges and color posterization"
+msgstr "Эффект в стиле комиксов с улучшенными краями и постеризацией цветов"
+
+#: src/other/OtherBox.vala:222
+msgid "Cinematic DPX grading process emulation"
+msgstr "Кинематографическая эмуляция процесса оценки в формате DPX"
+
+#: src/other/OtherBox.vala:223
+msgid "Procedural film grain with Gaussian noise control"
+msgstr "Процедурная зернистость пленки с контролем гауссовского шума"
+
+#: src/other/OtherBox.vala:224
+msgid "Color reduction to retro palettes with dithering"
+msgstr "Уменьшение цвета до ретро-палитр с размытием"
+
+#: src/other/OtherBox.vala:225
+msgid "Intelligent depth-based sharpening with bilateral filtering"
+msgstr "Интеллектуальная резкость по глубине с двусторонней фильтрацией"
+
+#: src/other/OtherBox.vala:226
+msgid "Advanced vibrance algorithm with intelligent saturation control"
+msgstr ""
+"Усовершенствованный алгоритм определения вибрации с интеллектуальным "
+"управлением насыщенностью"
+
+#: src/other/OtherBox.vala:227
+msgid "Vintage Technicolor process simulation"
+msgstr "Имитация процесса окрашивания в винтажном стиле Technicolor"
+
+#: src/other/OtherBox.vala:228
+msgid "Enhanced Technicolor effect with additional controls"
+msgstr ""
+"Улучшенный цветовой эффект Technicolor с дополнительными элементами "
+"управления"
+
+#: src/other/OtherBox.vala:229
+msgid ""
+"Complete CRT monitor simulation with scanlines, curvature, and aperture mask"
+msgstr ""
+"Полная имитация ЭЛТ-монитора с линиями развертки, кривизной и маской апертуры"
+
+#: src/other/OtherBox.vala:230
+msgid "HDR simulation with multi-scale bloom and halo effects"
+msgstr "HDR-симуляция с многомасштабными эффектами цветения и ореола"
+
+#: src/other/OtherBox.vala:263
+msgid "Shaders"
+msgstr "Шейдеры"
+
+#: src/other/OtherBox.vala:295 src/other/OtherBox.vala:322
+#: src/other/OtherBox.vala:347
+msgid "Reshade"
+msgstr "Reshade"
+
+#: src/other/OtherBox.vala:356
+msgid "Select Reshade folder"
+msgstr "Выберите директорию Reshade"
+
+#: src/other/OtherBox.vala:399
+#, c-format
+msgid "Error reading shaders folder: %s\n"
+msgstr "Ошибка чтения директории шейдеров: %s\n"
+
+#: src/other/OtherBox.vala:412
 msgid "Reshade folder selected successfully"
 msgstr "Папка Reshade успешно выбрана"
 
-msgid "Error selecting folder:"
-msgstr "Ошибка при выборе папки:"
+#: src/other/OtherBox.vala:413
+#, c-format
+msgid "Shader effects: %d"
+msgstr "Эффектов шейдеров: %d"
 
-msgid "Enter MangoHud variables separated by commas"
-msgstr "Вводите переменные MangoHud через запятую"
+#: src/other/OtherBox.vala:416
+#, c-format
+msgid "Error selecting folder: %s\n"
+msgstr "Ошибка выбора директории: %s\n"
 
-msgid "Directory for logs"
-msgstr "Директория для логов"
+#: src/save_states.vala:424
+msgid "none"
+msgstr "ничего"
+
+#: src/save_states.vala:491
+msgid "Select Font"
+msgstr "Выбрать шрифт"
+
+#~ msgid "Tinkoff"
+#~ msgstr "Тинькофф"
+
+#~ msgid "The MangoHUD customization assistant"
+#~ msgstr "Помощник по настройке MangoHUD"
+
+#~ msgid "Radiolamp"
+#~ msgstr "Radiolamp"
+
+#~ msgid "Profiles and sorting"
+#~ msgstr "Профили и сортировка"
+
+#~ msgid "Full update information is available on GitHub."
+#~ msgstr "Полная информация об обновлении доступна на GitHub."
+
+#~ msgid "Initial release of MangoJuice."
+#~ msgstr "Первый выпуск MangoJuice."
+
+#~ msgid "Financial support"
+#~ msgstr "Финансовая поддержка"
+
+#~ msgid "Including virtual"
+#~ msgstr "Включая виртуальный"
+
+#~ msgid "Hide the HUD"
+#~ msgstr "Скрыть HUD"
+
+#, c-format
+#~ msgid "Error executing fc-list: %s\n"
+#~ msgstr "Ошибка выполнения fc-list: %s\n"
+
+#~ msgid "Hotkey"
+#~ msgstr "Горячая клавиша"
+
+#~ msgid "Only 1 key. Only X11/Xwayland."
+#~ msgstr "Только 1 клавиша. Только X11/Xwayland."
