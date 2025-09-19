@@ -117,20 +117,20 @@ namespace AboutDialog {
             });
         });
 
-        var tinkoff_btn = new Gtk.Button.with_label(_("Tinkoff"));
-        tinkoff_btn.set_tooltip_text("https://www.tbank.ru/cf/3PPTstulqEq");
-        tinkoff_btn.clicked.connect(() => {
+        var tbank_btn = new Gtk.Button.with_label(_("T-Bank"));
+        tbank_btn.set_tooltip_text("https://www.tbank.ru/cf/3PPTstulqEq");
+        tbank_btn.clicked.connect(() => {
             var launcher = new Gtk.UriLauncher("https://www.tbank.ru/cf/3PPTstulqEq");
             launcher.launch.begin(parent_window, null, (obj, res) => {
                 try {
                     launcher.launch.end(res);
                 } catch (Error e) {
-                    warning("Failed to open Tinkoff: %s", e.message);
+                    warning("Failed to open T-Bank: %s", e.message);
                 }
             });
         });
 
-        var ymoney_btn = new Gtk.Button.with_label(_("ЮMoney (Мир)"));
+        var ymoney_btn = new Gtk.Button.with_label(_("ЮMoney (Mir)"));
         ymoney_btn.set_tooltip_text("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
         ymoney_btn.clicked.connect(() => {
             var launcher = new Gtk.UriLauncher("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
@@ -143,7 +143,7 @@ namespace AboutDialog {
             });
         });
 
-        var sber_btn = new Gtk.Button.with_label(_("Sber (Мир)"));
+        var sber_btn = new Gtk.Button.with_label(_("Sber (Mir)"));
         sber_btn.set_tooltip_text("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
         sber_btn.clicked.connect(() => {
             var launcher = new Gtk.UriLauncher("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
@@ -172,8 +172,8 @@ namespace AboutDialog {
         var donation_child = new Gtk.FlowBoxChild();
         donation_child.set_child(donation_alerts_btn);
         
-        var tinkoff_child = new Gtk.FlowBoxChild();
-        tinkoff_child.set_child(tinkoff_btn);
+        var tbank_child = new Gtk.FlowBoxChild();
+        tbank_child.set_child(tbank_btn);
         
         var boosty_child = new Gtk.FlowBoxChild();
         boosty_child.set_child(boosty_btn);
@@ -190,7 +190,7 @@ namespace AboutDialog {
         flow_box.append(donation_child);
         flow_box.append(boosty_child);
         flow_box.append(ymoney_child);
-        flow_box.append(tinkoff_child);
+        flow_box.append(tbank_child);
         flow_box.append(telegram_child);
         flow_box.append(sber_child);
         
