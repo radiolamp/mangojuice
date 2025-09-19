@@ -117,20 +117,20 @@ namespace AboutDialog {
             });
         });
 
-        var tbank_btn = new Gtk.Button.with_label(_("T-Bank"));
-        tbank_btn.set_tooltip_text("https://www.tbank.ru/cf/3PPTstulqEq");
-        tbank_btn.clicked.connect(() => {
+        var tinkoff_btn = new Gtk.Button.with_label(_("Tinkoff"));
+        tinkoff_btn.set_tooltip_text("https://www.tbank.ru/cf/3PPTstulqEq");
+        tinkoff_btn.clicked.connect(() => {
             var launcher = new Gtk.UriLauncher("https://www.tbank.ru/cf/3PPTstulqEq");
             launcher.launch.begin(parent_window, null, (obj, res) => {
                 try {
                     launcher.launch.end(res);
                 } catch (Error e) {
-                    warning("Failed to open T-Bank: %s", e.message);
+                    warning("Failed to open Tinkoff: %s", e.message);
                 }
             });
         });
 
-        var ymoney_btn = new Gtk.Button.with_label(_("ЮMoney (Mir)"));
+        var ymoney_btn = new Gtk.Button.with_label(_("ЮMoney (Мир)"));
         ymoney_btn.set_tooltip_text("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
         ymoney_btn.clicked.connect(() => {
             var launcher = new Gtk.UriLauncher("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
@@ -143,7 +143,7 @@ namespace AboutDialog {
             });
         });
 
-        var sber_btn = new Gtk.Button.with_label(_("Sber (Mir)"));
+        var sber_btn = new Gtk.Button.with_label(_("Sber (Мир)"));
         sber_btn.set_tooltip_text("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
         sber_btn.clicked.connect(() => {
             var launcher = new Gtk.UriLauncher("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
@@ -172,8 +172,8 @@ namespace AboutDialog {
         var donation_child = new Gtk.FlowBoxChild();
         donation_child.set_child(donation_alerts_btn);
         
-        var tbank_child = new Gtk.FlowBoxChild();
-        tbank_child.set_child(tbank_btn);
+        var tinkoff_child = new Gtk.FlowBoxChild();
+        tinkoff_child.set_child(tinkoff_btn);
         
         var boosty_child = new Gtk.FlowBoxChild();
         boosty_child.set_child(boosty_btn);
@@ -190,7 +190,7 @@ namespace AboutDialog {
         flow_box.append(donation_child);
         flow_box.append(boosty_child);
         flow_box.append(ymoney_child);
-        flow_box.append(tbank_child);
+        flow_box.append(tinkoff_child);
         flow_box.append(telegram_child);
         flow_box.append(sber_child);
         
@@ -401,8 +401,39 @@ namespace AboutDialog {
         dialog.present(parent_window);
     }
 
-    static Adw.ActionRow? currently_selected_row = null;
+    bool check_if_profile_active_simple(string profile_name) {
+        try {
+            string profile_filename = profile_name.replace(" ", "-") + ".conf";
+            string active_config_path = Path.build_filename(
+                Environment.get_home_dir(),
+                ".config",
+                "MangoHud",
+                "MangoHud.conf"
+            );
     
+            var active_file = File.new_for_path(active_config_path);
+            if (!active_file.query_exists()) {
+                return false;
+            }
+    
+            var dis = new DataInputStream(active_file.read());
+            string? first_line = dis.read_line(null);
+            
+            if (first_line != null && first_line.contains(profile_filename)) {
+                return true;
+            }
+            
+        } catch (Error e) {
+            warning("Failed to check if profile is active: %s", e.message);
+            return false;
+        }
+        
+        return false;
+    }
+
+    static Adw.ActionRow? currently_selected_row = null;
+    static Gtk.Button? currently_playing_button = null;
+        
     Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice app, Adw.ToastOverlay toast_overlay, owned DeleteCallback on_delete, string initial_name = _("Profile"), bool is_existing_profile = false) {
         string profile_name = initial_name;
         
@@ -421,6 +452,12 @@ namespace AboutDialog {
         row.set_selectable(false);
         row.set_tooltip_text(_("Profile preview"));
         row.add_css_class("profile-row");
+    
+        var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
+        play_btn.add_css_class("flat");
+        play_btn.add_css_class("circular");
+        play_btn.set_tooltip_text(_("Apply the profile to the entire system"));
+        play_btn.set_valign(Gtk.Align.CENTER);
         
         var edit_btn = new Gtk.Button();
         edit_btn.set_icon_name("document-edit-symbolic");
@@ -442,43 +479,74 @@ namespace AboutDialog {
         close_btn.set_icon_name("edit-delete-symbolic");
         close_btn.set_focusable(false);
         close_btn.add_css_class("flat");
+        close_btn.add_css_class("circular");
         close_btn.set_tooltip_text(_("Delete profile"));
         close_btn.set_valign(Gtk.Align.CENTER);
-        close_btn.add_css_class("circular");
+    
+        bool is_active_profile = check_if_profile_active_simple(profile_name);
+        if (is_active_profile) {
+            play_btn.add_css_class("destructive-action");
+            currently_playing_button = play_btn;
+        }
+    
+        var entry = new Gtk.Entry();
+        entry.set_text(profile_name);
+        entry.set_visible(false);
+        entry.set_hexpand(true);
+        entry.set_valign(Gtk.Align.CENTER);
+    
+        row.add_prefix(play_btn);
+        row.add_prefix(entry);
         
         var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
         button_box.append(edit_btn);
         button_box.append(reset_btn);
         button_box.append(close_btn);
         row.add_suffix(button_box);
-        
-        var entry = new Gtk.Entry();
-        entry.set_text(profile_name);
-        entry.set_visible(false);
-        entry.set_hexpand(true);
-        entry.set_valign(Gtk.Align.CENTER);
-        row.add_prefix(entry);
+    
+        play_btn.clicked.connect(() => {
+            if (currently_playing_button != null) {
+                currently_playing_button.remove_css_class("destructive-action");
+            }
+            
+            app.run_test();
+            apply_profile_config(profile_name);
+            LoadStates.load_states_from_file.begin(app);
+            app.reset_manager.reset_all_widgets();
+
+            play_btn.add_css_class("destructive-action");
+            currently_playing_button = play_btn;
+            
+            var toast = new Adw.Toast(_("Applied"));
+            toast.set_timeout(3);
+            toast_overlay.add_toast(toast);
+            
+            if (currently_selected_row == row) {
+                row.remove_css_class("selected");
+                currently_selected_row = null;
+            }
+        });
         
         edit_btn.clicked.connect(() => {
             entry.set_text(profile_name);
             row.set_title("");
             entry.set_visible(true);
             entry.grab_focus();
-    
+        
             if (currently_selected_row != null && currently_selected_row != row) {
                 currently_selected_row.remove_css_class("selected");
             }
             row.add_css_class("selected");
             currently_selected_row = row;
         });
-    
+        
         if (!is_existing_profile) {
             Timeout.add(100, () => {
                 entry.set_text(profile_name);
                 row.set_title("");
                 entry.set_visible(true);
                 entry.grab_focus();
-    
+        
                 if (currently_selected_row != null && currently_selected_row != row) {
                     currently_selected_row.remove_css_class("selected");
                 }
@@ -494,16 +562,16 @@ namespace AboutDialog {
                 var config_dir = File.new_for_path(Environment.get_home_dir())
                     .get_child(".config")
                     .get_child("MangoHud");
-    
+        
                 var original_config = config_dir.get_child("MangoHud.conf");
                 var profile_config = config_dir.get_child(
                     profile_name.replace(" ", "-") + ".conf"
                 );
-    
+        
                 if (original_config.query_exists()) {
                     original_config.copy(profile_config, FileCopyFlags.OVERWRITE);
                 }
-    
+        
                 var toast = new Adw.Toast(_("Changed"));
                 toast.set_timeout(3);
                 toast_overlay.add_toast(toast);
@@ -514,46 +582,31 @@ namespace AboutDialog {
         
         entry.activate.connect(() => {
             string new_name = entry.get_text().strip();
-    
+        
             if (new_name.has_suffix(".exe")) {
                 new_name = "wine " + new_name.substring(0, new_name.length - 4);
             }
-    
+        
             if (new_name != "" && new_name != profile_name) {
                 rename_profile_config(profile_name, new_name);
                 profile_name = new_name;
+
+                if (currently_playing_button == play_btn) {
+                    play_btn.add_css_class("destructive-action");
+                } else {
+                    play_btn.remove_css_class("destructive-action");
+                }
             }
-    
+        
             entry.set_visible(false);
             row.set_title(profile_name);
-    
+        
             if (currently_selected_row != null && currently_selected_row != row) {
                 currently_selected_row.remove_css_class("selected");
             }
             row.add_css_class("selected");
             currently_selected_row = row;
         });
-        
-        var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
-        play_btn.add_css_class("flat");
-        play_btn.set_tooltip_text(_("Apply the profile to the entire system"));
-        play_btn.set_valign(Gtk.Align.CENTER);
-        play_btn.add_css_class("circular");
-        play_btn.clicked.connect(() => {
-            app.run_test();
-            apply_profile_config(profile_name);
-            LoadStates.load_states_from_file.begin(app);
-            app.reset_manager.reset_all_widgets();
-            
-            var toast = new Adw.Toast(_("Applied"));
-            toast.set_timeout(3);
-            toast_overlay.add_toast(toast);
-            if (currently_selected_row == row) {
-                row.remove_css_class("selected");
-                currently_selected_row = null;
-            }
-        });
-        row.add_prefix(play_btn);
         
         var focus_controller = new Gtk.EventControllerFocus();
         focus_controller.leave.connect(() => {
@@ -564,6 +617,10 @@ namespace AboutDialog {
         entry.add_controller(focus_controller);
         
         close_btn.clicked.connect(() => {
+            if (currently_playing_button == play_btn) {
+                currently_playing_button = null;
+            }
+            
             if (currently_selected_row == row) {
                 currently_selected_row.remove_css_class("selected");
                 currently_selected_row = null;
@@ -596,9 +653,9 @@ namespace AboutDialog {
                     "MangoHud",
                     profile_name.replace(" ", "-") + ".conf"
                 );
-    
+        
                 string base_cmd = @"env MANGOHUD_CONFIGFILE='$config_path' mangohud";
-    
+        
                 if (app.is_flatpak ()) {
                     Process.spawn_command_line_sync ("pkill vkcube");
                     if (is_wayland) {
@@ -617,7 +674,7 @@ namespace AboutDialog {
                 warning("%s", e.message);
             }
         });
-    
+        
         var click_controller = new Gtk.GestureClick();
         click_controller.pressed.connect((n_press, x, y) => {
             if (currently_selected_row != null && currently_selected_row != row) {
@@ -881,30 +938,62 @@ namespace AboutDialog {
         }
     }
 
-    void apply_profile_config(string profile_name) {
-        try {
-            string profile_path = Path.build_filename(
-                Environment.get_home_dir(),
-                ".config",
-                "MangoHud",
-                profile_name.replace(" ", "-") + ".conf"
-            );
+void apply_profile_config(string profile_name) {
+    try {
+        string profile_path = Path.build_filename(
+            Environment.get_home_dir(),
+            ".config",
+            "MangoHud",
+            profile_name.replace(" ", "-") + ".conf"
+        );
 
-            string target_path = Path.build_filename(
-                Environment.get_home_dir(),
-                ".config",
-                "MangoHud",
-                "MangoHud.conf"
-            );
+        string target_path = Path.build_filename(
+            Environment.get_home_dir(),
+            ".config",
+            "MangoHud",
+            "MangoHud.conf"
+        );
 
-            var profile_file = File.new_for_path(profile_path);
-            if (profile_file.query_exists()) {
-                profile_file.copy(File.new_for_path(target_path), FileCopyFlags.OVERWRITE);
-            }
-        } catch (Error e) {
-            warning("Failed to apply profile: %s", e.message);
+        var profile_file = File.new_for_path(profile_path);
+        if (profile_file.query_exists()) {
+            // Копируем файл
+            profile_file.copy(File.new_for_path(target_path), FileCopyFlags.OVERWRITE);
+            
+            // Добавляем комментарий с именем профиля в начало
+            add_profile_comment_to_file(target_path, profile_name);
         }
+    } catch (Error e) {
+        warning("Failed to apply profile: %s", e.message);
     }
+}
+
+void add_profile_comment_to_file(string file_path, string profile_name) {
+    try {
+        var file = File.new_for_path(file_path);
+        var temp_file = File.new_for_path(file_path + ".tmp");
+        
+        var output = new DataOutputStream(temp_file.create(FileCreateFlags.REPLACE_DESTINATION));
+        var input = new DataInputStream(file.read());
+        
+        // Добавляем комментарий в начало
+        output.put_string("# Active profile: " + profile_name.replace(" ", "-") + ".conf\n");
+        
+        // Копируем остальное содержимое
+        string? line;
+        while ((line = input.read_line(null)) != null) {
+            // Пропускаем старый комментарий профиля, если есть
+            if (!line.has_prefix("# Active profile:")) {
+                output.put_string(line + "\n");
+            }
+        }
+        
+        // Заменяем оригинальный файл
+        temp_file.move(file, FileCopyFlags.OVERWRITE);
+        
+    } catch (Error e) {
+        warning("Failed to add profile comment: %s", e.message);
+    }
+}
 
     void set_preset (string[] preset_values) {
         var file = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child("MangoHud").get_child ("MangoHud.conf");
