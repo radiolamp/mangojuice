@@ -405,91 +405,50 @@ public class AdvancedDialog : Adw.Dialog {
     }
 
     string get_localized_title (string key) {
-        switch (key) {
-            case "custom_text_center":
-                return _("Your text");
-            case "custom_text":
-                return _("Your text");
-            case "gpu_stats":
-                return _("Load GPU");
-            case "vulkan_driver":
-                return _("Vulkan Driver");
-            case "vram":
-                return _("VRAM");
-            case "cpu_stats":
-                return _("Load CPU");
-            case "core_load":
-                return _("Load per core");
-            case "ram":
-                return _("RAM");
-            case "io_read":
-                return _("Disk");
-            case "io_write":
-                return _("Disk");
-            case "procmem":
-                return _("Resident memory");
-            case "swap":
-                return _("Swap");
-            case "fan":
-                return _("Fan");
-            case "fps":
-                return _("FPS");
-            case "fps_metrics=avg,0.01":
-                return _("Lowest 0.1%");
-            case "fps_metrics=avg,0.1":
-                return _("Lowest 1%");
-            case "version":
-                return _("Version");
-             case "engine_version":
-                return _("Engine version");
-            case "gamemode":
-                return _("Gamemode");
-            case "vkbasalt":
-                return _("vkBasalt");
-            case "exec_name":
-                return _("Exe name");
-            case "fsr":
-                return _("FSR");
-            case "hdr":
-                return _("HDR");
-            case "refresh_rate":
-                return _("Refresh rate");
-            case "resolution":
-                return _("Resolution");
-            case "arch":
-                return _("Architecture");
-            case "present_mode":
-                return _("VPS");
-            case "display_server":
-                return _("Session type");
-            case "show_fps_limit":
-                return _("Frame limit");
-            case "frame_timing":
-                return _("Frame graph");
-            case "frame_count":
-                return _("Frame");
-            case "battery":
-                return _("Battery charge");
-            case "battery_watt":
-                return _("Battery power");
-            case "battery_time":
-                return _("Time remain");
-            case "device_battery_icon":
-                return _("Battery icon");
-            case "device_battery=gamepad,mouse":
-                return _("Other batteries");
-            case "network":
-                return _("Network");
-            case "media_player":
-                return _("Media");
-            case "wine":
-                return _("Version");
-            case "winesync":
-                return _("Winesync");
-            case "time":
-                return _("Watch");
-            default:
-                return _("Other");
-        }
+        var localized_titles = new Gee.HashMap<string, string>();
+        
+        localized_titles["custom_text_center"] = _("Your text");
+        localized_titles["custom_text"] = _("Your text");
+        localized_titles["gpu_stats"] = _("Load GPU");
+        localized_titles["vulkan_driver"] = _("Vulkan Driver");
+        localized_titles["vram"] = _("VRAM");
+        localized_titles["cpu_stats"] = _("Load CPU");
+        localized_titles["core_load"] = _("Load per core");
+        localized_titles["ram"] = _("RAM");
+        localized_titles["io_read"] = _("Disk");
+        localized_titles["io_write"] = _("Disk");
+        localized_titles["procmem"] = _("Resident memory");
+        localized_titles["swap"] = _("Swap");
+        localized_titles["fan"] = _("Fan");
+        localized_titles["fps"] = _("FPS");
+        localized_titles["fps_metrics=avg,0.01"] = _("Lowest 0.1%");
+        localized_titles["fps_metrics=avg,0.1"] = _("Lowest 1%");
+        localized_titles["version"] = _("Version");
+        localized_titles["engine_version"] = _("Engine version");
+        localized_titles["gamemode"] = _("Gamemode");
+        localized_titles["vkbasalt"] = _("vkBasalt");
+        localized_titles["exec_name"] = _("Exe name");
+        localized_titles["fsr"] = _("FSR");
+        localized_titles["hdr"] = _("HDR");
+        localized_titles["refresh_rate"] = _("Refresh rate");
+        localized_titles["resolution"] = _("Resolution");
+        localized_titles["arch"] = _("Architecture");
+        localized_titles["present_mode"] = _("VPS");
+        localized_titles["display_server"] = _("Session type");
+        localized_titles["show_fps_limit"] = _("Frame limit");
+        localized_titles["frame_timing"] = _("Frame graph");
+        localized_titles["frame_count"] = _("Frame");
+        localized_titles["battery"] = _("Battery charge");
+        localized_titles["battery_watt"] = _("Battery power");
+        localized_titles["battery_time"] = _("Time remain");
+        localized_titles["device_battery_icon"] = _("Battery icon");
+        localized_titles["device_battery=gamepad,mouse"] = _("Other batteries");
+        localized_titles["network"] = _("Network");
+        localized_titles["media_player"] = _("Media");
+        localized_titles["wine"] = _("Version");
+        localized_titles["winesync"] = _("Winesync");
+        localized_titles["time"] = _("Watch");
+        
+        return localized_titles.has_key(key) ? localized_titles[key] : _("Other");
     }
 }
