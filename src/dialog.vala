@@ -485,7 +485,8 @@ namespace AboutDialog {
     
         bool is_active_profile = check_if_profile_active_simple(profile_name);
         if (is_active_profile) {
-            play_btn.add_css_class("destructive-action");
+            play_btn.add_css_class("accent");
+            play_btn.remove_css_class("flat");
             currently_playing_button = play_btn;
         }
     
@@ -506,7 +507,8 @@ namespace AboutDialog {
     
         play_btn.clicked.connect(() => {
             if (currently_playing_button != null) {
-                currently_playing_button.remove_css_class("destructive-action");
+                currently_playing_button.remove_css_class("accent");
+                currently_playing_button.add_css_class("flat");
             }
             
             app.run_test();
@@ -514,7 +516,8 @@ namespace AboutDialog {
             LoadStates.load_states_from_file.begin(app);
             app.reset_manager.reset_all_widgets();
 
-            play_btn.add_css_class("destructive-action");
+            play_btn.add_css_class("accent");
+            play_btn.remove_css_class("flat");
             currently_playing_button = play_btn;
             
             var toast = new Adw.Toast(_("Applied"));

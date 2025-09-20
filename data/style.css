@@ -11,12 +11,8 @@ flowboxchild {
 }
 
 .profile-row.selected {
-    background-color: alpha(@accent_bg_color, 0.5);
+    background-color: alpha(@accent_bg_color, 0.2);
     border-radius: 10px;
-}
-
-.profile-row.selected:focus {
-    background-color: alpha(@accent_bg_color, 0.7);
 }
 
 @keyframes wobble {
