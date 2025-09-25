@@ -48,6 +48,20 @@
   </developer>
   <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
+    <release version="0.8.8" date="2025-09-25">
+      <description>
+        <p>Interface improvements and bug fixes</p>
+        <ul>
+          <li>Update to Gnome 49</li>
+          <li>Added a donation bar when starting the program for the first time in the system (can be disabled by creating a file during installation: ~/.config/.mangojuice)</li>
+          <li>Improved graphical display of profiles</li>
+          <li>Improved interface style</li>
+          <li>Added the ability to add multiple variables using ","</li>
+          <li>An improvement in vkbasalt is available for AppImage and the native package: the ability to select reshaders has been added. Vaddum has currently prepared a selection of reshaders that can be downloaded from the release</li>
+          <li>Other improvements</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.8.7" date="2025-08-31">
       <description>
         <p>Interface improvements and bug fixes</p>
