@@ -6,6 +6,7 @@ project(
     ]
 )
 
+app_id = 'io.github.radiolamp.mangojuice'
 i18n = import('i18n')
 gnome = import('gnome')
 
@@ -28,6 +29,7 @@ if get_option('is_devel')
 endif
 
 conf = configuration_data()
+conf.set('APP_ID_RELEVANT', app_id)
 conf.set10('IS_DEVEL', get_option('is_devel'))
 conf.set_quoted('DATADIR', join_paths(get_option('prefix'), get_option('datadir')))
 conf.set_quoted('GNOMELOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))

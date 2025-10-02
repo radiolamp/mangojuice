@@ -16,8 +16,11 @@ install_data(
     install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps')
 )
 
-install_data(
-    'io.github.radiolamp.mangojuice.desktop',
+desktop_file = configure_file(
+    input: 'io.github.radiolamp.mangojuice.desktop.in.in',
+    output: 'io.github.radiolamp.mangojuice.desktop',
+    configuration: conf,
+    install: true,
     install_dir: get_option('datadir') / 'applications'
 )
 

@@ -1,8 +1,11 @@
 [Desktop Entry]
 Name=MangoJuice
 Comment=A convenient alternative to GOverlay for configuring MangoHud
-Exec=mangojuice
-Icon=io.github.radiolamp.mangojuice
+# Translators: keep number of ';'
+Keywords=mangojuice;MangoJuice;mj;Mango Juice;
+Exec=mangojuice %U
+Icon=@APP_ID_RELEVANT@
 Terminal=false
 Type=Application
 Categories=Utility;Application;
+StartupNotify=true
