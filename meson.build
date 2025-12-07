@@ -37,6 +37,7 @@ conf.set_quoted('VERSION', meson.project_version() + version_suffix)
 
 add_project_arguments(
     '-Wno-discarded-qualifiers',
+    '-Wno-incompatible-pointer-types',
     language: 'c'
 )
 

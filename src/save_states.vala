@@ -168,6 +168,10 @@ public class SaveStates {
         update_file ("battery_color=", battery_color);
     }
 
+    public static void update_horizontal_separator_color_in_file (string horizontal_separator_color) {
+        update_file ("horizontal_separator_color=", horizontal_separator_color);
+    }
+
     public static void update_media_player_format_in_file (string format_value) {
         update_file ("media_player_format=", format_value);
     }
@@ -314,6 +318,9 @@ public class SaveStates {
             gpu_end.add (9);
             gpu_end.add (14);
             gpu_end.add (15);
+            gpu_end.add (16);
+            gpu_end.add (17);
+            gpu_end.add (18);
             order_map.set ("gpu_end", gpu_end);
 
             var system_start = new ArrayList<int> ();
@@ -332,7 +339,7 @@ public class SaveStates {
 
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
 
-            int[] cpu_order = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+            int[] cpu_order = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             save_switches_to_file (data_stream, mango_juice.cpu_switches, mango_juice.cpu_config_vars, cpu_order);
 
             int[] memory_order = {0, 1, 2, 3, 4, 5, 6};
@@ -362,7 +369,7 @@ public class SaveStates {
             int[] other_extra_order = {1, 2, 0, 3};
             save_switches_to_file (data_stream, mango_juice.other_extra_switches, mango_juice.other_extra_config_vars, other_extra_order);
 
-            int[] wine_order = {0, 1};
+            int[] wine_order = {0, 1, 2};
             save_switches_to_file (data_stream, mango_juice.wine_switches, mango_juice.wine_config_vars, wine_order);
 
             if (mango_juice.logs_key_recorder.shortcut != null && mango_juice.logs_key_recorder.shortcut != "") {
@@ -564,6 +571,7 @@ public class SaveStates {
             save_color_setting(data_stream, mango_juice.media_player_color_button, "media_player_color", mango_juice);
             save_color_setting(data_stream, mango_juice.network_color_button, "network_color", mango_juice);
             save_color_setting(data_stream, mango_juice.battery_color_button, "battery_color", mango_juice);
+            save_color_setting(data_stream, mango_juice.horizontal_separator_color_button, "horizontal_separator_color", mango_juice);
 
             const string[] FORMAT_VALUES = { "title", "artist", "album", "none" };
             

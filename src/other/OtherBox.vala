@@ -649,21 +649,23 @@ public class OtherBox : Box {
             text_box.set_size_request (160, -1);
 
             var label1 = new Label (null);
-            label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
+            string label1_text = label_texts[i] ?? "";
+            label1.set_markup ("<b>%s</b>".printf (label1_text));
             label1.set_halign (Align.START);
             label1.set_hexpand (false);
             label1.set_ellipsize (Pango.EllipsizeMode.END);
             label1.set_max_width_chars (20);
 
-            var label2 = new Label (label_texts_2[i]);
+            string label2_text = label_texts_2[i] ?? "";
+            var label2 = new Label (label2_text);
             label2.set_halign (Align.START);
             label2.set_hexpand (false);
             label2.add_css_class ("dim-label");
             label2.set_ellipsize (Pango.EllipsizeMode.END);
             label2.set_max_width_chars (25);
 
-            label1.set_markup ("<b>%s</b>".printf (label_texts[i]));
-            label2.set_markup ("<span size='9000'>%s</span>".printf (label_texts_2[i]));
+            label1.set_markup ("<b>%s</b>".printf (label1_text));
+            label2.set_markup ("<span size='9000'>%s</span>".printf (label2_text));
 
             text_box.append (label1);
             text_box.append (label2);

@@ -148,6 +148,7 @@ public class ResetManager {
         reset_color_button(app.media_player_color_button, "#FFFFFF");
         reset_color_button(app.network_color_button, "#e07b85");
         reset_color_button(app.battery_color_button, "#92e79a");
+        reset_color_button(app.horizontal_separator_color_button, "#FFFFFF");
     }
 
     void reset_color_button(ColorDialogButton? button, string hex_color) {

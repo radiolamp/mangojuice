@@ -214,7 +214,7 @@ public class LoadStates {
                     mango_juice.custom_text_center_entry.text = line.substring ("custom_text_center=".length);
                 }
 
-                if (line.has_prefix ("horizontal")) {
+                if (line.strip () == "horizontal") {
                     mango_juice.custom_switch.active = true;
                 }
 
@@ -466,6 +466,13 @@ public class LoadStates {
                     var rgba = Gdk.RGBA ();
                     rgba.parse ("#" + battery_color);
                     mango_juice.battery_color_button.set_rgba (rgba);
+                }
+
+                if (line.has_prefix ("horizontal_separator_color=")) {
+                    var horizontal_separator_color = line.substring ("horizontal_separator_color=".length);
+                    var rgba = Gdk.RGBA ();
+                    rgba.parse ("#" + horizontal_separator_color);
+                    mango_juice.horizontal_separator_color_button.set_rgba (rgba);
                 }
 
                 if (line.has_prefix ("offset_x=")) {

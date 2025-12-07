@@ -92,6 +92,7 @@ public class MangoJuice : Adw.Application {
     public  ColorDialogButton media_player_color_button;
     public  ColorDialogButton network_color_button;
     public  ColorDialogButton battery_color_button;
+    public  ColorDialogButton horizontal_separator_color_button;
     public  Entry             blacklist_entry;
     public  Entry             gpu_entry;
     public  Scale             offset_x_scale;
@@ -136,23 +137,24 @@ public class MangoJuice : Adw.Application {
     public string[] gpu_config_vars = {
         "gpu_stats", "gpu_load_change", "vram", "gpu_core_clock", "gpu_mem_clock",
         "gpu_temp", "gpu_mem_temp", "gpu_junction_temp", "gpu_fan", "gpu_name",
-        "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "vulkan_driver" , "engine_version"
+        "gpu_power", "gpu_voltage", "throttling_status", "throttling_status_graph", "vulkan_driver" ,"gpu_efficiency", "engine_version", 
+        "gpu_power_limit", "proc_vram"
     };
     public string[] cpu_config_vars = {
         "cpu_stats", "cpu_load_change", "core_load", "core_load_change", "core_bars", "cpu_mhz", "cpu_temp",
-        "cpu_power", "core_type"
+        "cpu_power", "core_type", "cpu_efficiency", "flip_efficiency"
     };
     public string[] memory_config_vars = {
         "ram", "io_read", "io_write", "procmem", "procmem_shared", "procmem_virt", "swap"
     };
     public string[] git_config_vars = {
-        "gpu_efficiency", "flip_efficiency", "hide_fsr_sharpness"
+         "hide_fsr_sharpness"
     };
     public string[] system_config_vars = {
         "refresh_rate", "fan", "resolution", "display_server", "engine_short_names", "time", "arch", "network"
     };
     public string[] wine_config_vars = {
-        "wine", "winesync"
+        "wine", "winesync", "dx_api"
     };
     public string[] battery_config_vars = {
         "battery", "battery_watt", "battery_time", "battery_icon" , "device_battery_icon", "device_battery=gamepad,mouse"
@@ -176,21 +178,20 @@ public class MangoJuice : Adw.Application {
         _("Load GPU"),         _("Color load"),       _("VRAM"),               _("Core frequency"),
         _("Memory frequency"), _("Temperature"),      _("Memory temperature"), _("Max temperature"),
         _("Fans"),             _("Model"),            _("Power"),              _("Voltage"),
-        _("Throttling"),       _("Throttling graph"), _("Vulkan Driver") ,     _("Engine version")
+        _("Throttling"),       _("Throttling graph"), _("Vulkan Driver") ,     _("GPU efficiency (F/J)"),
+        _("Engine version"),   _("Power limit"),      _("VRAM usage")
     };
     string[] cpu_label_texts = {
-        _("Load CPU"),          _("Color load"),  _("Load per core"), _("Colored cores"), _("Diagram"),
-        _("Maximum frequency"), _("Temperature"), _("Power"),  _("Core type")
+        _("Load CPU"),           _("Color load"),  _("Load per core"), _("Colored cores"), _("Diagram"),
+        _("Maximum frequency"), _("Temperature"),  _("Power"),         _("Core type"),     _("FPS per Joule"),
+        _("EconoFlip")
     };
     string[] memory_label_texts = {
         _("RAM"),             _("Disk read"),       _("Disk write"),  _("Resident memory"),
         _("General memory"),  _("Virtual memory"),  _("Swap")
     };
 
-    string[] git_label_texts = {
-        _("GPU efficiency (F/J)"),             _("GPU energy (J/F)"),
-        _("Hide FSR sharpness")
-    };
+    string[] git_label_texts = { _("Hide FSR sharpness")};
 
     // Extras
     string[] system_label_texts = {
@@ -207,7 +208,7 @@ public class MangoJuice : Adw.Application {
         _("Device icon"), _("More icon"),   _("Other batteries")
     };
     string[] wine_label_texts = {
-        _("Version"), _("Winesync")
+        _("Version"), _("Winesync"), _("DirectX Layer")
     };
     string[] other_extra_label_texts = {
         _("Media"),    _("Full ON"),
@@ -223,27 +224,27 @@ public class MangoJuice : Adw.Application {
 
     /*
      * Descriptions
-     */
+    */
 
     // Metrics
     string[] gpu_label_texts_2 = {
         _("Percentage load"),    _("Color text"),      _("Amount of video memory"), _("Frequency, MHz"),
         _("Frequency, MHz"),     _("GPU temperature"), _("GDDR temperature"),       _("Temperature peak"),
         _("Speed, RPM"),         _("GPU name"),        _("Consumption, W" ),        _("Consumption, V"),
-        _("Trolling parametrs"), _("Curve"),           _("Driver Version"),         _("OpenGL and Vulkan")
+        _("Trolling parametrs"), _("Curve"),           _("Driver Version"),         _("CPU efficiency in FPS/Joule"),
+        _("OpenGL and Vulkan"),  _("Display GPU power limit"), _("Display process' VRAM usage")
     };
     string[] cpu_label_texts_2 = {
-        _("Percentage load"),      _("Color text"),      _("All cores"),  _("Colored cores text"),   _("Load per core"),
-        _("Peak among all cores"), _("CPU temperature"), _("Consumption, W"), _("For new Intel and ARM")
+        _("Percentage load"),      _("Color text"),      _("All cores"),      _("Colored cores text"),    _("Load per core"),
+        _("Peak among all cores"), _("CPU temperature"), _("Consumption, W"), _("For new Intel and ARM"), _("CPU efficiency in FPS/Joule"),
+        _("Swaps FPS/J to J/Frame")
     };
     string[] memory_label_texts_2 = {
          _("Size, GiB"),   _("Input, MiB/s"), _("Output, MiB/s"), _("Size, GiB"),
          _("Size, MiB/s"), _("Size, MiB/s"),  _("Size, GiB")
     };
 
-    string[] git_label_texts_2 = {
-         _("GPU"), _("GPU"), _("Gamescope")
-    };
+    string[] git_label_texts_2 = { _("Gamescope")    };
 
     // Extras
     string[] system_label_texts_2 = {
@@ -260,7 +261,7 @@ public class MangoJuice : Adw.Application {
         _("This devices"),    _("Wireless devices"), _("Wireless battries")
     };
     string[] wine_label_texts_2 = {
-        _("Wine or Proton version"), _("Wine sync method")
+        _("Wine or Proton version"), _("Wine sync method"), _("Reveals low-level API call")
     };
     string[] other_extra_label_texts_2 = {
         _("Current playback"), _("All but histograms"),
@@ -720,11 +721,16 @@ public class MangoJuice : Adw.Application {
         cpu_switches[2].notify["active"].connect (() => {
             if (!cpu_switches[2].active) cpu_switches[4].active = false;
             if (!cpu_switches[2].active) cpu_switches[3].active = false;
+            if (!cpu_switches[2].active) cpu_switches[8].active = false;
+        });
+        cpu_switches[8].notify["active"].connect (() => {
+            if (cpu_switches[8].active) cpu_switches[2].active = true;
         });
         cpu_switches[3].notify["active"].connect (() => {
             if (cpu_switches[3].active) cpu_switches[2].active = true;
             if (cpu_switches[3].active) cpu_switches[4].active = false;
         });
+        
         gpu_switches[4].notify["active"].connect (() => {
             if (gpu_switches[4].active) gpu_switches[2].active = true;
         });
@@ -893,7 +899,7 @@ public class MangoJuice : Adw.Application {
         bool any_cpu_switch_active = false;
 
         for (int i = 0; i < cpu_switches.length; i++) {
-            if (cpu_switches[i].active && cpu_config_vars[i] != "core_load" && cpu_config_vars[i] != "core_bars") {
+            if (cpu_switches[i].active && cpu_config_vars[i] != "core_load" && cpu_config_vars[i] != "core_bars" && cpu_config_vars[i] != "core_type") {
                 any_cpu_switch_active = true;
                 break;
             }
@@ -1752,8 +1758,15 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_battery_color_in_file (rgba_to_hex (rgba));
         });
 
-        ColorDialogButton[] color_buttons = { background_color_button, frametime_color_button, vram_color_button, ram_color_button, wine_color_button, engine_color_button, media_player_color_button, network_color_button, text_color_button, battery_color_button };
-        string[] color_labels = { _("Background"), _("Frametime"), _("VRAM"), _("RAM"), _("Wine"), _("Engine"), _("Media"), _("Network"), _("Text"), _("Battery") };
+        horizontal_separator_color_button = new ColorDialogButton (color_dialog);
+        setup_color_button(horizontal_separator_color_button, "#FFFFFF");
+        horizontal_separator_color_button.notify["rgba"].connect ( () => {
+            var rgba = horizontal_separator_color_button.get_rgba ().copy ();
+            SaveStates.update_horizontal_separator_color_in_file (rgba_to_hex (rgba));
+        });
+
+        ColorDialogButton[] color_buttons = { background_color_button, frametime_color_button, vram_color_button, ram_color_button, wine_color_button, engine_color_button, media_player_color_button, network_color_button, text_color_button, battery_color_button, horizontal_separator_color_button };
+        string[] color_labels = { _("Background"), _("Frametime"), _("VRAM"), _("RAM"), _("Wine"), _("Engine"), _("Media"), _("Network"), _("Text"), _("Battery"), _("Horizontal Line") };
 
         assert (color_buttons.length == color_labels.length);
 
