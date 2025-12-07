@@ -1,7 +1,7 @@
 {
   "app-id": "io.github.radiolamp.mangojuice",
   "runtime": "org.gnome.Platform",
-  "runtime-version": "48",
+  "runtime-version": "49",
   "sdk": "org.gnome.Sdk",
   "command": "mangojuice",
   "finish-args": [
@@ -83,18 +83,14 @@
       "sources": [
         {
           "type": "archive",
-          "url": "https://github.com/flightlessmango/MangoHud/releases/download/v0.8.1/MangoHud-v0.8.1-Source.tar.xz",
-          "sha256": "4c8d8098f5deff7737978d792eef909b7469933f456a47132dccc06804825482",
+          "url": "https://github.com/flightlessmango/MangoHud/releases/download/v0.8.2/MangoHud-v0.8.2-Source.tar.xz",
+          "sha256": "9fe98da24f790f4489efc1e0c8e3ad0291c80efd882a406797d54dab82f8765b",
           "x-checker-data": {
             "type": "json",
             "url": "https://api.github.com/repos/flightlessmango/MangoHud/releases",
             "url-query": "map(select(.tag_name | startswith(\"v\"))) | first |\n.assets | map((select(.name | endswith(\"Source.tar.xz\")))) | first | .browser_download_url\n",
             "version-query": "map(select(.tag_name | startswith(\"v\"))) | first |\n.tag_name | sub(\"^[vV]\"; \"\")\n"
           }
-        },
-        {
-          "type": "patch",
-          "path": "patches/0001-wayland-dlopen-correct-library.patch"
         }
       ],
       "modules": [
@@ -165,8 +161,8 @@
             {
               "type": "git",
               "url": "https://github.com/nlohmann/json.git",
-              "tag": "v3.11.2",
-              "commit": "bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d"
+              "tag": "v3.12.0",
+              "commit": "55f93686c01528224f448c19128836e7df245f72"
             }
           ]
         },
