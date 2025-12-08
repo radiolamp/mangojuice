@@ -176,21 +176,31 @@ public class SaveStates {
         update_file ("media_player_format=", format_value);
     }
 
+    static Mutex update_file_mutex = Mutex ();
+    
     static void update_file (string prefix, string value) {
-        var file = get_config_file();
-        if (!file.query_exists ()) {
-            return;
-        }
-
+        update_file_mutex.lock ();
         try {
+            var file = get_config_file();
+            if (!file.query_exists ()) {
+                update_file_mutex.unlock ();
+                return;
+            }
+
             var lines = new ArrayList<string> ();
             var file_stream = new DataInputStream (file.read ());
             string line;
+            bool found = false;
             while ((line = file_stream.read_line ()) != null) {
                 if (line.has_prefix (prefix)) {
                     line = "%s%s".printf (prefix, value);
+                    found = true;
                 }
                 lines.add (line);
+            }
+
+            if (!found) {
+                lines.add ("%s%s".printf (prefix, value));
             }
 
             var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
@@ -200,6 +210,8 @@ public class SaveStates {
             file_stream_write.close ();
         } catch (Error e) {
             stderr.printf ("Error writing to the file: %s\n", e.message);
+        } finally {
+            update_file_mutex.unlock ();
         }
     }
 

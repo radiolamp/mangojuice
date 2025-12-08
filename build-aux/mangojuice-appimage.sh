@@ -126,7 +126,7 @@ rm -rf ./usr/share
 ln ./sharun ./AppRun
 ./sharun -g
 
-echo 'MANGOJUICE=1' > ./.env
+#echo 'MANGOJUICE=1' > ./.env
 echo 'TEXTDOMAINDIR="${SHARUN_DIR}/share/locale' >> ./.env
 echo 'TEXTDOMAIN="mangojuice' >> ./.env
 echo 'libMangoHud_shim.so' > ./.preload
