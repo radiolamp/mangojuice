@@ -13,9 +13,9 @@ URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uru
 
 # add debloated packages
 if [ "$(uname -m)" = 'x86_64' ]; then
-	PKG_TYPE='x86_64.pkg.tar.zst'
+    PKG_TYPE='x86_64.pkg.tar.zst'
 else
-	PKG_TYPE='aarch64.pkg.tar.xz'
+    PKG_TYPE='aarch64.pkg.tar.xz'
 fi
 
 LLVM_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/llvm-libs-nano-$PKG_TYPE"
@@ -28,7 +28,7 @@ VK_PANFROST_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/do
 VK_FREEDRENO_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/vulkan-freedreno-mini-$PKG_TYPE"
 VK_BROADCOM_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/vulkan-broadcom-mini-$PKG_TYPE"
 
-echo "Installing debloated pckages..."
+echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
 wget --retry-connrefused --tries=30 "$LLVM_URL"        -O  ./llvm-libs.pkg.tar.zst
 wget --retry-connrefused --tries=30 "$LIBXML_URL"      -O  ./libxml2.pkg.tar.zst
@@ -37,11 +37,11 @@ wget --retry-connrefused --tries=30 "$VK_RADEON_URL"   -O  ./vulkan-radeon.pkg.t
 wget --retry-connrefused --tries=30 "$VK_NOUVEAU_URL"  -O  ./vulkan-nouveau.pkg.tar.zst
 
 if [ "$(uname -m)" = 'x86_64' ]; then
-	wget --retry-connrefused --tries=30 "$VK_INTEL_URL"     -O ./vulkan-intel.pkg.tar.zst
+    wget --retry-connrefused --tries=30 "$VK_INTEL_URL"     -O ./vulkan-intel.pkg.tar.zst
 else
-	wget --retry-connrefused --tries=30 "$VK_PANFROST_URL"  -O ./vulkan-panfrost.pkg.tar.zst
-	wget --retry-connrefused --tries=30 "$VK_FREEDRENO_URL" -O ./vulkan-freedreno.pkg.tar.zst
-	wget --retry-connrefused --tries=30 "$VK_BROADCOM_URL"  -O ./vulkan-broadcom.pkg.tar.zst
+    wget --retry-connrefused --tries=30 "$VK_PANFROST_URL"  -O ./vulkan-panfrost.pkg.tar.zst
+    wget --retry-connrefused --tries=30 "$VK_FREEDRENO_URL" -O ./vulkan-freedreno.pkg.tar.zst
+    wget --retry-connrefused --tries=30 "$VK_BROADCOM_URL"  -O ./vulkan-broadcom.pkg.tar.zst
 fi
 
 pacman -U --noconfirm ./*.pkg.tar.zst
@@ -113,7 +113,7 @@ fi
 # mangojuice is also going to run mangohud vkcube so we need to wrap this
 echo '#!/bin/sh
 CURRENTDIR="$(dirname "$(readlink -f "$0")")"
-export MANGOHUD=1
+export MANGOHUD=0
 shift
 "$CURRENTDIR"/vkcube "$@"' > ./bin/mangohud
 chmod +x ./bin/mangohud
@@ -126,12 +126,24 @@ rm -rf ./usr/share
 ln ./sharun ./AppRun
 ./sharun -g
 
-#echo 'MANGOJUICE=1' > ./.env
+echo 'MANGOJUICE=0' > ./.env
 echo 'TEXTDOMAINDIR="${SHARUN_DIR}/share/locale' >> ./.env
 echo 'TEXTDOMAIN="mangojuice' >> ./.env
 echo 'libMangoHud_shim.so' > ./.preload
 
+# Дополнительная проверка структуры файлов
+echo "=== Проверка структуры файлов ==="
+echo "Файлы в AppDir:"
+ls -la | grep -E "(DirIcon|desktop|svg)"
+echo "Desktop файл:"
+cat *.desktop 2>/dev/null | grep -E "(Icon|Name)"
+
 cd .. || exit
+
+# Проверяем, что симлинк создан
+echo "Проверка симлинка .DirIcon в корне:"
+ls -la .DirIcon 2>/dev/null || echo "Предупреждение: симлинк .DirIcon не создан в корне"
+
 echo "Загрузка uruntime..."
 wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime || {
     echo "Ошибка загрузки uruntime"
