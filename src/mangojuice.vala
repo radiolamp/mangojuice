@@ -763,6 +763,9 @@ public class MangoJuice : Adw.Application {
     }
 
     protected override void shutdown () {
+        // Сохраняем все ожидающие изменения цветов перед закрытием
+        SaveStates.flush_all_pending ();
+        
         try {
             Process.spawn_command_line_sync ("pkill vkcube");
             Process.spawn_command_line_sync ("pkill glxgears");
@@ -1537,24 +1540,30 @@ public class MangoJuice : Adw.Application {
         setup_color_button(fps_color_button_1, "#cc0000");
         fps_color_button_1.notify["rgba"].connect (() => {
             if (is_loading) return;
-            var rgba = fps_color_button_1.get_rgba ().copy ();
-            SaveStates.update_fps_color_in_file (rgba_to_hex (rgba), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (fps_color_button_3.get_rgba ()));
+            var rgba1 = fps_color_button_1.get_rgba ().copy ();
+            var rgba2 = fps_color_button_2.get_rgba ().copy ();
+            var rgba3 = fps_color_button_3.get_rgba ().copy ();
+            SaveStates.update_fps_color_in_file (rgba_to_hex (rgba1), rgba_to_hex (rgba2), rgba_to_hex (rgba3));
         });
 
         fps_color_button_2 = new ColorDialogButton (color_dialog_fps);
         setup_color_button(fps_color_button_2, "#ffaa7f");
         fps_color_button_2.notify["rgba"].connect (() => {
             if (is_loading) return;
-            var rgba = fps_color_button_2.get_rgba ().copy ();
-            SaveStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (fps_color_button_3.get_rgba ()));
+            var rgba1 = fps_color_button_1.get_rgba ().copy ();
+            var rgba2 = fps_color_button_2.get_rgba ().copy ();
+            var rgba3 = fps_color_button_3.get_rgba ().copy ();
+            SaveStates.update_fps_color_in_file (rgba_to_hex (rgba1), rgba_to_hex (rgba2), rgba_to_hex (rgba3));
         });
 
         fps_color_button_3 = new ColorDialogButton (color_dialog_fps);
         setup_color_button(fps_color_button_3, "#92e79a");
         fps_color_button_3.notify["rgba"].connect (() => {
             if (is_loading) return;
-            var rgba = fps_color_button_3.get_rgba ().copy ();
-            SaveStates.update_fps_color_in_file (rgba_to_hex (fps_color_button_1.get_rgba ()), rgba_to_hex (fps_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+            var rgba1 = fps_color_button_1.get_rgba ().copy ();
+            var rgba2 = fps_color_button_2.get_rgba ().copy ();
+            var rgba3 = fps_color_button_3.get_rgba ().copy ();
+            SaveStates.update_fps_color_in_file (rgba_to_hex (rgba1), rgba_to_hex (rgba2), rgba_to_hex (rgba3));
         });
 
         fps_color_buttons_box.append(fps_color_button_1);
@@ -1599,24 +1608,30 @@ public class MangoJuice : Adw.Application {
         setup_color_button(gpu_load_color_button_1, "#92e79a");
         gpu_load_color_button_1.notify["rgba"].connect (() => {
             if (is_loading) return;
-            var rgba = gpu_load_color_button_1.get_rgba ().copy ();
-            SaveStates.update_gpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
+            var rgba1 = gpu_load_color_button_1.get_rgba ().copy ();
+            var rgba2 = gpu_load_color_button_2.get_rgba ().copy ();
+            var rgba3 = gpu_load_color_button_3.get_rgba ().copy ();
+            SaveStates.update_gpu_load_color_in_file (rgba_to_hex (rgba1), rgba_to_hex (rgba2), rgba_to_hex (rgba3));
         });
 
         gpu_load_color_button_2 = new ColorDialogButton (color_dialog_gpu_load);
         setup_color_button(gpu_load_color_button_2, "#ffaa7f");
         gpu_load_color_button_2.notify["rgba"].connect (() => {
             if (is_loading) return;
-            var rgba = gpu_load_color_button_2.get_rgba ().copy ();
-            SaveStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (gpu_load_color_button_3.get_rgba ()));
+            var rgba1 = gpu_load_color_button_1.get_rgba ().copy ();
+            var rgba2 = gpu_load_color_button_2.get_rgba ().copy ();
+            var rgba3 = gpu_load_color_button_3.get_rgba ().copy ();
+            SaveStates.update_gpu_load_color_in_file (rgba_to_hex (rgba1), rgba_to_hex (rgba2), rgba_to_hex (rgba3));
         });
 
         gpu_load_color_button_3 = new ColorDialogButton (color_dialog_gpu_load);
         setup_color_button(gpu_load_color_button_3, "#cc0000");
         gpu_load_color_button_3.notify["rgba"].connect (() => {
             if (is_loading) return;
-            var rgba = gpu_load_color_button_3.get_rgba ().copy ();
-            SaveStates.update_gpu_load_color_in_file (rgba_to_hex (gpu_load_color_button_1.get_rgba ()), rgba_to_hex (gpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+            var rgba1 = gpu_load_color_button_1.get_rgba ().copy ();
+            var rgba2 = gpu_load_color_button_2.get_rgba ().copy ();
+            var rgba3 = gpu_load_color_button_3.get_rgba ().copy ();
+            SaveStates.update_gpu_load_color_in_file (rgba_to_hex (rgba1), rgba_to_hex (rgba2), rgba_to_hex (rgba3));
         });
 
         gpu_load_color_buttons_box.append(gpu_load_color_button_1);
@@ -1661,24 +1676,30 @@ public class MangoJuice : Adw.Application {
         setup_color_button(cpu_load_color_button_1, "#92e79a");
         cpu_load_color_button_1.notify["rgba"].connect (() => {
             if (is_loading) return;
-            var rgba = cpu_load_color_button_1.get_rgba ().copy ();
-            SaveStates.update_cpu_load_color_in_file (rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
+            var rgba1 = cpu_load_color_button_1.get_rgba ().copy ();
+            var rgba2 = cpu_load_color_button_2.get_rgba ().copy ();
+            var rgba3 = cpu_load_color_button_3.get_rgba ().copy ();
+            SaveStates.update_cpu_load_color_in_file (rgba_to_hex (rgba1), rgba_to_hex (rgba2), rgba_to_hex (rgba3));
         });
 
         cpu_load_color_button_2 = new ColorDialogButton (color_dialog_cpu_load);
         setup_color_button(cpu_load_color_button_2, "#ffaa7f");
         cpu_load_color_button_2.notify["rgba"].connect (() => {
             if (is_loading) return;
-            var rgba = cpu_load_color_button_2.get_rgba ().copy ();
-            SaveStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (rgba), rgba_to_hex (cpu_load_color_button_3.get_rgba ()));
+            var rgba1 = cpu_load_color_button_1.get_rgba ().copy ();
+            var rgba2 = cpu_load_color_button_2.get_rgba ().copy ();
+            var rgba3 = cpu_load_color_button_3.get_rgba ().copy ();
+            SaveStates.update_cpu_load_color_in_file (rgba_to_hex (rgba1), rgba_to_hex (rgba2), rgba_to_hex (rgba3));
         });
 
         cpu_load_color_button_3 = new ColorDialogButton (color_dialog_cpu_load);
         setup_color_button(cpu_load_color_button_3, "#cc0000");
         cpu_load_color_button_3.notify["rgba"].connect (() => {
             if (is_loading) return;
-            var rgba = cpu_load_color_button_3.get_rgba ().copy ();
-            SaveStates.update_cpu_load_color_in_file (rgba_to_hex (cpu_load_color_button_1.get_rgba ()), rgba_to_hex (cpu_load_color_button_2.get_rgba ()), rgba_to_hex (rgba));
+            var rgba1 = cpu_load_color_button_1.get_rgba ().copy ();
+            var rgba2 = cpu_load_color_button_2.get_rgba ().copy ();
+            var rgba3 = cpu_load_color_button_3.get_rgba ().copy ();
+            SaveStates.update_cpu_load_color_in_file (rgba_to_hex (rgba1), rgba_to_hex (rgba2), rgba_to_hex (rgba3));
         });
 
         cpu_load_color_buttons_box.append(cpu_load_color_button_1);

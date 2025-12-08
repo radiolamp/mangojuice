@@ -177,42 +177,158 @@ public class SaveStates {
     }
 
     static Mutex update_file_mutex = Mutex ();
+    static uint? pending_timeout_id = null;
+    static HashMap<string, string>? pending_updates = null;
+    
+    static HashMap<string, string> get_pending_updates () {
+        if (pending_updates == null) {
+            pending_updates = new HashMap<string, string> ();
+        }
+        return pending_updates;
+    }
     
     static void update_file (string prefix, string value) {
         update_file_mutex.lock ();
-        try {
-            var file = get_config_file();
-            if (!file.query_exists ()) {
-                update_file_mutex.unlock ();
-                return;
-            }
-
-            var lines = new ArrayList<string> ();
-            var file_stream = new DataInputStream (file.read ());
-            string line;
-            bool found = false;
-            while ((line = file_stream.read_line ()) != null) {
-                if (line.has_prefix (prefix)) {
-                    line = "%s%s".printf (prefix, value);
-                    found = true;
-                }
-                lines.add (line);
-            }
-
-            if (!found) {
-                lines.add ("%s%s".printf (prefix, value));
-            }
-
-            var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
-            foreach (var l in lines) {
-                file_stream_write.put_string (l + "\n");
-            }
-            file_stream_write.close ();
-        } catch (Error e) {
-            stderr.printf ("Error writing to the file: %s\n", e.message);
-        } finally {
-            update_file_mutex.unlock ();
+        var updates = get_pending_updates ();
+        updates[prefix] = value;
+        update_file_mutex.unlock ();
+        
+        // Отменяем предыдущий таймер, если он есть
+        if (pending_timeout_id != null) {
+            Source.remove (pending_timeout_id);
+            pending_timeout_id = null;
         }
+        
+        // Устанавливаем таймер для батчинга (50ms) с гарантией выполнения
+        pending_timeout_id = Timeout.add (50, () => {
+            flush_pending_updates ();
+            pending_timeout_id = null;
+            return false;
+        });
+    }
+    
+    static void flush_pending_updates (bool synchronous = false) {
+        update_file_mutex.lock ();
+        var updates_map = get_pending_updates ();
+        if (updates_map.is_empty) {
+            update_file_mutex.unlock ();
+            return;
+        }
+        
+        // Копируем все обновления
+        var updates = new HashMap<string, string> ();
+        foreach (var entry in updates_map.entries) {
+            updates[entry.key] = entry.value;
+        }
+        updates_map.clear ();
+        update_file_mutex.unlock ();
+        
+        if (synchronous) {
+            // Синхронная запись для гарантированного сохранения при закрытии
+            try {
+                var file = get_config_file();
+                if (!file.query_exists ()) {
+                    return;
+                }
+
+                var lines = new ArrayList<string> ();
+                var file_stream = new DataInputStream (file.read ());
+                string? line;
+                var updated_keys = new HashSet<string> ();
+                
+                // Читаем файл и обновляем все измененные строки
+                while ((line = file_stream.read_line ()) != null) {
+                    bool updated = false;
+                    foreach (var entry in updates.entries) {
+                        if (line.has_prefix (entry.key)) {
+                            lines.add ("%s%s".printf (entry.key, entry.value));
+                            updated_keys.add (entry.key);
+                            updated = true;
+                            break;
+                        }
+                    }
+                    if (!updated) {
+                        lines.add (line);
+                    }
+                }
+
+                // Добавляем новые параметры, которых не было в файле
+                foreach (var entry in updates.entries) {
+                    if (!updated_keys.contains (entry.key)) {
+                        lines.add ("%s%s".printf (entry.key, entry.value));
+                    }
+                }
+
+                // Запись в файл
+                var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+                foreach (var l in lines) {
+                    file_stream_write.put_string (l + "\n");
+                }
+                file_stream_write.close ();
+            } catch (Error e) {
+                stderr.printf ("Error writing to the file: %s\n", e.message);
+            }
+        } else {
+            // Асинхронная запись с высоким приоритетом
+            Idle.add_full (Priority.HIGH_IDLE, () => {
+                try {
+                    var file = get_config_file();
+                    if (!file.query_exists ()) {
+                        return false;
+                    }
+
+                    var lines = new ArrayList<string> ();
+                    var file_stream = new DataInputStream (file.read ());
+                    string? line;
+                    var updated_keys = new HashSet<string> ();
+                    
+                    // Читаем файл и обновляем все измененные строки
+                    while ((line = file_stream.read_line ()) != null) {
+                        bool updated = false;
+                        foreach (var entry in updates.entries) {
+                            if (line.has_prefix (entry.key)) {
+                                lines.add ("%s%s".printf (entry.key, entry.value));
+                                updated_keys.add (entry.key);
+                                updated = true;
+                                break;
+                            }
+                        }
+                        if (!updated) {
+                            lines.add (line);
+                        }
+                    }
+
+                    // Добавляем новые параметры, которых не было в файле
+                    foreach (var entry in updates.entries) {
+                        if (!updated_keys.contains (entry.key)) {
+                            lines.add ("%s%s".printf (entry.key, entry.value));
+                        }
+                    }
+
+                    // Запись в файл
+                    var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+                    foreach (var l in lines) {
+                        file_stream_write.put_string (l + "\n");
+                    }
+                    file_stream_write.close ();
+                } catch (Error e) {
+                    stderr.printf ("Error writing to the file: %s\n", e.message);
+                }
+                return false;
+            });
+        }
+    }
+    
+    public static void flush_all_pending () {
+        update_file_mutex.lock ();
+        // Отменяем таймер, если он есть
+        if (pending_timeout_id != null) {
+            Source.remove (pending_timeout_id);
+            pending_timeout_id = null;
+        }
+        update_file_mutex.unlock ();
+        // Принудительно сохраняем все ожидающие обновления
+        flush_pending_updates (true);
     }
 
     static void save_color_setting (DataOutputStream data_stream, Gtk.ColorDialogButton? color_button, string setting_name, MangoJuice mango_juice) throws Error {
