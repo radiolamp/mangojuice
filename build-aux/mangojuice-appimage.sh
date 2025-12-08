@@ -113,7 +113,8 @@ fi
 # mangojuice is also going to run mangohud vkcube so we need to wrap this
 echo '#!/bin/sh
 CURRENTDIR="$(dirname "$(readlink -f "$0")")"
-export MANGOHUD=0
+export GDK_BACKEND=x11
+export MANGOHUD=1
 shift
 "$CURRENTDIR"/vkcube "$@"' > ./bin/mangohud
 chmod +x ./bin/mangohud
@@ -126,7 +127,7 @@ rm -rf ./usr/share
 ln ./sharun ./AppRun
 ./sharun -g
 
-echo 'MANGOJUICE=0' > ./.env
+echo 'MANGOJUICE=1' > ./.env
 echo 'TEXTDOMAINDIR="${SHARUN_DIR}/share/locale' >> ./.env
 echo 'TEXTDOMAIN="mangojuice' >> ./.env
 echo 'libMangoHud_shim.so' > ./.preload
