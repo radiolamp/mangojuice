@@ -48,6 +48,16 @@
   </developer>
   <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
+    <release version="0.8.9" date="2025-12-22">
+      <description>
+        <p>Happy New Year!</p>
+        <ul>
+          <li>New settings from MangoHud 0.8.2.</li>
+          <li>Updated Fatpak runtime to 49.</li>
+          <li>Improved translation.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.8.8" date="2025-09-25">
       <description>
         <p>Interface improvements and bug fixes</p>
@@ -63,14 +73,6 @@
       </description>
     </release>
     <release version="0.8.7" date="2025-08-31">
-      <description>
-        <p>Interface improvements and bug fixes</p>
-        <ul>
-          <li>Update to GTK 4.19 and сorrection of bugs.</li>
-        </ul>
-      </description>
-    </release>
-    <release version="0.8.6" date="2025-08-31">
       <description>
         <p>Interface improvements and bug fixes</p>
         <ul>
