@@ -90,28 +90,6 @@ Also in the app there is Devel mode. It is intended for development and it is no
   sudo ninja -C build install
 ```
 
-## Support
-
-You can support in several ways:
-
-- Create an issue with a problem or a suggestion for improvement;
-- Submit a merge request with a fix or new functionality;
-- Support financially (please include your nickname in message when sending via T-Bank).
-
-<br>
-
-<div align="center">
-  <a href="https://boosty.to/radiolamp/donate">
-    <img height="200" src="data/assets/boosty_qrcode.png" alt="Boosty">
-  </a>
-  <a href="https://www.donationalerts.com/r/radiolamp">
-  <img height="200" src="data/assets/donationalerts_qrcode.png" alt="Donation Alerts">
-  </a>
-  <a href="https://www.tbank.ru/cf/3PPTstulqEq">
-    <img height="200" src="data/assets/tbank_qrcode.png" alt="T-Bank">
-  </a>
-</div>
-
 ## Gratitude
 
 Thank to [Rirusha](https://gitlab.gnome.org/Rirusha) for important clarifications about Vala and GTK4.
