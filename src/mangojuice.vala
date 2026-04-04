@@ -739,6 +739,7 @@ public class MangoJuice : Adw.Application {
 
         gpu_switches[4].notify["active"].connect (() => {
             if (gpu_switches[4].active) gpu_switches[2].active = true;
+        });
         gpu_switches[2].notify["active"].connect (() => {
             if (!gpu_switches[2].active) gpu_switches[4].active = false;
         });
@@ -754,12 +755,6 @@ public class MangoJuice : Adw.Application {
         });
         gpu_switches[10].notify["active"].connect (() => {
             if (!gpu_switches[10].active) gpu_switches[17].active = false;
-        });
-        gpu_switches[4].notify["active"].connect (() => {
-            if (gpu_switches[4].active) gpu_switches[2].active = true;
-        });
-        gpu_switches[2].notify["active"].connect (() => {
-            if (!gpu_switches[2].active) gpu_switches[4].active = false;
         });
         memory_switches[4].notify["active"].connect (() => {
             if (memory_switches[4].active) memory_switches[3].active = true;

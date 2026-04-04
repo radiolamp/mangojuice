@@ -80,7 +80,9 @@ public class OtherLoad {
                     load_int_scale_value (line, other_box.scales[9], other_box.entries[9]);
                     found[9] = true;
                 } else if (line.has_prefix ("effects = ")) {
-                    string[] effects = line.split (" = ")[1].split (":");
+                    string[] parts = line.split (" = ");
+                    if (parts.length < 2) continue;
+                    string[] effects = parts[1].split (":");
 
                     for (int i = 0; i < other_box.switches.size; i++) {
                         if (contains_string (effects, config_vars[i])) {
@@ -99,7 +101,9 @@ public class OtherLoad {
                     effectsFound = true;
                 }
                 else if (line.has_prefix ("toggleKey=")) {
-                    string hotkey = line.split ("=")[1].strip ();
+                    string[] parts = line.split ("=");
+                    if (parts.length < 2) continue;
+                    string hotkey = parts[1].strip ();
                     if (other_box.hotkey_recorder != null) {
                         other_box.hotkey_recorder.shortcut = hotkey;
                     }
@@ -204,7 +208,9 @@ public class OtherLoad {
     }
 
     private static void load_scale_value (string line, Scale scale, Entry entry, string format) {
-        string value_str = line.split ("=")[1].replace (",", ".");
+        string[] parts = line.split ("=");
+        if (parts.length < 2) return;
+        string value_str = parts[1].replace (",", ".");
         double value = double.parse (value_str);
         if (scale != null) {
             scale.set_value (value);
@@ -215,9 +221,12 @@ public class OtherLoad {
     }
 
     private static void load_int_scale_value (string line, Scale scale, Entry entry) {
-        string value_str = line.split ("=")[1].replace (",", ".");
+        string[] parts = line.split ("=");
+        if (parts.length < 2) return;
+        string value_str = parts[1].replace (",", ".");
         if (value_str.contains (".")) {
-            value_str = value_str.split (".")[0];
+            string[] dot_parts = value_str.split (".");
+            value_str = dot_parts[0];
         }
         int value = int.parse (value_str);
         if (scale != null) {

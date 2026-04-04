@@ -179,6 +179,7 @@ public class SaveStates {
     static Mutex update_file_mutex = Mutex ();
     static uint? pending_timeout_id = null;
     static HashMap<string, string>? pending_updates = null;
+    static bool flush_in_progress = false;
 
     static HashMap<string, string> get_pending_updates () {
         if (pending_updates == null) {
@@ -188,26 +189,64 @@ public class SaveStates {
     }
 
     static void update_file (string prefix, string value) {
+        bool should_schedule_flush = false;
+
         update_file_mutex.lock ();
         var updates = get_pending_updates ();
         updates[prefix] = value;
-        update_file_mutex.unlock ();
 
-        // Отменяем предыдущий таймер, если он есть
+        if (!flush_in_progress && pending_timeout_id == null) {
+            should_schedule_flush = true;
+        }
+
         if (pending_timeout_id != null) {
             Source.remove (pending_timeout_id);
             pending_timeout_id = null;
         }
 
-        // Устанавливаем таймер для батчинга (50ms) с гарантией выполнения
-        pending_timeout_id = Timeout.add (50, () => {
-            flush_pending_updates ();
-            pending_timeout_id = null;
-            return false;
-        });
+        if (should_schedule_flush) {
+            pending_timeout_id = Timeout.add (50, () => {
+                bool sync = false;
+                update_file_mutex.lock ();
+                pending_timeout_id = null;
+                if (get_pending_updates ().is_empty) {
+                    update_file_mutex.unlock ();
+                    return false;
+                }
+                flush_in_progress = true;
+                update_file_mutex.unlock ();
+                flush_pending_updates_internal (sync);
+                update_file_mutex.lock ();
+                flush_in_progress = false;
+                update_file_mutex.unlock ();
+                return false;
+            });
+        }
+        update_file_mutex.unlock ();
     }
 
     static void flush_pending_updates (bool synchronous = false) {
+        update_file_mutex.lock ();
+        if (get_pending_updates ().is_empty) {
+            update_file_mutex.unlock ();
+            return;
+        }
+
+        if (pending_timeout_id != null) {
+            Source.remove (pending_timeout_id);
+            pending_timeout_id = null;
+        }
+        flush_in_progress = true;
+        update_file_mutex.unlock ();
+
+        flush_pending_updates_internal (synchronous);
+
+        update_file_mutex.lock ();
+        flush_in_progress = false;
+        update_file_mutex.unlock ();
+    }
+
+    static void flush_pending_updates_internal (bool synchronous) {
         update_file_mutex.lock ();
         var updates_map = get_pending_updates ();
         if (updates_map.is_empty) {
@@ -215,7 +254,6 @@ public class SaveStates {
             return;
         }
 
-        // Копируем все обновления
         var updates = new HashMap<string, string> ();
         foreach (var entry in updates_map.entries) {
             updates[entry.key] = entry.value;

@@ -345,7 +345,7 @@ namespace AboutDialog {
     
                 while ((info = enumerator.next_file()) != null) {
                     string name = info.get_name();
-                    if (name.has_suffix(".conf") && name != "MangoHud.conf" && name != ".MangoHud.backup") {
+                    if (name.has_suffix(".conf") && name.length > 5 && name != "MangoHud.conf" && name != ".MangoHud.backup") {
                         string profile_name = name[0:-5].replace("-", " ");
                         profiles.append(profile_name);
                     }
@@ -438,7 +438,7 @@ namespace AboutDialog {
         string profile_name = initial_name;
         
         if (!is_existing_profile) {
-            if (profile_name.has_suffix(".exe")) {
+            if (profile_name.has_suffix(".exe") && profile_name.length > 4) {
                 profile_name = "wine-" + profile_name.substring(0, profile_name.length - 4);
             } else if (initial_name == _("Profile")) {
                 profile_name = generate_unique_profile_name(initial_name);
@@ -586,7 +586,7 @@ namespace AboutDialog {
         entry.activate.connect(() => {
             string new_name = entry.get_text().strip();
         
-            if (new_name.has_suffix(".exe")) {
+            if (new_name.has_suffix(".exe") && new_name.length > 4) {
                 new_name = "wine " + new_name.substring(0, new_name.length - 4);
             }
         
