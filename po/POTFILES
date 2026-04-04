@@ -1,4 +1,3 @@
-data/io.github.radiolamp.mangojuice.desktop
 data/io.github.radiolamp.mangojuice.metainfo.xml
 src/advanced.vala
 src/dialog.vala

@@ -5,7 +5,7 @@ using Gee;
 public class SaveStates {
 
     static File? config_file_cache = null;
-    
+
     static File get_config_file() {
         if (config_file_cache == null) {
             var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
@@ -24,7 +24,7 @@ public class SaveStates {
           (parameter_name  == "table_columns"       && parameter_value == "3")   ||
           (parameter_name  == "fps_sampling_period" && parameter_value == "500") ||
           (parameter_name  == "offset_x"            && parameter_value == "0")   ||
-          (parameter_name  == "offset_y"            && parameter_value == "0")   
+          (parameter_name  == "offset_y"            && parameter_value == "0")
         ) {
             return;
         }
@@ -179,26 +179,26 @@ public class SaveStates {
     static Mutex update_file_mutex = Mutex ();
     static uint? pending_timeout_id = null;
     static HashMap<string, string>? pending_updates = null;
-    
+
     static HashMap<string, string> get_pending_updates () {
         if (pending_updates == null) {
             pending_updates = new HashMap<string, string> ();
         }
         return pending_updates;
     }
-    
+
     static void update_file (string prefix, string value) {
         update_file_mutex.lock ();
         var updates = get_pending_updates ();
         updates[prefix] = value;
         update_file_mutex.unlock ();
-        
+
         // Отменяем предыдущий таймер, если он есть
         if (pending_timeout_id != null) {
             Source.remove (pending_timeout_id);
             pending_timeout_id = null;
         }
-        
+
         // Устанавливаем таймер для батчинга (50ms) с гарантией выполнения
         pending_timeout_id = Timeout.add (50, () => {
             flush_pending_updates ();
@@ -206,7 +206,7 @@ public class SaveStates {
             return false;
         });
     }
-    
+
     static void flush_pending_updates (bool synchronous = false) {
         update_file_mutex.lock ();
         var updates_map = get_pending_updates ();
@@ -214,7 +214,7 @@ public class SaveStates {
             update_file_mutex.unlock ();
             return;
         }
-        
+
         // Копируем все обновления
         var updates = new HashMap<string, string> ();
         foreach (var entry in updates_map.entries) {
@@ -222,7 +222,7 @@ public class SaveStates {
         }
         updates_map.clear ();
         update_file_mutex.unlock ();
-        
+
         if (synchronous) {
             // Синхронная запись для гарантированного сохранения при закрытии
             try {
@@ -235,7 +235,7 @@ public class SaveStates {
                 var file_stream = new DataInputStream (file.read ());
                 string? line;
                 var updated_keys = new HashSet<string> ();
-                
+
                 // Читаем файл и обновляем все измененные строки
                 while ((line = file_stream.read_line ()) != null) {
                     bool updated = false;
@@ -281,7 +281,7 @@ public class SaveStates {
                     var file_stream = new DataInputStream (file.read ());
                     string? line;
                     var updated_keys = new HashSet<string> ();
-                    
+
                     // Читаем файл и обновляем все измененные строки
                     while ((line = file_stream.read_line ()) != null) {
                         bool updated = false;
@@ -318,7 +318,7 @@ public class SaveStates {
             });
         }
     }
-    
+
     public static void flush_all_pending () {
         update_file_mutex.lock ();
         // Отменяем таймер, если он есть
@@ -339,18 +339,18 @@ public class SaveStates {
             }
         }
     }
-    
-    static void save_multi_color_setting (DataOutputStream data_stream, 
-                                                 Gtk.ColorDialogButton? color_button_1, 
-                                                 Gtk.ColorDialogButton? color_button_2, 
-                                                 Gtk.ColorDialogButton? color_button_3, 
-                                                 string setting_name, 
+
+    static void save_multi_color_setting (DataOutputStream data_stream,
+                                                 Gtk.ColorDialogButton? color_button_1,
+                                                 Gtk.ColorDialogButton? color_button_2,
+                                                 Gtk.ColorDialogButton? color_button_3,
+                                                 string setting_name,
                                                  MangoJuice mango_juice) throws Error {
         if (color_button_1 != null && color_button_2 != null && color_button_3 != null) {
             var color_1 = mango_juice.rgba_to_hex (color_button_1.get_rgba ());
             var color_2 = mango_juice.rgba_to_hex (color_button_2.get_rgba ());
             var color_3 = mango_juice.rgba_to_hex (color_button_3.get_rgba ());
-            
+
             if (color_1 != "" && color_2 != "" && color_3 != "") {
                 update_parameter(data_stream, setting_name, "%s,%s,%s".printf(color_1, color_2, color_3));
             }
@@ -381,7 +381,7 @@ public class SaveStates {
                     data_stream.put_string ("pci_dev=%s\n".printf (selected_pci_address));
                 }
             }
-           
+
            var custom_command = mango_juice.custom_command_entry.text;
             if (custom_command != "") {
                 if (custom_command.contains (",")) {
@@ -497,7 +497,7 @@ public class SaveStates {
             int[] other_extra_order = {1, 2, 0, 3};
             save_switches_to_file (data_stream, mango_juice.other_extra_switches, mango_juice.other_extra_config_vars, other_extra_order);
 
-            int[] wine_order = {0, 1, 2};
+            int[] wine_order = {0, 1};
             save_switches_to_file (data_stream, mango_juice.wine_switches, mango_juice.wine_config_vars, wine_order);
 
             if (mango_juice.logs_key_recorder.shortcut != null && mango_juice.logs_key_recorder.shortcut != "") {
@@ -550,14 +550,16 @@ public class SaveStates {
                 update_parameter (data_stream, "gl_vsync", opengl_config_value);
             }
 
-            string[] filter_values = {"none", "bicubic", "trilinear", "retro"};
+            string[] filter_values = {"", "bicubic", "trilinear", "retro"};
 
             if (mango_juice.filter_dropdown.selected != Gtk.INVALID_LIST_POSITION) {
                 int selected = (int)mango_juice.filter_dropdown.selected;
                 if (selected >= 0 && selected < filter_values.length) {
                     string filter_value = filter_values[selected];
-                    if (filter_value != _("none")) {
+                    if (filter_value.length > 0) {
                         data_stream.put_string("%s #filters\n".printf(filter_value));
+                    } else {
+                        data_stream.put_string("");
                     }
                 }
             }
@@ -652,11 +654,11 @@ public class SaveStates {
                 }
             }
 
-            save_multi_color_setting(data_stream, 
-                                   mango_juice.fps_color_button_1, 
-                                   mango_juice.fps_color_button_2, 
-                                   mango_juice.fps_color_button_3, 
-                                   "fps_color", 
+            save_multi_color_setting(data_stream,
+                                   mango_juice.fps_color_button_1,
+                                   mango_juice.fps_color_button_2,
+                                   mango_juice.fps_color_button_3,
+                                   "fps_color",
                                    mango_juice);
 
             if (mango_juice.gpu_load_value_entry_1 != null && mango_juice.gpu_load_value_entry_2 != null) {
@@ -667,11 +669,11 @@ public class SaveStates {
                 }
             }
 
-            save_multi_color_setting(data_stream, 
-                                   mango_juice.gpu_load_color_button_1, 
-                                   mango_juice.gpu_load_color_button_2, 
-                                   mango_juice.gpu_load_color_button_3, 
-                                   "gpu_load_color", 
+            save_multi_color_setting(data_stream,
+                                   mango_juice.gpu_load_color_button_1,
+                                   mango_juice.gpu_load_color_button_2,
+                                   mango_juice.gpu_load_color_button_3,
+                                   "gpu_load_color",
                                    mango_juice);
 
             if (mango_juice.cpu_load_value_entry_1 != null && mango_juice.cpu_load_value_entry_2 != null) {
@@ -682,11 +684,11 @@ public class SaveStates {
                 }
             }
 
-            save_multi_color_setting(data_stream, 
-                                   mango_juice.cpu_load_color_button_1, 
-                                   mango_juice.cpu_load_color_button_2, 
-                                   mango_juice.cpu_load_color_button_3, 
-                                   "cpu_load_color", 
+            save_multi_color_setting(data_stream,
+                                   mango_juice.cpu_load_color_button_1,
+                                   mango_juice.cpu_load_color_button_2,
+                                   mango_juice.cpu_load_color_button_3,
+                                   "cpu_load_color",
                                    mango_juice);
 
             save_color_setting(data_stream, mango_juice.background_color_button, "background_color", mango_juice);
@@ -702,7 +704,7 @@ public class SaveStates {
             save_color_setting(data_stream, mango_juice.horizontal_separator_color_button, "horizontal_separator_color", mango_juice);
 
             const string[] FORMAT_VALUES = { "title", "artist", "album", "none" };
-            
+
             if (mango_juice.media_format_dropdowns != null) {
                 var active_values = new Gee.ArrayList<string>();
                 foreach (var dropdown in mango_juice.media_format_dropdowns) {
@@ -714,7 +716,7 @@ public class SaveStates {
                         }
                     }
                 }
-                
+
                 string media_format = "";
                 if (active_values.size > 0) {
                     var sb = new StringBuilder();
@@ -754,5 +756,5 @@ public class SaveStates {
             }
         }
     }
-        
+
 }
