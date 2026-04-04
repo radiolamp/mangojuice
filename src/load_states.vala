@@ -290,6 +290,16 @@ public class LoadStates {
                         }
                     }
                 }
+
+                if (line.has_prefix ("font_size_secondary=")) {
+                    if (mango_juice.font_size_secondary_scale != null) {
+                        int font_size_secondary_value = int.parse (line.substring ("font_size_secondary=".length));
+                        mango_juice.font_size_secondary_scale.set_value (font_size_secondary_value);
+                        if (mango_juice.font_size_secondary_entry != null) {
+                            mango_juice.font_size_secondary_entry.text = "%d".printf (font_size_secondary_value);
+                        }
+                    }
+                }
                
                if (line.has_prefix ("font_file=")) {
                 var font_file = line.substring ("font_file=".length);

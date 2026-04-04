@@ -62,6 +62,8 @@ public class MangoJuice : Adw.Application {
     public  Entry             toggle_hud_entry;
     public  Scale             font_size_scale;
     public  Entry             font_size_entry;
+    public  Scale             font_size_secondary_scale;
+    public  Entry             font_size_secondary_entry;
     public  Button            font_button;
     public  Entry             gpu_text_entry;
     public  ColorDialogButton gpu_color_button;
@@ -679,7 +681,7 @@ public class MangoJuice : Adw.Application {
 
         var scales = new Scale[] {
             duracion_scale, autostart_scale, interval_scale, af, picmip, borders_scale, colums_scale, font_size_scale,
-            offset_x_scale, offset_y_scale };
+            font_size_secondary_scale, offset_x_scale, offset_y_scale };
         foreach (var scale in scales) {
             add_value_changed_handler (scale);
         }
@@ -1335,10 +1337,19 @@ public class MangoJuice : Adw.Application {
             }
         });
 
+        var font_size_secondary_widget = create_scale_entry_widget (_("Small fonts"), _("Secondary font size"), 8, 64, 12);
+        font_size_secondary_scale = font_size_secondary_widget.scale;
+        font_size_secondary_entry = font_size_secondary_widget.entry;
+        font_size_secondary_scale.value_changed.connect (() => {
+            if (font_size_secondary_entry != null) {
+                font_size_secondary_entry.text = "%d".printf ((int)font_size_secondary_scale.get_value ());
+            }
+        });
+
         var fonts_flow_box = new FlowBox () {
             row_spacing = FLOW_BOX_ROW_SPACING,
             column_spacing = FLOW_BOX_COLUMN_SPACING,
-            max_children_per_line = 2,
+            max_children_per_line = 3,
             margin_start = FLOW_BOX_MARGIN,
             margin_end = FLOW_BOX_MARGIN,
             margin_top = FLOW_BOX_MARGIN,
@@ -1351,6 +1362,7 @@ public class MangoJuice : Adw.Application {
 
         fonts_flow_box.insert (font_selector_widget, -1);
         fonts_flow_box.insert (font_size_widget.widget, -1);
+        fonts_flow_box.insert (font_size_secondary_widget.widget, -1);
 
         visual_box.append (fonts_flow_box);
 
@@ -1822,7 +1834,7 @@ public class MangoJuice : Adw.Application {
         });
 
         ColorDialogButton[] color_buttons = { background_color_button, frametime_color_button, vram_color_button, ram_color_button, wine_color_button, engine_color_button, media_player_color_button, network_color_button, text_color_button, battery_color_button, horizontal_separator_color_button };
-        string[] color_labels = { _("Background"), _("Frametime"), _("VRAM"), _("RAM"), _("Wine"), _("Engine"), _("Media"), _("Network"), _("Text"), _("Battery"), _("Horizontal Line") };
+        string[] color_labels = { _("Background"), _("Frametime"), _("VRAM"), _("RAM"), _("Wine"), _("Engine"), _("Media"), _("Network"), _("Text"), _("Battery"), _("Horizontal separator") };
 
         assert (color_buttons.length == color_labels.length);
 

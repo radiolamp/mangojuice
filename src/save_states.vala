@@ -661,6 +661,10 @@ public class SaveStates {
                 update_parameter (data_stream, "font_size", ((int)mango_juice.font_size_scale.get_value ()).to_string ());
             }
 
+            if (mango_juice.font_size_secondary_scale != null) {
+                update_parameter (data_stream, "font_size_secondary", ((int)mango_juice.font_size_secondary_scale.get_value ()).to_string ());
+            }
+
             if (mango_juice.font_button != null) {
                 var font_name = mango_juice.font_button.label;
                 if (font_name != _("Default") && font_name != _("Select Font")) {
