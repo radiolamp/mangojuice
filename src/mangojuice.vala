@@ -2054,9 +2054,9 @@ public class MangoJuice : Adw.Application {
             label2.set_halign (Align.START);
             label2.add_css_class ("dim-label");
             label2.set_ellipsize (Pango.EllipsizeMode.END);
-            label2.set_max_width_chars (19);
+            label2.set_max_width_chars (18);
 
-            if (label_texts_2[i].char_count() > 21) {
+            if (label_texts_2[i].char_count() > 20) {
                 label2.set_tooltip_text (label_texts_2[i]);
             }
 

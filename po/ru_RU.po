@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: 0.8.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-04 17:28+0300\n"
-"PO-Revision-Date: 2026-04-04 18:15+0300\n"
+"PO-Revision-Date: 2026-04-04 22:36+0300\n"
 "Last-Translator: Radiolamp <anton.osi@outlook.com>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -424,7 +424,7 @@ msgstr "Тип ядра"
 
 #: src/mangojuice.vala:188
 msgid "FPS per Joule"
-msgstr "FPS/Джоуль"
+msgstr "Эффективность процессора"
 
 #: src/mangojuice.vala:189
 msgid "EconoFlip"

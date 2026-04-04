@@ -40,6 +40,8 @@ public async void on_intel_power_fix_button_clicked(Button button) {
 
         if (response == "temporary") {
             Process.spawn_command_line_sync("pkexec chmod " + new_mode + " /sys/class/powercap/intel-rapl\\:0/energy_uj");
+            var app = (MangoJuice) window.get_application();
+            app.run_test();
         } else if (response == "permanent") {
             bool service_exists = FileUtils.test("/etc/systemd/system/powercap-permissions.service", FileTest.EXISTS);
             
