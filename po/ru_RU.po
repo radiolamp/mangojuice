@@ -435,6 +435,10 @@ msgid "RAM"
 msgstr "ОЗУ"
 
 #: src/mangojuice.vala:192
+msgid "RAM temperature"
+msgstr "Температура памяти"
+
+#: src/mangojuice.vala:192
 msgid "Disk read"
 msgstr "Чтение с диска"
 
@@ -748,6 +752,10 @@ msgstr "Меняет местами FPS/J на J/кадр"
 #: src/mangojuice.vala:245 src/mangojuice.vala:246
 msgid "Size, GiB"
 msgstr "Размер, ГиБ"
+
+#: src/mangojuice.vala:197
+msgid "DDR5 only"
+msgstr "Только DDR5"
 
 #: src/mangojuice.vala:245
 msgid "Input, MiB/s"

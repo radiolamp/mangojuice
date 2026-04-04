@@ -147,7 +147,7 @@ public class MangoJuice : Adw.Application {
         "cpu_power", "core_type", "cpu_efficiency", "flip_efficiency"
     };
     public string[] memory_config_vars = {
-        "ram", "io_read", "io_write", "procmem", "procmem_shared", "procmem_virt", "swap"
+        "ram", "ram_temp", "io_read", "io_write", "procmem", "procmem_shared", "procmem_virt", "swap"
     };
     public string[] git_config_vars = {
          "hide_fsr_sharpness"
@@ -189,8 +189,13 @@ public class MangoJuice : Adw.Application {
         _("EconoFlip")
     };
     string[] memory_label_texts = {
-        _("RAM"),             _("Disk read"),       _("Disk write"),  _("Resident memory"),
+        _("RAM"),             _("RAM temperature"), _("Disk read"),       _("Disk write"),  _("Resident memory"),
         _("General memory"),  _("Virtual memory"),  _("Swap")
+    };
+
+    string[] memory_label_texts_2 = {
+         _("Size, GiB"),      _("DDR5 only"),        _("Input, MiB/s"),   _("Output, MiB/s"), _("Size, GiB"),
+         _("Size, MiB/s"),    _("Size, MiB/s"),      _("Size, GiB")
     };
 
     string[] git_label_texts = { _("Hide FSR sharpness")};
@@ -240,10 +245,6 @@ public class MangoJuice : Adw.Application {
         _("Percentage load"),      _("Color text"),      _("All cores"),      _("Colored cores text"),    _("Load per core"),
         _("Peak among all cores"), _("CPU temperature"), _("Consumption, W"), _("For new Intel and ARM"), _("CPU efficiency in FPS/Joule"),
         _("Swaps FPS/J to J/Frame")
-    };
-    string[] memory_label_texts_2 = {
-         _("Size, GiB"),   _("Input, MiB/s"), _("Output, MiB/s"), _("Size, GiB"),
-         _("Size, MiB/s"), _("Size, MiB/s"),  _("Size, GiB")
     };
 
     string[] git_label_texts_2 = { _("Gamescope")    };
