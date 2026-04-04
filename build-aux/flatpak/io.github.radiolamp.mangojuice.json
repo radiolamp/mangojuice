@@ -1,7 +1,7 @@
 {
   "app-id": "io.github.radiolamp.mangojuice",
   "runtime": "org.gnome.Platform",
-  "runtime-version": "49",
+  "runtime-version": "50",
   "sdk": "org.gnome.Sdk",
   "command": "mangojuice",
   "finish-args": [
@@ -45,9 +45,7 @@
         {
           "name": "volk",
           "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-DVOLK_INSTALL=ON"
-          ],
+          "config-opts": ["-DVOLK_INSTALL=ON"],
           "sources": [
             {
               "type": "archive",
@@ -154,9 +152,7 @@
         {
           "name": "nlohmann-json",
           "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-DJSON_BuildTests:BOOL=OFF"
-          ],
+          "config-opts": ["-DJSON_BuildTests:BOOL=OFF"],
           "sources": [
             {
               "type": "git",
@@ -198,14 +194,14 @@
       ]
     },
     {
-        "name": "mangojuice",
-        "buildsystem": "meson",
-        "sources": [
-            {
-                "type": "dir",
-                "path": "../../"
-            }
-        ]
+      "name": "mangojuice",
+      "buildsystem": "meson",
+      "sources": [
+        {
+          "type": "dir",
+          "path": "../../"
+        }
+      ]
     }
   ]
 }

@@ -739,9 +739,15 @@ public class MangoJuice : Adw.Application {
 
         gpu_switches[4].notify["active"].connect (() => {
             if (gpu_switches[4].active) gpu_switches[2].active = true;
-        });
         gpu_switches[2].notify["active"].connect (() => {
             if (!gpu_switches[2].active) gpu_switches[4].active = false;
+        });
+
+        gpu_switches[6].notify["active"].connect (() => {
+            if (gpu_switches[6].active) gpu_switches[2].active = true;
+        });
+        gpu_switches[2].notify["active"].connect (() => {
+            if (!gpu_switches[2].active) gpu_switches[6].active = false;
         });
         gpu_switches[17].notify["active"].connect (() => {
             if (gpu_switches[17].active) gpu_switches[10].active = true;
