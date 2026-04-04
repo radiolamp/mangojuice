@@ -229,27 +229,21 @@ public class AdvancedDialog : Adw.Dialog {
                 return false;
             }
         
-            var scrolled_window = get_scrolled_parent(list_box);
-            double scroll_position = 0;
-            if (scrolled_window != null) {
-                scroll_position = get_scroll_position(scrolled_window);
-            }
-        
-            int source_index = get_row_index(list_box, source_row);
             int dest_index = get_row_index(list_box, dest_row);
-        
-            list_box.remove(source_row);
             
+            int row_height = dest_row.get_height();
+            if (y > row_height / 2) {
+                dest_index++;
+            }
+            
+            int source_index = get_row_index(list_box, source_row);
             if (source_index < dest_index) {
                 dest_index--;
             }
             
+            list_box.remove(source_row);
             list_box.insert(source_row, dest_index);
             save_config_to_file(list_box);
-        
-            if (scrolled_window != null) {
-                restore_scroll_position(scrolled_window, scroll_position);
-            }
         
             return true;
         });
