@@ -886,7 +886,7 @@ msgid "vkBasalt state"
 msgstr ""
 
 #: src/mangojuice.vala:262
-msgid "Proccess name"
+msgid "Process name"
 msgstr ""
 
 #: src/mangojuice.vala:263

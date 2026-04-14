@@ -1,4 +1,4 @@
-/* Mangojuice.vala // Licence:  GPL-v3.0 */
+/* Mangojuice.vala // License: GPL-3.0+ */
 using Gtk;
 using Adw;
 using Gee;

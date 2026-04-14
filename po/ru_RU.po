@@ -819,7 +819,7 @@ msgid "vkBasalt state"
 msgstr "Состояние vkBasalt"
 
 #: src/mangojuice.vala:257
-msgid "Proccess name"
+msgid "Process name"
 msgstr "Имя процесса"
 
 #: src/mangojuice.vala:258
@@ -1069,7 +1069,7 @@ msgstr "Вводите переменные MangoHud через запятую"
 
 #: src/mangojuice.vala:970
 msgid "Home"
-msgstr "Домашний католог"
+msgstr "Домашний каталог"
 
 #: src/mangojuice.vala:971
 msgid "Directory for logs"

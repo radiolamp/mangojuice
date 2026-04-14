@@ -1,4 +1,4 @@
-/* other_load  // Licence:  GPL-v3.0 */
+/* other_load  // License: GPL-3.0+ */
 using Gtk;
 using Gee;
 

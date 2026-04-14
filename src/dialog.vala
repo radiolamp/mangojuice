@@ -1,4 +1,4 @@
-/* dialog  // Licence:  GPL-v3.0 */
+/* dialog  // License: GPL-3.0+ */
 using Gtk;
 using Adw;
 

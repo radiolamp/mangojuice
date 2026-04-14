@@ -1,4 +1,4 @@
-/* load_states.vala // Licence:  GPL-v3.0 */
+/* load_states.vala // License: GPL-3.0+ */
 
 using Gtk;
 using Gee;
