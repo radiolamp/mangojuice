@@ -398,17 +398,17 @@ msgid "Size, GiB"
 msgstr "Tamanho, GiB"
 
 #: src/mangojuice.vala:226
-msgid "Disk read"  
-msgstr "Leitura do disco"  
+msgid "Disk read"
+msgstr "Leitura do disco"
 
-msgid "Disk write"  
-msgstr "Gravação no disco"  
+msgid "Disk write"
+msgstr "Gravação no disco"
 
-msgid "Input, MiB/s"  
-msgstr "Entrada, MiB/s"  
+msgid "Input, MiB/s"
+msgstr "Entrada, MiB/s"
 
-msgid "Output, MiB/s"  
-msgstr "Saída, MiB/s"  
+msgid "Output, MiB/s"
+msgstr "Saída, MiB/s"
 
 #. Extras
 #: src/mangojuice.vala:232 src/mangojuice.vala:237
@@ -456,7 +456,7 @@ msgid "vkBasalt state"
 msgstr "Estado de Vkbasalt"
 
 #: src/mangojuice.vala:236
-msgid "Proccess name"
+msgid "Process name"
 msgstr "Nome do processo"
 
 #: src/mangojuice.vala:237
@@ -1180,31 +1180,31 @@ msgstr "Suas predefinições"
 msgid "Device icon"
 msgstr ""
 
-msgid "Profile preview"  
-msgstr "Visualização do perfil"  
+msgid "Profile preview"
+msgstr "Visualização do perfil"
 
-msgid "No profiles yet"  
-msgstr "Nenhum perfil ainda"  
+msgid "No profiles yet"
+msgstr "Nenhum perfil ainda"
 
-msgid "Apply the profile to the entire system"  
-msgstr "Aplicar o perfil a todo o sistema"  
+msgid "Apply the profile to the entire system"
+msgstr "Aplicar o perfil a todo o sistema"
 
-msgid "Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe . Attention case is important!"  
-msgstr "Renomear. Digite o nome do jogo ou nome.exe para jogos no Wine, ex: DOOM.exe. Atenção: letras maiúsculas/minúsculas importam!"  
+msgid "Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe . Attention case is important!"
+msgstr "Renomear. Digite o nome do jogo ou nome.exe para jogos no Wine, ex: DOOM.exe. Atenção: letras maiúsculas/minúsculas importam!"
 
-msgid "Delete profile"  
-msgstr "Excluir perfil"  
+msgid "Delete profile"
+msgstr "Excluir perfil"
 
-msgid "Add Profile"  
-msgstr "Adicionar perfil"  
+msgid "Add Profile"
+msgstr "Adicionar perfil"
 
-msgid "To get ready presets, click on the title."  
-msgstr "Para obter predefinições prontas, clique no título."  
+msgid "To get ready presets, click on the title."
+msgstr "Para obter predefinições prontas, clique no título."
 
-msgid "Presets"  
-msgstr "Predefinições"  
+msgid "Presets"
+msgstr "Predefinições"
 
-msgid "Profile"  
+msgid "Profile"
 msgstr "Perfil"
 
 msgid "You profiles"
@@ -1234,22 +1234,22 @@ msgstr "Núcleo de texto colorido"
 msgid "Color core"
 msgstr "Núcleo colorido"
 
-msgid "Including virtual"  
-msgstr "Incluindo virtual"  
+msgid "Including virtual"
+msgstr "Incluindo virtual"
 
-msgid "General memory"  
-msgstr "Memória geral"  
+msgid "General memory"
+msgstr "Memória geral"
 
-msgid "Engine version"  
-msgstr "Versão do motor"  
+msgid "Engine version"
+msgstr "Versão do motor"
 
-msgid "OpenGL and Vulkan"  
+msgid "OpenGL and Vulkan"
 msgstr "OpenGL e Vulkan"
 
-msgid "Size, MiB/s"  
-msgstr "Tamanho, MiB/s"  
+msgid "Size, MiB/s"
+msgstr "Tamanho, MiB/s"
 
-msgid "Virtual memory"  
+msgid "Virtual memory"
 msgstr "Memória virtual"
 
 msgid "Add space"

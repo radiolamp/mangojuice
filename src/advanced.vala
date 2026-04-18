@@ -1,4 +1,4 @@
-/* advanced.vala // Licence:  GPL-v3.0 */
+/* advanced.vala // License: GPL-3.0+ */
 using Gtk;
 using Adw;
 
