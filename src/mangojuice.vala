@@ -255,7 +255,7 @@ public class MangoJuice : Adw.Application {
         _("Shortens the name"), _("Current time"),    _("Processor base"), _("Adapters speed")
     };
     string[] options_label_texts_2 = {
-        _("MangoHud version"),       _("Gamemode state"),     _("vkBasalt state"), _("Proccess name"),
+        _("MangoHud version"),       _("Gamemode state"),     _("vkBasalt state"), _("Process name"),
         _("Updating visualization"), _("Gamescope only"),     _("Gamescope only"), _("Internal offsets"),
         _("Hide overlay"),           _("Shadows under text"), _("Same font size"), _("External offsets")
     };
@@ -1194,6 +1194,7 @@ public class MangoJuice : Adw.Application {
             valign = Align.CENTER,
             hexpand = true
         };
+        position_dropdown.set_size_request(200, -1);
 
         position_dropdown.notify["selected-item"].connect(() => {
             int selected = (int)position_dropdown.selected;

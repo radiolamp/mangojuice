@@ -1,7 +1,0 @@
-[
-  {
-    "label": "build and run",
-    "command": "rm -rf ./build/ &&  meson setup --wipe build --reconfigure -Dis_devel=true --buildtype=debug && ninja -C build && ./build/src/mangojuice",
-    "use_new_terminal": true,
-  },
-]
