@@ -8,6 +8,7 @@
     />
     MangoJuice
   </h1>
+</div>
 
 ### Эта программа станет удобной альтернативой GOverlay для настройки MangoHud
 
@@ -15,19 +16,21 @@
     <img src="https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true" alt="Скриншот"/>
 </p>
 
-|             Страница 1              |             Страница 2              |             Страница 3              |             Страница 4              |             Страница 5              |
-| :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: |
+| Страница 1 | Страница 2 | Страница 3 | Страница 4 | Страница 5 |
+| --- | --- | --- | --- | --- |
 | ![screen1](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true) | ![screen2](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen2.png?raw=true) | ![screen3](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen3.png?raw=true) | ![screen4](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen4.png?raw=true) | ![screen5](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen0.png?raw=true) |
 
 ## Установить
 
 **Flathub:**
 
+<div align="center">
 <a href="https://flathub.org/ru/apps/io.github.radiolamp.mangojuice">
   <img width='240' alt='Загрузить с Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
 </a>
 
 **AppImage:**
+
 <a href="https://github.com/radiolamp/mangojuice/releases/latest/download/MangoJuice-AppImagename-x86_64.zip">
   <img width='240' alt='Скачать AppImage из релизов GitHub' src='http://docs.appimage.org/_images/download-appimage-banner.svg'/>
 </a>
