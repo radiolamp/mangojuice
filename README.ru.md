@@ -1,4 +1,4 @@
-[![En](https://img.shields.io/badge/en-gray)](/README.md) [![Ru](https://img.shields.io/badge/ru-green)](/docs/README-ru.md)
+[![En](https://img.shields.io/badge/en-gray)](/README.md) [![Ru](https://img.shields.io/badge/ru-green)](README.ru.md)
 
 <div align="center">
   <h1>
@@ -27,6 +27,10 @@
   <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
 </a>
 
+**AppImage:**
+<a href="https://github.com/radiolamp/mangojuice/releases/latest/download/MangoJuice-AppImagename-x86_64.zip">
+  <img width='240' alt='Download on Flathub' src='http://docs.appimage.org/_images/download-appimage-banner.svg'/>
+</a>
 </div>
 
 ## Репозитории
