@@ -9,7 +9,6 @@
     MangoJuice
   </h1>
 
-
 ### This program will be a convenient alternative to GOverlay for setting up MangoHud
 
 <p align="center">
@@ -30,7 +29,7 @@
 
 **AppImage:**
 <a href="https://github.com/radiolamp/mangojuice/releases/latest/download/MangoJuice-AppImagename-x86_64.zip">
-  <img width='240' alt='Download on Flathub' src='http://docs.appimage.org/_images/download-appimage-banner.svg'/>
+  <img width='240' alt='Download AppImage from GitHub releases' src='http://docs.appimage.org/_images/download-appimage-banner.svg'/>
 </a>
 </div>
 
@@ -104,4 +103,4 @@ Thank to [Rirusha](https://gitlab.gnome.org/Rirusha) for important clarification
 - [`Goverlay`](https://github.com/benjamimgois/goverlay)
 - [`Colloid`](https://github.com/vinceliuice/Colloid-icon-theme/)
 
-### Attention, this is my first project on GTK4 + Vala, so please treat with understanding.
+### Attention, this is my first project on GTK4 + Vala, so please treat with understanding

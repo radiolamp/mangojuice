@@ -24,12 +24,12 @@
 **Flathub:**
 
 <a href="https://flathub.org/ru/apps/io.github.radiolamp.mangojuice">
-  <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
+  <img width='240' alt='Загрузить с Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
 </a>
 
 **AppImage:**
 <a href="https://github.com/radiolamp/mangojuice/releases/latest/download/MangoJuice-AppImagename-x86_64.zip">
-  <img width='240' alt='Download on Flathub' src='http://docs.appimage.org/_images/download-appimage-banner.svg'/>
+  <img width='240' alt='Скачать AppImage из релизов GitHub' src='http://docs.appimage.org/_images/download-appimage-banner.svg'/>
 </a>
 </div>
 
@@ -125,4 +125,4 @@ sudo ninja -C build uninstall
 - [`Goverlay`](https://github.com/benjamimgois/goverlay)
 - [`Colloid`](https://github.com/vinceliuice/Colloid-icon-theme/)
 
-### Обращаю ваше внимание, что это мой первый проект на GTK4 + Vala, прошу отнестись с пониманием.
+### Обращаю ваше внимание, что это мой первый проект на GTK4 + Vala, прошу отнестись с пониманием
