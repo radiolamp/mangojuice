@@ -1268,7 +1268,7 @@ public class MangoJuice : Adw.Application {
 
         visual_box.append (combined_flow_box);
 
-        var offset_x_widget = create_scale_entry_widget (_("Offset X"), _("Horizontal offset"), 0, 1500, 0);
+        var offset_x_widget = create_scale_entry_widget (_("Offset X"), _("Horizontal offset"), -10, 1500, 0);
         offset_x_scale = offset_x_widget.scale;
         offset_x_entry = offset_x_widget.entry;
         offset_x_value_label = new Label ("0") {
@@ -1280,7 +1280,7 @@ public class MangoJuice : Adw.Application {
             SaveStates.update_offset_x_in_file ("%d".printf ((int)offset_x_scale.get_value ()));
         });
 
-        var offset_y_widget = create_scale_entry_widget (_("Offset Y"), _("Vertical offset"), 0, 1500, 0);
+        var offset_y_widget = create_scale_entry_widget (_("Offset Y"), _("Vertical offset"), -10, 1500, 0);
         offset_y_scale = offset_y_widget.scale;
         offset_y_entry = offset_y_widget.entry;
         offset_y_value_label = new Label ("0") {
