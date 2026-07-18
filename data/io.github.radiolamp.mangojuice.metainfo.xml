@@ -46,6 +46,9 @@
   <developer id="io.github.radiolamp">
     <name>Radiolamp</name>
   </developer>
+  <custom>
+    <value key="Purism::form_factor">mobile</value>
+  </custom>
   <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
     <release version="0.9.0" date="2026-04-05">

@@ -237,6 +237,13 @@ namespace AboutDialog {
 
     delegate void DeleteCallback();
 
+    class DeleteCallbackHolder {
+        public DeleteCallback cb;
+        public DeleteCallbackHolder (owned DeleteCallback cb) {
+            this.cb = (owned) cb;
+        }
+    }
+
     void update_group_state(Adw.PreferencesGroup group, Adw.StatusPage status_page) {
         if (profile_count == 0 && status_page.get_parent() == null) {
             group.add(status_page);
@@ -436,6 +443,92 @@ namespace AboutDialog {
     static Adw.ActionRow? currently_selected_row = null;
     static Gtk.Button? currently_playing_button = null;
 
+    static void run_preview_impl(MangoJuice app, string profile_name, bool is_wayland) {
+        try {
+            Process.spawn_command_line_async("pkill vkcube");
+            Process.spawn_command_line_async("pkill glxgears");
+            SaveStates.reset_config_file_cache();
+            string config_path = Path.build_filename(
+                Environment.get_home_dir(),
+                ".config",
+                "MangoHud",
+                profile_name.replace(" ", "-") + ".conf"
+            );
+
+            string base_cmd = @"env MANGOHUD_CONFIGFILE='$config_path' mangohud";
+
+            if (app.is_flatpak ()) {
+                Process.spawn_command_line_sync ("pkill vkcube");
+                if (is_wayland) {
+                    Process.spawn_command_line_async (base_cmd + " mangohud vkcube-wayland");
+                } else {
+                    Process.spawn_command_line_async (base_cmd + " mangohud vkcube --wsi xcb");
+                }
+            } else if (app.is_vkcube_available ()) {
+                Process.spawn_command_line_sync ("pkill vkcube");
+                Process.spawn_command_line_async (base_cmd + " mangohud vkcube --wsi xcb");
+            } else if (app.is_glxgears_available ()) {
+                Process.spawn_command_line_sync ("pkill glxgears");
+                Process.spawn_command_line_async (base_cmd + " mangohud glxgears");
+            }
+        } catch (Error e) {
+            warning("%s", e.message);
+        }
+    }
+
+    static void do_edit_impl(Gtk.Entry entry, Adw.ActionRow row, string profile_name) {
+        entry.set_text(profile_name);
+        row.set_title("");
+        entry.set_visible(true);
+        entry.grab_focus();
+
+        if (currently_selected_row != null && currently_selected_row != row) {
+            currently_selected_row.remove_css_class("selected");
+        }
+        row.add_css_class("selected");
+        currently_selected_row = row;
+    }
+
+    static void do_reset_impl(string profile_name, Adw.ToastOverlay toast_overlay) {
+        try {
+            var config_dir = File.new_for_path(Environment.get_home_dir())
+                .get_child(".config")
+                .get_child("MangoHud");
+
+            var original_config = config_dir.get_child("MangoHud.conf");
+            var profile_config = config_dir.get_child(
+                profile_name.replace(" ", "-") + ".conf"
+            );
+
+            if (original_config.query_exists()) {
+                original_config.copy(profile_config, FileCopyFlags.OVERWRITE);
+            }
+
+            var toast = new Adw.Toast(_("Changed"));
+            toast.set_timeout(3);
+            toast_overlay.add_toast(toast);
+        } catch (Error e) {
+            warning("Failed to reset profile: %s", e.message);
+        }
+    }
+
+    static void do_delete_impl(Gtk.Button play_btn, Adw.ActionRow row, string profile_name, Adw.PreferencesGroup group, DeleteCallback on_delete, Adw.ToastOverlay toast_overlay) {
+        if (currently_playing_button == play_btn) {
+            currently_playing_button = null;
+        }
+
+        if (currently_selected_row == row) {
+            currently_selected_row.remove_css_class("selected");
+            currently_selected_row = null;
+        }
+        delete_profile_config(profile_name);
+        group.remove(row);
+        on_delete();
+        var toast = new Adw.Toast(_("Deleted"));
+        toast.set_timeout(3);
+        toast_overlay.add_toast(toast);
+    }
+
     Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice app, Adw.ToastOverlay toast_overlay, owned DeleteCallback on_delete, string initial_name = _("Profile"), bool is_existing_profile = false) {
         string profile_name = initial_name;
 
@@ -448,12 +541,16 @@ namespace AboutDialog {
             create_profile_config(profile_name);
         }
 
+        var cb_holder = new DeleteCallbackHolder((owned) on_delete);
+        unowned DeleteCallback del = cb_holder.cb;
+
         var row = new Adw.ActionRow();
         row.set_title(profile_name);
-        row.set_activatable(true);
         row.set_selectable(false);
         row.set_tooltip_text(_("Profile preview"));
-        row.add_css_class("profile-row");
+
+        string? wayland_display = Environment.get_variable("WAYLAND_DISPLAY");
+        bool is_wayland = (wayland_display != null && wayland_display != "");
 
         var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
         play_btn.add_css_class("flat");
@@ -468,6 +565,14 @@ namespace AboutDialog {
         edit_btn.add_css_class("circular");
         edit_btn.set_tooltip_text(_("Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe. Attention case is important!"));
         edit_btn.set_valign(Gtk.Align.CENTER);
+
+        var preview_btn = new Gtk.Button();
+        preview_btn.set_icon_name("view-reveal-symbolic");
+        preview_btn.set_focusable(false);
+        preview_btn.add_css_class("flat");
+        preview_btn.add_css_class("circular");
+        preview_btn.set_tooltip_text(_("Profile preview"));
+        preview_btn.set_valign(Gtk.Align.CENTER);
 
         var reset_btn = new Gtk.Button();
         reset_btn.set_icon_name("view-refresh-symbolic");
@@ -485,6 +590,49 @@ namespace AboutDialog {
         close_btn.set_tooltip_text(_("Delete profile"));
         close_btn.set_valign(Gtk.Align.CENTER);
 
+        var menu_btn = new Gtk.MenuButton();
+        menu_btn.set_icon_name("view-more-symbolic");
+        menu_btn.set_focusable(false);
+        menu_btn.add_css_class("flat");
+        menu_btn.add_css_class("circular");
+        menu_btn.set_tooltip_text(_("Options"));
+        menu_btn.set_valign(Gtk.Align.CENTER);
+        menu_btn.set_visible(false);
+
+        var menu_popover = new Gtk.Popover();
+        var menu_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+        menu_box.set_margin_top(6);
+        menu_box.set_margin_bottom(6);
+        menu_box.set_margin_start(6);
+        menu_box.set_margin_end(6);
+        menu_popover.set_child(menu_box);
+        menu_btn.set_popover(menu_popover);
+
+        var btn_preview = new Gtk.Button.with_label(_("Preview"));
+        btn_preview.set_icon_name("view-reveal-symbolic");
+        btn_preview.add_css_class("flat");
+        btn_preview.set_hexpand(true);
+        menu_box.append(btn_preview);
+
+        var btn_edit = new Gtk.Button.with_label(_("Rename"));
+        btn_edit.set_icon_name("document-edit-symbolic");
+        btn_edit.add_css_class("flat");
+        btn_edit.set_hexpand(true);
+        menu_box.append(btn_edit);
+
+        var btn_reset = new Gtk.Button.with_label(_("Overwrite"));
+        btn_reset.set_icon_name("view-refresh-symbolic");
+        btn_reset.add_css_class("flat");
+        btn_reset.set_hexpand(true);
+        menu_box.append(btn_reset);
+
+        var btn_delete = new Gtk.Button.with_label(_("Delete"));
+        btn_delete.set_icon_name("edit-delete-symbolic");
+        btn_delete.add_css_class("flat");
+        btn_delete.add_css_class("destructive-action");
+        btn_delete.set_hexpand(true);
+        menu_box.append(btn_delete);
+
         bool is_active_profile = check_if_profile_active_simple(profile_name);
         if (is_active_profile) {
             play_btn.add_css_class("accent");
@@ -498,14 +646,51 @@ namespace AboutDialog {
         entry.set_hexpand(true);
         entry.set_valign(Gtk.Align.CENTER);
 
-        row.add_prefix(play_btn);
         row.add_prefix(entry);
+        row.add_prefix(play_btn);
 
         var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
+        button_box.append(preview_btn);
         button_box.append(edit_btn);
         button_box.append(reset_btn);
         button_box.append(close_btn);
+        button_box.append(menu_btn);
         row.add_suffix(button_box);
+
+        Timeout.add(200, () => {
+            var root = button_box.get_root();
+            if (root != null && root is Gtk.Window) {
+                var window = (Gtk.Window) root;
+                var width = (int) window.get_width();
+                bool narrow = width < 550;
+                preview_btn.set_visible(!narrow);
+                edit_btn.set_visible(!narrow);
+                reset_btn.set_visible(!narrow);
+                close_btn.set_visible(!narrow);
+                menu_btn.set_visible(narrow);
+            }
+            return true;
+        });
+
+        btn_preview.clicked.connect(() => {
+            menu_popover.popdown();
+            run_preview_impl(app, profile_name, is_wayland);
+        });
+
+        btn_edit.clicked.connect(() => {
+            menu_popover.popdown();
+            do_edit_impl(entry, row, profile_name);
+        });
+
+        btn_reset.clicked.connect(() => {
+            menu_popover.popdown();
+            do_reset_impl(profile_name, toast_overlay);
+        });
+
+        btn_delete.clicked.connect(() => {
+            menu_popover.popdown();
+            do_delete_impl(play_btn, row, profile_name, group, del, toast_overlay);
+        });
 
         play_btn.clicked.connect(() => {
             if (currently_playing_button != null) {
@@ -632,63 +817,16 @@ namespace AboutDialog {
             }
             delete_profile_config(profile_name);
             group.remove(row);
-            on_delete();
+            del();
             var toast = new Adw.Toast(_("Deleted"));
             toast.set_timeout(3);
             toast_overlay.add_toast(toast);
         });
 
-        string? wayland_display = Environment.get_variable("WAYLAND_DISPLAY");
-        bool is_wayland = (wayland_display != null && wayland_display != "");
-
-        row.activated.connect(() => {
-            if (currently_selected_row != null && currently_selected_row != row) {
-                currently_selected_row.remove_css_class("selected");
-            }
-            row.add_css_class("selected");
-            currently_selected_row = row;
-
-            try {
-                Process.spawn_command_line_async("pkill vkcube");
-                Process.spawn_command_line_async("pkill glxgears");
-                SaveStates.reset_config_file_cache();
-                string config_path = Path.build_filename(
-                    Environment.get_home_dir(),
-                    ".config",
-                    "MangoHud",
-                    profile_name.replace(" ", "-") + ".conf"
-                );
-
-                string base_cmd = @"env MANGOHUD_CONFIGFILE='$config_path' mangohud";
-
-                if (app.is_flatpak ()) {
-                    Process.spawn_command_line_sync ("pkill vkcube");
-                    if (is_wayland) {
-                        Process.spawn_command_line_async (base_cmd + " mangohud vkcube-wayland");
-                    } else {
-                        Process.spawn_command_line_async (base_cmd + " mangohud vkcube --wsi xcb");
-                    }
-                } else if (app.is_vkcube_available ()) {
-                    Process.spawn_command_line_sync ("pkill vkcube");
-                    Process.spawn_command_line_async (base_cmd + " mangohud vkcube --wsi xcb");
-                } else if (app.is_glxgears_available ()) {
-                    Process.spawn_command_line_sync ("pkill glxgears");
-                    Process.spawn_command_line_async (base_cmd + " mangohud glxgears");
-                }
-            } catch (Error e) {
-                warning("%s", e.message);
-            }
-        });
-
-        var click_controller = new Gtk.GestureClick();
-        click_controller.pressed.connect((n_press, x, y) => {
-            if (currently_selected_row != null && currently_selected_row != row) {
-                currently_selected_row.remove_css_class("selected");
-            }
-            row.add_css_class("selected");
-            currently_selected_row = row;
-        });
-        row.add_controller(click_controller);
+        preview_btn.clicked.connect(() => run_preview_impl(app, profile_name, is_wayland));
+        edit_btn.clicked.connect(() => do_edit_impl(entry, row, profile_name));
+        reset_btn.clicked.connect(() => do_reset_impl(profile_name, toast_overlay));
+        close_btn.clicked.connect(() => do_delete_impl(play_btn, row, profile_name, group, del, toast_overlay));
 
         return row;
     }
@@ -700,9 +838,7 @@ namespace AboutDialog {
         dialog.set_size_request(320, 240);
 
         var breakpoint_mobile = new Adw.Breakpoint(Adw.BreakpointCondition.parse("max-width: 450px"));
-        var breakpoint_desktop = new Adw.Breakpoint(Adw.BreakpointCondition.parse("min-width: 451px"));
         dialog.add_breakpoint(breakpoint_mobile);
-        dialog.add_breakpoint(breakpoint_desktop);
 
         var main_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
         dialog.set_child(main_box);
@@ -756,12 +892,13 @@ namespace AboutDialog {
         header.pack_end(apply_button);
 
         var content_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
-        content_box.set_margin_top(12);
-        content_box.set_margin_bottom(12);
+        content_box.set_margin_top(6);
+        content_box.set_margin_bottom(6);
         content_box.set_margin_start(12);
         content_box.set_margin_end(12);
         content_box.set_hexpand(true);
         content_box.set_vexpand(true);
+
         main_box.append(content_box);
 
         content_box.append(carousel);
@@ -774,35 +911,39 @@ namespace AboutDialog {
         bottom_indicators.set_visible(false);
         content_box.append(bottom_indicators);
 
-        breakpoint_mobile.add_setter(header_indicators, "visible", false);
-        breakpoint_mobile.add_setter(bottom_indicators, "visible", true);
-        breakpoint_desktop.add_setter(header_indicators, "visible", true);
-        breakpoint_desktop.add_setter(bottom_indicators, "visible", false);
+        breakpoint_mobile.apply.connect(() => {
+            header_indicators.visible = false;
+            bottom_indicators.visible = true;
+        });
+        breakpoint_mobile.unapply.connect(() => {
+            header_indicators.visible = true;
+            bottom_indicators.visible = false;
+        });
 
         string[] titles = { _("Minimal"), _("Default"), _("Advanced"), _("Full"), _("Only FPS") };
         string[] icons = { "minimal", "default", "advanced", "full", "fps" };
 
         for (int i = 0; i < titles.length; i++) {
-            var page = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
+            var page = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
             page.set_hexpand(true);
-            page.set_vexpand(true);
+            page.set_valign(Gtk.Align.CENTER);
 
             var center = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
-            center.set_hexpand(true);
-            center.set_vexpand(true);
+            center.set_halign(Gtk.Align.CENTER);
+            center.set_margin_top(20);
 
-            var picture = new Gtk.Picture();
-            picture.set_resource("/io/github/radiolamp/mangojuice/images/" + icons[i] + ".png");
-            picture.set_hexpand(true);
-            picture.set_vexpand(true);
-            picture.set_can_shrink(false);
+            var image = new Gtk.Picture.for_resource(
+                "/io/github/radiolamp/mangojuice/images/" + icons[i] + ".png"
+            );
+            image.set_can_shrink(true);
+            image.set_content_fit(Gtk.ContentFit.CONTAIN);
 
             var label = new Gtk.Label(titles[i]);
             label.add_css_class("title-2");
             label.set_margin_top(10);
             label.set_margin_bottom(10);
 
-            center.append(picture);
+            center.append(image);
             center.append(label);
             page.append(center);
 
