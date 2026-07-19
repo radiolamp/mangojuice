@@ -1,0 +1,50 @@
+name: Build MangoJuice (Windows)
+
+on:
+  push:
+    branches: [ mj-windows-unstable ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-vala
+            mingw-w64-x86_64-meson
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-gtk4
+            mingw-w64-x86_64-libadwaita
+            mingw-w64-x86_64-libgee
+            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-ntldd
+
+      - name: Build
+        run: |
+          meson setup build --buildtype=release
+          ninja -C build
+
+      - name: Bundle DLLs
+        run: |
+          mkdir -p dist
+          cp build/src/mangojuice.exe dist/
+          for dll in $(ntldd -R dist/mangojuice.exe | grep mingw64 | awk '{print $3}' | sort -u); do
+            cp "$dll" dist/
+          done
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mangojuice-windows-x86_64
+          path: dist/
