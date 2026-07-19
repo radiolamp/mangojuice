@@ -40,23 +40,39 @@ public static bool register_vulkan_layer () {
     string? json = find_layer_json ();
     if (json == null) return false;
     string rp = json.replace ("/", "\\");
-    if (!run_reg ({ "reg", "add", "HKLM\\SOFTWARE\\Khronos\\Vulkan\\ImplicitLayers",
-        "/v", rp, "/t", "REG_DWORD", "/d", "0", "/f" })) return false;
-    run_reg ({ "reg", "add",
-        "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment",
-        "/v", "MANGOHUD", "/t", "REG_SZ", "/d", "1", "/f" });
+    // Try HKLM first (admin), fall back to HKCU
+    bool admin = run_reg ({ "reg", "add", "HKLM\\SOFTWARE\\Khronos\\Vulkan\\ImplicitLayers",
+        "/v", rp, "/t", "REG_DWORD", "/d", "0", "/f" });
+    if (!admin) {
+        if (!run_reg ({ "reg", "add", "HKCU\\SOFTWARE\\Khronos\\Vulkan\\ImplicitLayers",
+            "/v", rp, "/t", "REG_DWORD", "/d", "0", "/f" })) return false;
+        run_reg ({ "reg", "add",
+            "HKCU\\Environment",
+            "/v", "MANGOHUD", "/t", "REG_SZ", "/d", "1", "/f" });
+    } else {
+        run_reg ({ "reg", "add",
+            "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment",
+            "/v", "MANGOHUD", "/t", "REG_SZ", "/d", "1", "/f" });
+    }
     return true;
 }
 
 public static bool is_vulkan_layer_registered () {
-    try {
-        int exit_status;
-        string std_out, std_err;
-        Process.spawn_sync (null,
-            { get_sys_exe ("reg.exe"), "query", "HKLM\\SOFTWARE\\Khronos\\Vulkan\\ImplicitLayers" },
-            null, (SpawnFlags) 0, null, out std_out, out std_err, out exit_status);
-        return (exit_status == 0 && std_out.contains ("MangoHud"));
-    } catch (Error e) { return false; }
+    string[] hives = {
+        "HKLM\\SOFTWARE\\Khronos\\Vulkan\\ImplicitLayers",
+        "HKCU\\SOFTWARE\\Khronos\\Vulkan\\ImplicitLayers",
+    };
+    foreach (var hive in hives) {
+        try {
+            int exit_status;
+            string std_out, std_err;
+            Process.spawn_sync (null,
+                { get_sys_exe ("reg.exe"), "query", hive },
+                null, (SpawnFlags) 0, null, out std_out, out std_err, out exit_status);
+            if (exit_status == 0 && std_out.contains ("MangoHud")) return true;
+        } catch (Error e) { continue; }
+    }
+    return false;
 }
 
 public class GameManager : Box {

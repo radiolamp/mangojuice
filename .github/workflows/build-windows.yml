@@ -30,8 +30,14 @@ jobs:
             mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-ntldd
             mingw-w64-x86_64-gettext
+            mingw-w64-x86_64-glslang
+            mingw-w64-x86_64-vulkan-headers
+            mingw-w64-x86_64-vulkan-loader
+            mingw-w64-x86_64-python-mako
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-git
 
-      - name: Build
+      - name: Build MangoJuice
         run: |
           meson setup build --buildtype=release
           ninja -C build
@@ -40,13 +46,59 @@ jobs:
         run: |
           DESTDIR=/tmp/mangojuice-install meson install -C build --no-rebuild
 
+      - name: Build MangoHud
+        run: |
+          git clone --depth 1 https://github.com/Leclowndu93150/MangoHud-Windows.git /tmp/mangohud-src
+          cd /tmp/mangohud-src
+          sed -i 's|@ld_libdir_mangohud_abs@/MangoHud.dll|./MangoHud.dll|' src/mangohud.json.in
+          meson setup builddir \
+            --buildtype=release \
+            -Dwith_nvml=disabled \
+            -Dinclude_doc=false \
+            -Dtests=disabled
+          ninja -C builddir
+          DESTDIR=/tmp/mangohud-install meson install -C builddir
+
+      - name: Build vkcube
+        run: |
+          git clone --depth 1 --branch vulkan-sdk-1.4.350 https://github.com/KhronosGroup/Vulkan-Tools.git /tmp/vulkantools-src
+          cd /tmp/vulkantools-src
+          cmake -B builddir \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_CUBE=ON \
+            -DBUILD_VULKANINFO=OFF \
+            -DBUILD_WERROR=OFF
+          cmake --build builddir
+
       - name: Bundle
         run: |
           mkdir -p dist/share/locale
           cp build/src/mangojuice.exe dist/
+
           for dll in $(ntldd -R dist/mangojuice.exe | grep mingw64 | awk '{print $3}' | sort -u); do
             cp "$dll" dist/
           done
+
+          if [ -d /tmp/mangohud-install ]; then
+            find /tmp/mangohud-install -name '*.dll' -exec cp -n {} dist/ \;
+            find /tmp/mangohud-install -name '*.json' -exec cp -n {} dist/MangoHud.json \;
+            find /tmp/mangohud-install -name 'MangoHud.exe' -exec cp -n {} dist/ \;
+            for dll in $(find /tmp/mangohud-install -name '*.dll'); do
+              for dep in $(ntldd -R "$dll" | grep mingw64 | awk '{print $3}' | sort -u); do
+                cp -n "$dep" dist/ 2>/dev/null || true
+              done
+            done
+            printf '@echo off\r\nset MANGOHUD=1\r\nset VK_LAYER_PATH=%%~dp0\r\n%%*\r\n' > dist/mangohud.bat
+          fi
+
+          # vkcube.exe + DLLs
+          if [ -f /tmp/vulkantools-src/builddir/cube/vkcube.exe ]; then
+            cp /tmp/vulkantools-src/builddir/cube/vkcube.exe dist/
+            for dll in $(ntldd -R dist/vkcube.exe | grep mingw64 | awk '{print $3}' | sort -u); do
+              cp -n "$dll" dist/ 2>/dev/null || true
+            done
+          fi
+
           if [ -d /tmp/mangojuice-install/mingw64/share/locale ]; then
             cp -r /tmp/mangojuice-install/mingw64/share/locale/* dist/share/locale/
           fi
