@@ -28,6 +28,7 @@
   "modules": [
     {
       "name": "vulkan-tools",
+      "only-arches": ["x86_64"],
       "buildsystem": "cmake-ninja",
       "config-opts": [
         "-DGLSLANG_INSTALL_DIR=/app",
@@ -45,9 +46,7 @@
         {
           "name": "volk",
           "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-DVOLK_INSTALL=ON"
-          ],
+          "config-opts": ["-DVOLK_INSTALL=ON"],
           "sources": [
             {
               "type": "archive",
@@ -73,6 +72,7 @@
     },
     {
       "name": "MangoHud",
+      "only-arches": ["x86_64"],
       "buildsystem": "meson",
       "config-opts": [
         "-Dwith_xnvctrl=enabled",
@@ -83,8 +83,8 @@
       "sources": [
         {
           "type": "archive",
-          "url": "https://github.com/flightlessmango/MangoHud/releases/download/v0.8.2/MangoHud-v0.8.2-Source.tar.xz",
-          "sha256": "9fe98da24f790f4489efc1e0c8e3ad0291c80efd882a406797d54dab82f8765b",
+          "url": "https://github.com/flightlessmango/MangoHud/releases/download/v0.8.4/MangoHud-v0.8.4-Source.tar.xz",
+          "sha256": "bbe5a2b976313c53f21dc24b98bbed03226589460a0cce20d923cb2c36c9d8b0",
           "x-checker-data": {
             "type": "json",
             "url": "https://api.github.com/repos/flightlessmango/MangoHud/releases",
@@ -96,6 +96,7 @@
       "modules": [
         {
           "name": "glew",
+          "only-arches": ["x86_64"],
           "no-autogen": true,
           "make-args": [
             "GLEW_PREFIX=${FLATPAK_DEST}",
@@ -123,6 +124,7 @@
           "modules": [
             {
               "name": "glu",
+              "only-arches": ["x86_64"],
               "buildsystem": "meson",
               "sources": [
                 {
@@ -136,6 +138,7 @@
         },
         {
           "name": "glfw",
+          "only-arches": ["x86_64"],
           "buildsystem": "cmake-ninja",
           "config-opts": [
             "-DGLFW_BUILD_EXAMPLES:BOOL=OFF",
@@ -153,10 +156,9 @@
         },
         {
           "name": "nlohmann-json",
+          "only-arches": ["x86_64"],
           "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-DJSON_BuildTests:BOOL=OFF"
-          ],
+          "config-opts": ["-DJSON_BuildTests:BOOL=OFF"],
           "sources": [
             {
               "type": "git",
@@ -168,6 +170,7 @@
         },
         {
           "name": "libNVCtrl",
+          "only-arches": ["x86_64"],
           "no-autogen": true,
           "no-make-install": true,
           "build-commands": [
@@ -198,14 +201,14 @@
       ]
     },
     {
-        "name": "mangojuice",
-        "buildsystem": "meson",
-        "sources": [
-            {
-                "type": "dir",
-                "path": "../../"
-            }
-        ]
+      "name": "mangojuice",
+      "buildsystem": "meson",
+      "sources": [
+        {
+          "type": "dir",
+          "path": "../../"
+        }
+      ]
     }
   ]
 }

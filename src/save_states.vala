@@ -1,12 +1,12 @@
-/* save_states.vala // Licence:  GPL-v3.0 */
+/* save_states.vala // License: GPL-3.0+ */
 using Gtk;
 using Gee;
 
 public class SaveStates {
 
     static File? config_file_cache = null;
-    
-    static File get_config_file() {
+
+    static File get_config_file () {
         if (config_file_cache == null) {
             string appdata = Environment.get_variable ("APPDATA") ?? Environment.get_home_dir ();
             config_file_cache = File.new_for_path (Path.build_filename (appdata, "MangoHud", "MangoHud.conf"));
@@ -14,17 +14,20 @@ public class SaveStates {
         return config_file_cache;
     }
 
-    public static void update_parameter (DataOutputStream data_stream, string parameter_name, string parameter_value) throws Error {
+    public static void update_parameter (
+        DataOutputStream data_stream, string parameter_name,
+        string parameter_value
+    ) throws Error {
         if (
-          parameter_value == "" ||
-          (parameter_name  == "round_corners"       && parameter_value == "0")   ||
-          (parameter_name  == "font_size"           && parameter_value == "24")  ||
-          (parameter_name  == "log_duration"        && parameter_value == "30")  ||
-          (parameter_name  == "log_interval"        && parameter_value == "100") ||
-          (parameter_name  == "table_columns"       && parameter_value == "3")   ||
-          (parameter_name  == "fps_sampling_period" && parameter_value == "500") ||
-          (parameter_name  == "offset_x"            && parameter_value == "0")   ||
-          (parameter_name  == "offset_y"            && parameter_value == "0")   
+            parameter_value == "" ||
+            (parameter_name == "round_corners" && parameter_value == "0") ||
+            (parameter_name == "font_size" && parameter_value == "24") ||
+            (parameter_name == "log_duration" && parameter_value == "30") ||
+            (parameter_name == "log_interval" && parameter_value == "100") ||
+            (parameter_name == "table_columns" && parameter_value == "3") ||
+            (parameter_name == "fps_sampling_period" && parameter_value == "500") ||
+            (parameter_name == "offset_x" && parameter_value == "0") ||
+            (parameter_name == "offset_y" && parameter_value == "0")
         ) {
             return;
         }
@@ -102,14 +105,17 @@ public class SaveStates {
         update_file ("fps_color=", "%s,%s,%s".printf (fps_color_1, fps_color_2, fps_color_3));
     }
 
-    public static void update_gpu_load_value_in_file(string gpu_load_value_1, string gpu_load_value_2) {
+    public static void update_gpu_load_value_in_file (string gpu_load_value_1, string gpu_load_value_2) {
         if (gpu_load_value_1 == "" || gpu_load_value_2 == "") {
             return;
         }
-        update_file ("gpu_load_value=", "%s,%s".printf(gpu_load_value_1, gpu_load_value_2));
+        update_file ("gpu_load_value=", "%s,%s".printf (gpu_load_value_1, gpu_load_value_2));
     }
 
-    public static void update_gpu_load_color_in_file (string gpu_load_color_1, string gpu_load_color_2, string gpu_load_color_3) {
+    public static void update_gpu_load_color_in_file (
+        string gpu_load_color_1, string gpu_load_color_2,
+        string gpu_load_color_3
+    ) {
         update_file ("gpu_load_color=", "%s,%s,%s".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3));
     }
 
@@ -117,14 +123,17 @@ public class SaveStates {
         update_file ("font_file=", font_path);
     }
 
-    public static void update_cpu_load_value_in_file(string cpu_load_value_1, string cpu_load_value_2) {
+    public static void update_cpu_load_value_in_file (string cpu_load_value_1, string cpu_load_value_2) {
         if (cpu_load_value_1 == "" || cpu_load_value_2 == "") {
             return;
         }
-        update_file ("cpu_load_value=", "%s,%s".printf(cpu_load_value_1, cpu_load_value_2));
+        update_file ("cpu_load_value=", "%s,%s".printf (cpu_load_value_1, cpu_load_value_2));
     }
 
-    public static void update_cpu_load_color_in_file (string cpu_load_color_1, string cpu_load_color_2, string cpu_load_color_3) {
+    public static void update_cpu_load_color_in_file (
+        string cpu_load_color_1, string cpu_load_color_2,
+        string cpu_load_color_3
+    ) {
         update_file ("cpu_load_color=", "%s,%s,%s".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3));
     }
 
@@ -179,54 +188,91 @@ public class SaveStates {
     static Mutex update_file_mutex = Mutex ();
     static uint? pending_timeout_id = null;
     static HashMap<string, string>? pending_updates = null;
-    
+    static bool flush_in_progress = false;
+
     static HashMap<string, string> get_pending_updates () {
         if (pending_updates == null) {
             pending_updates = new HashMap<string, string> ();
         }
         return pending_updates;
     }
-    
+
     static void update_file (string prefix, string value) {
+        bool should_schedule_flush = false;
+
         update_file_mutex.lock ();
         var updates = get_pending_updates ();
         updates[prefix] = value;
-        update_file_mutex.unlock ();
-        
-        // Отменяем предыдущий таймер, если он есть
+
+        if (!flush_in_progress && pending_timeout_id == null) {
+            should_schedule_flush = true;
+        }
+
         if (pending_timeout_id != null) {
             Source.remove (pending_timeout_id);
             pending_timeout_id = null;
         }
-        
-        // Устанавливаем таймер для батчинга (50ms) с гарантией выполнения
-        pending_timeout_id = Timeout.add (50, () => {
-            flush_pending_updates ();
-            pending_timeout_id = null;
-            return false;
-        });
+
+        if (should_schedule_flush) {
+            pending_timeout_id = Timeout.add (50, () => {
+                bool sync = false;
+                update_file_mutex.lock ();
+                pending_timeout_id = null;
+                if (get_pending_updates ().is_empty) {
+                    update_file_mutex.unlock ();
+                    return false;
+                }
+                flush_in_progress = true;
+                update_file_mutex.unlock ();
+                flush_pending_updates_internal (sync);
+                update_file_mutex.lock ();
+                flush_in_progress = false;
+                update_file_mutex.unlock ();
+                return false;
+            });
+        }
+        update_file_mutex.unlock ();
     }
-    
+
     static void flush_pending_updates (bool synchronous = false) {
+        update_file_mutex.lock ();
+        if (get_pending_updates ().is_empty) {
+            update_file_mutex.unlock ();
+            return;
+        }
+
+        if (pending_timeout_id != null) {
+            Source.remove (pending_timeout_id);
+            pending_timeout_id = null;
+        }
+        flush_in_progress = true;
+        update_file_mutex.unlock ();
+
+        flush_pending_updates_internal (synchronous);
+
+        update_file_mutex.lock ();
+        flush_in_progress = false;
+        update_file_mutex.unlock ();
+    }
+
+    static void flush_pending_updates_internal (bool synchronous) {
         update_file_mutex.lock ();
         var updates_map = get_pending_updates ();
         if (updates_map.is_empty) {
             update_file_mutex.unlock ();
             return;
         }
-        
-        // Копируем все обновления
+
         var updates = new HashMap<string, string> ();
         foreach (var entry in updates_map.entries) {
             updates[entry.key] = entry.value;
         }
         updates_map.clear ();
         update_file_mutex.unlock ();
-        
+
         if (synchronous) {
-            // Синхронная запись для гарантированного сохранения при закрытии
             try {
-                var file = get_config_file();
+                var file = get_config_file ();
                 if (!file.query_exists ()) {
                     return;
                 }
@@ -235,8 +281,7 @@ public class SaveStates {
                 var file_stream = new DataInputStream (file.read ());
                 string? line;
                 var updated_keys = new HashSet<string> ();
-                
-                // Читаем файл и обновляем все измененные строки
+
                 while ((line = file_stream.read_line ()) != null) {
                     bool updated = false;
                     foreach (var entry in updates.entries) {
@@ -252,14 +297,12 @@ public class SaveStates {
                     }
                 }
 
-                // Добавляем новые параметры, которых не было в файле
                 foreach (var entry in updates.entries) {
                     if (!updated_keys.contains (entry.key)) {
                         lines.add ("%s%s".printf (entry.key, entry.value));
                     }
                 }
 
-                // Запись в файл
                 var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
                 foreach (var l in lines) {
                     file_stream_write.put_string (l + "\n");
@@ -269,10 +312,9 @@ public class SaveStates {
                 stderr.printf ("Error writing to the file: %s\n", e.message);
             }
         } else {
-            // Асинхронная запись с высоким приоритетом
             Idle.add_full (Priority.HIGH_IDLE, () => {
                 try {
-                    var file = get_config_file();
+                    var file = get_config_file ();
                     if (!file.query_exists ()) {
                         return false;
                     }
@@ -281,8 +323,7 @@ public class SaveStates {
                     var file_stream = new DataInputStream (file.read ());
                     string? line;
                     var updated_keys = new HashSet<string> ();
-                    
-                    // Читаем файл и обновляем все измененные строки
+
                     while ((line = file_stream.read_line ()) != null) {
                         bool updated = false;
                         foreach (var entry in updates.entries) {
@@ -298,14 +339,12 @@ public class SaveStates {
                         }
                     }
 
-                    // Добавляем новые параметры, которых не было в файле
                     foreach (var entry in updates.entries) {
                         if (!updated_keys.contains (entry.key)) {
                             lines.add ("%s%s".printf (entry.key, entry.value));
                         }
                     }
 
-                    // Запись в файл
                     var file_stream_write = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
                     foreach (var l in lines) {
                         file_stream_write.put_string (l + "\n");
@@ -318,41 +357,42 @@ public class SaveStates {
             });
         }
     }
-    
+
     public static void flush_all_pending () {
         update_file_mutex.lock ();
-        // Отменяем таймер, если он есть
         if (pending_timeout_id != null) {
             Source.remove (pending_timeout_id);
             pending_timeout_id = null;
         }
         update_file_mutex.unlock ();
-        // Принудительно сохраняем все ожидающие обновления
         flush_pending_updates (true);
     }
 
-    static void save_color_setting (DataOutputStream data_stream, Gtk.ColorDialogButton? color_button, string setting_name, MangoJuice mango_juice) throws Error {
+    static void save_color_setting (
+        DataOutputStream data_stream, Gtk.ColorDialogButton? color_button,
+        string setting_name, MangoJuice mango_juice
+    ) throws Error {
         if (color_button != null) {
             var color = mango_juice.rgba_to_hex (color_button.get_rgba ());
             if (color != "") {
-                update_parameter(data_stream, setting_name, color);
+                update_parameter (data_stream, setting_name, color);
             }
         }
     }
-    
-    static void save_multi_color_setting (DataOutputStream data_stream, 
-                                                 Gtk.ColorDialogButton? color_button_1, 
-                                                 Gtk.ColorDialogButton? color_button_2, 
-                                                 Gtk.ColorDialogButton? color_button_3, 
-                                                 string setting_name, 
+
+    static void save_multi_color_setting (DataOutputStream data_stream,
+                                                 Gtk.ColorDialogButton? color_button_1,
+                                                 Gtk.ColorDialogButton? color_button_2,
+                                                 Gtk.ColorDialogButton? color_button_3,
+                                                 string setting_name,
                                                  MangoJuice mango_juice) throws Error {
         if (color_button_1 != null && color_button_2 != null && color_button_3 != null) {
             var color_1 = mango_juice.rgba_to_hex (color_button_1.get_rgba ());
             var color_2 = mango_juice.rgba_to_hex (color_button_2.get_rgba ());
             var color_3 = mango_juice.rgba_to_hex (color_button_3.get_rgba ());
-            
+
             if (color_1 != "" && color_2 != "" && color_3 != "") {
-                update_parameter(data_stream, setting_name, "%s,%s,%s".printf(color_1, color_2, color_3));
+                update_parameter (data_stream, setting_name, "%s,%s,%s".printf (color_1, color_2, color_3));
             }
         }
     }
@@ -368,7 +408,9 @@ public class SaveStates {
                 config_dir.make_directory_with_parents ();
             }
 
-            var data_stream = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
+            var data_stream = new DataOutputStream (
+                file.replace (null, false, FileCreateFlags.NONE)
+            );
             data_stream.put_string ("# Config Generated by MangoJuice #\n");
             data_stream.put_string ("legacy_layout=false\n");
 
@@ -377,12 +419,14 @@ public class SaveStates {
             update_parameter (data_stream, "gpu_list", mango_juice.gpu_entry.text);
 
             if (mango_juice.gpu_dropdown.selected_item != null) {
-                var selected_pci_address = (mango_juice.gpu_dropdown.selected_item as StringObject)?.get_string () ?? "";
+                var selected_pci_address = (
+                    mango_juice.gpu_dropdown.selected_item as StringObject
+                )?.get_string () ?? "";
                 if (selected_pci_address != _("All video cards")) {
                     data_stream.put_string ("pci_dev=%s\n".printf (selected_pci_address));
                 }
             }
-           
+
            var custom_command = mango_juice.custom_command_entry.text;
             if (custom_command != "") {
                 if (custom_command.contains (",")) {
@@ -466,70 +510,128 @@ public class SaveStates {
             system_end.add (5);
             order_map.set ("system_end", system_end);
 
-            save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
+            save_switches_to_file (
+                data_stream, mango_juice.gpu_switches,
+                mango_juice.gpu_config_vars,
+                (int[]) order_map.get ("gpu_start").to_array ()
+            );
 
             int[] cpu_order = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-            save_switches_to_file (data_stream, mango_juice.cpu_switches, mango_juice.cpu_config_vars, cpu_order);
+            save_switches_to_file (
+                data_stream, mango_juice.cpu_switches,
+                mango_juice.cpu_config_vars, cpu_order
+            );
 
             int[] memory_order = {0, 1, 2, 3, 4, 5, 6};
-            save_switches_to_file (data_stream, mango_juice.memory_switches, mango_juice.memory_config_vars, memory_order);
+            save_switches_to_file (
+                data_stream, mango_juice.memory_switches,
+                mango_juice.memory_config_vars, memory_order
+            );
 
             if (Config.IS_DEVEL) {
                 int[] git_order = {0, 1, 2};
-                save_switches_to_file (data_stream, mango_juice.git_switches, mango_juice.git_config_vars, git_order);
+                save_switches_to_file (
+                    data_stream, mango_juice.git_switches,
+                    mango_juice.git_config_vars, git_order
+                );
             }
 
-            save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_start").to_array ());
+            save_switches_to_file (
+                data_stream, mango_juice.inform_switches,
+                mango_juice.inform_config_vars,
+                (int[]) order_map.get ("inform_start").to_array ()
+            );
 
-            save_switches_to_file (data_stream, mango_juice.system_switches, mango_juice.system_config_vars, (int[]) order_map.get ("system_end").to_array ());
+            save_switches_to_file (
+                data_stream, mango_juice.system_switches,
+                mango_juice.system_config_vars,
+                (int[]) order_map.get ("system_end").to_array ()
+            );
 
-            int[] options_order = {0 ,1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10, 11};
-            save_switches_to_file (data_stream, mango_juice.options_switches, mango_juice.options_config_vars, options_order);
+            int[] options_order = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+            save_switches_to_file (
+                data_stream, mango_juice.options_switches,
+                mango_juice.options_config_vars, options_order
+            );
 
-            save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_end").to_array ());
+            save_switches_to_file (
+                data_stream, mango_juice.gpu_switches,
+                mango_juice.gpu_config_vars,
+                (int[]) order_map.get ("gpu_end").to_array ()
+            );
 
-            save_switches_to_file (data_stream, mango_juice.system_switches, mango_juice.system_config_vars, (int[]) order_map.get ("system_start").to_array ());
+            save_switches_to_file (
+                data_stream, mango_juice.system_switches,
+                mango_juice.system_config_vars,
+                (int[]) order_map.get ("system_start").to_array ()
+            );
 
-            save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_end").to_array ());
+            save_switches_to_file (
+                data_stream, mango_juice.inform_switches,
+                mango_juice.inform_config_vars,
+                (int[]) order_map.get ("inform_end").to_array ()
+            );
 
             int[] battery_order = {0, 1, 2, 3, 4, 5};
-            save_switches_to_file (data_stream, mango_juice.battery_switches, mango_juice.battery_config_vars, battery_order);
+            save_switches_to_file (
+                data_stream, mango_juice.battery_switches,
+                mango_juice.battery_config_vars, battery_order
+            );
 
             int[] other_extra_order = {1, 2, 0, 3};
-            save_switches_to_file (data_stream, mango_juice.other_extra_switches, mango_juice.other_extra_config_vars, other_extra_order);
+            save_switches_to_file (
+                data_stream, mango_juice.other_extra_switches,
+                mango_juice.other_extra_config_vars, other_extra_order
+            );
 
-            int[] wine_order = {0, 1, 2};
-            save_switches_to_file (data_stream, mango_juice.wine_switches, mango_juice.wine_config_vars, wine_order);
+            int[] wine_order = {0, 1};
+            save_switches_to_file (
+                data_stream, mango_juice.wine_switches,
+                mango_juice.wine_config_vars, wine_order
+            );
 
             if (mango_juice.logs_key_recorder.shortcut != null && mango_juice.logs_key_recorder.shortcut != "") {
-                update_parameter(data_stream, "toggle_logging", mango_juice.logs_key_recorder.shortcut);
+                update_parameter (data_stream, "toggle_logging", mango_juice.logs_key_recorder.shortcut);
             }
 
-            if (mango_juice.toggle_hud_key_recorder.shortcut != null && mango_juice.toggle_hud_key_recorder.shortcut != "") {
-                update_parameter(data_stream, "toggle_hud_position", mango_juice.toggle_hud_key_recorder.shortcut);
+            if (mango_juice.toggle_hud_key_recorder.shortcut != null &&
+                mango_juice.toggle_hud_key_recorder.shortcut != "") {
+                update_parameter (data_stream, "toggle_hud_position", mango_juice.toggle_hud_key_recorder.shortcut);
             }
 
             if (mango_juice.duracion_scale != null && (int)mango_juice.duracion_scale.get_value () != 0) {
-                update_parameter (data_stream, "log_duration", ((int)mango_juice.duracion_scale.get_value ()).to_string ());
+                update_parameter (
+                    data_stream, "log_duration",
+                    ((int)mango_juice.duracion_scale.get_value ()).to_string ()
+                );
             }
 
             if (mango_juice.autostart_scale != null && (int)mango_juice.autostart_scale.get_value () != 0) {
-                update_parameter (data_stream, "autostart_log", ((int)mango_juice.autostart_scale.get_value ()).to_string ());
+                update_parameter (
+                    data_stream, "autostart_log",
+                    ((int)mango_juice.autostart_scale.get_value ()).to_string ()
+                );
             }
 
             if (mango_juice.interval_scale != null && (int)mango_juice.interval_scale.get_value () != 0) {
-                update_parameter (data_stream, "log_interval", ((int)mango_juice.interval_scale.get_value ()).to_string ());
+                update_parameter (
+                    data_stream, "log_interval",
+                    ((int)mango_juice.interval_scale.get_value ()).to_string ()
+                );
             }
 
             update_parameter (data_stream, "output_folder", mango_juice.custom_logs_path_entry.text);
 
             if (mango_juice.fps_limit_method.selected_item != null) {
-                var fps_limit_method_value = (mango_juice.fps_limit_method.selected_item as StringObject)?.get_string () ?? "";
+                var fps_limit_method_value = (
+                    mango_juice.fps_limit_method.selected_item as StringObject
+                )?.get_string () ?? "";
                 update_parameter (data_stream, "fps_limit_method", fps_limit_method_value);
             }
 
-            if (mango_juice.toggle_fps_limit_recorder != null && mango_juice.toggle_fps_limit_recorder.shortcut != null) {
-                update_parameter(data_stream, "toggle_fps_limit", mango_juice.toggle_fps_limit_recorder.shortcut);
+            if (mango_juice.toggle_fps_limit_recorder != null &&
+                mango_juice.toggle_fps_limit_recorder.shortcut != null) {
+                update_parameter (data_stream, "toggle_fps_limit", mango_juice.toggle_fps_limit_recorder.shortcut);
             }
 
             var fps_limit_1 = mango_juice.fps_limit_entry_1.text;
@@ -551,14 +653,16 @@ public class SaveStates {
                 update_parameter (data_stream, "gl_vsync", opengl_config_value);
             }
 
-            string[] filter_values = {"none", "bicubic", "trilinear", "retro"};
+            string[] filter_values = {"", "bicubic", "trilinear", "retro"};
 
             if (mango_juice.filter_dropdown.selected != Gtk.INVALID_LIST_POSITION) {
                 int selected = (int)mango_juice.filter_dropdown.selected;
                 if (selected >= 0 && selected < filter_values.length) {
                     string filter_value = filter_values[selected];
-                    if (filter_value != _("none")) {
-                        data_stream.put_string("%s #filters\n".printf(filter_value));
+                    if (filter_value.length > 0) {
+                        data_stream.put_string ("%s #filters\n".printf (filter_value));
+                    } else {
+                        data_stream.put_string ("");
                     }
                 }
             }
@@ -580,7 +684,10 @@ public class SaveStates {
             }
 
             if (mango_juice.borders_scale != null) {
-                update_parameter (data_stream, "round_corners", ((int)mango_juice.borders_scale.get_value ()).to_string ());
+                update_parameter (
+                    data_stream, "round_corners",
+                    ((int)mango_juice.borders_scale.get_value ()).to_string ()
+                );
             }
 
             if (mango_juice.alpha_scale != null) {
@@ -590,7 +697,9 @@ public class SaveStates {
             }
 
             if (mango_juice.position_dropdown.selected_item != null) {
-                var position_label = (mango_juice.position_dropdown.selected_item as StringObject)?.get_string () ?? "";
+                var position_label = (
+                    mango_juice.position_dropdown.selected_item as StringObject
+                )?.get_string () ?? "";
                 string position_value = position_label;
                 if (position_label == _("Top Left")) {
                     position_value = "top-left";
@@ -609,41 +718,61 @@ public class SaveStates {
                 } else if (position_label == _("Bottom Right")) {
                     position_value = "bottom-right";
                 }
-                update_parameter(data_stream, "position", position_value);
+                update_parameter (data_stream, "position", position_value);
             }
 
             if (mango_juice.colums_scale != null) {
-                update_parameter (data_stream, "table_columns", ((int)mango_juice.colums_scale.get_value ()).to_string ());
+                update_parameter (
+                    data_stream, "table_columns",
+                    ((int)mango_juice.colums_scale.get_value ()).to_string ()
+                );
             }
 
             update_parameter (data_stream, "toggle_hud", mango_juice.toggle_hud_entry.text);
 
             if (mango_juice.font_size_scale != null) {
-                update_parameter (data_stream, "font_size", ((int)mango_juice.font_size_scale.get_value ()).to_string ());
+                update_parameter (
+                    data_stream, "font_size",
+                    ((int)mango_juice.font_size_scale.get_value ()).to_string ()
+                );
+            }
+
+            if (mango_juice.font_size_secondary_scale != null) {
+                update_parameter (
+                    data_stream, "font_size_secondary",
+                    ((int)mango_juice.font_size_secondary_scale.get_value ()).to_string ()
+                );
             }
 
             if (mango_juice.font_button != null) {
                 var font_name = mango_juice.font_button.label;
                 if (font_name != _("Default") && font_name != _("Select Font")) {
-                    var font_path = mango_juice.find_font_path_by_name(font_name, mango_juice.find_fonts());
+                    var font_path = mango_juice.find_font_path_by_name (font_name, mango_juice.find_fonts ());
                     if (font_path != "") {
-                        update_parameter(data_stream, "font_file", font_path);
-                        data_stream.put_string("font_glyph_ranges=korean, chinese, chinese_simplified, japanese, cyrillic, thai, vietnamese, latin_ext_a, latin_ext_b\n");
+                        update_parameter (data_stream, "font_file", font_path);
+                        data_stream.put_string (
+                            "font_glyph_ranges=korean, chinese, " +
+                            "chinese_simplified, japanese, cyrillic, " +
+                            "thai, vietnamese, latin_ext_a, latin_ext_b\n"
+                        );
                     }
                 }
             }
 
             if (mango_juice.fps_sampling_period_scale != null) {
-                update_parameter (data_stream, "fps_sampling_period", ((int)mango_juice.fps_sampling_period_scale.get_value ()).to_string ());
+                update_parameter (
+                    data_stream, "fps_sampling_period",
+                    ((int)mango_juice.fps_sampling_period_scale.get_value ()).to_string ()
+                );
             }
 
             update_parameter (data_stream, "gpu_text", mango_juice.gpu_text_entry.text);
 
-            save_color_setting(data_stream, mango_juice.gpu_color_button, "gpu_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.gpu_color_button, "gpu_color", mango_juice);
 
             update_parameter (data_stream, "cpu_text", mango_juice.cpu_text_entry.text);
 
-            save_color_setting(data_stream, mango_juice.cpu_color_button, "cpu_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.cpu_color_button, "cpu_color", mango_juice);
 
             if (mango_juice.fps_value_entry_1 != null && mango_juice.fps_value_entry_2 != null) {
                 var fps_value_1 = mango_juice.fps_value_entry_1.text;
@@ -653,83 +782,92 @@ public class SaveStates {
                 }
             }
 
-            save_multi_color_setting(data_stream, 
-                                   mango_juice.fps_color_button_1, 
-                                   mango_juice.fps_color_button_2, 
-                                   mango_juice.fps_color_button_3, 
-                                   "fps_color", 
+            save_multi_color_setting (data_stream,
+                                   mango_juice.fps_color_button_1,
+                                   mango_juice.fps_color_button_2,
+                                   mango_juice.fps_color_button_3,
+                                   "fps_color",
                                    mango_juice);
 
             if (mango_juice.gpu_load_value_entry_1 != null && mango_juice.gpu_load_value_entry_2 != null) {
                 var gpu_load_value_1 = mango_juice.gpu_load_value_entry_1.text;
                 var gpu_load_value_2 = mango_juice.gpu_load_value_entry_2.text;
                 if (gpu_load_value_1 != "" && gpu_load_value_2 != "") {
-                    update_parameter (data_stream, "gpu_load_value", "%s,%s".printf (gpu_load_value_1, gpu_load_value_2));
+                    update_parameter (
+                        data_stream, "gpu_load_value",
+                        "%s,%s".printf (gpu_load_value_1, gpu_load_value_2)
+                    );
                 }
             }
 
-            save_multi_color_setting(data_stream, 
-                                   mango_juice.gpu_load_color_button_1, 
-                                   mango_juice.gpu_load_color_button_2, 
-                                   mango_juice.gpu_load_color_button_3, 
-                                   "gpu_load_color", 
+            save_multi_color_setting (data_stream,
+                                   mango_juice.gpu_load_color_button_1,
+                                   mango_juice.gpu_load_color_button_2,
+                                   mango_juice.gpu_load_color_button_3,
+                                   "gpu_load_color",
                                    mango_juice);
 
             if (mango_juice.cpu_load_value_entry_1 != null && mango_juice.cpu_load_value_entry_2 != null) {
                 var cpu_load_value_1 = mango_juice.cpu_load_value_entry_1.text;
                 var cpu_load_value_2 = mango_juice.cpu_load_value_entry_2.text;
                 if (cpu_load_value_1 != "" && cpu_load_value_2 != "") {
-                    update_parameter (data_stream, "cpu_load_value", "%s,%s".printf (cpu_load_value_1, cpu_load_value_2));
+                    update_parameter (
+                        data_stream, "cpu_load_value",
+                        "%s,%s".printf (cpu_load_value_1, cpu_load_value_2)
+                    );
                 }
             }
 
-            save_multi_color_setting(data_stream, 
-                                   mango_juice.cpu_load_color_button_1, 
-                                   mango_juice.cpu_load_color_button_2, 
-                                   mango_juice.cpu_load_color_button_3, 
-                                   "cpu_load_color", 
+            save_multi_color_setting (data_stream,
+                                   mango_juice.cpu_load_color_button_1,
+                                   mango_juice.cpu_load_color_button_2,
+                                   mango_juice.cpu_load_color_button_3,
+                                   "cpu_load_color",
                                    mango_juice);
 
-            save_color_setting(data_stream, mango_juice.background_color_button, "background_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.frametime_color_button, "frametime_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.vram_color_button, "vram_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.ram_color_button, "ram_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.wine_color_button, "wine_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.engine_color_button, "engine_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.text_color_button, "text_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.media_player_color_button, "media_player_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.network_color_button, "network_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.battery_color_button, "battery_color", mango_juice);
-            save_color_setting(data_stream, mango_juice.horizontal_separator_color_button, "horizontal_separator_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.background_color_button, "background_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.frametime_color_button, "frametime_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.vram_color_button, "vram_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.ram_color_button, "ram_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.wine_color_button, "wine_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.engine_color_button, "engine_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.text_color_button, "text_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.media_player_color_button, "media_player_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.network_color_button, "network_color", mango_juice);
+            save_color_setting (data_stream, mango_juice.battery_color_button, "battery_color", mango_juice);
+            save_color_setting (
+                data_stream, mango_juice.horizontal_separator_color_button,
+                "horizontal_separator_color", mango_juice
+            );
 
             const string[] FORMAT_VALUES = { "title", "artist", "album", "none" };
-            
+
             if (mango_juice.media_format_dropdowns != null) {
-                var active_values = new Gee.ArrayList<string>();
+                var active_values = new Gee.ArrayList<string> ();
                 foreach (var dropdown in mango_juice.media_format_dropdowns) {
                     int selected = (int)dropdown.selected;
                     if (selected >= 0 && selected < FORMAT_VALUES.length) {
                         string english_value = FORMAT_VALUES[selected];
                         if (english_value != "none") {
-                            active_values.add(english_value);
+                            active_values.add (english_value);
                         }
                     }
                 }
-                
+
                 string media_format = "";
                 if (active_values.size > 0) {
-                    var sb = new StringBuilder();
-                    sb.append("{");
+                    var sb = new StringBuilder ();
+                    sb.append ("{");
                     bool first = true;
                     foreach (string val in active_values) {
-                        if (!first) sb.append("};{");
-                        sb.append(val);
+                        if (!first) sb.append ("};{");
+                        sb.append (val);
                         first = false;
                     }
-                    sb.append("}");
+                    sb.append ("}");
                     media_format = sb.str;
                 }
-                update_parameter(data_stream, "media_player_format", media_format);
+                update_parameter (data_stream, "media_player_format", media_format);
             }
 
             data_stream.close ();
@@ -738,11 +876,14 @@ public class SaveStates {
         }
     }
 
-    public static void reset_config_file_cache() {
+    public static void reset_config_file_cache () {
         config_file_cache = null;
     }
 
-    public static void save_switches_to_file (DataOutputStream data_stream, Switch[] switches, string[] config_vars, int[] order) {
+    public static void save_switches_to_file (
+        DataOutputStream data_stream, Switch[] switches,
+        string[] config_vars, int[] order
+    ) {
         for (int i = 0; i < order.length; i++) {
             int index = order[i];
             if (index < switches.length && switches[index].active) {
@@ -755,5 +896,5 @@ public class SaveStates {
             }
         }
     }
-        
+
 }

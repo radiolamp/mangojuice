@@ -1,4 +1,4 @@
-/* other_load  // Licence:  GPL-v3.0 */
+/* other_load  // License: GPL-3.0+ */
 using Gtk;
 using Gee;
 
@@ -9,8 +9,8 @@ public class OtherLoad {
         public string reshade_folders_path { get; set; }
         public string reshade_texture_path { get; set; }
         public string reshade_include_path { get; set; }
-        
-        public LoadResult() {
+
+        public LoadResult () {
             reshade_states = new Gee.HashMap<string, bool> ();
             reshade_folders_path = "";
             reshade_texture_path = "";
@@ -18,7 +18,7 @@ public class OtherLoad {
         }
     }
 
-    private static bool contains_string (string[] array, string target) {
+    static bool contains_string (string[] array, string target) {
         foreach (string item in array) {
             if (item == target) {
                 return true;
@@ -42,8 +42,8 @@ public class OtherLoad {
             var file_stream = new DataInputStream (config_file.read ());
             string line;
             bool[] found = new bool[10];
-            bool effectsFound = false;
-            bool hotkeyFound = false;
+            bool effects_found = false;
+            bool hotkey_found = false;
 
             string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
 
@@ -79,7 +79,9 @@ public class OtherLoad {
                     load_int_scale_value (line, other_box.scales[9], other_box.entries[9]);
                     found[9] = true;
                 } else if (line.has_prefix ("effects = ")) {
-                    string[] effects = line.split (" = ")[1].split (":");
+                    string[] parts = line.split (" = ");
+                    if (parts.length < 2) continue;
+                    string[] effects = parts[1].split (":");
 
                     for (int i = 0; i < other_box.switches.size; i++) {
                         if (contains_string (effects, config_vars[i])) {
@@ -94,15 +96,17 @@ public class OtherLoad {
                             result.reshade_states[effect] = true;
                         }
                     }
-                    
-                    effectsFound = true;
+
+                    effects_found = true;
                 }
                 else if (line.has_prefix ("toggleKey=")) {
-                    string hotkey = line.split ("=")[1].strip ();
+                    string[] parts = line.split ("=");
+                    if (parts.length < 2) continue;
+                    string hotkey = parts[1].strip ();
                     if (other_box.hotkey_recorder != null) {
                         other_box.hotkey_recorder.shortcut = hotkey;
                     }
-                    hotkeyFound = true;
+                    hotkey_found = true;
                 }
                 else if (line.has_prefix ("reshadeTexturePath = ")) {
                     result.reshade_texture_path = line.substring ("reshadeTexturePath = ".length).strip ();
@@ -114,19 +118,19 @@ public class OtherLoad {
                     result.reshade_folders_path = line.substring ("#reshadeFoldersPath = ".length).strip ();
                 }
                 else if (line.has_suffix (" #effects")) {
-                    string clean_line = line.replace(" #effects", "").strip();
-                    string[] parts = clean_line.split(" = ", 2);
-                    
+                    string clean_line = line.replace (" #effects", "").strip ();
+                    string[] parts = clean_line.split (" = ", 2);
+
                     if (parts.length == 2) {
-                        string shader_name = parts[0].strip();
-                        string shader_value = parts[1].strip();
+                        string shader_name = parts[0].strip ();
+                        string shader_value = parts[1].strip ();
 
                         if (shader_value == "true" || shader_value == "false") {
                             result.reshade_states[shader_name] = (shader_value == "true");
                         }
                         else if (shader_value.has_suffix (".fx")) {
-                            if (!other_box.reshade_shaders.contains(shader_name)) {
-                                other_box.reshade_shaders.add(shader_name);
+                            if (!other_box.reshade_shaders.contains (shader_name)) {
+                                other_box.reshade_shaders.add (shader_name);
                             }
                         }
                     }
@@ -135,7 +139,7 @@ public class OtherLoad {
 
             set_default_values (other_box, found);
 
-            if (!effectsFound) {
+            if (!effects_found) {
                 foreach (var switch_widget in other_box.switches) {
                     switch_widget.set_active (false);
                 }
@@ -144,15 +148,15 @@ public class OtherLoad {
         } catch (Error e) {
             stderr.printf ("Ошибка при чтении файла: %s\n", e.message);
         }
-        
+
         return result;
     }
 
     public static void apply_reshade_states (OtherBox other_box, Gee.HashMap<string, bool> reshade_states) {
-        
+
         foreach (var switch_widget in other_box.reshade_switches) {
-            string shader_name = switch_widget.get_name ().replace("reshade_", "");
-            
+            string shader_name = switch_widget.get_name ().replace ("reshade_", "");
+
             if (reshade_states.has_key (shader_name)) {
                 bool state = reshade_states[shader_name];
                 switch_widget.set_active (state);
@@ -162,20 +166,20 @@ public class OtherLoad {
         }
     }
 
-    private static void set_default_values (OtherBox other_box, bool[] found) {
-        if (!found[0]) set_default_scale_value     (other_box.scales[0], other_box.entries[0], 0,      "%.2f");
-        if (!found[1]) set_default_scale_value     (other_box.scales[1], other_box.entries[1], 0.5,    "%.2f");
-        if (!found[2]) set_default_scale_value     (other_box.scales[2], other_box.entries[2], 0.17,   "%.2f");
-        if (!found[3]) set_default_scale_value     (other_box.scales[3], other_box.entries[3], 0.75,   "%.2f");
-        if (!found[4]) set_default_scale_value     (other_box.scales[4], other_box.entries[4], 0.125,  "%.3f");
-        if (!found[5]) set_default_scale_value     (other_box.scales[5], other_box.entries[5], 0.0833, "%.4f");
-        if (!found[6]) set_default_scale_value     (other_box.scales[6], other_box.entries[6], 0.05,   "%.2f");
+    static void set_default_values (OtherBox other_box, bool[] found) {
+        if (!found[0]) set_default_scale_value (other_box.scales[0], other_box.entries[0], 0, "%.2f");
+        if (!found[1]) set_default_scale_value (other_box.scales[1], other_box.entries[1], 0.5, "%.2f");
+        if (!found[2]) set_default_scale_value (other_box.scales[2], other_box.entries[2], 0.17, "%.2f");
+        if (!found[3]) set_default_scale_value (other_box.scales[3], other_box.entries[3], 0.75, "%.2f");
+        if (!found[4]) set_default_scale_value (other_box.scales[4], other_box.entries[4], 0.125, "%.3f");
+        if (!found[5]) set_default_scale_value (other_box.scales[5], other_box.entries[5], 0.0833, "%.4f");
+        if (!found[6]) set_default_scale_value (other_box.scales[6], other_box.entries[6], 0.05, "%.2f");
         if (!found[7]) set_default_int_scale_value (other_box.scales[7], other_box.entries[7], 8);
         if (!found[8]) set_default_int_scale_value (other_box.scales[8], other_box.entries[8], 0);
         if (!found[9]) set_default_int_scale_value (other_box.scales[9], other_box.entries[9], 25);
     }
 
-    private static void create_default_config (File config_dir, File config_file) {
+    static void create_default_config (File config_dir, File config_file) {
         try {
             if (!config_dir.query_exists ()) {
                 config_dir.make_directory_with_parents ();
@@ -202,8 +206,10 @@ public class OtherLoad {
         }
     }
 
-    private static void load_scale_value (string line, Scale scale, Entry entry, string format) {
-        string value_str = line.split ("=")[1].replace (",", ".");
+    static void load_scale_value (string line, Scale scale, Entry entry, string format) {
+        string[] parts = line.split ("=");
+        if (parts.length < 2) return;
+        string value_str = parts[1].replace (",", ".");
         double value = double.parse (value_str);
         if (scale != null) {
             scale.set_value (value);
@@ -213,10 +219,13 @@ public class OtherLoad {
         }
     }
 
-    private static void load_int_scale_value (string line, Scale scale, Entry entry) {
-        string value_str = line.split ("=")[1].replace (",", ".");
+    static void load_int_scale_value (string line, Scale scale, Entry entry) {
+        string[] parts = line.split ("=");
+        if (parts.length < 2) return;
+        string value_str = parts[1].replace (",", ".");
         if (value_str.contains (".")) {
-            value_str = value_str.split (".")[0];
+            string[] dot_parts = value_str.split (".");
+            value_str = dot_parts[0];
         }
         int value = int.parse (value_str);
         if (scale != null) {
@@ -227,7 +236,7 @@ public class OtherLoad {
         }
     }
 
-    private static void set_default_scale_value (Scale scale, Entry entry, double default_value, string format) {
+    static void set_default_scale_value (Scale scale, Entry entry, double default_value, string format) {
         if (scale != null) {
             scale.set_value (default_value);
             if (entry != null) {
@@ -236,7 +245,7 @@ public class OtherLoad {
         }
     }
 
-    private static void set_default_int_scale_value (Scale scale, Entry entry, int default_value) {
+    static void set_default_int_scale_value (Scale scale, Entry entry, int default_value) {
         if (scale != null) {
             scale.set_value (default_value);
             if (entry != null) {

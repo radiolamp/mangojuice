@@ -1,4 +1,4 @@
-/* OtherBox.vala // Licence:  GPL-v3.0 */
+/* OtherBox.vala // License: GPL-3.0+ */
 using Gtk;
 using Gee;
 
@@ -31,7 +31,7 @@ public class OtherBox : Box {
     HashMap<string, ArrayList<Scale>> switch_scale_map;
     HashMap<string, ArrayList<Entry>> switch_entry_map;
     HashMap<string, ArrayList<Button>> switch_reset_map;
-    
+
     Label reshade_section_label;
     FlowBox reshade_flow_box;
     FlowBox main_flow_box;
@@ -50,11 +50,11 @@ public class OtherBox : Box {
         switch_scale_map = new HashMap<string, ArrayList<Scale>> ();
         switch_entry_map = new HashMap<string, ArrayList<Entry>> ();
         switch_reset_map = new HashMap<string, ArrayList<Button>> ();
-        
+
         reshade_section_label = null;
         reshade_flow_box = null;
         main_flow_box = null;
-        
+
         string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
         string[] label_texts = { "CAS", "DLS", "FXAA", "SMAA", "LUT" };
         string[] label_texts_2 = {
@@ -69,7 +69,7 @@ public class OtherBox : Box {
             switch_widget.state_set.connect ((state) => {
                 if (!is_loading) {
                     OtherSave.save_states (this);
-                    restart_vkcube();
+                    restart_vkcube ();
                 }
                 update_scale_entry_reset_state (switch_widget);
                 return false;
@@ -83,16 +83,16 @@ public class OtherBox : Box {
         main_flow_box.set_max_children_per_line (2);
         this.append (main_flow_box);
 
-        create_scale_with_entry (main_flow_box, "CAS Sharpness",         -1.0, 1.0,    0.01,  0.0,    "%.2f", "cas");
-        create_scale_with_entry (main_flow_box, "DLS Sharpness",         0.0,  1.0,    0.01,  0.5,    "%.2f", "dls");
-        create_scale_with_entry (main_flow_box, "FXAA Quality Subpix",   0.0,  1.0,    0.01,  0.75,   "%.2f", "fxaa");
-        create_scale_with_entry (main_flow_box, "DLS Denoise",           0.0,  1.0,    0.01,  0.17,   "%.2f", "dls");
-        create_scale_with_entry (main_flow_box, "FXAA Edge Threshold",   0.0,  0.333,  0.01,  0.125,  "%.3f", "fxaa");
-        create_scale_with_entry (main_flow_box, "FXAA Threshold Min",    0.0,  0.0833, 0.001, 0.0833, "%.4f", "fxaa");
-        create_scale_with_entry (main_flow_box, "SMAA Threshold",        0.0,  0.5,    0.01,  0.05,   "%.2f", "smaa");
-        create_scale_with_entry (main_flow_box, "SMAA Max Search Steps", 0,    112,    1,     8,      "%d",   "smaa");
-        create_scale_with_entry (main_flow_box, "SMAA Max Steps Diag",   0,    20,     1,     0,      "%d",   "smaa");
-        create_scale_with_entry (main_flow_box, "SMAA Corner Rounding",  0,    100,    1,     25,     "%d",   "smaa");
+        create_scale_with_entry (main_flow_box, "CAS Sharpness", -1.0, 1.0, 0.01, 0.0, "%.2f", "cas");
+        create_scale_with_entry (main_flow_box, "DLS Sharpness", 0.0, 1.0, 0.01, 0.5, "%.2f", "dls");
+        create_scale_with_entry (main_flow_box, "FXAA Quality Subpix", 0.0, 1.0, 0.01, 0.75, "%.2f", "fxaa");
+        create_scale_with_entry (main_flow_box, "DLS Denoise", 0.0, 1.0, 0.01, 0.17, "%.2f", "dls");
+        create_scale_with_entry (main_flow_box, "FXAA Edge Threshold", 0.0, 0.333, 0.01, 0.125, "%.3f", "fxaa");
+        create_scale_with_entry (main_flow_box, "FXAA Threshold Min", 0.0, 0.0833, 0.001, 0.0833, "%.4f", "fxaa");
+        create_scale_with_entry (main_flow_box, "SMAA Threshold", 0.0, 0.5, 0.01, 0.05, "%.2f", "smaa");
+        create_scale_with_entry (main_flow_box, "SMAA Max Search Steps", 0, 112, 1, 8, "%d", "smaa");
+        create_scale_with_entry (main_flow_box, "SMAA Max Steps Diag", 0, 20, 1, 0, "%d", "smaa");
+        create_scale_with_entry (main_flow_box, "SMAA Corner Rounding", 0, 100, 1, 25, "%d", "smaa");
 
         reshade_flow_box = new FlowBox ();
         reshade_flow_box.set_homogeneous (true);
@@ -105,7 +105,7 @@ public class OtherBox : Box {
         reshade_flow_box.set_selection_mode (SelectionMode.NONE);
         reshade_flow_box.set_max_children_per_line (5);
         this.append (reshade_flow_box);
-        
+
         var buttons_flow_box = new FlowBox ();
         buttons_flow_box.set_homogeneous (true);
         buttons_flow_box.set_margin_top (FLOW_BOX_MARGIN);
@@ -115,95 +115,95 @@ public class OtherBox : Box {
         buttons_flow_box.set_selection_mode (SelectionMode.NONE);
         buttons_flow_box.set_max_children_per_line (3);
         buttons_flow_box.set_min_children_per_line (1);
-        
+
         vkbasalt_global_button = new Button.with_label (_("Global vkBasalt"));
         vkbasalt_global_button.sensitive = false;
         vkbasalt_global_button.set_tooltip_text ("Not available on Windows");
         buttons_flow_box.append (vkbasalt_global_button);
-        
-        hotkey_recorder = new ShortcutRecorder() {
+
+        hotkey_recorder = new ShortcutRecorder () {
             tooltip_text = _("Click to record vkBasalt toggle shortcut"),
             hexpand = true,
             shortcut = "Home"
         };
 
-        var key_controller = new Gtk.EventControllerKey();
-        key_controller.key_pressed.connect((keyval, keycode, state) => {
+        var key_controller = new Gtk.EventControllerKey ();
+        key_controller.key_pressed.connect ((keyval, keycode, state) => {
             if (hotkey_recorder.is_recording) {
-                return hotkey_recorder.handle_key_event_with_code(keyval, 0, state);
+                return hotkey_recorder.handle_key_event_with_code (keyval, 0, state);
             }
             return false;
         });
-        hotkey_recorder.add_controller(key_controller);
-        
-        hotkey_recorder.shortcut_changed.connect((shortcut_value) => {
+        hotkey_recorder.add_controller (key_controller);
+
+        hotkey_recorder.shortcut_changed.connect ((shortcut_value) => {
             if (!is_loading) {
                 OtherSave.save_states (this);
             }
         });
-        
+
         buttons_flow_box.append (hotkey_recorder);
 
-        var reshade_container = new Box(Orientation.HORIZONTAL, 0);
-        reshade_container.add_css_class("linked");
-        
-        var reshade_label = new Label(_("Add Reshade"));
-        reshade_label.set_ellipsize(Pango.EllipsizeMode.END);
-        reshade_label.set_max_width_chars(20);
-        reshade_label.set_hexpand(true);
-        reshade_label.set_halign(Align.CENTER);
-        
-        reshade_button = new Button();
-        reshade_button.set_child(reshade_label);
-        reshade_button.clicked.connect(on_reshade_button_clicked);
-        reshade_container.append(reshade_button);
-        
-        reshade_clear_button = new Button.from_icon_name("edit-clear-symbolic");
-        reshade_clear_button.set_tooltip_text(_("Clear Reshade path"));
-        reshade_clear_button.set_sensitive(false);
-        reshade_clear_button.clicked.connect(on_reshade_clear_button_clicked);
-        reshade_container.append(reshade_clear_button);
-        
-        buttons_flow_box.append(reshade_container);
-        
+        var reshade_container = new Box (Orientation.HORIZONTAL, 0);
+        reshade_container.add_css_class ("linked");
+
+        var reshade_label = new Label (_("Add Reshade"));
+        reshade_label.set_ellipsize (Pango.EllipsizeMode.END);
+        reshade_label.set_max_width_chars (20);
+        reshade_label.set_hexpand (true);
+        reshade_label.set_halign (Align.CENTER);
+
+        reshade_button = new Button ();
+        reshade_button.set_child (reshade_label);
+        reshade_button.clicked.connect (on_reshade_button_clicked);
+        reshade_container.append (reshade_button);
+
+        reshade_clear_button = new Button.from_icon_name ("edit-clear-symbolic");
+        reshade_clear_button.set_tooltip_text (_("Clear Reshade path"));
+        reshade_clear_button.set_sensitive (false);
+        reshade_clear_button.clicked.connect (on_reshade_clear_button_clicked);
+        reshade_container.append (reshade_clear_button);
+
+        buttons_flow_box.append (reshade_container);
+
         this.append (buttons_flow_box);
-        
+
         vkbasalt_global_button.clicked.connect (on_vkbasalt_global_button_clicked);
-        
+
         check_vkbasalt_global_status ();
 
         is_loading = true;
         load_result = OtherLoad.load_states (this);
         is_loading = false;
-        
+
         foreach (var switch_widget in switches) {
             update_scale_entry_reset_state (switch_widget);
         }
 
         if (load_result.reshade_folders_path != "") {
-            set_reshade_button_text(load_result.reshade_folders_path);
+            set_reshade_button_text (load_result.reshade_folders_path);
             reshade_folders_path = load_result.reshade_folders_path;
             reshade_texture_path = load_result.reshade_texture_path;
             reshade_include_path = load_result.reshade_include_path;
-            reshade_clear_button.set_sensitive(true);
+            reshade_clear_button.set_sensitive (true);
 
             reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
-            this.insert_child_after(reshade_section_label, main_flow_box);
-            
-            populate_reshade_flow_box();
+            this.insert_child_after (reshade_section_label, main_flow_box);
+
+            populate_reshade_flow_box ();
         }
     }
 
-    public Gee.List<Label> reshade_descriptions = new ArrayList<Label>();
-    
-    void populate_reshade_flow_box() {
-        reshade_switches.clear();
-        reshade_labels.clear();
-        reshade_descriptions.clear();
-        reshade_flow_box.remove_all();
+    public Gee.List<Label> reshade_descriptions = new ArrayList<Label> ();
 
-    var shader_descriptions = new Gee.HashMap<string, string>();
-    
+    void populate_reshade_flow_box () {
+        reshade_switches.clear ();
+        reshade_labels.clear ();
+        reshade_descriptions.clear ();
+        reshade_flow_box.remove_all ();
+
+    var shader_descriptions = new Gee.HashMap<string, string> ();
+
     shader_descriptions["adaptivesharpen"] = _("Adaptive sharpening that adjusts based on local content");
     shader_descriptions["border"] = _("Add customizable borders around the image");
     shader_descriptions["curves"] = _("RGB curve correction for precise contrast control");
@@ -230,12 +230,12 @@ public class OtherBox : Box {
     shader_descriptions["technicolor2"] = _("Enhanced Technicolor effect with additional controls");
     shader_descriptions["crt"] = _("Complete CRT monitor simulation with scanlines, curvature, and aperture mask");
     shader_descriptions["fakehdr"] = _("HDR simulation with multi-scale bloom and halo effects");
-    
+
     foreach (string shader_name in reshade_shaders) {
         var row_box = new Box (Orientation.HORIZONTAL, MAIN_BOX_SPACING);
         row_box.set_hexpand (true);
         row_box.set_valign (Align.CENTER);
-        
+
         var switch_widget = new Switch ();
         switch_widget.set_valign (Align.CENTER);
         switch_widget.set_name ("reshade_" + shader_name);
@@ -244,7 +244,7 @@ public class OtherBox : Box {
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
         text_box.set_size_request (160, -1);
-        string display_name = shader_name.replace(".fx", "");
+        string display_name = shader_name.replace (".fx", "");
         var label1 = new Label (null);
         label1.set_halign (Align.START);
         label1.set_hexpand (false);
@@ -258,18 +258,18 @@ public class OtherBox : Box {
         label2.add_css_class ("dim-label");
         label2.set_ellipsize (Pango.EllipsizeMode.END);
         label2.set_max_width_chars (20);
-    
-        string normalized_name = display_name.down();
-        string description = shader_descriptions.has_key(normalized_name) 
-            ? shader_descriptions[normalized_name] 
+
+        string normalized_name = display_name.down ();
+        string description = shader_descriptions.has_key (normalized_name)
+            ? shader_descriptions[normalized_name]
             : _("Shaders");
-        
+
         label2.set_markup ("<span size='small'>%s</span>".printf (description));
         reshade_descriptions.add (label2);
-        string tooltip_text = shader_descriptions.has_key(normalized_name)
-            ? "%s: %s".printf(display_name, shader_descriptions[normalized_name])
+        string tooltip_text = shader_descriptions.has_key (normalized_name)
+            ? "%s: %s".printf (display_name, shader_descriptions[normalized_name])
             : display_name;
-        
+
         label1.set_tooltip_text (tooltip_text);
         label2.set_tooltip_text (tooltip_text);
         text_box.set_tooltip_text (tooltip_text);
@@ -278,141 +278,141 @@ public class OtherBox : Box {
         row_box.append (switch_widget);
         row_box.append (text_box);
         reshade_flow_box.insert (row_box, -1);
-        
+
         switch_widget.state_set.connect ((state) => {
             if (!is_loading) {
                 OtherSave.save_states (this);
-                restart_vkcube();
+                restart_vkcube ();
             }
             return false;
         });
     }
-        
+
         is_loading = true;
-        OtherLoad.apply_reshade_states(this, load_result.reshade_states);
+        OtherLoad.apply_reshade_states (this, load_result.reshade_states);
         is_loading = false;
     }
 
-    void on_reshade_clear_button_clicked() {
-        set_reshade_button_text(_("Reshade"));
+    void on_reshade_clear_button_clicked () {
+        set_reshade_button_text (_("Reshade"));
         reshade_folders_path = "";
         reshade_texture_path = "";
         reshade_include_path = "";
-        reshade_shaders.clear();
-        
-        reshade_clear_button.set_sensitive(false);
-        hide_reshade_section();
-        
+        reshade_shaders.clear ();
+
+        reshade_clear_button.set_sensitive (false);
+        hide_reshade_section ();
+
         if (!is_loading) {
-            OtherSave.save_states(this);
+            OtherSave.save_states (this);
         }
     }
 
-    public void set_reshade_button_text(string text) {
-        var current_child = reshade_button.get_child();
+    public void set_reshade_button_text (string text) {
+        var current_child = reshade_button.get_child ();
         if (current_child is Label) {
-            ((Label) current_child).set_text(text);
+            ((Label) current_child).set_text (text);
         } else {
-            var label = new Label(text);
-            label.set_ellipsize(Pango.EllipsizeMode.END);
-            label.set_max_width_chars(20);
-            label.set_hexpand(true);
-            label.set_halign(Align.CENTER);
-            reshade_button.set_child(label);
+            var label = new Label (text);
+            label.set_ellipsize (Pango.EllipsizeMode.END);
+            label.set_max_width_chars (20);
+            label.set_hexpand (true);
+            label.set_halign (Align.CENTER);
+            reshade_button.set_child (label);
         }
 
-        reshade_clear_button.set_sensitive(text != _("Reshade"));
+        reshade_clear_button.set_sensitive (text != _("Reshade"));
     }
 
-    public string get_reshade_button_text() {
-        var child = reshade_button.get_child();
+    public string get_reshade_button_text () {
+        var child = reshade_button.get_child ();
         if (child is Label) {
-            return ((Label) child).get_text();
+            return ((Label) child).get_text ();
         }
         return "";
     }
 
-    void hide_reshade_section() {
+    void hide_reshade_section () {
         if (reshade_section_label != null) {
-            this.remove(reshade_section_label);
+            this.remove (reshade_section_label);
             reshade_section_label = null;
         }
-        
-        reshade_flow_box.remove_all();
-        reshade_switches.clear();
-        reshade_labels.clear();
-    }
-    
-    public void update_reshade_section() {
-        hide_reshade_section();
 
-        if (get_reshade_button_text() != _("Reshade")) {
+        reshade_flow_box.remove_all ();
+        reshade_switches.clear ();
+        reshade_labels.clear ();
+    }
+
+    public void update_reshade_section () {
+        hide_reshade_section ();
+
+        if (get_reshade_button_text () != _("Reshade")) {
             reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
-            this.insert_child_after(reshade_section_label, main_flow_box);
-            populate_reshade_flow_box();
+            this.insert_child_after (reshade_section_label, main_flow_box);
+            populate_reshade_flow_box ();
         }
     }
 
     void on_reshade_button_clicked () {
         var folder_chooser = new Gtk.FileDialog ();
         folder_chooser.title = _("Select Reshade folder");
-        
+
         Gtk.Window? parent_window = this.get_root () as Gtk.Window;
-        
+
         folder_chooser.select_folder.begin (parent_window, null, (obj, res) => {
             try {
                 File? folder = folder_chooser.select_folder.end (res);
                 if (folder != null) {
                     string folder_path = folder.get_path ();
 
-                    var previous_states = new Gee.HashMap<string, bool>();
+                    var previous_states = new Gee.HashMap<string, bool> ();
                     foreach (var switch_widget in reshade_switches) {
-                        string shader_name = switch_widget.get_name ().replace("reshade_", "");
-                        previous_states[shader_name] = switch_widget.get_active();
+                        string shader_name = switch_widget.get_name ().replace ("reshade_", "");
+                        previous_states[shader_name] = switch_widget.get_active ();
                     }
 
-                    set_reshade_button_text(folder_path);
-                    reshade_folders_path = "%s/".printf(folder_path);
-                    reshade_texture_path = "%s/textures".printf(folder_path);
-                    reshade_include_path = "%s/shaders".printf(folder_path);
+                    set_reshade_button_text (folder_path);
+                    reshade_folders_path = "%s/".printf (folder_path);
+                    reshade_texture_path = "%s/textures".printf (folder_path);
+                    reshade_include_path = "%s/shaders".printf (folder_path);
 
-                    reshade_shaders.clear();
+                    reshade_shaders.clear ();
                     File shaders_folder = folder.get_child ("shaders");
-                    
+
                     if (shaders_folder.query_exists ()) {
                         try {
                             FileEnumerator enumerator = shaders_folder.enumerate_children (
-                                "standard::name,standard::type", 
+                                "standard::name,standard::type",
                                 FileQueryInfoFlags.NONE
                             );
-                            
+
                             FileInfo file_info;
-                            
+
                             while ((file_info = enumerator.next_file ()) != null) {
                                 string filename = file_info.get_name ();
-                                
+
                                 if (filename.has_suffix (".fx")) {
                                     string name_without_extension = filename.substring (0, filename.length - 3);
                                     reshade_shaders.add (name_without_extension);
                                 }
                             }
-                            
+
                         } catch (Error e) {
                             print (_("Error reading shaders folder: %s\n"), e.message);
                         }
                     }
 
-                    reshade_clear_button.set_sensitive(true);
-                    update_reshade_section();
+                    reshade_clear_button.set_sensitive (true);
+                    update_reshade_section ();
 
                     is_loading = true;
-                    OtherLoad.apply_reshade_states(this, previous_states);
+                    OtherLoad.apply_reshade_states (this, previous_states);
                     is_loading = false;
-                    
+
                     OtherSave.save_states (this);
-                    
-                    show_info_dialog (_("Reshade folder selected successfully"), 
-                                    _("Shader effects: %d").printf(reshade_shaders.size));
+
+                    show_info_dialog (_("Reshade folder selected successfully"),
+                                    _("Shader effects: %d").printf (reshade_shaders.size));
                 }
             } catch (Error e) {
                 print (_("Error selecting folder: %s\n"), e.message);
@@ -453,7 +453,11 @@ public class OtherBox : Box {
         return is_switch_active (switch_name);
     }
 
-    void create_scale_with_entry (FlowBox flow_box, string label_text, double min, double max, double step, double initial_value, string format, string switch_name) {
+    void create_scale_with_entry (
+        FlowBox flow_box, string label_text,
+        double min, double max, double step,
+        double initial_value, string format, string switch_name
+    ) {
         var main_box = new Box (Orientation.VERTICAL, 6);
 
         var label = new Label (label_text);
@@ -602,16 +606,28 @@ public class OtherBox : Box {
             if (value >= min && value <= max) {
                 scale.set_value (value);
             } else {
-                entry.set_text (format == "%d" ? "%d".printf ((int) scale.get_value ()) : format.printf (scale.get_value ()).replace (",", "."));
+                entry.set_text (
+                    format == "%d"
+                    ? "%d".printf ((int) scale.get_value ())
+                    : format.printf (scale.get_value ()).replace (",", ".")
+                );
             }
         } else {
-            entry.set_text (format == "%d" ? "%d".printf ((int) scale.get_value ()) : format.printf (scale.get_value ()).replace (",", "."));
+            entry.set_text (
+                format == "%d"
+                ? "%d".printf ((int) scale.get_value ())
+                : format.printf (scale.get_value ()).replace (",", ".")
+            );
         }
     }
 
-    void create_switches_and_labels (Box parent_box, string title, ArrayList<Switch> switches, ArrayList<Label> labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
+    void create_switches_and_labels (
+        Box parent_box, string title,
+        ArrayList<Switch> switches, ArrayList<Label> labels,
+        string[] config_vars, string[] label_texts, string[] label_texts_2
+    ) {
         var label = new Label (title);
-        label.add_css_class("title-4");
+        label.add_css_class ("title-4");
         label.set_margin_top (FLOW_BOX_MARGIN);
         label.set_margin_start (FLOW_BOX_MARGIN);
         label.set_margin_end (FLOW_BOX_MARGIN);
@@ -684,7 +700,10 @@ public class OtherBox : Box {
     }
 
     void show_restart_warning () {
-        var dialog = new Adw.AlertDialog ("Warning", "The changes will take effect only after the system is restarted.");
+        var dialog = new Adw.AlertDialog (
+            "Warning",
+            "The changes will take effect only after the system is restarted."
+        );
         dialog.add_response ("ok", "OK");
         dialog.add_response ("restart", "Restart");
         dialog.set_default_response ("ok");
@@ -708,165 +727,165 @@ public class OtherBox : Box {
         var label = new Label (text);
         label.set_halign (halign);
         label.set_hexpand (true);
-        
+
         foreach (string style_class in style_classes) {
             label.add_css_class (style_class);
         }
-        
+
         if (margin > 0) {
             label.set_margin_top (margin);
             label.set_margin_bottom (margin);
             label.set_margin_start (margin);
             label.set_margin_end (margin);
         }
-        
+
         return label;
     }
 }
 
 public class ShortcutRecorder : Gtk.Box {
-    private Gtk.Button _record_button;
-    private Gtk.Label _display_label;
-    private Gtk.Button _edit_button;
-    private Gtk.Entry _entry;
-    private string _shortcut = "";
-    private bool _is_recording = false;
+    Gtk.Button _record_button;
+    Gtk.Label _display_label;
+    Gtk.Button _edit_button;
+    Gtk.Entry _entry;
+    string _shortcut = "";
+    bool _is_recording = false;
 
     public string shortcut {
         get { return _shortcut; }
-        set { 
+        set {
             _shortcut = value;
-            update_display();
+            update_display ();
         }
     }
-    
+
     public bool is_recording {
         get { return _is_recording; }
     }
 
-    public signal void shortcut_changed(string shortcut);
+    public signal void shortcut_changed (string shortcut);
 
-    public ShortcutRecorder() {
-        Object(orientation: Gtk.Orientation.HORIZONTAL, spacing: 0);
-        
-        this.add_css_class("linked");
+    public ShortcutRecorder () {
+        Object (orientation: Gtk.Orientation.HORIZONTAL, spacing: 0);
 
-        _record_button = new Gtk.Button();
+        this.add_css_class ("linked");
+
+        _record_button = new Gtk.Button ();
         _record_button.hexpand = true;
-        _display_label = new Gtk.Label("");
+        _display_label = new Gtk.Label ("");
         _record_button.child = _display_label;
 
-        _edit_button = new Gtk.Button.from_icon_name("document-edit-symbolic");
+        _edit_button = new Gtk.Button.from_icon_name ("document-edit-symbolic");
         _edit_button.tooltip_text = _("Edit shortcut manually");
 
-        _entry = new Gtk.Entry();
+        _entry = new Gtk.Entry ();
         _entry.visible = false;
         _entry.primary_icon_name = "input-keyboard-symbolic";
         _entry.secondary_icon_name = "edit-clear-symbolic";
         _entry.secondary_icon_activatable = true;
 
-        append(_record_button);
-        append(_edit_button);
-        append(_entry);
+        append (_record_button);
+        append (_edit_button);
+        append (_entry);
 
-        _record_button.clicked.connect(() => {
-            if (!_is_recording) start_recording();
-            else cancel_recording();
+        _record_button.clicked.connect (() => {
+            if (!_is_recording) start_recording ();
+            else cancel_recording ();
         });
-        
-        _edit_button.clicked.connect(() => {
-            start_editing();
+
+        _edit_button.clicked.connect (() => {
+            start_editing ();
         });
-        
-        _entry.activate.connect(() => {
-            apply_editing();
+
+        _entry.activate.connect (() => {
+            apply_editing ();
         });
-        
-        _entry.icon_release.connect((pos) => {
+
+        _entry.icon_release.connect ((pos) => {
             if (pos == Gtk.EntryIconPosition.SECONDARY) {
-                cancel_editing();
+                cancel_editing ();
             }
         });
     }
-    
-    private void update_display() {
+
+    void update_display () {
         _display_label.label = _shortcut;
     }
-    
-    private void start_recording() {
+
+    void start_recording () {
         _is_recording = true;
-        
-        var image = new Gtk.Image.from_icon_name("input-keyboard-symbolic");
+
+        var image = new Gtk.Image.from_icon_name ("input-keyboard-symbolic");
         image.pixel_size = 16;
         _record_button.child = image;
-        
-        _record_button.add_css_class("suggested-action");
-        _record_button.grab_focus();
+
+        _record_button.add_css_class ("suggested-action");
+        _record_button.grab_focus ();
     }
-    
-    private void stop_recording() {
+
+    void stop_recording () {
         _is_recording = false;
         _record_button.child = _display_label;
-        update_display();
-        _record_button.remove_css_class("suggested-action");
+        update_display ();
+        _record_button.remove_css_class ("suggested-action");
     }
-    
-    private void cancel_recording() {
-        stop_recording();
+
+    void cancel_recording () {
+        stop_recording ();
     }
-    
-    private void start_editing() {
+
+    void start_editing () {
         _entry.text = _shortcut;
         _entry.visible = true;
         _record_button.visible = false;
         _edit_button.visible = false;
-        _entry.grab_focus();
+        _entry.grab_focus ();
     }
-    
-    private void apply_editing() {
-        _shortcut = _entry.text.strip();
-        shortcut_changed(_shortcut);
-        finish_editing();
+
+    void apply_editing () {
+        _shortcut = _entry.text.strip ();
+        shortcut_changed (_shortcut);
+        finish_editing ();
     }
-    
-    private void cancel_editing() {
-        finish_editing();
+
+    void cancel_editing () {
+        finish_editing ();
     }
-    
-    private void finish_editing() {
+
+    void finish_editing () {
         _entry.visible = false;
         _record_button.visible = true;
         _edit_button.visible = true;
-        update_display();
+        update_display ();
     }
-    
-    public bool handle_key_event(uint keyval, Gdk.ModifierType state) {
-        return handle_key_event_with_code(keyval, 0, state);
+
+    public bool handle_key_event (uint keyval, Gdk.ModifierType state) {
+        return handle_key_event_with_code (keyval, 0, state);
     }
-    
-    public bool handle_key_event_with_code(uint keyval, uint keycode, Gdk.ModifierType state) {
+
+    public bool handle_key_event_with_code (uint keyval, uint keycode, Gdk.ModifierType state) {
         if (!_is_recording) return false;
         if (keyval == Gdk.Key.Escape) {
-            cancel_recording();
+            cancel_recording ();
             return true;
         }
-        
-        var key = Gdk.keyval_name(keyval) ?? "Unknown";
 
-        string[] IGNORED_KEYS = {
-            "Control_L", "Control_R", "Shift_L", "Shift_R", 
+        var key = Gdk.keyval_name (keyval) ?? "Unknown";
+
+        string[] ignored_keys = {
+            "Control_L", "Control_R", "Shift_L", "Shift_R",
             "Alt_L", "Alt_R", "Super_L", "Super_R", "Meta_L", "Meta_R",
-            "Num_Lock", "Caps_Lock", "Scroll_Lock", "ISO_Level3_Shift", 
+            "Num_Lock", "Caps_Lock", "Scroll_Lock", "ISO_Level3_Shift",
             "Mode_switch", "Multi_key"
         };
-        
-        foreach (string ignored in IGNORED_KEYS) {
+
+        foreach (string ignored in ignored_keys) {
             if (key == ignored) return true;
         }
 
         _shortcut = key;
-        shortcut_changed(_shortcut);
-        stop_recording();
+        shortcut_changed (_shortcut);
+        stop_recording ();
         return true;
     }
 }

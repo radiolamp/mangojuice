@@ -56,7 +56,7 @@ if [ -f "/usr/share/applications/io.github.radiolamp.mangojuice.desktop" ]; then
     cp "/usr/share/applications/io.github.radiolamp.mangojuice.desktop" ./
     sed -i 's|^Exec=.*|Exec=mangojuice|' ./io.github.radiolamp.mangojuice.desktop
 else
-    echo "Ошибка: desktop-файл не найден"
+    echo "Error: .desktop file isn't exist"
     exit 1
 fi
 
@@ -64,7 +64,7 @@ if [ -f "/usr/share/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.s
     cp "/usr/share/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg" ./
     cp "./io.github.radiolamp.mangojuice.svg" ./.DirIcon
 else
-    echo "Предупреждение: значёк не найден"
+    echo "Warning: icon file isn't found"
 fi
 
 for icon in /usr/share/icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice*.svg; do
@@ -83,14 +83,14 @@ for mo_file in /usr/share/locale/*/LC_MESSAGES/mangojuice.mo; do
     cp "$mo_file" "./share/locale/$lang/LC_MESSAGES/mangojuice.mo"
 done
 
-echo "Загрузка lib4bin..."
+echo "Downloading lib4bin..."
 wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin || {
-    echo "Ошибка загрузки lib4bin"
+    echo "Error downloading lib4bin"
     exit 1
 }
 chmod +x ./lib4bin
 
-echo "Копирование файлов mangojuice..."
+echo "Copying files of mangojuice..."
 xvfb-run -a -- ./lib4bin -p -v -e -s -k \
     /usr/bin/mangojuice \
     /usr/bin/vkcube \
@@ -98,7 +98,7 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
     /usr/bin/lspci \
     /usr/lib/libintl.so* \
     /usr/lib/gdk-pixbuf-*/*/*/* || {
-    echo "Ошибка при копировании файлов"
+    echo "Error with copying files"
     exit 1
 }
 
@@ -107,7 +107,7 @@ if [ -d "/usr/share/vulkan/implicit_layer.d" ]; then
     cp -rv "/usr/share/vulkan/implicit_layer.d" "./share/vulkan/"
     sed -i 's|/usr/lib/mangohud/||' ./share/vulkan/implicit_layer.d/*
 else
-    echo "Предупреждение: Vulkan layers не найдены"
+    echo "Warning: Vulkan layers isn't found"
 fi
 
 # mangojuice is also going to run mangohud vkcube so we need to wrap this
@@ -132,45 +132,45 @@ echo 'TEXTDOMAINDIR="${SHARUN_DIR}/share/locale' >> ./.env
 echo 'TEXTDOMAIN="mangojuice' >> ./.env
 echo 'libMangoHud_shim.so' > ./.preload
 
-# Дополнительная проверка структуры файлов
-echo "=== Проверка структуры файлов ==="
-echo "Файлы в AppDir:"
+# Additional checking file structure
+echo "=== Checking file structure ==="
+echo "Files in AppDir:"
 ls -la | grep -E "(DirIcon|desktop|svg)"
-echo "Desktop файл:"
+echo "Desktop file:"
 cat *.desktop 2>/dev/null | grep -E "(Icon|Name)"
 
 cd .. || exit
 
-# Проверяем, что симлинк создан
-echo "Проверка симлинка .DirIcon в корне:"
-ls -la .DirIcon 2>/dev/null || echo "Предупреждение: симлинк .DirIcon не создан в корне"
+# Check that the symlink has been created
+echo "Checking the .DirIcon symlink in the root:"
+ls -la .DirIcon 2>/dev/null || echo "Warning: .DirIcon symlink not created"
 
-echo "Загрузка uruntime..."
+echo "Downloading uruntime..."
 wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime || {
-    echo "Ошибка загрузки uruntime"
+    echo "Error downloading uruntime"
     exit 1
 }
 wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite || {
-    echo "Ошибка загрузки uruntime-lite"
+    echo "Error downloading uruntime-lite"
     exit 1
 }
 chmod +x ./uruntime*
 
-echo "Добавление информации об обновлениях..."
+echo "Adding update info..."
 ./uruntime-lite --appimage-addupdinfo "$UPINFO" || {
-    echo "Ошибка добавления информации об обновлении"
+    echo "Error with adding update info"
     exit 1
 }
 
-echo "Создание AppImage..."
+echo "Creating AppImage..."
 ./uruntime --appimage-mkdwarfs -f \
     --set-owner 0 --set-group 0 \
     --no-history --no-create-timestamp \
     --compression zstd:level=22 -S26 -B8 \
     --header uruntime-lite \
     -i ./AppDir -o "MangoJuice-${VERSION}-${ARCH}.AppImage" || {
-    echo "Ошибка создания AppImage"
+    echo "AppImage isn't created"
     exit 1
 }
 
-echo "Готово! Создан AppImage: MangoJuice-${VERSION}-${ARCH}.AppImage"
+echo "Great! Created AppImage: MangoJuice-${VERSION}-${ARCH}.AppImage"

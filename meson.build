@@ -1,8 +1,9 @@
 project(
     'mangojuice', 'vala',
-    version: '0.8.9',
+    version: '0.9.0',
     default_options: [
         'warning_level=0',
+        'prefix=/usr',
     ]
 )
 

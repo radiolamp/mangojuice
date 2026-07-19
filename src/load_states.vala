@@ -1,4 +1,4 @@
-/* load_states.vala // Licence:  GPL-v3.0 */
+/* load_states.vala // License: GPL-3.0+ */
 
 using Gtk;
 using Gee;
@@ -30,28 +30,26 @@ public class LoadStates {
             var data_stream = new DataInputStream (file_stream);
             string line;
 
-            // Создаем список для сбора всех custom команд
-            var custom_commands = new Gee.ArrayList<string>();
+            var custom_commands = new Gee.ArrayList<string> ();
 
             while ((line = yield data_stream.read_line_async ()) != null) {
-                load_switch_from_file (line, mango_juice.gpu_switches,         mango_juice.gpu_config_vars);
-                load_switch_from_file (line, mango_juice.cpu_switches,         mango_juice.cpu_config_vars);
-                load_switch_from_file (line, mango_juice.memory_switches,      mango_juice.memory_config_vars);
+                load_switch_from_file (line, mango_juice.gpu_switches, mango_juice.gpu_config_vars);
+                load_switch_from_file (line, mango_juice.cpu_switches, mango_juice.cpu_config_vars);
+                load_switch_from_file (line, mango_juice.memory_switches, mango_juice.memory_config_vars);
                 if (Config.IS_DEVEL) {
-                load_switch_from_file (line, mango_juice.git_switches,         mango_juice.git_config_vars);
+                    load_switch_from_file (line, mango_juice.git_switches, mango_juice.git_config_vars);
                 }
-                load_switch_from_file (line, mango_juice.system_switches,      mango_juice.system_config_vars);
-                load_switch_from_file (line, mango_juice.wine_switches,        mango_juice.wine_config_vars);
-                load_switch_from_file (line, mango_juice.battery_switches,     mango_juice.battery_config_vars);
+                load_switch_from_file (line, mango_juice.system_switches, mango_juice.system_config_vars);
+                load_switch_from_file (line, mango_juice.wine_switches, mango_juice.wine_config_vars);
+                load_switch_from_file (line, mango_juice.battery_switches, mango_juice.battery_config_vars);
                 load_switch_from_file (line, mango_juice.other_extra_switches, mango_juice.other_extra_config_vars);
-                load_switch_from_file (line, mango_juice.inform_switches,      mango_juice.inform_config_vars);
-                load_switch_from_file (line, mango_juice.options_switches,     mango_juice.options_config_vars);
+                load_switch_from_file (line, mango_juice.inform_switches, mango_juice.inform_config_vars);
+                load_switch_from_file (line, mango_juice.options_switches, mango_juice.options_config_vars);
 
-                // Собираем custom команды в список
-                if (line.contains("#custom_command")) {
-                    var custom_command_value = line.split("#custom_command")[0].strip();
+                if (line.contains ("#custom_command")) {
+                    var custom_command_value = line.split ("#custom_command")[0].strip ();
                     if (custom_command_value != "") {
-                        custom_commands.add(custom_command_value);
+                        custom_commands.add (custom_command_value);
                     }
                 }
 
@@ -60,8 +58,8 @@ public class LoadStates {
                     mango_juice.logs_key_recorder.shortcut = logs_key;
                 }
 
-                if (line.has_prefix("toggle_hud_position=")) {
-                    var toggle_hud_position = line.substring("toggle_hud_position=".length);
+                if (line.has_prefix ("toggle_hud_position=")) {
+                    var toggle_hud_position = line.substring ("toggle_hud_position=".length);
                     mango_juice.toggle_hud_key_recorder.shortcut = toggle_hud_position;
                 }
 
@@ -72,7 +70,7 @@ public class LoadStates {
                         selected_pci_address = selected_pci_address.replace ("0000:", "");
 
                         var model = mango_juice.gpu_dropdown.model;
- 
+
                         uint index = 0;
                         bool found = false;
                         for (uint i = 0; i < model.get_n_items (); i++) {
@@ -138,8 +136,8 @@ public class LoadStates {
                     }
                 }
 
-                if (line.has_prefix("toggle_fps_limit=")) {
-                    var toggle_fps_limit_value = line.substring("toggle_fps_limit=".length).strip();
+                if (line.has_prefix ("toggle_fps_limit=")) {
+                    var toggle_fps_limit_value = line.substring ("toggle_fps_limit=".length).strip ();
                     if (mango_juice.toggle_fps_limit_recorder != null) {
                         mango_juice.toggle_fps_limit_recorder.shortcut = toggle_fps_limit_value;
                     }
@@ -178,11 +176,11 @@ public class LoadStates {
                     }
                 }
 
-                if (line.contains("#filters")) {
-                    var filter_value = line.split("#filters")[0].strip();
-                
+                if (line.contains ("#filters")) {
+                    var filter_value = line.split ("#filters")[0].strip ();
+
                     string[] filter_values = {"none", "bicubic", "trilinear", "retro"};
-                
+
                     for (uint i = 0; i < filter_values.length; i++) {
                         if (filter_values[i] == filter_value) {
                             mango_juice.filter_dropdown.selected = i;
@@ -240,9 +238,9 @@ public class LoadStates {
                 }
 
 
-                if (line.has_prefix("position=")) {
-                    var position_value = line.substring("position=".length);
-                    var position_mapping = new Gee.HashMap<string, string>();
+                if (line.has_prefix ("position=")) {
+                    var position_value = line.substring ("position=".length);
+                    var position_mapping = new Gee.HashMap<string, string> ();
                     position_mapping["top-left"] = _("Top Left");
                     position_mapping["top-center"] = _("Top Center");
                     position_mapping["top-right"] = _("Top Right");
@@ -254,8 +252,8 @@ public class LoadStates {
                     string? translated_label = position_mapping[position_value];
                     if (translated_label != null && mango_juice.position_dropdown != null) {
                         var model = mango_juice.position_dropdown.model as Gtk.StringList;
-                        for (uint i = 0; i < model.get_n_items(); i++) {
-                            string? item = model.get_string(i);
+                        for (uint i = 0; i < model.get_n_items (); i++) {
+                            string? item = model.get_string (i);
                             if (item == translated_label) {
                                 mango_juice.position_dropdown.selected = i;
                                 break;
@@ -291,11 +289,21 @@ public class LoadStates {
                         }
                     }
                 }
-               
-               if (line.has_prefix ("font_file=")) {
-                var font_file = line.substring ("font_file=".length);
-                if (font_file.strip() == "") {
-                    mango_juice.font_button.label = _("Default");
+
+                if (line.has_prefix ("font_size_secondary=")) {
+                    if (mango_juice.font_size_secondary_scale != null) {
+                        int font_size_secondary_value = int.parse (line.substring ("font_size_secondary=".length));
+                        mango_juice.font_size_secondary_scale.set_value (font_size_secondary_value);
+                        if (mango_juice.font_size_secondary_entry != null) {
+                            mango_juice.font_size_secondary_entry.text = "%d".printf (font_size_secondary_value);
+                        }
+                    }
+                }
+
+                if (line.has_prefix ("font_file=")) {
+                    var font_file = line.substring ("font_file=".length);
+                    if (font_file.strip () == "") {
+                        mango_juice.font_button.label = _("Default");
                     } else {
                         var font_name = Path.get_basename (font_file);
                         mango_juice.font_button.label = font_name;
@@ -480,7 +488,9 @@ public class LoadStates {
                     if (mango_juice.offset_x_scale != null) {
                         mango_juice.offset_x_scale.set_value (int.parse (line.substring ("offset_x=".length)));
                         if (mango_juice.offset_x_value_label != null) {
-                            mango_juice.offset_x_value_label.label = "%d".printf ((int)mango_juice.offset_x_scale.get_value ());
+                            mango_juice.offset_x_value_label.label = "%d".printf (
+                                (int)mango_juice.offset_x_scale.get_value ()
+                            );
                         }
                     }
                 }
@@ -489,16 +499,22 @@ public class LoadStates {
                     if (mango_juice.offset_y_scale != null) {
                         mango_juice.offset_y_scale.set_value (int.parse (line.substring ("offset_y=".length)));
                         if (mango_juice.offset_y_value_label != null) {
-                            mango_juice.offset_y_value_label.label = "%d".printf ((int)mango_juice.offset_y_scale.get_value ());
+                            mango_juice.offset_y_value_label.label = "%d".printf (
+                                (int)mango_juice.offset_y_scale.get_value ()
+                            );
                         }
                     }
                 }
 
                 if (line.has_prefix ("fps_sampling_period=")) {
                     if (mango_juice.fps_sampling_period_scale != null) {
-                        mango_juice.fps_sampling_period_scale.set_value (int.parse (line.substring ("fps_sampling_period=".length)));
+                        mango_juice.fps_sampling_period_scale.set_value (
+                            int.parse (line.substring ("fps_sampling_period=".length))
+                        );
                         if (mango_juice.fps_sampling_period_value_label != null) {
-                            mango_juice.fps_sampling_period_value_label.label = "%d ms".printf ((int)mango_juice.fps_sampling_period_scale.get_value ());
+                            mango_juice.fps_sampling_period_value_label.label = "%d ms".printf (
+                                (int)mango_juice.fps_sampling_period_scale.get_value ()
+                            );
                         }
                     }
                 }
@@ -512,21 +528,21 @@ public class LoadStates {
                 }
 
                 const string[] FORMAT_VALUES = { "title", "artist", "album", "none" };
-                
-                if (line.has_prefix("media_player_format=")) {
-                    var format_str = line.substring("media_player_format=".length).strip();
-                    if (format_str.has_prefix("{") && format_str.has_suffix("}")) {
-                        format_str = format_str.substring(1, format_str.length-2);
+
+                if (line.has_prefix ("media_player_format=")) {
+                    var format_str = line.substring ("media_player_format=".length).strip ();
+                    if (format_str.has_prefix ("{") && format_str.has_suffix ("}")) {
+                        format_str = format_str.substring (1, format_str.length - 2);
                     }
-                    string[] format_parts = format_str.split("};{");
-                    
+                    string[] format_parts = format_str.split ("};{");
+
                     for (int i = 0; i < 3 && i < mango_juice.media_format_dropdowns.size; i++) {
                         string part = "none";
                         if (i < format_parts.length) {
-                            part = format_parts[i].strip();
+                            part = format_parts[i].strip ();
                         }
-                        
-                        var dropdown = mango_juice.media_format_dropdowns.get(i);
+
+                        var dropdown = mango_juice.media_format_dropdowns.get (i);
 
                         int selected_index = -1;
                         for (int j = 0; j < FORMAT_VALUES.length; j++) {
@@ -544,7 +560,7 @@ public class LoadStates {
                                 }
                             }
                         }
-                        
+
                         if (selected_index != -1) {
                             dropdown.selected = selected_index;
                         }
@@ -553,7 +569,7 @@ public class LoadStates {
             }
 
             if (custom_commands.size > 0) {
-                mango_juice.custom_command_entry.text = string.joinv(", ", (string[]) custom_commands.to_array());
+                mango_juice.custom_command_entry.text = string.joinv (", ", (string[]) custom_commands.to_array ());
             }
 
         } catch (Error e) {

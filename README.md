@@ -1,4 +1,4 @@
-[![En](https://img.shields.io/badge/en-green)](README.md) [![Ru](https://img.shields.io/badge/ru-gray)](docs/README-ru.md)
+[![En](https://img.shields.io/badge/en-green)](README.md) [![Ru](https://img.shields.io/badge/ru-gray)](README.ru.md)
 
 <div align="center">
   <h1>
@@ -8,7 +8,7 @@
     />
     MangoJuice
   </h1>
-
+</div>
 
 ### A convenient GUI for setting up MangoHud (Windows port)
 
@@ -18,18 +18,24 @@
     <img src="https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true" alt="Screenshot"/>
 </p>
 
-|               Page 1                |               Page 2                |               Page 3                |               Page 4                |               Page 5                |
-| :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: |
+| Page 1 | Page 2 | Page 3 | Page 4 | Page 5 |
+| --- | --- | --- | --- | --- |
 | ![screen1](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen1.png?raw=true) | ![screen2](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen2.png?raw=true) | ![screen3](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen3.png?raw=true) | ![screen4](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen4.png?raw=true) | ![screen5](https://github.com/radiolamp/mangojuice-donate/blob/main/images/screen0.png?raw=true) |
 
 ## Install
 
 **Flathub:**
 
-<a href="https://flathub.org/ru/apps/io.github.radiolamp.mangojuice">
+<div align="center">
+<a href="https://flathub.org/apps/io.github.radiolamp.mangojuice">
   <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
 </a>
 
+**AppImage:**
+
+<a href="https://github.com/radiolamp/mangojuice/releases/latest/download/MangoJuice-AppImagename-x86_64.zip">
+  <img width='240' alt='Download AppImage from GitHub releases' src='http://docs.appimage.org/_images/download-appimage-banner.svg'/>
+</a>
 </div>
 
 ## Repositories
@@ -102,4 +108,4 @@ Thank to [Rirusha](https://gitlab.gnome.org/Rirusha) for important clarification
 - [`Goverlay`](https://github.com/benjamimgois/goverlay)
 - [`Colloid`](https://github.com/vinceliuice/Colloid-icon-theme/)
 
-### Attention, this is my first project on GTK4 + Vala, so please treat with understanding.
+### Attention, this is my first project on GTK4 + Vala, so please treat with understanding
