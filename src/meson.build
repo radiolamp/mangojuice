@@ -28,6 +28,7 @@ executable(
     vapi_sources,
     sources,
     vala_args: ['--vapidir', meson.current_source_dir()],
+    c_args: ['-Wno-incompatible-pointer-types'],
     dependencies: deps,
     install: true
 )

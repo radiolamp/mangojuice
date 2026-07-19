@@ -28,34 +28,60 @@ public class OtherSave {
                 file_stream_write.put_string ("toggleKey=%s\n".printf (hotkey));
             }
 
-            save_scale_value_if_active (file_stream_write, "casSharpness", other_box.scales[0], other_box.entries[0], "%.2f", other_box, "cas");
-            save_scale_value_if_active (file_stream_write, "dlsSharpness", other_box.scales[1], other_box.entries[1], "%.2f", other_box, "dls");
-            save_scale_value_if_active (file_stream_write, "dlsDenoise", other_box.scales[2], other_box.entries[2], "%.2f", other_box, "dls");
-            save_scale_value_if_active (file_stream_write, "fxaaQualitySubpix", other_box.scales[3], other_box.entries[3], "%.2f", other_box, "fxaa");
-            save_scale_value_if_active (file_stream_write, "fxaaEdgeThreshold", other_box.scales[4], other_box.entries[4], "%.3f", other_box, "fxaa");
-            save_scale_value_if_active (file_stream_write, "fxaaEdgeThresholdMin", other_box.scales[5], other_box.entries[5], "%.4f", other_box, "fxaa");
-            save_scale_value_if_active (file_stream_write, "smaaThreshold", other_box.scales[6], other_box.entries[6], "%.2f", other_box, "smaa");
-            save_int_scale_value_if_active (file_stream_write, "smaaMaxSearchSteps", other_box.scales[7], other_box.entries[7], other_box, "smaa");
-            save_int_scale_value_if_active (file_stream_write, "smaaMaxSearchStepsDiag", other_box.scales[8], other_box.entries[8], other_box, "smaa");
-            save_int_scale_value_if_active (file_stream_write, "smaaCornerRounding", other_box.scales[9], other_box.entries[9], other_box, "smaa");
+            save_scale_value_if_active (
+                file_stream_write, "casSharpness",
+                other_box.scales[0], other_box.entries[0], "%.2f", other_box, "cas"
+            );
+            save_scale_value_if_active (
+                file_stream_write, "dlsSharpness",
+                other_box.scales[1], other_box.entries[1], "%.2f", other_box, "dls"
+            );
+            save_scale_value_if_active (
+                file_stream_write, "dlsDenoise",
+                other_box.scales[2], other_box.entries[2], "%.2f", other_box, "dls"
+            );
+            save_scale_value_if_active (
+                file_stream_write, "fxaaQualitySubpix",
+                other_box.scales[3], other_box.entries[3], "%.2f", other_box, "fxaa"
+            );
+            save_scale_value_if_active (
+                file_stream_write, "fxaaEdgeThreshold",
+                other_box.scales[4], other_box.entries[4], "%.3f", other_box, "fxaa"
+            );
+            save_scale_value_if_active (
+                file_stream_write, "fxaaEdgeThresholdMin",
+                other_box.scales[5], other_box.entries[5], "%.4f", other_box, "fxaa"
+            );
+            save_scale_value_if_active (
+                file_stream_write, "smaaThreshold",
+                other_box.scales[6], other_box.entries[6], "%.2f", other_box, "smaa"
+            );
+            save_int_scale_value_if_active (
+                file_stream_write, "smaaMaxSearchSteps",
+                other_box.scales[7], other_box.entries[7], other_box, "smaa"
+            );
+            save_int_scale_value_if_active (
+                file_stream_write, "smaaMaxSearchStepsDiag",
+                other_box.scales[8], other_box.entries[8], other_box, "smaa"
+            );
+            save_int_scale_value_if_active (
+                file_stream_write, "smaaCornerRounding",
+                other_box.scales[9], other_box.entries[9], other_box, "smaa"
+            );
 
-            // Сохраняем активные эффекты (основные + ReShade шейдеры)
             var active_effects = new Gee.ArrayList<string> ();
-            
-            // Основные эффекты
+
             string[] config_vars = { "cas", "dls", "fxaa", "smaa", "lut" };
             for (int i = 0; i < other_box.switches.size; i++) {
                 if (other_box.switches[i].get_active ()) {
                     active_effects.add (config_vars[i]);
                 }
             }
-            
-            // ReShade шейдеры
+
             for (int i = 0; i < other_box.reshade_switches.size; i++) {
                 if (other_box.reshade_switches[i].get_active ()) {
-                    // Получаем имя шейдера из имени переключателя
                     string switch_name = other_box.reshade_switches[i].get_name ();
-                    string shader_name = switch_name.replace("reshade_", "");
+                    string shader_name = switch_name.replace ("reshade_", "");
                     active_effects.add (shader_name);
                 }
             }
@@ -66,14 +92,16 @@ public class OtherSave {
             }
 
             if (other_box.reshade_texture_path != null && other_box.reshade_include_path != null) {
-                string folders_path = other_box.reshade_include_path.replace("/shaders", "");
-                file_stream_write.put_string ("#reshadeFoldersPath = %s\n".printf(folders_path));
-                file_stream_write.put_string ("reshadeTexturePath = %s\n".printf(other_box.reshade_texture_path));
-                file_stream_write.put_string ("reshadeIncludePath = %s\n".printf(other_box.reshade_include_path));
-                
+                string folders_path = other_box.reshade_include_path.replace ("/shaders", "");
+                file_stream_write.put_string ("#reshadeFoldersPath = %s\n".printf (folders_path));
+                file_stream_write.put_string ("reshadeTexturePath = %s\n".printf (other_box.reshade_texture_path));
+                file_stream_write.put_string ("reshadeIncludePath = %s\n".printf (other_box.reshade_include_path));
+
                 foreach (string shader in other_box.reshade_shaders) {
-                    file_stream_write.put_string ("%s = %s/shaders/%s.fx #effects\n".printf(shader, 
-                        folders_path, shader));
+                    var shader_line = "%s = %s/shaders/%s.fx #effects\n".printf (
+                        shader, folders_path, shader
+                    );
+                    file_stream_write.put_string (shader_line);
                 }
             }
 
@@ -90,8 +118,11 @@ public class OtherSave {
         }
     }
 
-    // Вспомогательный метод для сохранения дробных значений, если Scale активен
-    private static void save_scale_value_if_active (DataOutputStream file_stream_write, string key, Scale scale, Entry entry, string format, OtherBox other_box, string switch_name) throws Error {
+    static void save_scale_value_if_active (
+        DataOutputStream file_stream_write, string key,
+        Scale scale, Entry entry, string format,
+        OtherBox other_box, string switch_name
+    ) throws Error {
         if (other_box.is_scale_active (scale, switch_name)) {
             double value = scale.get_value ();
             string line = "%s=%s\n".printf (key, format.printf (value).replace (",", "."));
@@ -99,8 +130,11 @@ public class OtherSave {
         }
     }
 
-    // Вспомогательный метод для сохранения целочисленных значений, если Scale активен
-    private static void save_int_scale_value_if_active (DataOutputStream file_stream_write, string key, Scale scale, Entry entry, OtherBox other_box, string switch_name) throws Error {
+    static void save_int_scale_value_if_active (
+        DataOutputStream file_stream_write, string key,
+        Scale scale, Entry entry,
+        OtherBox other_box, string switch_name
+    ) throws Error {
         if (other_box.is_scale_active (scale, switch_name)) {
             int value = (int) scale.get_value ();
             string line = "%s=%d\n".printf (key, value);

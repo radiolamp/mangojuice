@@ -6,7 +6,7 @@ namespace AboutDialog {
 
     public void show_about_dialog (Gtk.Window parent_window) {
 
-        const string[] developers = {
+        const string[] DEVELOPERS = {
             "Radiolamp https://github.com/radiolamp",
             "Rirusha https://rirusha.space",
             "Boria138 https://github.com/Boria138",
@@ -26,204 +26,208 @@ namespace AboutDialog {
         dialog.application_icon = "io.github.radiolamp.mangojuice";
         dialog.version = Config.VERSION;
         dialog.translator_credits = _("translator-credits");
-        dialog.set_developers(developers);
+        dialog.set_developers (DEVELOPERS);
         dialog.present (parent_window);
     }
 
     public async void show_support_dialog (Gtk.Window parent_window) {
-        var dialog = new Adw.Dialog();
-        dialog.set_title(_("Support the Project"));
-        dialog.set_content_width(560);
-        dialog.set_content_height(480);
+        var dialog = new Adw.Dialog ();
+        dialog.set_title (_("Support the Project"));
+        dialog.set_content_width (560);
+        dialog.set_content_height (480);
 
-        var scrolled_window = new Gtk.ScrolledWindow();
-        scrolled_window.set_hexpand(true);
-        scrolled_window.set_vexpand(true);
-        scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
-        dialog.set_child(scrolled_window);
+        var scrolled_window = new Gtk.ScrolledWindow ();
+        scrolled_window.set_hexpand (true);
+        scrolled_window.set_vexpand (true);
+        scrolled_window.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
+        dialog.set_child (scrolled_window);
 
-        var main_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-        scrolled_window.set_child(main_box);
+        var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        scrolled_window.set_child (main_box);
 
-        var header_bar = new Adw.HeaderBar();
-        header_bar.set_show_start_title_buttons(false);
-        header_bar.set_show_end_title_buttons(true);
-        header_bar.add_css_class("flat");
-        main_box.append(header_bar);
+        var header_bar = new Adw.HeaderBar ();
+        header_bar.set_show_start_title_buttons (false);
+        header_bar.set_show_end_title_buttons (true);
+        header_bar.add_css_class ("flat");
+        main_box.append (header_bar);
 
-        var icon_container = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-        icon_container.set_halign(Gtk.Align.CENTER);
-        icon_container.set_vexpand(true);
-        main_box.append(icon_container);
+        var icon_container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        icon_container.set_halign (Gtk.Align.CENTER);
+        icon_container.set_vexpand (true);
+        main_box.append (icon_container);
 
-        var app_icon = new Gtk.Image.from_icon_name("io.github.radiolamp.mangojuice");
-        app_icon.set_pixel_size(150);
-        app_icon.set_halign(Gtk.Align.CENTER);
-        icon_container.append(app_icon);
+        var app_icon = new Gtk.Image.from_icon_name ("io.github.radiolamp.mangojuice");
+        app_icon.set_pixel_size (150);
+        app_icon.set_halign (Gtk.Align.CENTER);
+        icon_container.append (app_icon);
 
-        var description_label = new Gtk.Label(_("It is only thanks to your support that Mangojuice lives and develops. If it is not difficult for you, please support the project financially. Any amount will be useful and will go towards development."));
-        description_label.set_wrap(true);
-        description_label.set_halign(Gtk.Align.CENTER);
-        description_label.add_css_class("heading");
-        description_label.set_margin_top(24);
-        description_label.set_margin_bottom(48);
-        description_label.set_margin_start(24);
-        description_label.set_margin_end(24);
-        main_box.append(description_label);
+        var description_label = new Gtk.Label (
+            _("It is only thanks to your support that Mangojuice lives and develops.")
+            + _(" If it is not difficult for you, please support the project financially.")
+            + _(" Any amount will be useful and will go towards development.")
+        );
+        description_label.set_wrap (true);
+        description_label.set_halign (Gtk.Align.CENTER);
+        description_label.add_css_class ("heading");
+        description_label.set_margin_top (24);
+        description_label.set_margin_bottom (48);
+        description_label.set_margin_start (24);
+        description_label.set_margin_end (24);
+        main_box.append (description_label);
 
-        var flow_box = new Gtk.FlowBox();
-        flow_box.set_selection_mode(Gtk.SelectionMode.NONE);
-        flow_box.set_max_children_per_line(3);
-        flow_box.set_min_children_per_line(1);
-        flow_box.set_column_spacing(12);
-        flow_box.set_row_spacing(12);
-        flow_box.set_halign(Gtk.Align.CENTER);
-        flow_box.set_valign(Gtk.Align.CENTER);
-        flow_box.set_vexpand(true);
+        var flow_box = new Gtk.FlowBox ();
+        flow_box.set_selection_mode (Gtk.SelectionMode.NONE);
+        flow_box.set_max_children_per_line (3);
+        flow_box.set_min_children_per_line (1);
+        flow_box.set_column_spacing (12);
+        flow_box.set_row_spacing (12);
+        flow_box.set_halign (Gtk.Align.CENTER);
+        flow_box.set_valign (Gtk.Align.CENTER);
+        flow_box.set_vexpand (true);
         flow_box.set_homogeneous (true);
-        flow_box.set_margin_start(24);
-        flow_box.set_margin_end(24);
+        flow_box.set_margin_start (24);
+        flow_box.set_margin_end (24);
         SourceFunc callback = null;
         bool dialog_closed = false;
 
-        dialog.closed.connect(() => {
+        dialog.closed.connect (() => {
             dialog_closed = true;
             if (callback != null) {
-                callback();
+                callback ();
             }
         });
 
-        var donation_alerts_btn = new Gtk.Button.with_label(_("Donation Alerts"));
-        donation_alerts_btn.set_tooltip_text("https://www.donationalerts.com/r/radiolamp");
-        donation_alerts_btn.clicked.connect(() => {
-            var launcher = new Gtk.UriLauncher("https://www.donationalerts.com/r/radiolamp");
-            launcher.launch.begin(parent_window, null, (obj, res) => {
+        var donation_alerts_btn = new Gtk.Button.with_label (_("Donation Alerts"));
+        donation_alerts_btn.set_tooltip_text ("https://www.donationalerts.com/r/radiolamp");
+        donation_alerts_btn.clicked.connect (() => {
+            var launcher = new Gtk.UriLauncher ("https://www.donationalerts.com/r/radiolamp");
+            launcher.launch.begin (parent_window, null, (obj, res) => {
                 try {
-                    launcher.launch.end(res);
+                    launcher.launch.end (res);
                 } catch (Error e) {
-                    warning("Failed to open Donation Alerts: %s", e.message);
+                    warning ("Failed to open Donation Alerts: %s", e.message);
                 }
             });
         });
 
-        var boosty_btn = new Gtk.Button.with_label(_("Boosty"));
-        boosty_btn.set_tooltip_text("https://boosty.to/radiolamp");
-        boosty_btn.clicked.connect(() => {
-            var launcher = new Gtk.UriLauncher("https://boosty.to/radiolamp");
-            launcher.launch.begin(parent_window, null, (obj, res) => {
+        var boosty_btn = new Gtk.Button.with_label (_("Boosty"));
+        boosty_btn.set_tooltip_text ("https://boosty.to/radiolamp");
+        boosty_btn.clicked.connect (() => {
+            var launcher = new Gtk.UriLauncher ("https://boosty.to/radiolamp");
+            launcher.launch.begin (parent_window, null, (obj, res) => {
                 try {
-                    launcher.launch.end(res);
+                    launcher.launch.end (res);
                 } catch (Error e) {
-                    warning("Failed to open Boosty: %s", e.message);
+                    warning ("Failed to open Boosty: %s", e.message);
                 }
             });
         });
 
-        var tinkoff_btn = new Gtk.Button.with_label(_("Tinkoff"));
-        tinkoff_btn.set_tooltip_text("https://www.tbank.ru/cf/3PPTstulqEq");
-        tinkoff_btn.clicked.connect(() => {
-            var launcher = new Gtk.UriLauncher("https://www.tbank.ru/cf/3PPTstulqEq");
-            launcher.launch.begin(parent_window, null, (obj, res) => {
+        var tinkoff_btn = new Gtk.Button.with_label (_("Tinkoff"));
+        tinkoff_btn.set_tooltip_text ("https://www.tbank.ru/cf/3PPTstulqEq");
+        tinkoff_btn.clicked.connect (() => {
+            var launcher = new Gtk.UriLauncher ("https://www.tbank.ru/cf/3PPTstulqEq");
+            launcher.launch.begin (parent_window, null, (obj, res) => {
                 try {
-                    launcher.launch.end(res);
+                    launcher.launch.end (res);
                 } catch (Error e) {
-                    warning("Failed to open Tinkoff: %s", e.message);
+                    warning ("Failed to open Tinkoff: %s", e.message);
                 }
             });
         });
 
-        var ymoney_btn = new Gtk.Button.with_label(_("ЮMoney (Мир)"));
-        ymoney_btn.set_tooltip_text("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
-        ymoney_btn.clicked.connect(() => {
-            var launcher = new Gtk.UriLauncher("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
-            launcher.launch.begin(parent_window, null, (obj, res) => {
+        var ymoney_btn = new Gtk.Button.with_label (_("ЮMoney (Мир)"));
+        ymoney_btn.set_tooltip_text ("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
+        ymoney_btn.clicked.connect (() => {
+            var launcher = new Gtk.UriLauncher ("https://yoomoney.ru/fundraise/1CRVAISSLRB.250918");
+            launcher.launch.begin (parent_window, null, (obj, res) => {
                 try {
-                    launcher.launch.end(res);
+                    launcher.launch.end (res);
                 } catch (Error e) {
-                    warning("Failed to open ЮMoney: %s", e.message);
+                    warning ("Failed to open ЮMoney: %s", e.message);
                 }
             });
         });
 
-        var sber_btn = new Gtk.Button.with_label(_("Sber (Мир)"));
-        sber_btn.set_tooltip_text("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
-        sber_btn.clicked.connect(() => {
-            var launcher = new Gtk.UriLauncher("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
-            launcher.launch.begin(parent_window, null, (obj, res) => {
+        var sber_btn = new Gtk.Button.with_label (_("Sber (Мир)"));
+        sber_btn.set_tooltip_text ("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
+        sber_btn.clicked.connect (() => {
+            var launcher = new Gtk.UriLauncher ("https://messenger.online.sberbank.ru/sl/eIrNTQ3a1dCLQ8gxL");
+            launcher.launch.begin (parent_window, null, (obj, res) => {
                 try {
-                    launcher.launch.end(res);
+                    launcher.launch.end (res);
                 } catch (Error e) {
-                    warning("Failed to open Sber: %s", e.message);
+                    warning ("Failed to open Sber: %s", e.message);
                 }
             });
         });
 
-        var telegram_btn = new Gtk.Button.with_label(_("Telegram (TON)"));
-        telegram_btn.set_tooltip_text(_("Click to copy the wallet number"));
-        telegram_btn.clicked.connect(() => {
-            var clipboard = Gdk.Display.get_default().get_clipboard();
-            clipboard.set_text("UQCHkkZx3UT_8A-tAI8Zlu6iuX5WsBYLa0JVC7SK8PfJ3Rqf");
-            string original_text = telegram_btn.get_label();
-            telegram_btn.set_label(_("Copied"));
-            Timeout.add_seconds(1, () => {
-                telegram_btn.set_label(original_text);
+        var telegram_btn = new Gtk.Button.with_label (_("Telegram (TON)"));
+        telegram_btn.set_tooltip_text (_("Click to copy the wallet number"));
+        telegram_btn.clicked.connect (() => {
+            var clipboard = Gdk.Display.get_default ().get_clipboard ();
+            clipboard.set_text ("UQCHkkZx3UT_8A-tAI8Zlu6iuX5WsBYLa0JVC7SK8PfJ3Rqf");
+            string original_text = telegram_btn.get_label ();
+            telegram_btn.set_label (_("Copied"));
+            Timeout.add_seconds (1, () => {
+                telegram_btn.set_label (original_text);
                 return false;
             });
         });
 
-        var donation_child = new Gtk.FlowBoxChild();
-        donation_child.set_child(donation_alerts_btn);
+        var donation_child = new Gtk.FlowBoxChild ();
+        donation_child.set_child (donation_alerts_btn);
 
-        var tinkoff_child = new Gtk.FlowBoxChild();
-        tinkoff_child.set_child(tinkoff_btn);
+        var tinkoff_child = new Gtk.FlowBoxChild ();
+        tinkoff_child.set_child (tinkoff_btn);
 
-        var boosty_child = new Gtk.FlowBoxChild();
-        boosty_child.set_child(boosty_btn);
+        var boosty_child = new Gtk.FlowBoxChild ();
+        boosty_child.set_child (boosty_btn);
 
-        var ymoney_child = new Gtk.FlowBoxChild();
-        ymoney_child.set_child(ymoney_btn);
+        var ymoney_child = new Gtk.FlowBoxChild ();
+        ymoney_child.set_child (ymoney_btn);
 
-        var telegram_child = new Gtk.FlowBoxChild();
-        telegram_child.set_child(telegram_btn);
+        var telegram_child = new Gtk.FlowBoxChild ();
+        telegram_child.set_child (telegram_btn);
 
-        var sber_child = new Gtk.FlowBoxChild();
-        sber_child.set_child(sber_btn);
+        var sber_child = new Gtk.FlowBoxChild ();
+        sber_child.set_child (sber_btn);
 
-        flow_box.append(donation_child);
-        flow_box.append(boosty_child);
-        flow_box.append(ymoney_child);
-        flow_box.append(tinkoff_child);
-        flow_box.append(telegram_child);
-        flow_box.append(sber_child);
+        flow_box.append (donation_child);
+        flow_box.append (boosty_child);
+        flow_box.append (ymoney_child);
+        flow_box.append (tinkoff_child);
+        flow_box.append (telegram_child);
+        flow_box.append (sber_child);
 
-        main_box.append(flow_box);
+        main_box.append (flow_box);
 
-        var spacer = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-        spacer.set_hexpand(true);
-        spacer.set_vexpand(true);
-        main_box.append(spacer);
+        var spacer = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        spacer.set_hexpand (true);
+        spacer.set_vexpand (true);
+        main_box.append (spacer);
 
-        var thanks_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
-        thanks_box.set_halign(Gtk.Align.CENTER);
-        thanks_box.set_margin_bottom(24);
-        thanks_box.set_margin_top(24);
+        var thanks_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        thanks_box.set_halign (Gtk.Align.CENTER);
+        thanks_box.set_margin_bottom (24);
+        thanks_box.set_margin_top (24);
 
-        var thanks_label = new Gtk.Label(_("Thank you for your support!"));
-        thanks_label.add_css_class("dim-label");
+        var thanks_label = new Gtk.Label (_("Thank you for your support!"));
+        thanks_label.add_css_class ("dim-label");
 
-        var heart_icon = new Gtk.Image.from_icon_name("io.github.radiolamp.mangojuice.donate-symbolic");
-        heart_icon.add_css_class("love-hover");
-        heart_icon.set_pixel_size(16);
+        var heart_icon = new Gtk.Image.from_icon_name ("io.github.radiolamp.mangojuice.donate-symbolic");
+        heart_icon.add_css_class ("love-hover");
+        heart_icon.set_pixel_size (16);
 
-        thanks_box.append(thanks_label);
-        thanks_box.append(heart_icon);
+        thanks_box.append (thanks_label);
+        thanks_box.append (heart_icon);
 
-        main_box.append(thanks_box);
+        main_box.append (thanks_box);
 
-        dialog.present(parent_window);
+        dialog.present (parent_window);
 
-        Timeout.add(500, () => {
-            icon_container.add_css_class("wobble-animation");
+        Timeout.add (500, () => {
+            icon_container.add_css_class ("wobble-animation");
             return Source.REMOVE;
         });
 
@@ -235,7 +239,7 @@ namespace AboutDialog {
 
     int profile_count = 0;
 
-    delegate void DeleteCallback();
+    delegate void DeleteCallback ();
 
     class DeleteCallbackHolder {
         public DeleteCallback cb;
@@ -244,196 +248,197 @@ namespace AboutDialog {
         }
     }
 
-    void update_group_state(Adw.PreferencesGroup group, Adw.StatusPage status_page) {
-        if (profile_count == 0 && status_page.get_parent() == null) {
-            group.add(status_page);
-        } else if (profile_count > 0 && status_page.get_parent() != null) {
-            group.remove(status_page);
+    void update_group_state (Adw.PreferencesGroup group, Adw.StatusPage status_page) {
+        if (profile_count == 0 && status_page.get_parent () == null) {
+            group.add (status_page);
+        } else if (profile_count > 0 && status_page.get_parent () != null) {
+            group.remove (status_page);
         }
     }
 
-    public void preset_dialog(Gtk.Window parent_window, MangoJuice app) {
-        var dialog = new Adw.Dialog();
-        dialog.set_content_width(800);
-        dialog.set_content_height(600);
-        dialog.set_size_request(320, 240);
+    public void preset_dialog (Gtk.Window parent_window, MangoJuice app) {
+        var dialog = new Adw.Dialog ();
+        dialog.set_content_width (800);
+        dialog.set_content_height (600);
+        dialog.set_size_request (320, 240);
 
-        var breakpoint_450px = new Adw.Breakpoint(Adw.BreakpointCondition.parse("max-width: 450px"));
-        dialog.add_breakpoint(breakpoint_450px);
+        var breakpoint_450px = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 450px"));
+        dialog.add_breakpoint (breakpoint_450px);
 
-        var toast_overlay = new Adw.ToastOverlay();
-        dialog.set_child(toast_overlay);
+        var toast_overlay = new Adw.ToastOverlay ();
+        dialog.set_child (toast_overlay);
 
-        var main_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-        toast_overlay.set_child(main_box);
+        var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        toast_overlay.set_child (main_box);
 
-        var window_handle = new Gtk.WindowHandle();
-        main_box.append(window_handle);
+        var window_handle = new Gtk.WindowHandle ();
+        main_box.append (window_handle);
 
-        var header_bar = new Adw.HeaderBar();
-        header_bar.set_show_start_title_buttons(true);
-        header_bar.set_show_end_title_buttons(true);
-        header_bar.add_css_class("flat");
-        main_box.append(header_bar);
+        var header_bar = new Adw.HeaderBar ();
+        header_bar.set_show_start_title_buttons (true);
+        header_bar.set_show_end_title_buttons (true);
+        header_bar.add_css_class ("flat");
+        main_box.append (header_bar);
 
-        var info_button = new Gtk.Button();
-        info_button.set_icon_name("dialog-information-symbolic");
-        info_button.add_css_class("circular");
-        info_button.set_tooltip_text(_("To get ready presets, click on the title."));
-        header_bar.pack_start(info_button);
+        var info_button = new Gtk.Button ();
+        info_button.set_icon_name ("dialog-information-symbolic");
+        info_button.add_css_class ("circular");
+        info_button.set_tooltip_text (_("To get ready presets, click on the title."));
+        header_bar.pack_start (info_button);
 
-        var popover = new Gtk.Popover();
-        var popover_label = new Gtk.Label(_("To get ready presets, click on the title."));
-        popover.set_child(popover_label);
-        popover.set_parent(info_button);
+        var popover = new Gtk.Popover ();
+        var popover_label = new Gtk.Label (_("To get ready presets, click on the title."));
+        popover.set_child (popover_label);
+        popover.set_parent (info_button);
 
-        info_button.clicked.connect(() => {
-            popover.popup();
+        info_button.clicked.connect (() => {
+            popover.popup ();
         });
 
-        var presets_button = new Gtk.Button();
-        presets_button.set_hexpand(true);
-        presets_button.add_css_class("flat");
-        var button_content = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
-        button_content.set_halign(Gtk.Align.CENTER);
-        var presets_label = new Gtk.Label(_("Presets"));
-        var arrow_icon = new Gtk.Image.from_icon_name("go-next-symbolic");
-        button_content.append(presets_label);
-        button_content.append(arrow_icon);
-        presets_button.set_child(button_content);
-        header_bar.set_title_widget(presets_button);
+        var presets_button = new Gtk.Button ();
+        presets_button.set_hexpand (true);
+        presets_button.add_css_class ("flat");
+        var button_content = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        button_content.set_halign (Gtk.Align.CENTER);
+        var presets_label = new Gtk.Label (_("Presets"));
+        var arrow_icon = new Gtk.Image.from_icon_name ("go-next-symbolic");
+        button_content.append (presets_label);
+        button_content.append (arrow_icon);
+        presets_button.set_child (button_content);
+        header_bar.set_title_widget (presets_button);
 
-        var content_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-        content_box.set_hexpand(true);
-        content_box.set_vexpand(true);
-        main_box.append(content_box);
+        var content_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        content_box.set_hexpand (true);
+        content_box.set_vexpand (true);
+        main_box.append (content_box);
 
-        var clamp = new Adw.Clamp() {
+        var clamp = new Adw.Clamp () {
             maximum_size = 800,
             tightening_threshold = 450,
             margin_top = 12,
             margin_bottom = 12
         };
-        content_box.append(clamp);
+        content_box.append (clamp);
 
-        var clamped_content = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
-        clamped_content.set_margin_start(24);
-        clamped_content.set_margin_end(24);
-        clamp.set_child(clamped_content);
+        var clamped_content = new Gtk.Box (Gtk.Orientation.VERTICAL, 12);
+        clamped_content.set_margin_start (24);
+        clamped_content.set_margin_end (24);
+        clamp.set_child (clamped_content);
 
-        var group = new Adw.PreferencesGroup();
-        var status_page = new Adw.StatusPage() {
+        var group = new Adw.PreferencesGroup ();
+        var status_page = new Adw.StatusPage () {
             title = _("No profiles yet"),
             icon_name = "emoji-symbols-symbolic"
         };
-        status_page.add_css_class("dim-label");
-        status_page.set_vexpand(true);
+        status_page.add_css_class ("dim-label");
+        status_page.set_vexpand (true);
 
-        var add_button = new Gtk.Button.with_label(_("Add Profile"));
-        add_button.set_size_request(-1, 40);
+        var add_button = new Gtk.Button.with_label (_("Add Profile"));
+        add_button.set_size_request (-1, 40);
 
-        add_button.clicked.connect(() => {
-            var row = add_option_button(group, app, toast_overlay, () => {
+        add_button.clicked.connect (() => {
+            var row = add_option_button (group, app, toast_overlay, () => {
                 profile_count--;
-                update_group_state(group, status_page);
+                update_group_state (group, status_page);
             });
-            group.add(row);
+            group.add (row);
             profile_count++;
-            update_group_state(group, status_page);
+            update_group_state (group, status_page);
         });
 
         try {
-            var config_dir = File.new_for_path(Environment.get_home_dir())
-                .get_child(".config")
-                .get_child("MangoHud");
+            var config_dir = File.new_for_path (Environment.get_home_dir ())
+                .get_child (".config")
+                .get_child ("MangoHud");
 
-            if (config_dir.query_exists()) {
-                var enumerator = config_dir.enumerate_children(FileAttribute.STANDARD_NAME, 0);
+            if (config_dir.query_exists ()) {
+                var enumerator = config_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
                 FileInfo info;
-                var profiles = new GLib.List<string>();
+                var profiles = new GLib.List<string> ();
 
-                while ((info = enumerator.next_file()) != null) {
-                    string name = info.get_name();
-                    if (name.has_suffix(".conf") && name.length > 5 && name != "MangoHud.conf" && name != ".MangoHud.backup") {
-                        string profile_name = name[0:-5].replace("-", " ");
-                        profiles.append(profile_name);
+                while ((info = enumerator.next_file ()) != null) {
+                    string name = info.get_name ();
+                    if (name.has_suffix (".conf") && name.length > 5
+                        && name != "MangoHud.conf" && name != ".MangoHud.backup") {
+                        string profile_name = name[0:-5].replace ("-", " ");
+                        profiles.append (profile_name);
                     }
                 }
 
-                profiles.sort((a, b) => {
-                    return a.collate(b);
+                profiles.sort ((a, b) => {
+                    return a.collate (b);
                 });
 
                 foreach (string profile_name in profiles) {
-                    var row = add_option_button(group, app, toast_overlay, () => {
+                    var row = add_option_button (group, app, toast_overlay, () => {
                         profile_count--;
-                        update_group_state(group, status_page);
+                        update_group_state (group, status_page);
                     }, profile_name, true);
-                    group.add(row);
+                    group.add (row);
                     profile_count++;
                 }
             }
         } catch (Error e) {
-            warning("Error loading profiles: %s", e.message);
+            warning ("Error loading profiles: %s", e.message);
         }
 
-        update_group_state(group, status_page);
+        update_group_state (group, status_page);
 
-        var scrolled = new Gtk.ScrolledWindow();
-        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
+        var scrolled = new Gtk.ScrolledWindow ();
+        scrolled.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 
-        var profile_container = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-        profile_container.set_margin_top(2);
-        profile_container.set_margin_bottom(2);
-        profile_container.set_margin_start(2);
-        profile_container.set_margin_end(2);
-        profile_container.append(group);
+        var profile_container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        profile_container.set_margin_top (2);
+        profile_container.set_margin_bottom (2);
+        profile_container.set_margin_start (2);
+        profile_container.set_margin_end (2);
+        profile_container.append (group);
 
-        scrolled.set_child(profile_container);
-        scrolled.set_vexpand(true);
-        clamped_content.append(scrolled);
-        clamped_content.append(add_button);
+        scrolled.set_child (profile_container);
+        scrolled.set_vexpand (true);
+        clamped_content.append (scrolled);
+        clamped_content.append (add_button);
 
-        presets_button.clicked.connect(() => {
-            show_presets_carousel_dialog((Gtk.Window)dialog, app);
+        presets_button.clicked.connect (() => {
+            show_presets_carousel_dialog ((Gtk.Window)dialog, app);
         });
 
-        dialog.closed.connect(() => {
+        dialog.closed.connect (() => {
             try {
-                Process.spawn_command_line_async("pkill vkcube");
-                Process.spawn_command_line_async("pkill glxgears");
+                Process.spawn_command_line_async ("pkill vkcube");
+                Process.spawn_command_line_async ("pkill glxgears");
             } catch (Error e) {
-                stderr.printf(_("Error when executing the command: %s\n"), e.message);
+                stderr.printf (_("Error when executing the command: %s\n"), e.message);
             }
         });
 
-        dialog.present(parent_window);
+        dialog.present (parent_window);
     }
 
-    bool check_if_profile_active_simple(string profile_name) {
+    bool check_if_profile_active_simple (string profile_name) {
         try {
-            string profile_filename = profile_name.replace(" ", "-") + ".conf";
-            string active_config_path = Path.build_filename(
-                Environment.get_home_dir(),
+            string profile_filename = profile_name.replace (" ", "-") + ".conf";
+            string active_config_path = Path.build_filename (
+                Environment.get_home_dir (),
                 ".config",
                 "MangoHud",
                 "MangoHud.conf"
             );
 
-            var active_file = File.new_for_path(active_config_path);
-            if (!active_file.query_exists()) {
+            var active_file = File.new_for_path (active_config_path);
+            if (!active_file.query_exists ()) {
                 return false;
             }
 
-            var dis = new DataInputStream(active_file.read());
-            string? first_line = dis.read_line(null);
+            var dis = new DataInputStream (active_file.read ());
+            string? first_line = dis.read_line (null);
 
-            if (first_line != null && first_line.contains(profile_filename)) {
+            if (first_line != null && first_line.contains (profile_filename)) {
                 return true;
             }
 
         } catch (Error e) {
-            warning("Failed to check if profile is active: %s", e.message);
+            warning ("Failed to check if profile is active: %s", e.message);
             return false;
         }
 
@@ -443,16 +448,16 @@ namespace AboutDialog {
     static Adw.ActionRow? currently_selected_row = null;
     static Gtk.Button? currently_playing_button = null;
 
-    static void run_preview_impl(MangoJuice app, string profile_name, bool is_wayland) {
+    static void run_preview_impl (MangoJuice app, string profile_name, bool is_wayland) {
         try {
-            Process.spawn_command_line_async("pkill vkcube");
-            Process.spawn_command_line_async("pkill glxgears");
-            SaveStates.reset_config_file_cache();
-            string config_path = Path.build_filename(
-                Environment.get_home_dir(),
+            Process.spawn_command_line_async ("pkill vkcube");
+            Process.spawn_command_line_async ("pkill glxgears");
+            SaveStates.reset_config_file_cache ();
+            string config_path = Path.build_filename (
+                Environment.get_home_dir (),
                 ".config",
                 "MangoHud",
-                profile_name.replace(" ", "-") + ".conf"
+                profile_name.replace (" ", "-") + ".conf"
             );
 
             string base_cmd = @"env MANGOHUD_CONFIGFILE='$config_path' mangohud";
@@ -472,450 +477,460 @@ namespace AboutDialog {
                 Process.spawn_command_line_async (base_cmd + " mangohud glxgears");
             }
         } catch (Error e) {
-            warning("%s", e.message);
+            warning ("%s", e.message);
         }
     }
 
-    static void do_edit_impl(Gtk.Entry entry, Adw.ActionRow row, string profile_name) {
-        entry.set_text(profile_name);
-        row.set_title("");
-        entry.set_visible(true);
-        entry.grab_focus();
+    static void do_edit_impl (Gtk.Entry entry, Adw.ActionRow row, string profile_name) {
+        entry.set_text (profile_name);
+        row.set_title ("");
+        entry.set_visible (true);
+        entry.grab_focus ();
 
         if (currently_selected_row != null && currently_selected_row != row) {
-            currently_selected_row.remove_css_class("selected");
+            currently_selected_row.remove_css_class ("selected");
         }
-        row.add_css_class("selected");
+        row.add_css_class ("selected");
         currently_selected_row = row;
     }
 
-    static void do_reset_impl(string profile_name, Adw.ToastOverlay toast_overlay) {
+    static void do_reset_impl (string profile_name, Adw.ToastOverlay toast_overlay) {
         try {
-            var config_dir = File.new_for_path(Environment.get_home_dir())
-                .get_child(".config")
-                .get_child("MangoHud");
+            var config_dir = File.new_for_path (Environment.get_home_dir ())
+                .get_child (".config")
+                .get_child ("MangoHud");
 
-            var original_config = config_dir.get_child("MangoHud.conf");
-            var profile_config = config_dir.get_child(
-                profile_name.replace(" ", "-") + ".conf"
+            var original_config = config_dir.get_child ("MangoHud.conf");
+            var profile_config = config_dir.get_child (
+                profile_name.replace (" ", "-") + ".conf"
             );
 
-            if (original_config.query_exists()) {
-                original_config.copy(profile_config, FileCopyFlags.OVERWRITE);
+            if (original_config.query_exists ()) {
+                original_config.copy (profile_config, FileCopyFlags.OVERWRITE);
             }
 
-            var toast = new Adw.Toast(_("Changed"));
-            toast.set_timeout(3);
-            toast_overlay.add_toast(toast);
+            var toast = new Adw.Toast (_("Changed"));
+            toast.set_timeout (3);
+            toast_overlay.add_toast (toast);
         } catch (Error e) {
-            warning("Failed to reset profile: %s", e.message);
+            warning ("Failed to reset profile: %s", e.message);
         }
     }
 
-    static void do_delete_impl(Gtk.Button play_btn, Adw.ActionRow row, string profile_name, Adw.PreferencesGroup group, DeleteCallback on_delete, Adw.ToastOverlay toast_overlay) {
+    static void do_delete_impl (
+        Gtk.Button play_btn, Adw.ActionRow row, string profile_name,
+        Adw.PreferencesGroup group, DeleteCallback on_delete, Adw.ToastOverlay toast_overlay
+    ) {
         if (currently_playing_button == play_btn) {
             currently_playing_button = null;
         }
 
         if (currently_selected_row == row) {
-            currently_selected_row.remove_css_class("selected");
+            currently_selected_row.remove_css_class ("selected");
             currently_selected_row = null;
         }
-        delete_profile_config(profile_name);
-        group.remove(row);
-        on_delete();
-        var toast = new Adw.Toast(_("Deleted"));
-        toast.set_timeout(3);
-        toast_overlay.add_toast(toast);
+        delete_profile_config (profile_name);
+        group.remove (row);
+        on_delete ();
+        var toast = new Adw.Toast (_("Deleted"));
+        toast.set_timeout (3);
+        toast_overlay.add_toast (toast);
     }
 
-    Adw.ActionRow add_option_button(Adw.PreferencesGroup group, MangoJuice app, Adw.ToastOverlay toast_overlay, owned DeleteCallback on_delete, string initial_name = _("Profile"), bool is_existing_profile = false) {
+    Adw.ActionRow add_option_button (
+        Adw.PreferencesGroup group, MangoJuice app,
+        Adw.ToastOverlay toast_overlay, owned DeleteCallback on_delete,
+        string initial_name = _("Profile"), bool is_existing_profile = false
+    ) {
         string profile_name = initial_name;
 
         if (!is_existing_profile) {
-            if (profile_name.has_suffix(".exe") && profile_name.length > 4) {
-                profile_name = "wine-" + profile_name.substring(0, profile_name.length - 4);
+            if (profile_name.has_suffix (".exe") && profile_name.length > 4) {
+                profile_name = "wine-" + profile_name.substring (0, profile_name.length - 4);
             } else if (initial_name == _("Profile")) {
-                profile_name = generate_unique_profile_name(initial_name);
+                profile_name = generate_unique_profile_name (initial_name);
             }
-            create_profile_config(profile_name);
+            create_profile_config (profile_name);
         }
 
-        var cb_holder = new DeleteCallbackHolder((owned) on_delete);
+        var cb_holder = new DeleteCallbackHolder ((owned) on_delete);
         unowned DeleteCallback del = cb_holder.cb;
 
-        var row = new Adw.ActionRow();
-        row.set_title(profile_name);
-        row.set_selectable(false);
-        row.set_tooltip_text(_("Profile preview"));
+        var row = new Adw.ActionRow ();
+        row.set_title (profile_name);
+        row.set_selectable (false);
+        row.set_tooltip_text (_("Profile preview"));
 
-        string? wayland_display = Environment.get_variable("WAYLAND_DISPLAY");
+        string? wayland_display = Environment.get_variable ("WAYLAND_DISPLAY");
         bool is_wayland = (wayland_display != null && wayland_display != "");
 
-        var play_btn = new Gtk.Button.from_icon_name("media-playback-start-symbolic");
-        play_btn.add_css_class("flat");
-        play_btn.add_css_class("circular");
-        play_btn.set_tooltip_text(_("Apply the profile to the entire system"));
-        play_btn.set_valign(Gtk.Align.CENTER);
+        var play_btn = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
+        play_btn.add_css_class ("flat");
+        play_btn.add_css_class ("circular");
+        play_btn.set_tooltip_text (_("Apply the profile to the entire system"));
+        play_btn.set_valign (Gtk.Align.CENTER);
 
-        var edit_btn = new Gtk.Button();
-        edit_btn.set_icon_name("document-edit-symbolic");
-        edit_btn.set_focusable(false);
-        edit_btn.add_css_class("flat");
-        edit_btn.add_css_class("circular");
-        edit_btn.set_tooltip_text(_("Renaming. Name the name of the game, or name.exe for Wine games, e.g. DOOM.exe. Attention case is important!"));
-        edit_btn.set_valign(Gtk.Align.CENTER);
+        var edit_btn = new Gtk.Button ();
+        edit_btn.set_icon_name ("document-edit-symbolic");
+        edit_btn.set_focusable (false);
+        edit_btn.add_css_class ("flat");
+        edit_btn.add_css_class ("circular");
+        edit_btn.set_tooltip_text (
+            _("Renaming. Name the name of the game, or name.exe for Wine games,")
+            + _(" e.g. DOOM.exe. Attention case is important!")
+        );
+        edit_btn.set_valign (Gtk.Align.CENTER);
 
-        var preview_btn = new Gtk.Button();
-        preview_btn.set_icon_name("view-reveal-symbolic");
-        preview_btn.set_focusable(false);
-        preview_btn.add_css_class("flat");
-        preview_btn.add_css_class("circular");
-        preview_btn.set_tooltip_text(_("Profile preview"));
-        preview_btn.set_valign(Gtk.Align.CENTER);
+        var preview_btn = new Gtk.Button ();
+        preview_btn.set_icon_name ("view-reveal-symbolic");
+        preview_btn.set_focusable (false);
+        preview_btn.add_css_class ("flat");
+        preview_btn.add_css_class ("circular");
+        preview_btn.set_tooltip_text (_("Profile preview"));
+        preview_btn.set_valign (Gtk.Align.CENTER);
 
-        var reset_btn = new Gtk.Button();
-        reset_btn.set_icon_name("view-refresh-symbolic");
-        reset_btn.set_focusable(false);
-        reset_btn.add_css_class("flat");
-        reset_btn.add_css_class("circular");
-        reset_btn.set_tooltip_text(_("Overwrite profile"));
-        reset_btn.set_valign(Gtk.Align.CENTER);
+        var reset_btn = new Gtk.Button ();
+        reset_btn.set_icon_name ("view-refresh-symbolic");
+        reset_btn.set_focusable (false);
+        reset_btn.add_css_class ("flat");
+        reset_btn.add_css_class ("circular");
+        reset_btn.set_tooltip_text (_("Overwrite profile"));
+        reset_btn.set_valign (Gtk.Align.CENTER);
 
-        var close_btn = new Gtk.Button();
-        close_btn.set_icon_name("edit-delete-symbolic");
-        close_btn.set_focusable(false);
-        close_btn.add_css_class("flat");
-        close_btn.add_css_class("circular");
-        close_btn.set_tooltip_text(_("Delete profile"));
-        close_btn.set_valign(Gtk.Align.CENTER);
+        var close_btn = new Gtk.Button ();
+        close_btn.set_icon_name ("edit-delete-symbolic");
+        close_btn.set_focusable (false);
+        close_btn.add_css_class ("flat");
+        close_btn.add_css_class ("circular");
+        close_btn.set_tooltip_text (_("Delete profile"));
+        close_btn.set_valign (Gtk.Align.CENTER);
 
-        var menu_btn = new Gtk.MenuButton();
-        menu_btn.set_icon_name("view-more-symbolic");
-        menu_btn.set_focusable(false);
-        menu_btn.add_css_class("flat");
-        menu_btn.add_css_class("circular");
-        menu_btn.set_tooltip_text(_("Options"));
-        menu_btn.set_valign(Gtk.Align.CENTER);
-        menu_btn.set_visible(false);
+        var menu_btn = new Gtk.MenuButton ();
+        menu_btn.set_icon_name ("view-more-symbolic");
+        menu_btn.set_focusable (false);
+        menu_btn.add_css_class ("flat");
+        menu_btn.add_css_class ("circular");
+        menu_btn.set_tooltip_text (_("Options"));
+        menu_btn.set_valign (Gtk.Align.CENTER);
+        menu_btn.set_visible (false);
 
-        var menu_popover = new Gtk.Popover();
-        var menu_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
-        menu_box.set_margin_top(6);
-        menu_box.set_margin_bottom(6);
-        menu_box.set_margin_start(6);
-        menu_box.set_margin_end(6);
-        menu_popover.set_child(menu_box);
-        menu_btn.set_popover(menu_popover);
+        var menu_popover = new Gtk.Popover ();
+        var menu_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        menu_box.set_margin_top (6);
+        menu_box.set_margin_bottom (6);
+        menu_box.set_margin_start (6);
+        menu_box.set_margin_end (6);
+        menu_popover.set_child (menu_box);
+        menu_btn.set_popover (menu_popover);
 
-        var btn_preview = new Gtk.Button.with_label(_("Preview"));
-        btn_preview.set_icon_name("view-reveal-symbolic");
-        btn_preview.add_css_class("flat");
-        btn_preview.set_hexpand(true);
-        menu_box.append(btn_preview);
+        var btn_preview = new Gtk.Button.with_label (_("Preview"));
+        btn_preview.set_icon_name ("view-reveal-symbolic");
+        btn_preview.add_css_class ("flat");
+        btn_preview.set_hexpand (true);
+        menu_box.append (btn_preview);
 
-        var btn_edit = new Gtk.Button.with_label(_("Rename"));
-        btn_edit.set_icon_name("document-edit-symbolic");
-        btn_edit.add_css_class("flat");
-        btn_edit.set_hexpand(true);
-        menu_box.append(btn_edit);
+        var btn_edit = new Gtk.Button.with_label (_("Rename"));
+        btn_edit.set_icon_name ("document-edit-symbolic");
+        btn_edit.add_css_class ("flat");
+        btn_edit.set_hexpand (true);
+        menu_box.append (btn_edit);
 
-        var btn_reset = new Gtk.Button.with_label(_("Overwrite"));
-        btn_reset.set_icon_name("view-refresh-symbolic");
-        btn_reset.add_css_class("flat");
-        btn_reset.set_hexpand(true);
-        menu_box.append(btn_reset);
+        var btn_reset = new Gtk.Button.with_label (_("Overwrite"));
+        btn_reset.set_icon_name ("view-refresh-symbolic");
+        btn_reset.add_css_class ("flat");
+        btn_reset.set_hexpand (true);
+        menu_box.append (btn_reset);
 
-        var btn_delete = new Gtk.Button.with_label(_("Delete"));
-        btn_delete.set_icon_name("edit-delete-symbolic");
-        btn_delete.add_css_class("flat");
-        btn_delete.add_css_class("destructive-action");
-        btn_delete.set_hexpand(true);
-        menu_box.append(btn_delete);
+        var btn_delete = new Gtk.Button.with_label (_("Delete"));
+        btn_delete.set_icon_name ("edit-delete-symbolic");
+        btn_delete.add_css_class ("flat");
+        btn_delete.add_css_class ("destructive-action");
+        btn_delete.set_hexpand (true);
+        menu_box.append (btn_delete);
 
-        bool is_active_profile = check_if_profile_active_simple(profile_name);
+        bool is_active_profile = check_if_profile_active_simple (profile_name);
         if (is_active_profile) {
-            play_btn.add_css_class("accent");
-            play_btn.remove_css_class("flat");
+            play_btn.add_css_class ("accent");
+            play_btn.remove_css_class ("flat");
             currently_playing_button = play_btn;
         }
 
-        var entry = new Gtk.Entry();
-        entry.set_text(profile_name);
-        entry.set_visible(false);
-        entry.set_hexpand(true);
-        entry.set_valign(Gtk.Align.CENTER);
+        var entry = new Gtk.Entry ();
+        entry.set_text (profile_name);
+        entry.set_visible (false);
+        entry.set_hexpand (true);
+        entry.set_valign (Gtk.Align.CENTER);
 
-        row.add_prefix(entry);
-        row.add_prefix(play_btn);
+        row.add_prefix (entry);
+        row.add_prefix (play_btn);
 
-        var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
-        button_box.append(preview_btn);
-        button_box.append(edit_btn);
-        button_box.append(reset_btn);
-        button_box.append(close_btn);
-        button_box.append(menu_btn);
-        row.add_suffix(button_box);
+        var button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 2);
+        button_box.append (preview_btn);
+        button_box.append (edit_btn);
+        button_box.append (reset_btn);
+        button_box.append (close_btn);
+        button_box.append (menu_btn);
+        row.add_suffix (button_box);
 
-        Timeout.add(200, () => {
-            var root = button_box.get_root();
+        Timeout.add (200, () => {
+            var root = button_box.get_root ();
             if (root != null && root is Gtk.Window) {
                 var window = (Gtk.Window) root;
-                var width = (int) window.get_width();
+                var width = (int) window.get_width ();
                 bool narrow = width < 550;
-                preview_btn.set_visible(!narrow);
-                edit_btn.set_visible(!narrow);
-                reset_btn.set_visible(!narrow);
-                close_btn.set_visible(!narrow);
-                menu_btn.set_visible(narrow);
+                preview_btn.set_visible (!narrow);
+                edit_btn.set_visible (!narrow);
+                reset_btn.set_visible (!narrow);
+                close_btn.set_visible (!narrow);
+                menu_btn.set_visible (narrow);
             }
             return true;
         });
 
-        btn_preview.clicked.connect(() => {
-            menu_popover.popdown();
-            run_preview_impl(app, profile_name, is_wayland);
+        btn_preview.clicked.connect (() => {
+            menu_popover.popdown ();
+            run_preview_impl (app, profile_name, is_wayland);
         });
 
-        btn_edit.clicked.connect(() => {
-            menu_popover.popdown();
-            do_edit_impl(entry, row, profile_name);
+        btn_edit.clicked.connect (() => {
+            menu_popover.popdown ();
+            do_edit_impl (entry, row, profile_name);
         });
 
-        btn_reset.clicked.connect(() => {
-            menu_popover.popdown();
-            do_reset_impl(profile_name, toast_overlay);
+        btn_reset.clicked.connect (() => {
+            menu_popover.popdown ();
+            do_reset_impl (profile_name, toast_overlay);
         });
 
-        btn_delete.clicked.connect(() => {
-            menu_popover.popdown();
-            do_delete_impl(play_btn, row, profile_name, group, del, toast_overlay);
+        btn_delete.clicked.connect (() => {
+            menu_popover.popdown ();
+            do_delete_impl (play_btn, row, profile_name, group, del, toast_overlay);
         });
 
-        play_btn.clicked.connect(() => {
+        play_btn.clicked.connect (() => {
             if (currently_playing_button != null) {
-                currently_playing_button.remove_css_class("accent");
-                currently_playing_button.add_css_class("flat");
+                currently_playing_button.remove_css_class ("accent");
+                currently_playing_button.add_css_class ("flat");
             }
 
-            app.run_test();
-            apply_profile_config(profile_name);
-            LoadStates.load_states_from_file.begin(app);
-            app.reset_manager.reset_all_widgets();
+            app.run_test ();
+            apply_profile_config (profile_name);
+            LoadStates.load_states_from_file.begin (app);
+            app.reset_manager.reset_all_widgets ();
 
-            play_btn.add_css_class("accent");
-            play_btn.remove_css_class("flat");
+            play_btn.add_css_class ("accent");
+            play_btn.remove_css_class ("flat");
             currently_playing_button = play_btn;
 
-            var toast = new Adw.Toast(_("Applied"));
-            toast.set_timeout(3);
-            toast_overlay.add_toast(toast);
+            var toast = new Adw.Toast (_("Applied"));
+            toast.set_timeout (3);
+            toast_overlay.add_toast (toast);
 
             if (currently_selected_row == row) {
-                row.remove_css_class("selected");
+                row.remove_css_class ("selected");
                 currently_selected_row = null;
             }
         });
 
-        edit_btn.clicked.connect(() => {
-            entry.set_text(profile_name);
-            row.set_title("");
-            entry.set_visible(true);
-            entry.grab_focus();
+        edit_btn.clicked.connect (() => {
+            entry.set_text (profile_name);
+            row.set_title ("");
+            entry.set_visible (true);
+            entry.grab_focus ();
 
             if (currently_selected_row != null && currently_selected_row != row) {
-                currently_selected_row.remove_css_class("selected");
+                currently_selected_row.remove_css_class ("selected");
             }
-            row.add_css_class("selected");
+            row.add_css_class ("selected");
             currently_selected_row = row;
         });
 
         if (!is_existing_profile) {
-            Timeout.add(100, () => {
-                entry.set_text(profile_name);
-                row.set_title("");
-                entry.set_visible(true);
-                entry.grab_focus();
+            Timeout.add (100, () => {
+                entry.set_text (profile_name);
+                row.set_title ("");
+                entry.set_visible (true);
+                entry.grab_focus ();
 
                 if (currently_selected_row != null && currently_selected_row != row) {
-                    currently_selected_row.remove_css_class("selected");
+                    currently_selected_row.remove_css_class ("selected");
                 }
-                row.add_css_class("selected");
+                row.add_css_class ("selected");
                 currently_selected_row = row;
 
                 return false;
             });
         }
 
-        reset_btn.clicked.connect(() => {
+        reset_btn.clicked.connect (() => {
             try {
-                var config_dir = File.new_for_path(Environment.get_home_dir())
-                    .get_child(".config")
-                    .get_child("MangoHud");
+                var config_dir = File.new_for_path (Environment.get_home_dir ())
+                    .get_child (".config")
+                    .get_child ("MangoHud");
 
-                var original_config = config_dir.get_child("MangoHud.conf");
-                var profile_config = config_dir.get_child(
-                    profile_name.replace(" ", "-") + ".conf"
+                var original_config = config_dir.get_child ("MangoHud.conf");
+                var profile_config = config_dir.get_child (
+                    profile_name.replace (" ", "-") + ".conf"
                 );
 
-                if (original_config.query_exists()) {
-                    original_config.copy(profile_config, FileCopyFlags.OVERWRITE);
+                if (original_config.query_exists ()) {
+                    original_config.copy (profile_config, FileCopyFlags.OVERWRITE);
                 }
 
-                var toast = new Adw.Toast(_("Changed"));
-                toast.set_timeout(3);
-                toast_overlay.add_toast(toast);
+                var toast = new Adw.Toast (_("Changed"));
+                toast.set_timeout (3);
+                toast_overlay.add_toast (toast);
             } catch (Error e) {
-                warning("Failed to reset profile: %s", e.message);
+                warning ("Failed to reset profile: %s", e.message);
             }
         });
 
-        entry.activate.connect(() => {
-            string new_name = entry.get_text().strip();
+        entry.activate.connect (() => {
+            string new_name = entry.get_text ().strip ();
 
-            if (new_name.has_suffix(".exe") && new_name.length > 4) {
-                new_name = "wine " + new_name.substring(0, new_name.length - 4);
+            if (new_name.has_suffix (".exe") && new_name.length > 4) {
+                new_name = "wine " + new_name.substring (0, new_name.length - 4);
             }
 
             if (new_name != "" && new_name != profile_name) {
-                rename_profile_config(profile_name, new_name);
+                rename_profile_config (profile_name, new_name);
                 profile_name = new_name;
 
                 if (currently_playing_button == play_btn) {
-                    play_btn.add_css_class("destructive-action");
+                    play_btn.add_css_class ("destructive-action");
                 } else {
-                    play_btn.remove_css_class("destructive-action");
+                    play_btn.remove_css_class ("destructive-action");
                 }
             }
 
-            entry.set_visible(false);
-            row.set_title(profile_name);
+            entry.set_visible (false);
+            row.set_title (profile_name);
 
             if (currently_selected_row != null && currently_selected_row != row) {
-                currently_selected_row.remove_css_class("selected");
+                currently_selected_row.remove_css_class ("selected");
             }
-            row.add_css_class("selected");
+            row.add_css_class ("selected");
             currently_selected_row = row;
         });
 
-        var focus_controller = new Gtk.EventControllerFocus();
-        focus_controller.leave.connect(() => {
-            if (entry.get_visible()) {
-                entry.activate();
+        var focus_controller = new Gtk.EventControllerFocus ();
+        focus_controller.leave.connect (() => {
+            if (entry.get_visible ()) {
+                entry.activate ();
             }
         });
-        entry.add_controller(focus_controller);
+        entry.add_controller (focus_controller);
 
-        close_btn.clicked.connect(() => {
+        close_btn.clicked.connect (() => {
             if (currently_playing_button == play_btn) {
                 currently_playing_button = null;
             }
 
             if (currently_selected_row == row) {
-                currently_selected_row.remove_css_class("selected");
+                currently_selected_row.remove_css_class ("selected");
                 currently_selected_row = null;
             }
-            delete_profile_config(profile_name);
-            group.remove(row);
-            del();
-            var toast = new Adw.Toast(_("Deleted"));
-            toast.set_timeout(3);
-            toast_overlay.add_toast(toast);
+            delete_profile_config (profile_name);
+            group.remove (row);
+            del ();
+            var toast = new Adw.Toast (_("Deleted"));
+            toast.set_timeout (3);
+            toast_overlay.add_toast (toast);
         });
 
-        preview_btn.clicked.connect(() => run_preview_impl(app, profile_name, is_wayland));
-        edit_btn.clicked.connect(() => do_edit_impl(entry, row, profile_name));
-        reset_btn.clicked.connect(() => do_reset_impl(profile_name, toast_overlay));
-        close_btn.clicked.connect(() => do_delete_impl(play_btn, row, profile_name, group, del, toast_overlay));
+        preview_btn.clicked.connect (() => run_preview_impl (app, profile_name, is_wayland));
+        edit_btn.clicked.connect (() => do_edit_impl (entry, row, profile_name));
+        reset_btn.clicked.connect (() => do_reset_impl (profile_name, toast_overlay));
+        close_btn.clicked.connect (() => do_delete_impl (play_btn, row, profile_name, group, del, toast_overlay));
 
         return row;
     }
 
-    void show_presets_carousel_dialog(Gtk.Window parent_dialog, MangoJuice app) {
-        var dialog = new Adw.Dialog();
-        dialog.set_content_width(800);
-        dialog.set_content_height(600);
-        dialog.set_size_request(320, 240);
+    void show_presets_carousel_dialog (Gtk.Window parent_dialog, MangoJuice app) {
+        var dialog = new Adw.Dialog ();
+        dialog.set_content_width (800);
+        dialog.set_content_height (600);
+        dialog.set_size_request (320, 240);
 
-        var breakpoint_mobile = new Adw.Breakpoint(Adw.BreakpointCondition.parse("max-width: 450px"));
-        dialog.add_breakpoint(breakpoint_mobile);
+        var breakpoint_mobile = new Adw.Breakpoint (Adw.BreakpointCondition.parse ("max-width: 450px"));
+        dialog.add_breakpoint (breakpoint_mobile);
 
-        var main_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-        dialog.set_child(main_box);
+        var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        dialog.set_child (main_box);
 
-        var header = new Adw.HeaderBar();
-        header.set_show_start_title_buttons(true);
-        header.set_show_end_title_buttons(true);
-        header.add_css_class("flat");
-        main_box.append(header);
+        var header = new Adw.HeaderBar ();
+        header.set_show_start_title_buttons (true);
+        header.set_show_end_title_buttons (true);
+        header.add_css_class ("flat");
+        main_box.append (header);
 
-        var header_center_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
-        header_center_box.set_halign(Gtk.Align.CENTER);
-        header_center_box.set_valign(Gtk.Align.CENTER);
-        header_center_box.set_hexpand(true);
-        header_center_box.set_vexpand(false);
-        header.set_title_widget(header_center_box);
+        var header_center_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        header_center_box.set_halign (Gtk.Align.CENTER);
+        header_center_box.set_valign (Gtk.Align.CENTER);
+        header_center_box.set_hexpand (true);
+        header_center_box.set_vexpand (false);
+        header.set_title_widget (header_center_box);
 
-        var carousel = new Adw.Carousel();
-        carousel.set_hexpand(true);
-        carousel.set_vexpand(true);
+        var carousel = new Adw.Carousel ();
+        carousel.set_hexpand (true);
+        carousel.set_vexpand (true);
 
-        var header_indicators = new Adw.CarouselIndicatorDots();
-        header_indicators.set_carousel(carousel);
-        header_indicators.set_valign(Gtk.Align.CENTER);
-        header_indicators.set_halign(Gtk.Align.CENTER);
+        var header_indicators = new Adw.CarouselIndicatorDots ();
+        header_indicators.set_carousel (carousel);
+        header_indicators.set_valign (Gtk.Align.CENTER);
+        header_indicators.set_halign (Gtk.Align.CENTER);
 
-        header_center_box.append(header_indicators);
+        header_center_box.append (header_indicators);
 
-        var restore_button = new Gtk.Button.with_label(_("Restore"));
-        ((Gtk.Label)restore_button.get_child()).set_ellipsize(Pango.EllipsizeMode.END);
-        restore_button.clicked.connect(() => {
+        var restore_button = new Gtk.Button.with_label (_("Restore"));
+        ((Gtk.Label)restore_button.get_child ()).set_ellipsize (Pango.EllipsizeMode.END);
+        restore_button.clicked.connect (() => {
             try {
-                var backup_file = File.new_for_path(Environment.get_home_dir())
-                    .get_child(".config")
-                    .get_child("MangoHud")
-                    .get_child(".MangoHud.backup");
-                app.restore_config_from_file(backup_file.get_path());
-                backup_file.delete();
+                var backup_file = File.new_for_path (Environment.get_home_dir ())
+                    .get_child (".config")
+                    .get_child ("MangoHud")
+                    .get_child (".MangoHud.backup");
+                app.restore_config_from_file (backup_file.get_path ());
+                backup_file.delete ();
             } catch (Error e) {
-                stderr.printf("Error: %s\n", e.message);
+                stderr.printf ("Error: %s\n", e.message);
             }
         });
-        header.pack_start(restore_button);
+        header.pack_start (restore_button);
 
-        var apply_button = new Gtk.Button.with_label(_("Apply"));
-        ((Gtk.Label)apply_button.get_child()).set_ellipsize(Pango.EllipsizeMode.END);
-        apply_button.add_css_class("suggested-action");
-        apply_button.clicked.connect(() => {
-            apply_preset(carousel, app);
+        var apply_button = new Gtk.Button.with_label (_("Apply"));
+        ((Gtk.Label)apply_button.get_child ()).set_ellipsize (Pango.EllipsizeMode.END);
+        apply_button.add_css_class ("suggested-action");
+        apply_button.clicked.connect (() => {
+            apply_preset (carousel, app);
         });
-        header.pack_end(apply_button);
+        header.pack_end (apply_button);
 
-        var content_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
-        content_box.set_margin_top(6);
-        content_box.set_margin_bottom(6);
-        content_box.set_margin_start(12);
-        content_box.set_margin_end(12);
-        content_box.set_hexpand(true);
-        content_box.set_vexpand(true);
+        var content_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 12);
+        content_box.set_margin_top (6);
+        content_box.set_margin_bottom (6);
+        content_box.set_margin_start (12);
+        content_box.set_margin_end (12);
+        content_box.set_hexpand (true);
+        content_box.set_vexpand (true);
 
-        main_box.append(content_box);
+        main_box.append (content_box);
 
-        content_box.append(carousel);
+        content_box.append (carousel);
 
-        var bottom_indicators = new Adw.CarouselIndicatorDots();
-        bottom_indicators.set_carousel(carousel);
-        bottom_indicators.set_valign(Gtk.Align.CENTER);
-        bottom_indicators.set_halign(Gtk.Align.CENTER);
-        bottom_indicators.set_margin_top(10);
-        bottom_indicators.set_visible(false);
-        content_box.append(bottom_indicators);
+        var bottom_indicators = new Adw.CarouselIndicatorDots ();
+        bottom_indicators.set_carousel (carousel);
+        bottom_indicators.set_valign (Gtk.Align.CENTER);
+        bottom_indicators.set_halign (Gtk.Align.CENTER);
+        bottom_indicators.set_margin_top (10);
+        bottom_indicators.set_visible (false);
+        content_box.append (bottom_indicators);
 
-        breakpoint_mobile.apply.connect(() => {
+        breakpoint_mobile.apply.connect (() => {
             header_indicators.visible = false;
             bottom_indicators.visible = true;
         });
-        breakpoint_mobile.unapply.connect(() => {
+        breakpoint_mobile.unapply.connect (() => {
             header_indicators.visible = true;
             bottom_indicators.visible = false;
         });
@@ -924,96 +939,132 @@ namespace AboutDialog {
         string[] icons = { "minimal", "default", "advanced", "full", "fps" };
 
         for (int i = 0; i < titles.length; i++) {
-            var page = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-            page.set_hexpand(true);
-            page.set_valign(Gtk.Align.CENTER);
+            var page = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            page.set_hexpand (true);
+            page.set_valign (Gtk.Align.CENTER);
 
-            var center = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
-            center.set_halign(Gtk.Align.CENTER);
-            center.set_margin_top(20);
+            var center = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
+            center.set_halign (Gtk.Align.CENTER);
+            center.set_margin_top (20);
 
-            var image = new Gtk.Picture.for_resource(
+            var image = new Gtk.Picture.for_resource (
                 "/io/github/radiolamp/mangojuice/images/" + icons[i] + ".png"
             );
-            image.set_can_shrink(true);
-            image.set_content_fit(Gtk.ContentFit.CONTAIN);
+            image.set_can_shrink (true);
+            image.set_content_fit (Gtk.ContentFit.CONTAIN);
 
-            var label = new Gtk.Label(titles[i]);
-            label.add_css_class("title-2");
-            label.set_margin_top(10);
-            label.set_margin_bottom(10);
+            var label = new Gtk.Label (titles[i]);
+            label.add_css_class ("title-2");
+            label.set_margin_top (10);
+            label.set_margin_bottom (10);
 
-            center.append(image);
-            center.append(label);
-            page.append(center);
+            center.append (image);
+            center.append (label);
+            page.append (center);
 
-            carousel.append(page);
+            carousel.append (page);
         }
 
-        dialog.present(parent_dialog);
+        dialog.present (parent_dialog);
     }
 
 
-    void apply_preset(Adw.Carousel carousel, MangoJuice app) {
-        int current_page = (int)carousel.get_position();
+    void apply_preset (Adw.Carousel carousel, MangoJuice app) {
+        int current_page = (int)carousel.get_position ();
         string[] page_names = { _("Minimal"), _("Default"), _("Advanced"), _("Full"), _("Only FPS") };
-        stdout.printf(_("Applying %s layout\n"), page_names[current_page]);
+        stdout.printf (_("Applying %s layout\n"), page_names[current_page]);
 
         switch (current_page) {
             case 0:
-                string[] profile1_vars = { "background_alpha=0.4", "round_corners=0", "background_color=000000", "text_color=FFFFFF", "position=top-left",
-                "table_columns=2", "cpu_stats", "gpu_stats", "ram", "vram", "hud_compact", "fps", "hud_no_margin" };
-                set_preset(profile1_vars);
+                string[] profile1_vars = {
+                    "background_alpha=0.4", "round_corners=0", "background_color=000000",
+                    "text_color=FFFFFF", "position=top-left", "table_columns=2",
+                    "cpu_stats", "gpu_stats", "ram", "vram", "hud_compact", "fps",
+                    "hud_no_margin"
+                };
+                set_preset (profile1_vars);
                 break;
             case 1:
-                string[] profile2_vars = { "background_alpha=0.4", "round_corners=10", "cpu_stats", "gpu_load_change", "gpu_load_value=30,60",
-                "gpu_load_color=FFFFFF,FFAA7F,CC0000", "gpu_temp", "gpu_fan", "gpu_power", "gpu_stats", "cpu_load_change", "cpu_load_value=30,60",
-                "cpu_load_color=FFFFFF,FFAA7F,CC0000", "cpu_mhz", "cpu_temp", "cpu_color=2E97CB", "vram", "vram_color=AD64C1", "ram", "ram_color=C26693",
-                "wine_color=EB4B4B", "fps", "frametime_color=00e4ff", "toggle_fps_limit=Shift_L+F1", "fps_limit=0,30,60", "fps_color_change",
-                 "fps_color=ff0000,FDFD09,ffffff", "fps_value=30,60", "engine_short_names", "frame_timing" };
-                set_preset(profile2_vars);
+                string[] profile2_vars = {
+                    "background_alpha=0.4", "round_corners=10", "cpu_stats",
+                    "gpu_load_change", "gpu_load_value=30,60",
+                    "gpu_load_color=FFFFFF,FFAA7F,CC0000", "gpu_temp", "gpu_fan",
+                    "gpu_power", "gpu_stats", "cpu_load_change", "cpu_load_value=30,60",
+                    "cpu_load_color=FFFFFF,FFAA7F,CC0000", "cpu_mhz", "cpu_temp",
+                    "cpu_color=2E97CB", "vram", "vram_color=AD64C1", "ram",
+                    "ram_color=C26693", "wine_color=EB4B4B", "fps",
+                    "frametime_color=00e4ff", "toggle_fps_limit=Shift_L+F1",
+                    "fps_limit=0,30,60", "fps_color_change",
+                    "fps_color=ff0000,FDFD09,ffffff", "fps_value=30,60",
+                    "engine_short_names", "frame_timing"
+                };
+                set_preset (profile2_vars);
                 break;
             case 2:
-                string[] profile3_vars = { "background_alpha=0.4", "round_corners=10", "gpu_text=GPU", "gpu_stats", "gpu_load_change", "gpu_load_value=30,60",
-                "gpu_load_color=ffffff,ffaa7f,cc0000", "gpu_temp", "gpu_fan", "gpu_power", "gpu_color=2E9762", "cpu_text=CPU", "cpu_stats", "cpu_load_change",
-                "cpu_load_value=30,60", "cpu_load_color=ffffff,ffaa7f,cc0000", "cpu_mhz", "cpu_temp", "cpu_color=2E97CB", "vram", "vram_color=AD64C1", "ram",
-                "ram_color=C26693", "fps", "engine_short_names", "gpu_name", "wine", "wine_color=eb4b4b", "frame_timing", "frametime_color=00edff",
-                "toggle_fps_limit=Shift_L+F1", "show_fps_limit", "fps_limit=0,30,60", "resolution", "fsr", "hdr", "refresh_rate", "fps_color_change",
-                "fps_color=ff0000,fdfd09,ffffff", "fps_value=30,60", "media_player", "media_player_color=FFFFFF" };
-                set_preset(profile3_vars);
+                string[] profile3_vars = {
+                    "background_alpha=0.4", "round_corners=10", "gpu_text=GPU",
+                    "gpu_stats", "gpu_load_change", "gpu_load_value=30,60",
+                    "gpu_load_color=ffffff,ffaa7f,cc0000", "gpu_temp", "gpu_fan",
+                    "gpu_power", "gpu_color=2E9762", "cpu_text=CPU", "cpu_stats",
+                    "cpu_load_change", "cpu_load_value=30,60",
+                    "cpu_load_color=ffffff,ffaa7f,cc0000", "cpu_mhz", "cpu_temp",
+                    "cpu_color=2E97CB", "vram", "vram_color=AD64C1", "ram",
+                    "ram_color=C26693", "fps", "engine_short_names", "gpu_name",
+                    "wine", "wine_color=eb4b4b", "frame_timing",
+                    "frametime_color=00edff", "toggle_fps_limit=Shift_L+F1",
+                    "show_fps_limit", "fps_limit=0,30,60", "resolution", "fsr",
+                    "hdr", "refresh_rate", "fps_color_change",
+                    "fps_color=ff0000,fdfd09,ffffff", "fps_value=30,60",
+                    "media_player", "media_player_color=FFFFFF"
+                };
+                set_preset (profile3_vars);
                 break;
             case 3:
-                string[] profile4_vars = { "background_alpha=0.4", "round_corners=10", "table_columns=4", "gpu_stats", "gpu_load_change", "gpu_load_value=30,60",
-                "gpu_load_color=FFFFFF,FFAA7F,CC0000", "gpu_temp", "gpu_fan", "gpu_power", "gpu_color=2E9762", "cpu_stats", "cpu_load_change", "cpu_load_value=30,60",
-                "cpu_load_color=FFFFFF,FFAA7F,CC0000", "cpu_mhz", "cpu_temp", "cpu_color=2E97CB", "vram", "vram_color=AD64C1", "ram", "procmem", "io_read", "io_write",
-                "ram_color=C26693", "fps", "engine_short_names", "gpu_name", "wine_color=EB4B4B", "frame_timing", "frame_count", "frametime_color=00FF00", "show_fps_limit",
-                "fps_limit=0,120,240", "resolution", "fsr", "hdr", "refresh_rate", "fps_color_change", "fps_color=ff0000,FDFD09,ffffff", "fps_value=80,140", "media_player",
-                "media_player_color=FFFFFF", "cpu_power", "gpu_junction_temp", "gpu_core_clock", "gpu_mem_temp", "gpu_mem_clock", "gpu_voltage", "procmem_shared", "procmem_virt",
-                "battery", "battery_icon", "device_battery_icon", "battery_watt", "battery_time", "exec_name", "throttling_status_graph", "arch", "full" };
-                set_preset(profile4_vars);
+                string[] profile4_vars = {
+                    "background_alpha=0.4", "round_corners=10", "table_columns=4",
+                    "gpu_stats", "gpu_load_change", "gpu_load_value=30,60",
+                    "gpu_load_color=FFFFFF,FFAA7F,CC0000", "gpu_temp", "gpu_fan",
+                    "gpu_power", "gpu_color=2E9762", "cpu_stats", "cpu_load_change",
+                    "cpu_load_value=30,60", "cpu_load_color=FFFFFF,FFAA7F,CC0000",
+                    "cpu_mhz", "cpu_temp", "cpu_color=2E97CB", "vram",
+                    "vram_color=AD64C1", "ram", "procmem", "io_read", "io_write",
+                    "ram_color=C26693", "fps", "engine_short_names", "gpu_name",
+                    "wine_color=EB4B4B", "frame_timing", "frame_count",
+                    "frametime_color=00FF00", "show_fps_limit",
+                    "fps_limit=0,120,240", "resolution", "fsr", "hdr",
+                    "refresh_rate", "fps_color_change",
+                    "fps_color=ff0000,FDFD09,ffffff", "fps_value=80,140",
+                    "media_player", "media_player_color=FFFFFF", "cpu_power",
+                    "gpu_junction_temp", "gpu_core_clock", "gpu_mem_temp",
+                    "gpu_mem_clock", "gpu_voltage", "procmem_shared", "procmem_virt",
+                    "battery", "battery_icon", "device_battery_icon", "battery_watt",
+                    "battery_time", "exec_name", "throttling_status_graph", "arch",
+                    "full"
+                };
+                set_preset (profile4_vars);
                 break;
             case 4:
                 string[] profile5_vars = { "fps_only", "background_alpha=0" };
-                set_preset(profile5_vars);
+                set_preset (profile5_vars);
                 break;
         }
-        LoadStates.load_states_from_file.begin(app);
-        app.reset_manager.reset_all_widgets();
+        LoadStates.load_states_from_file.begin (app);
+        app.reset_manager.reset_all_widgets ();
     }
 
-    string generate_unique_profile_name(string base_name) {
+    string generate_unique_profile_name (string base_name) {
         string name = base_name;
         int counter = 1;
 
         while (true) {
-            string config_path = Path.build_filename(
-                Environment.get_home_dir(),
+            string config_path = Path.build_filename (
+                Environment.get_home_dir (),
                 ".config",
                 "MangoHud",
-                name.replace(" ", "-") + ".conf"
+                name.replace (" ", "-") + ".conf"
             );
 
-            if (!File.new_for_path(config_path).query_exists()) {
+            if (!File.new_for_path (config_path).query_exists ()) {
                 break;
             }
 
@@ -1024,131 +1075,128 @@ namespace AboutDialog {
         return name;
     }
 
-    void create_profile_config(string profile_name) {
+    void create_profile_config (string profile_name) {
         try {
-            var config_dir = File.new_for_path(Environment.get_home_dir())
-                .get_child(".config")
-                .get_child("MangoHud");
+            var config_dir = File.new_for_path (Environment.get_home_dir ())
+                .get_child (".config")
+                .get_child ("MangoHud");
 
-            var original_config = config_dir.get_child("MangoHud.conf");
-            var new_config = config_dir.get_child(
-                profile_name.replace(" ", "-") + ".conf"
+            var original_config = config_dir.get_child ("MangoHud.conf");
+            var new_config = config_dir.get_child (
+                profile_name.replace (" ", "-") + ".conf"
             );
-            if (original_config.query_exists()) {
-                original_config.copy(new_config, FileCopyFlags.OVERWRITE);
+            if (original_config.query_exists ()) {
+                original_config.copy (new_config, FileCopyFlags.OVERWRITE);
             }
         } catch (Error e) {
-            warning("Failed to create profile: %s", e.message);
+            warning ("Failed to create profile: %s", e.message);
         }
     }
 
-    void rename_profile_config(string old_name, string new_name) {
+    void rename_profile_config (string old_name, string new_name) {
         try {
-            string old_path = Path.build_filename(
-                Environment.get_home_dir(),
+            string old_path = Path.build_filename (
+                Environment.get_home_dir (),
                 ".config",
                 "MangoHud",
-                old_name.replace(" ", "-") + ".conf"
+                old_name.replace (" ", "-") + ".conf"
             );
-            string new_path = Path.build_filename(
-                Environment.get_home_dir(),
+            string new_path = Path.build_filename (
+                Environment.get_home_dir (),
                 ".config",
                 "MangoHud",
-                new_name.replace(" ", "-") + ".conf"
+                new_name.replace (" ", "-") + ".conf"
             );
 
-            var old_file = File.new_for_path(old_path);
-            if (old_file.query_exists()) {
-                old_file.move(File.new_for_path(new_path), FileCopyFlags.OVERWRITE);
+            var old_file = File.new_for_path (old_path);
+            if (old_file.query_exists ()) {
+                old_file.move (File.new_for_path (new_path), FileCopyFlags.OVERWRITE);
             }
         } catch (Error e) {
-            warning("Failed to rename profile: %s", e.message);
+            warning ("Failed to rename profile: %s", e.message);
         }
     }
 
-    void delete_profile_config(string profile_name) {
+    void delete_profile_config (string profile_name) {
         try {
-            string path = Path.build_filename(
-                Environment.get_home_dir(),
+            string path = Path.build_filename (
+                Environment.get_home_dir (),
                 ".config",
                 "MangoHud",
-                profile_name.replace(" ", "-") + ".conf"
+                profile_name.replace (" ", "-") + ".conf"
             );
 
-            var file = File.new_for_path(path);
-            if (file.query_exists()) {
-                file.delete();
+            var file = File.new_for_path (path);
+            if (file.query_exists ()) {
+                file.delete ();
             }
         } catch (Error e) {
-            warning("Failed to delete profile: %s", e.message);
+            warning ("Failed to delete profile: %s", e.message);
         }
     }
 
-void apply_profile_config(string profile_name) {
+void apply_profile_config (string profile_name) {
     try {
-        string profile_path = Path.build_filename(
-            Environment.get_home_dir(),
+        string profile_path = Path.build_filename (
+            Environment.get_home_dir (),
             ".config",
             "MangoHud",
-            profile_name.replace(" ", "-") + ".conf"
+            profile_name.replace (" ", "-") + ".conf"
         );
 
-        string target_path = Path.build_filename(
-            Environment.get_home_dir(),
+        string target_path = Path.build_filename (
+            Environment.get_home_dir (),
             ".config",
             "MangoHud",
             "MangoHud.conf"
         );
 
-        var profile_file = File.new_for_path(profile_path);
-        if (profile_file.query_exists()) {
-            // Копируем файл
-            profile_file.copy(File.new_for_path(target_path), FileCopyFlags.OVERWRITE);
+        var profile_file = File.new_for_path (profile_path);
+        if (profile_file.query_exists ()) {
+            profile_file.copy (File.new_for_path (target_path), FileCopyFlags.OVERWRITE);
 
-            // Добавляем комментарий с именем профиля в начало
-            add_profile_comment_to_file(target_path, profile_name);
+            add_profile_comment_to_file (target_path, profile_name);
         }
     } catch (Error e) {
-        warning("Failed to apply profile: %s", e.message);
+        warning ("Failed to apply profile: %s", e.message);
     }
 }
 
-void add_profile_comment_to_file(string file_path, string profile_name) {
+void add_profile_comment_to_file (string file_path, string profile_name) {
     try {
-        var file = File.new_for_path(file_path);
-        var temp_file = File.new_for_path(file_path + ".tmp");
+        var file = File.new_for_path (file_path);
+        var temp_file = File.new_for_path (file_path + ".tmp");
 
-        var output = new DataOutputStream(temp_file.create(FileCreateFlags.REPLACE_DESTINATION));
-        var input = new DataInputStream(file.read());
+        var output = new DataOutputStream (temp_file.create (FileCreateFlags.REPLACE_DESTINATION));
+        var input = new DataInputStream (file.read ());
 
-        // Добавляем комментарий в начало
-        output.put_string("# Active profile: " + profile_name.replace(" ", "-") + ".conf\n");
+        output.put_string ("# Active profile: " + profile_name.replace (" ", "-") + ".conf\n");
 
-        // Копируем остальное содержимое
         string? line;
-        while ((line = input.read_line(null)) != null) {
-            // Пропускаем старый комментарий профиля, если есть
-            if (!line.has_prefix("# Active profile:")) {
-                output.put_string(line + "\n");
+        while ((line = input.read_line (null)) != null) {
+            if (!line.has_prefix ("# Active profile:")) {
+                output.put_string (line + "\n");
             }
         }
 
-        // Заменяем оригинальный файл
-        temp_file.move(file, FileCopyFlags.OVERWRITE);
+        temp_file.move (file, FileCopyFlags.OVERWRITE);
 
     } catch (Error e) {
-        warning("Failed to add profile comment: %s", e.message);
+        warning ("Failed to add profile comment: %s", e.message);
     }
 }
 
     void set_preset (string[] preset_values) {
-        var file = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child("MangoHud").get_child ("MangoHud.conf");
-        var backup_file = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud").get_child (".MangoHud.backup");
+        var home = Environment.get_home_dir ();
+        var file = File.new_for_path (home).get_child (".config")
+            .get_child ("MangoHud").get_child ("MangoHud.conf");
+        var backup_file = File.new_for_path (home).get_child (".config")
+            .get_child ("MangoHud").get_child (".MangoHud.backup");
         try {
             if (file.query_exists () && !backup_file.query_exists ()) {
                 file.copy (backup_file, FileCopyFlags.OVERWRITE);
             }
-            var output_stream = new DataOutputStream (file.replace(null, false, FileCreateFlags.NONE));
+            var output_stream = new DataOutputStream (file.replace (null, false, FileCreateFlags.NONE));
             output_stream.put_string ("#Preset config by MangoJuice #\n");
             output_stream.put_string ("legacy_layout=false\n");
             foreach (string value in preset_values) {
