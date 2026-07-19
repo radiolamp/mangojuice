@@ -8,5 +8,37 @@
     <file>images/default.png</file>
     <file>images/advanced.png</file>
     <file>images/full.png</file>
+    <file alias="scalable/actions/document-edit-symbolic.svg">assets/icons/document-edit-symbolic.svg</file>
+    <file alias="scalable/actions/edit-clear-symbolic.svg">assets/icons/edit-clear-symbolic.svg</file>
+    <file alias="scalable/actions/edit-delete-symbolic.svg">assets/icons/edit-delete-symbolic.svg</file>
+    <file alias="scalable/actions/edit-undo-symbolic.svg">assets/icons/edit-undo-symbolic.svg</file>
+    <file alias="scalable/actions/go-down-symbolic.svg">assets/icons/go-down-symbolic.svg</file>
+    <file alias="scalable/actions/go-next-symbolic.svg">assets/icons/go-next-symbolic.svg</file>
+    <file alias="scalable/actions/go-up-symbolic.svg">assets/icons/go-up-symbolic.svg</file>
+    <file alias="scalable/actions/media-playback-start-symbolic.svg">assets/icons/media-playback-start-symbolic.svg</file>
+    <file alias="scalable/actions/open-menu-symbolic.svg">assets/icons/open-menu-symbolic.svg</file>
+    <file alias="scalable/actions/view-continuous-symbolic.svg">assets/icons/view-continuous-symbolic.svg</file>
+    <file alias="scalable/actions/view-grid-symbolic.svg">assets/icons/view-grid-symbolic.svg</file>
+    <file alias="scalable/actions/view-more-symbolic.svg">assets/icons/view-more-symbolic.svg</file>
+    <file alias="scalable/actions/view-refresh-symbolic.svg">assets/icons/view-refresh-symbolic.svg</file>
+    <file alias="scalable/actions/view-reveal-symbolic.svg">assets/icons/view-reveal-symbolic.svg</file>
+    <file alias="scalable/apps/io.github.radiolamp.mangojuice-metrics-symbolic.svg">assets/icons/io.github.radiolamp.mangojuice-metrics-symbolic.svg</file>
+    <file alias="scalable/apps/io.github.radiolamp.mangojuice-extras-symbolic.svg">assets/icons/io.github.radiolamp.mangojuice-extras-symbolic.svg</file>
+    <file alias="scalable/apps/io.github.radiolamp.mangojuice-performance-symbolic.svg">assets/icons/io.github.radiolamp.mangojuice-performance-symbolic.svg</file>
+    <file alias="scalable/apps/io.github.radiolamp.mangojuice-visual-symbolic.svg">assets/icons/io.github.radiolamp.mangojuice-visual-symbolic.svg</file>
+    <file alias="scalable/apps/io.github.radiolamp.mangojuice-other-symbolic.svg">assets/icons/io.github.radiolamp.mangojuice-other-symbolic.svg</file>
+    <file alias="scalable/apps/io.github.radiolamp.mangojuice.donate-symbolic.svg">assets/icons/io.github.radiolamp.mangojuice.donate-symbolic.svg</file>
+    <file alias="scalable/apps/io.github.radiolamp.mangojuice.list-drag-handle-symbolic.svg">assets/icons/io.github.radiolamp.mangojuice.list-drag-handle-symbolic.svg</file>
+    <file alias="scalable/apps/io.github.radiolamp.mangojuice.svg">icons/hicolor/scalable/apps/io.github.radiolamp.mangojuice.svg</file>
+    <file alias="scalable/categories/applications-games-symbolic.svg">assets/icons/applications-games-symbolic.svg</file>
+    <file alias="scalable/categories/emoji-symbols-symbolic.svg">assets/icons/emoji-symbols-symbolic.svg</file>
+    <file alias="scalable/devices/input-keyboard-symbolic.svg">assets/icons/input-keyboard-symbolic.svg</file>
+    <file alias="scalable/legacy/emblem-system-symbolic.svg">assets/icons/emblem-system-symbolic.svg</file>
+    <file alias="scalable/legacy/preferences-desktop-appearance-symbolic.svg">assets/icons/preferences-desktop-appearance-symbolic.svg</file>
+    <file alias="scalable/mimetypes/application-x-addon-symbolic.svg">assets/icons/application-x-addon-symbolic.svg</file>
+    <file alias="scalable/places/folder-symbolic.svg">assets/icons/folder-symbolic.svg</file>
+    <file alias="scalable/places/user-trash-symbolic.svg">assets/icons/user-trash-symbolic.svg</file>
+    <file alias="scalable/status/dialog-information-symbolic.svg">assets/icons/dialog-information-symbolic.svg</file>
+    <file alias="scalable/status/dialog-warning-symbolic.svg">assets/icons/dialog-warning-symbolic.svg</file>
   </gresource>
 </gresources>

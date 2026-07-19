@@ -391,6 +391,8 @@ public class MangoJuice : Adw.Application {
         window.set_title ("MangoJuice");
         if (Config.IS_DEVEL) window.add_css_class ("devel");
 
+        Gtk.IconTheme.get_for_display (window.get_display ()).add_resource_path ("/io/github/radiolamp/mangojuice");
+
         var toast_overlay = new Adw.ToastOverlay ();
         var content_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         toast_overlay.set_child (content_box);
@@ -441,9 +443,12 @@ public class MangoJuice : Adw.Application {
         var visual_scrolled_window = create_scrolled_window (visual_box);
         other_scrolled_window = create_scrolled_window (other_box);
 
-        string? current_desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
-        // On Windows, XDG_CURRENT_DESKTOP is not set; use generic icons.
-        bool is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
+        bool is_windows = Environment.get_variable ("APPDATA") != null;
+        bool is_gnome = false;
+        if (!is_windows) {
+            string? current_desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
+            is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
+        }
 
         add_view_to_stack (metrics_scrolled_window, "metrics_box", _ ("Metrics"),
                           is_gnome ? "view-continuous-symbolic" : "io.github.radiolamp.mangojuice-metrics-symbolic");
@@ -460,7 +465,7 @@ public class MangoJuice : Adw.Application {
         var game_manager = new GameManager ();
         var game_manager_scrolled = create_scrolled_window (game_manager);
         add_view_to_stack (game_manager_scrolled, "games_box", _("Games"),
-                          "applications-games-symbolic");
+                          is_windows ? "io.github.radiolamp.mangojuice-other-symbolic" : "applications-games-symbolic");
 
         add_other_box_if_needed.begin ();
 
@@ -2962,6 +2967,9 @@ public class MangoJuice : Adw.Application {
     }
 
     async void add_other_box_if_needed () {
+        if (Environment.get_variable ("APPDATA") != null) {
+            return;
+        }
         if (Config.IS_DEVEL || yield check_vkbasalt_installed_async ()) {
             view_stack.add_titled (other_scrolled_window, "other_box", _ ("Other")).icon_name = "view-grid-symbolic";
         }
@@ -3286,12 +3294,45 @@ public class MangoJuice : Adw.Application {
     static int main (string[] args) {
         Intl.setlocale (LocaleCategory.ALL, "");
         Intl.textdomain ("mangojuice");
+
         string locale_dir = Environment.get_variable ("APPDIR") != null
             ? Path.build_filename (Environment.get_variable ("APPDIR"), "share/locale")
             : Config.GNOMELOCALEDIR;
 
+        try {
+            string tmp_dir = Path.build_filename (Environment.get_tmp_dir (), "mangojuice-locale");
+            string mo_path = Path.build_filename (tmp_dir, "ru_RU", "LC_MESSAGES", "mangojuice.mo");
+            var mo_file = File.new_for_path (mo_path);
+            if (!mo_file.query_exists ()) {
+                var bytes = resources_lookup_data ("/io/github/radiolamp/mangojuice/locale/ru_RU/LC_MESSAGES/mangojuice.mo",
+                                                  ResourceLookupFlags.NONE);
+                if (bytes != null) {
+                    mo_file.get_parent ().make_directory_with_parents ();
+                    var output = mo_file.replace (null, false, FileCreateFlags.NONE);
+                    output.write (bytes.get_data ());
+                    output.close ();
+                }
+            }
+            if (FileUtils.test (Path.build_filename (tmp_dir, "ru_RU", "LC_MESSAGES", "mangojuice.mo"), FileTest.EXISTS)) {
+                locale_dir = tmp_dir;
+            }
+        } catch (Error e) {
+            string? exe_dir = Environment.get_variable ("MANGOPATH");
+            if (exe_dir == null) {
+                exe_dir = File.new_for_path (args[0]).get_parent ()?.get_path ();
+            }
+            if (exe_dir == null) {
+                exe_dir = Environment.get_current_dir ();
+            }
+            string fallback = Path.build_filename (exe_dir, "share", "locale");
+            if (FileUtils.test (Path.build_filename (fallback, "ru_RU", "LC_MESSAGES", "mangojuice.mo"), FileTest.EXISTS)) {
+                locale_dir = fallback;
+            }
+        }
+
         Intl.bindtextdomain ("mangojuice", locale_dir);
         Intl.bind_textdomain_codeset ("mangojuice", "UTF-8");
+
         var app = new MangoJuice ();
         return app.run (args);
     }

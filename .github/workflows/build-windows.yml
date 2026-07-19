@@ -29,19 +29,27 @@ jobs:
             mingw-w64-x86_64-libgee
             mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-ntldd
+            mingw-w64-x86_64-gettext
 
       - name: Build
         run: |
           meson setup build --buildtype=release
           ninja -C build
 
-      - name: Bundle DLLs
+      - name: Install to destdir
         run: |
-          mkdir -p dist
+          DESTDIR=/tmp/mangojuice-install meson install -C build --no-rebuild
+
+      - name: Bundle
+        run: |
+          mkdir -p dist/share/locale
           cp build/src/mangojuice.exe dist/
           for dll in $(ntldd -R dist/mangojuice.exe | grep mingw64 | awk '{print $3}' | sort -u); do
             cp "$dll" dist/
           done
+          if [ -d /tmp/mangojuice-install/mingw64/share/locale ]; then
+            cp -r /tmp/mangojuice-install/mingw64/share/locale/* dist/share/locale/
+          fi
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

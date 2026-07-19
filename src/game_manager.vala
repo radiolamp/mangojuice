@@ -102,26 +102,28 @@ public class GameManager : Box {
         scrolled.child = process_list_box;
         append (scrolled);
 
-        var btn_box = new Box (Orientation.HORIZONTAL, 8);
+        var btn_box = new FlowBox ();
         btn_box.set_halign (Align.CENTER);
         btn_box.set_margin_top (8);
+        btn_box.set_max_children_per_line (3);
+        btn_box.set_selection_mode (SelectionMode.NONE);
 
         var refresh_btn = new Button.with_label (_("Refresh"));
         refresh_btn.add_css_class ("flat");
         refresh_btn.clicked.connect (refresh_processes);
-        btn_box.append (refresh_btn);
+        btn_box.insert (refresh_btn, -1);
 
         start_btn = new Button.with_label (_("Start Overlay"));
         start_btn.add_css_class ("suggested-action");
         start_btn.add_css_class ("pill");
         start_btn.clicked.connect (on_start);
-        btn_box.append (start_btn);
+        btn_box.insert (start_btn, -1);
 
         stop_btn = new Button.with_label (_("Stop Overlay"));
         stop_btn.add_css_class ("destructive-action");
         stop_btn.sensitive = false;
         stop_btn.clicked.connect (on_stop);
-        btn_box.append (stop_btn);
+        btn_box.insert (stop_btn, -1);
 
         append (btn_box);
 
