@@ -828,9 +828,6 @@ namespace AboutDialog {
             toast_overlay.add_toast (toast);
         });
 
-        string? wayland_display = Environment.get_variable("WAYLAND_DISPLAY");
-        bool is_wayland = (wayland_display != null && wayland_display != "");
-        
         row.activated.connect(() => {
             if (currently_selected_row != null && currently_selected_row != row) {
                 currently_selected_row.remove_css_class("selected");
