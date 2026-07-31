@@ -621,7 +621,7 @@ namespace AboutDialog {
         menu_box.set_margin_start (6);
         menu_box.set_margin_end (6);
         menu_popover.set_child (menu_box);
-        menu_btn.set_popover (menu_popover);
+        menu_btn.set_property ("popover", menu_popover);
 
         var btn_preview = new Gtk.Button.with_label (_("Preview"));
         btn_preview.set_icon_name ("view-reveal-symbolic");

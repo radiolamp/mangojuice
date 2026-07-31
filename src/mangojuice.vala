@@ -113,10 +113,12 @@ public class MangoJuice : Adw.Application {
     public ShortcutRecorder logs_key_recorder;
     bool mangohud_global_enabled = false;
     public bool is_loading = false;
+    public bool custom_order_changed { get; set; default = false; }
     bool first_run = false;
 
     ScrolledWindow other_scrolled_window;
     ViewStack view_stack;
+    Adw.HeaderBar header_bar;
 
     // Constants
     const string GPU_TITLE = _ ("GPU");
@@ -457,8 +459,22 @@ public class MangoJuice : Adw.Application {
 
         add_other_box_if_needed.begin ();
 
-        var header_bar = new Adw.HeaderBar ();
+        header_bar = new Adw.HeaderBar ();
         header_bar.set_title_widget (toolbar_view_switcher);
+
+        load_advanced_mode_state ();
+        if (custom_order_changed) {
+            header_bar.add_css_class ("custom-order-active");
+        }
+
+        notify["custom-order-changed"].connect (() => {
+            if (custom_order_changed) {
+                header_bar.add_css_class ("custom-order-active");
+            } else {
+                header_bar.remove_css_class ("custom-order-active");
+            }
+            save_advanced_mode_state ();
+        });
 
         var test_button = new Gtk.Button.with_label (_ ("Test"));
         test_button.clicked.connect (run_test);
@@ -3426,6 +3442,60 @@ public class MangoJuice : Adw.Application {
             _shortcut = modifiers.str + processed_key;
             shortcut_changed (_shortcut);
             stop_recording ();
+        }
+    }
+
+    void load_advanced_mode_state () {
+        var config_file = File.new_for_path (Environment.get_home_dir ())
+            .get_child (".config")
+            .get_child ("MangoHud")
+            .get_child ("MangoHud.conf");
+        try {
+            if (!config_file.query_exists ()) return;
+            var dis = new DataInputStream (config_file.read ());
+            string line;
+            while ((line = dis.read_line ()) != null) {
+                if (line == "#Advances=1") {
+                    custom_order_changed = true;
+                    break;
+                }
+            }
+            dis.close ();
+        } catch (Error e) {
+            stderr.printf ("Error loading advanced mode state: %s\n", e.message);
+        }
+    }
+
+    void save_advanced_mode_state () {
+        var config_file = File.new_for_path (Environment.get_home_dir ())
+            .get_child (".config")
+            .get_child ("MangoHud")
+            .get_child ("MangoHud.conf");
+        try {
+            if (!config_file.query_exists ()) return;
+            var lines = new Gee.ArrayList<string> ();
+            var dis = new DataInputStream (config_file.read ());
+            string line;
+            bool found = false;
+            while ((line = dis.read_line ()) != null) {
+                if (line.has_prefix ("#Advances=")) {
+                    lines.add (custom_order_changed ? "#Advances=1" : "#Advances=0");
+                    found = true;
+                } else {
+                    lines.add (line);
+                }
+            }
+            dis.close ();
+            if (!found) {
+                lines.add (custom_order_changed ? "#Advances=1" : "#Advances=0");
+            }
+            var dos = new DataOutputStream (config_file.replace (null, false, FileCreateFlags.NONE));
+            foreach (string l in lines) {
+                dos.put_string (l + "\n");
+            }
+            dos.close ();
+        } catch (Error e) {
+            stderr.printf ("Error saving advanced mode state: %s\n", e.message);
         }
     }
 

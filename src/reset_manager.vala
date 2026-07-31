@@ -16,6 +16,7 @@ public class ResetManager {
     }
 
     public void reset_all_widgets () {
+        app.custom_order_changed = false;
         reset_all_switches ();
         reset_media_format_dropdowns ();
         reset_entries ();

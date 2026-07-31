@@ -12,6 +12,7 @@ sources = files(
     'other/OtherBox.vala',
     'other/other_save.vala',
     'other/other_load.vala',
+    'other/DragRow.vala',
     'load_states.vala',
     'reset_manager.vala',
     'intel_power_fix_handler.vala',

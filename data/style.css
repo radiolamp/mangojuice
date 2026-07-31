@@ -2,22 +2,39 @@
     color: rgb(245, 94, 119);
 }
 
-.row-drop-indicator {
-    border-top: 3px solid @accent_color;
-    background: linear-gradient(to right, alpha(@accent_color, 0.15), transparent);
-    border-radius: 0;
-    transition: border-top-width 0.1s ease;
+.drop-target {
+    transition: background-color 150ms ease, border 150ms ease;
 }
 
-.drop-indicator {
-    background-color: @accent_color;
-    border-radius: 2px;
+.drop-target:drop(active) {
+    border-radius: 12px;
+    background-color: alpha(@accent_color, 0.12);
+    border: 1px solid alpha(@accent_color, 0.35);
 }
 
-.dragging {
-    opacity: 0.4;
-    background-color: alpha(@accent_bg_color, 0.3);
-    border-radius: 8px;
+.drop-area {
+    background-color: alpha(@accent_color, 0.12);
+    border: 1px solid alpha(@accent_color, 0.35);
+    border-radius: 12px;
+    transition: background-color 150ms ease, border 150ms ease;
+}
+
+.drop-begin {
+    padding: 3px;
+    background: alpha(@accent_color, 0.15);
+    border-radius: 12px;
+    border: 1px solid alpha(@accent_color, 0.2);
+}
+
+.drag-row:drop(active) {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.boxed-list row {
+    border-bottom: none;
 }
 
 flowboxchild {
@@ -41,12 +58,6 @@ flowboxchild {
   animation: wobble 1s ease-in-out 1;
 }
 
-@keyframes drop-pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-.row-drop-indicator {
-    animation: drop-pulse 1s ease-in-out infinite;
+.custom-order-active {
+    background-color: alpha(@accent_bg_color, 0.2);
 }

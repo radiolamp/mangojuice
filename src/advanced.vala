@@ -7,7 +7,8 @@ public class AdvancedDialog : Adw.Dialog {
     List<string> all_config_lines;
     List<string> filtered_config_lines;
     ListBox list_box;
-    Gtk.ListBoxRow? drop_indicator_row = null;
+    MangoJuice app;
+    Gtk.Switch mode_switch;
 
     string[] allowed_prefixes = { "custom_text_center=", "custom_text=", "gpu_stats", "vram", "cpu_stats",
     "core_load", "ram", "io_read", "io_write", "procmem", "swap", "fan", "fps", "fps_metrics=avg,0.01",
@@ -25,24 +26,11 @@ public class AdvancedDialog : Adw.Dialog {
 
     public AdvancedDialog (Gtk.Window parent, MangoJuice app) {
         Object ();
+        this.app = app;
 
         var header_bar = new Adw.HeaderBar ();
         header_bar.add_css_class ("flat");
         header_bar.set_size_request (320, -1);
-
-        var warning_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-        warning_box.set_halign (Gtk.Align.CENTER);
-        warning_box.set_margin_start (12);
-        warning_box.set_margin_end (12);
-
-        var warning_icon = new Gtk.Image.from_icon_name ("dialog-warning-symbolic");
-        var warning_label = new Gtk.Label (_("The setting is reset when the configuration is changed"));
-        warning_label.set_ellipsize (Pango.EllipsizeMode.END);
-        warning_label.add_css_class ("warning");
-
-        warning_box.append (warning_icon);
-        warning_box.append (warning_label);
-        header_bar.set_title_widget (warning_box);
 
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         main_box.append (header_bar);
@@ -67,12 +55,13 @@ public class AdvancedDialog : Adw.Dialog {
 
         list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
+        list_box.set_overflow (Gtk.Overflow.HIDDEN);
+        list_box.add_css_class ("boxed-list");
         list_box.set_hexpand (true);
         list_box.set_margin_start (12);
         list_box.set_margin_end (12);
         list_box.set_margin_top (12);
         list_box.set_margin_bottom (12);
-        list_box.add_css_class ("boxed-list");
 
         var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
         config_file = config_dir.get_child ("MangoHud.conf");
@@ -112,7 +101,37 @@ public class AdvancedDialog : Adw.Dialog {
             print (_("MangoHud.conf does not exist at: %s\n"), config_file.get_path ());
         }
 
-        clamp.set_child (list_box);
+        var content_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+
+        var header_row = new Adw.ActionRow ();
+        header_row.set_title (_("Enable Advanced Mode"));
+        header_row.set_subtitle (_("All new parameters will be saved at the end of the list"));
+
+        mode_switch = new Gtk.Switch ();
+        mode_switch.set_valign (Gtk.Align.CENTER);
+        mode_switch.active = app.custom_order_changed;
+        mode_switch.notify["active"].connect (() => {
+            app.custom_order_changed = mode_switch.active;
+        });
+        header_row.add_suffix (mode_switch);
+
+        var header_list = new Gtk.ListBox ();
+        header_list.set_selection_mode (Gtk.SelectionMode.NONE);
+        header_list.add_css_class ("boxed-list");
+        header_list.set_margin_start (12);
+        header_list.set_margin_top (2);
+        header_list.set_margin_end (12);
+        header_list.append (header_row);
+
+        content_box.append (header_list);
+
+        var spacer = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        spacer.set_size_request (-1, 13);
+        content_box.append (spacer);
+
+        content_box.append (list_box);
+
+        clamp.set_child (content_box);
         group.add (clamp);
         scrolled_window.set_child (group);
 
@@ -151,13 +170,27 @@ public class AdvancedDialog : Adw.Dialog {
         drag_icon.add_css_class ("dim-label");
         action_row.add_prefix (drag_icon);
 
+        var row = new Gtk.ListBoxRow ();
+        row.add_css_class ("drag-row");
+        var drag_row = new DragRow (action_row, row);
+        drag_row.build_drag_and_drop ();
+
+        row.set_child (drag_row);
+        row.map.connect (() => {
+            drag_row.draw_motion_widgets ();
+        });
+
+        drag_row.on_drop_end.connect ((lb) => {
+            save_config_to_file (list_box);
+        });
+
         var up_button = new Gtk.Button ();
         up_button.icon_name = "go-up-symbolic";
         up_button.add_css_class ("circular");
         up_button.set_valign (Align.CENTER);
         up_button.has_frame = false;
         up_button.clicked.connect (() => {
-            move_row_up (list_box, action_row);
+            move_row_up (list_box, row);
             save_config_to_file (list_box);
         });
         action_row.add_suffix (up_button);
@@ -168,7 +201,7 @@ public class AdvancedDialog : Adw.Dialog {
         down_button.set_valign (Align.CENTER);
         down_button.has_frame = false;
         down_button.clicked.connect (() => {
-            move_row_down (list_box, action_row);
+            move_row_down (list_box, row);
             save_config_to_file (list_box);
         });
         action_row.add_suffix (down_button);
@@ -179,115 +212,12 @@ public class AdvancedDialog : Adw.Dialog {
         delete_button.set_valign (Align.CENTER);
         delete_button.has_frame = false;
         delete_button.clicked.connect (() => {
-            list_box.remove (action_row);
+            list_box.remove (row);
             save_config_to_file (list_box);
         });
         action_row.add_suffix (delete_button);
 
-        enable_drag_and_drop (action_row, list_box, action_row);
-
-        list_box.append (action_row);
-    }
-
-    void enable_drag_and_drop (Gtk.Widget widget, ListBox list_box, ListBoxRow row) {
-        var drag_source = new Gtk.DragSource ();
-        drag_source.set_actions (Gdk.DragAction.MOVE);
-
-        // Store the dragged row reference
-        ListBoxRow? dragged_row = null;
-
-        drag_source.drag_begin.connect ((source, drag) => {
-            dragged_row = row;
-            row.add_css_class ("card");
-            var paintable = new Gtk.WidgetPaintable (row);
-            drag_source.set_icon (paintable, 0, 0);
-        });
-
-        drag_source.drag_end.connect ((source, drag) => {
-            if (dragged_row != null) {
-                dragged_row.remove_css_class ("card");
-                dragged_row = null;
-            }
-            clear_drop_highlight (list_box);
-        });
-
-        drag_source.prepare.connect ((source, x, y) => {
-            Value value = Value (typeof (ListBoxRow));
-            value.set_object (row);
-            return new Gdk.ContentProvider.for_value (value);
-        });
-
-        widget.add_controller (drag_source);
-
-        var drop_target = new Gtk.DropTarget (typeof (ListBoxRow), Gdk.DragAction.MOVE);
-
-        drop_target.drop.connect ((target, value, x, y) => {
-            var source_row = value.get_object () as ListBoxRow;
-            var dest_row = list_box.get_row_at_y ((int)y);
-
-            if (source_row == null || dest_row == null || source_row == dest_row) {
-                return false;
-            }
-
-            int dest_index = get_row_index (list_box, dest_row);
-
-            int row_height = dest_row.get_height ();
-            if (y > row_height / 2) {
-                dest_index++;
-            }
-
-            int source_index = get_row_index (list_box, source_row);
-            if (source_index < dest_index) {
-                dest_index--;
-            }
-
-            list_box.remove (source_row);
-            list_box.insert (source_row, dest_index);
-            save_config_to_file (list_box);
-
-            return true;
-        });
-
-        drop_target.enter.connect ((target, x, y) => {
-            var hover_row = list_box.get_row_at_y ((int)y);
-            if (hover_row != null && hover_row != dragged_row) {
-                update_drop_highlight (list_box, (int)y);
-            }
-            return Gdk.DragAction.MOVE;
-        });
-
-        drop_target.motion.connect ((target, x, y) => {
-            var hover_row = list_box.get_row_at_y ((int)y);
-            if (hover_row != null && hover_row != dragged_row) {
-                update_drop_highlight (list_box, (int)y);
-            } else {
-                clear_drop_highlight (list_box);
-            }
-            return Gdk.DragAction.MOVE;
-        });
-
-        drop_target.leave.connect ((target) => {
-            clear_drop_highlight (list_box);
-        });
-
-        list_box.add_controller (drop_target);
-    }
-
-    void update_drop_highlight (ListBox list_box, int y) {
-        clear_drop_highlight (list_box);
-
-        var dest_row = list_box.get_row_at_y (y);
-        if (dest_row != null) {
-            drop_indicator_row = dest_row;
-            drop_indicator_row.add_css_class ("row-drop-indicator");
-        }
-    }
-
-    void clear_drop_highlight (ListBox list_box) {
-        if (drop_indicator_row != null) {
-            drop_indicator_row.remove_css_class ("row-drop-indicator");
-            drop_indicator_row = null;
-        }
+        list_box.append (row);
     }
 
     int get_row_index (ListBox list_box, ListBoxRow row) {
@@ -366,6 +296,8 @@ public class AdvancedDialog : Adw.Dialog {
     }
 
     void save_config_to_file (ListBox list_box) {
+        app.custom_order_changed = true;
+        mode_switch.active = true;
         try {
             var output_stream = config_file.replace (
                 null,
@@ -379,9 +311,15 @@ public class AdvancedDialog : Adw.Dialog {
 
             var child = list_box.get_first_child ();
             while (child != null) {
-                var action_row = child as Adw.ActionRow;
-                if (action_row != null) {
-                    data_stream.put_string (action_row.subtitle + "\n", null);
+                var list_row = child as Gtk.ListBoxRow;
+                if (list_row != null) {
+                    var drag_row = list_row.get_child () as DragRow;
+                    if (drag_row != null) {
+                        var action_row = drag_row.content as Adw.ActionRow;
+                        if (action_row != null) {
+                            data_stream.put_string (action_row.subtitle + "\n", null);
+                        }
+                    }
                 }
                 child = child.get_next_sibling ();
             }
