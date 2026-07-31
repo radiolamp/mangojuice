@@ -307,8 +307,6 @@ public class AdvancedDialog : Adw.Dialog {
             );
             var data_stream = new DataOutputStream (output_stream);
 
-            data_stream.put_string ("# PRO MangoJuice #\n");
-
             var child = list_box.get_first_child ();
             while (child != null) {
                 var list_row = child as Gtk.ListBoxRow;

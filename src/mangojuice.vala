@@ -3448,14 +3448,13 @@ public class MangoJuice : Adw.Application {
     void load_advanced_mode_state () {
         var config_file = File.new_for_path (Environment.get_home_dir ())
             .get_child (".config")
-            .get_child ("MangoHud")
-            .get_child ("MangoHud.conf");
+            .get_child (".mangojuice");
         try {
             if (!config_file.query_exists ()) return;
             var dis = new DataInputStream (config_file.read ());
             string line;
             while ((line = dis.read_line ()) != null) {
-                if (line == "#Advances=1") {
+                if (line == "Advances=1") {
                     custom_order_changed = true;
                     break;
                 }
@@ -3469,8 +3468,7 @@ public class MangoJuice : Adw.Application {
     void save_advanced_mode_state () {
         var config_file = File.new_for_path (Environment.get_home_dir ())
             .get_child (".config")
-            .get_child ("MangoHud")
-            .get_child ("MangoHud.conf");
+            .get_child (".mangojuice");
         try {
             if (!config_file.query_exists ()) return;
             var lines = new Gee.ArrayList<string> ();
@@ -3478,8 +3476,8 @@ public class MangoJuice : Adw.Application {
             string line;
             bool found = false;
             while ((line = dis.read_line ()) != null) {
-                if (line.has_prefix ("#Advances=")) {
-                    lines.add (custom_order_changed ? "#Advances=1" : "#Advances=0");
+                if (line.has_prefix ("Advances=")) {
+                    lines.add (custom_order_changed ? "Advances=1" : "Advances=0");
                     found = true;
                 } else {
                     lines.add (line);
@@ -3487,7 +3485,7 @@ public class MangoJuice : Adw.Application {
             }
             dis.close ();
             if (!found) {
-                lines.add (custom_order_changed ? "#Advances=1" : "#Advances=0");
+                lines.add (custom_order_changed ? "Advances=1" : "Advances=0");
             }
             var dos = new DataOutputStream (config_file.replace (null, false, FileCreateFlags.NONE));
             foreach (string l in lines) {
