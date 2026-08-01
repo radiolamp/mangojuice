@@ -1724,8 +1724,8 @@ msgid "Enable Advanced Mode"
 msgstr "Включить продвинутый режим"
 
 #: src/advanced.vala:108
-msgid "All new parameters will be saved at the end of the list"
-msgstr "Все новые параметры будут сохраняться в конце списка"
+msgid "All new parameters will appear at the end of the list"
+msgstr "Все новые параметры будут появляться в конце списка"
 
 #~ msgid "Mango Juice"
 #~ msgstr "Mango Juice"

@@ -105,13 +105,16 @@ public class AdvancedDialog : Adw.Dialog {
 
         var header_row = new Adw.ActionRow ();
         header_row.set_title (_("Enable Advanced Mode"));
-        header_row.set_subtitle (_("All new parameters will be saved at the end of the list"));
+        header_row.set_subtitle (_("All new parameters will appear at the end of the list"));
 
         mode_switch = new Gtk.Switch ();
         mode_switch.set_valign (Gtk.Align.CENTER);
         mode_switch.active = app.custom_order_changed;
         mode_switch.notify["active"].connect (() => {
             app.custom_order_changed = mode_switch.active;
+            if (!mode_switch.active) {
+                SaveStates.save_states_to_file (app);
+            }
         });
         header_row.add_suffix (mode_switch);
 

@@ -1222,7 +1222,7 @@ public class MangoJuice : Adw.Application {
         custom_switch_pair.set_size_request (50, -1);
         combined_flow_box.insert (custom_switch_pair, -1);
 
-        var borders_widget = create_scale_entry_widget (_ ("Borders"), _ ("Round"), 0, 15, 0);
+        var borders_widget = create_scale_entry_widget (_ ("Borders"), _ ("Round"), 0, 40, 0);
         borders_scale = borders_widget.scale;
         borders_entry = borders_widget.entry;
         borders_scale.value_changed.connect (() => {
