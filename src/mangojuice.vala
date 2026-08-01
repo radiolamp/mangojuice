@@ -2498,6 +2498,7 @@ public class MangoJuice : Adw.Application {
                 string? wayland_display = Environment.get_variable ("WAYLAND_DISPLAY");
                 bool is_wayland = (wayland_display != null && wayland_display != "");
 
+                SaveStates.flush_all_pending ();
                 if (!config_file.query_exists ()) {
                     save_config ();
                 }

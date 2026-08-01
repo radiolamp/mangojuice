@@ -452,6 +452,7 @@ namespace AboutDialog {
         try {
             Process.spawn_command_line_async ("pkill vkcube");
             Process.spawn_command_line_async ("pkill glxgears");
+            SaveStates.flush_all_pending ();
             SaveStates.reset_config_file_cache ();
             string config_path = Path.build_filename (
                 Environment.get_home_dir (),
