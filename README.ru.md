@@ -96,28 +96,6 @@ sudo ninja -C build uninstall
   sudo ninja -C build install
 ```
 
-## Поддержка проекта
-
-Вы можете поддержать проект несколькими способами:
-
-- Создать задачу с проблемой или предложением по улучшению;
-- Отправить запрос на слияние с исправлениями или новой функциональностью;
-- Оказать финансовую поддержку (укажите ваш ник в сообщении при отправке через Т-Банк).
-
-<br>
-
-<div align="center">
-  <a href="https://boosty.to/radiolamp/donate">
-    <img height="200" src="https://github.com/radiolamp/mangojuice/raw/main/data/assets/boosty_qrcode.png" alt="Boosty">
-  </a>
-  <a href="https://www.donationalerts.com/r/radiolamp">
-    <img height="200" src="https://github.com/radiolamp/mangojuice/raw/main/data/assets/donationalerts_qrcode.png" alt="Donation Alerts">
-  </a>
-  <a href="https://www.tbank.ru/cf/3PPTstulqEq">
-    <img height="200" src="https://github.com/radiolamp/mangojuice/raw/main/data/assets/tbank_qrcode.png" alt="Т-Банк">
-  </a>
-</div>
-
 ## Благодарность
 
 Благодарю [Rirusha](https://gitlab.gnome.org/Rirusha) за важные разъяснения по Vala и GTK4.

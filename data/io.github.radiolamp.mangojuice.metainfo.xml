@@ -15,31 +15,31 @@
   <url type="bugtracker">https://github.com/radiolamp/mangojuice/issues</url>
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen1.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/1.0.0/images/screen1.png?raw=true</image>
       <caption>Main interface of MangoJuice</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen2.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/1.0.0/images/screen2.png?raw=true</image>
       <caption>Extra</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen3.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/1.0.0/images/screen3.png?raw=true</image>
       <caption>Metric</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen4.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/1.0.0/images/screen4.png?raw=true</image>
       <caption>Visual</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen5.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/1.0.0/images/screen5.png?raw=true</image>
       <caption>Your profiles</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen7.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/1.0.0/images/screen7.png?raw=true</image>
       <caption>Change order</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://github.com/radiolamp/mangojuice-donate/blob/0.3/images/screen6.png?raw=true</image>
+      <image>https://github.com/radiolamp/mangojuice-donate/blob/1.0.0/images/screen6.png?raw=true</image>
       <caption>Visual</caption>
     </screenshot>
   </screenshots>
@@ -51,6 +51,18 @@
   </custom>
   <update_contact>anton.osi@outlook.com</update_contact>
   <releases>
+    <release version="1.0.0" date="2026-08-08">
+      <description>
+        <p>Stable release</p>
+        <ul>
+          <li>Major rework of save/load functionality.</li>
+          <li>Improved advanced mode with drag-and-drop support.</li>
+          <li>Added mobile layout and adaptive controls.</li>
+          <li>Fixed offset issue (closes #72).</li>
+          <li>Updated translations and documentation.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.9.0" date="2026-04-05">
       <description>
         <p>New features and improvements</p>
