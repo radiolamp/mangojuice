@@ -1,0 +1,1873 @@
+# Turkish translations for mangojuice package.
+# Copyright (C) 2026 THE mangojuice'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the mangojuice package.
+# user <aliburakmc54tr@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: mangojuice\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 13:59+0300\n"
+"PO-Revision-Date: 2026-09-09 20:41+0300\n"
+"Last-Translator: user <aliburakmc54tr@gmail.com>\n"
+"Language-Team: Turkish <gnome-turk@gnome.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:6
+msgid "Mango Juice"
+msgstr "Mango Juice"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:7
+msgid "Customizable performance display"
+msgstr "Özelleştirilebilir performans ekranı"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:9
+msgid ""
+"MangoJuice is an application for easily editing MangoHUD settings, which in "
+"turn is an Overlay solution for tracking load and other parameters in games "
+"and other software."
+msgstr ""
+"MangoJuice, MangoHUD ayarlarını kolayca düzenlemeye yarayan bir uygulamadır. "
+"MangoHUD ise oyunlarda ve diğer yazılımlarda sistem yükü ve diğer parametreleri "
+"takip etmeye olanak tanıyan bir katman çözümüdür."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:19
+msgid "Main interface of MangoJuice"
+msgstr "MangoJuice'un ana arayüzü"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:23
+msgid "Extra"
+msgstr "Ekstra"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:27
+msgid "Metric"
+msgstr "Ölçüt"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:31
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:43 src/mangojuice.vala:455
+msgid "Visual"
+msgstr "Görünüm"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:35 src/mangojuice.vala:533
+msgid "Your profiles"
+msgstr "Profilleriniz"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:39 src/mangojuice.vala:535
+msgid "Change order"
+msgstr "Değişiklik sırası"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:47
+msgid "Radiolamp"
+msgstr "Radiolamp"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:56
+msgid "New features and improvements"
+msgstr "Yeni özellikler ve iyileştirmeler"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:58
+msgid "Added smooth tab switching animations."
+msgstr "Akıcı sekme geçiş animasyonları eklendi."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:59
+msgid "Added font_size_secondary option."
+msgstr "font_size_secondary seçeneği eklendi"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:60
+msgid "Added ram_temp switch with DDR5 temperature support (closes #64)."
+msgstr "DDR5 sıcaklık desteğine sahip `ram_temp` anahtarı eklendi (#64 kapanır)"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:61
+msgid "Added intel power fix functionality."
+msgstr "Intel güç düzeltmesi işlevi eklendi."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:62
+msgid "Added support for multiple fps_limit values."
+msgstr "Birden fazla fps_limit değeri desteği eklendi."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:63
+msgid "Improved drag and drop in advanced dialog."
+msgstr "Gelişmiş iletişim kutusunda sürükle ve bırak özelliği iyileştirildi."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:64
+msgid "Fixed various bugs and translations."
+msgstr "Çeşitli hatalar ve çeviriler düzeltildi."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:70
+msgid "Happy New Year!"
+msgstr "Mutlu Yıllar!"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:72
+msgid "New settings from MangoHud 0.8.2."
+msgstr "MangoHud 0.8.2'den yeni ayarlar."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:73
+msgid "Updated Fatpak runtime to 49."
+msgstr "Fatpak runtime 49'a güncellendi"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:74
+msgid "Improved translation."
+msgstr "Çeviri iyileştirildi"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:80
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:94
+msgid "Interface improvements and bug fixes"
+msgstr "Arayüz iyileştirmeleri ve hata düzeltmeleri"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:82
+msgid "Update to Gnome 49"
+msgstr "Gnome 49'a güncelleme"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:83
+msgid ""
+"Added a donation bar when starting the program for the first time in the "
+"system (can be disabled by creating a file during installation: "
+"~/.config/.mangojuice)"
+msgstr ""
+"Programı sistemde ilk defa başlatıldığında gözükecek bağış çubuğu eklendi "
+"(kurulum sırasında dosya oluşturarak devre dışı bırakılabilir: "
+"~/.config/.mangojuice)"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:84
+msgid "Improved graphical display of profiles"
+msgstr "Profillerin grafiksel gösterimi iyileştirildi"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:85
+msgid "Improved interface style"
+msgstr "İyileştirilmiş arayüz stili"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:86
+msgid "Added the ability to add multiple variables using \",\""
+msgstr "\",\" kullanarak çoklu değer ekleme özelliği eklendi"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:87
+msgid ""
+"An improvement in vkbasalt is available for AppImage and the native package: "
+"the ability to select reshaders has been added. Vaddum has currently "
+"prepared a selection of reshaders that can be downloaded from the release"
+msgstr ""
+"vkbasalt'ın AppImage ve yerel paket sürümleri için bir iyileştirme mevcut: "
+"reshader'ları seçme özelliği eklendi. Vaddum şu anda "
+"sürüm sayfasından indirilebilecek bir reshader seçkisi hazırladı."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:88
+msgid "Other improvements"
+msgstr "Diğer iyileştirmeler"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:96
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:104
+msgid "Update to GTK 4.19 and сorrection of bugs."
+msgstr "GTK 4.19 güncellemesi ve hata düzeltmeleri."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:102
+msgid "Minor update"
+msgstr "Ufak Güncelleme"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:110
+msgid "Profiles and sorting"
+msgstr "Profiller ve sıralama"
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:112
+msgid "Full update information is available on GitHub."
+msgstr "Tam güncelleme bilgisi GitHub üzerinde mevcut."
+
+#: data/io.github.radiolamp.mangojuice.metainfo.xml:118
+msgid "Initial release of MangoJuice."
+msgstr "MangoJuice'in ilk sürümü."
+
+#: src/advanced.vala:98 src/mangojuice.vala:2835
+#, c-format
+msgid "Error when selecting a file: %s\n"
+msgstr "Dosya seçilirken hata oluştu: %s\n"
+
+#: src/advanced.vala:101
+#, c-format
+msgid "MangoHud.conf does not exist at: %s\n"
+msgstr "MangoHud.conf burada bulunmuyor: %s\n"
+
+#: src/advanced.vala:107
+msgid "Enable Advanced Mode"
+msgstr "Gelişmiş Modu Etkinleştir"
+
+#: src/advanced.vala:108
+msgid "All new parameters will appear at the end of the list"
+msgstr "Tüm yeni parametreler listenin sonunda görünecek"
+
+#: src/advanced.vala:144
+msgid "Add space"
+msgstr "Boşluk ekle"
+
+#: src/advanced.vala:336 src/mangojuice.vala:2821 src/mangojuice.vala:2856
+#, c-format
+msgid "Error writing to the file: %s\n"
+msgstr "Dosyaya yazma hatası: %s\n"
+
+#: src/advanced.vala:343 src/advanced.vala:344 src/mangojuice.vala:1184
+msgid "Your text"
+msgstr "Metniniz"
+
+#.
+#. * Labels
+#.
+#. Metrics
+#: src/advanced.vala:345 src/mangojuice.vala:189
+msgid "Load GPU"
+msgstr "GPU Yükü"
+
+#: src/advanced.vala:346 src/mangojuice.vala:192
+msgid "Vulkan Driver"
+msgstr "Vulkan Sürücüsü"
+
+#: src/advanced.vala:347 src/mangojuice.vala:189 src/mangojuice.vala:1918
+msgid "VRAM"
+msgstr "VRAM"
+
+#: src/advanced.vala:348 src/mangojuice.vala:196
+msgid "Load CPU"
+msgstr "CPU Yükü"
+
+#: src/advanced.vala:349 src/mangojuice.vala:196 src/mangojuice.vala:255
+msgid "Load per core"
+msgstr "Çekirdek bazlı yük"
+
+#: src/advanced.vala:350 src/mangojuice.vala:201 src/mangojuice.vala:1918
+msgid "RAM"
+msgstr "RAM"
+
+#: src/advanced.vala:351 src/advanced.vala:352
+msgid "Disk"
+msgstr "Disk"
+
+#: src/advanced.vala:353 src/mangojuice.vala:201
+msgid "Resident memory"
+msgstr "Toplam bellek"
+
+#: src/advanced.vala:354 src/mangojuice.vala:202
+msgid "Swap"
+msgstr "Takas alanı"
+
+#: src/advanced.vala:355 src/mangojuice.vala:214
+msgid "Fan"
+msgstr "Fan"
+
+#. Performance
+#: src/advanced.vala:356 src/mangojuice.vala:236
+msgid "FPS"
+msgstr "FPS"
+
+#: src/advanced.vala:357 src/mangojuice.vala:237
+msgid "Lowest 0.1%"
+msgstr "En düşük 0.1%"
+
+#: src/advanced.vala:358 src/mangojuice.vala:236
+msgid "Lowest 1%"
+msgstr "En düşük %1"
+
+#: src/advanced.vala:359 src/advanced.vala:381 src/mangojuice.vala:227
+msgid "Version"
+msgstr "Sürüm"
+
+#: src/advanced.vala:360 src/mangojuice.vala:193
+msgid "Engine version"
+msgstr "Motor Sürümü"
+
+#: src/advanced.vala:361 src/mangojuice.vala:218
+msgid "Gamemode"
+msgstr "Gamemode"
+
+#: src/advanced.vala:362 src/mangojuice.vala:218
+msgid "vkBasalt"
+msgstr "vkBasalt"
+
+#: src/advanced.vala:363 src/mangojuice.vala:218
+msgid "Exe name"
+msgstr "Program adı"
+
+#: src/advanced.vala:364 src/mangojuice.vala:219
+msgid "FSR"
+msgstr "FSR"
+
+#: src/advanced.vala:365 src/mangojuice.vala:219
+msgid "HDR"
+msgstr "HDR"
+
+#. Extras
+#: src/advanced.vala:366 src/mangojuice.vala:214
+msgid "Refresh rate"
+msgstr "Yenileme hızı"
+
+#: src/advanced.vala:367 src/mangojuice.vala:214
+msgid "Resolution"
+msgstr "Çözünürlük"
+
+#: src/advanced.vala:368 src/mangojuice.vala:215
+msgid "Architecture"
+msgstr "Mimari"
+
+#: src/advanced.vala:369 src/mangojuice.vala:239
+msgid "VPS"
+msgstr "VPS"
+
+#: src/advanced.vala:370 src/mangojuice.vala:214
+msgid "Session type"
+msgstr "Oturum türü"
+
+#: src/advanced.vala:371 src/mangojuice.vala:237
+msgid "Frame limit"
+msgstr "Kare limiti"
+
+#: src/advanced.vala:372 src/mangojuice.vala:238
+msgid "Frame graph"
+msgstr "Kare grafiği"
+
+#: src/advanced.vala:373
+msgid "Frame"
+msgstr "Kare"
+
+#: src/advanced.vala:374 src/mangojuice.vala:223
+msgid "Battery charge"
+msgstr "Pil miktarı"
+
+#: src/advanced.vala:375 src/mangojuice.vala:223
+msgid "Battery power"
+msgstr "Pil gücü"
+
+#: src/advanced.vala:376 src/mangojuice.vala:223
+msgid "Time remain"
+msgstr "Kalan zaman"
+
+#: src/advanced.vala:377
+msgid "Battery icon"
+msgstr "Pil ikonu"
+
+#: src/advanced.vala:378 src/mangojuice.vala:224
+msgid "Other batteries"
+msgstr "Diğer Cihaz Pilleri"
+
+#: src/advanced.vala:379 src/mangojuice.vala:215 src/mangojuice.vala:1919
+msgid "Network"
+msgstr "Ağ"
+
+#: src/advanced.vala:380 src/mangojuice.vala:230 src/mangojuice.vala:1444
+#: src/mangojuice.vala:1919
+msgid "Media"
+msgstr "Medya"
+
+#: src/advanced.vala:382 src/mangojuice.vala:227
+msgid "Winesync"
+msgstr "Winesync"
+
+#: src/advanced.vala:383 src/mangojuice.vala:215
+msgid "Watch"
+msgstr "Saat"
+
+#: src/advanced.vala:385 src/mangojuice.vala:128 src/mangojuice.vala:2381
+#: src/mangojuice.vala:3121
+msgid "Other"
+msgstr "Diğer"
+
+#: src/dialog.vala:28
+msgid "translator-credits"
+msgstr "çevirmen-katkısı"
+
+#: src/dialog.vala:35
+msgid "Support the Project"
+msgstr "Projeyi Destekle"
+
+#: src/dialog.vala:65
+msgid "It is only thanks to your support that Mangojuice lives and develops."
+msgstr "Mangojuice, yalnızca sizin desteğiniz sayesinde varlığını sürdürüyor ve gelişiyor."
+
+#: src/dialog.vala:66
+msgid ""
+" If it is not difficult for you, please support the project financially."
+msgstr ""
+" Sizin için zor olmayacaksa, lütfen projeye maddi olarak destek olun."
+
+#: src/dialog.vala:67
+msgid " Any amount will be useful and will go towards development."
+msgstr " Herhangi bir miktar yararlı olacak ve geliştirme çalışmalarında kullanılacaktır."
+
+#: src/dialog.vala:100
+msgid "Donation Alerts"
+msgstr "Bağış Uyarıları"
+
+#: src/dialog.vala:113
+msgid "Boosty"
+msgstr "Boosty"
+
+#: src/dialog.vala:126
+msgid "Tinkoff"
+msgstr "Tinkoff"
+
+#: src/dialog.vala:139
+msgid "ЮMoney (Мир)"
+msgstr "ЮMoney (Мир)"
+
+#: src/dialog.vala:152
+msgid "Sber (Мир)"
+msgstr "Sber (Мир)"
+
+#: src/dialog.vala:165
+msgid "Telegram (TON)"
+msgstr "Telegram (TON)"
+
+#: src/dialog.vala:166
+msgid "Click to copy the wallet number"
+msgstr "Cüzdan numarasını kopyalamak için tıklayın"
+
+#: src/dialog.vala:171
+msgid "Copied"
+msgstr "Kopyalandı"
+
+#: src/dialog.vala:215
+msgid "Thank you for your support!"
+msgstr "Desteğiniz için teşekkürler!"
+
+#: src/dialog.vala:286 src/dialog.vala:290
+msgid "To get ready presets, click on the title."
+msgstr "Hazır ön ayarları almak için başlığa tıklayın."
+
+#: src/dialog.vala:303 src/mangojuice.vala:534
+msgid "Presets"
+msgstr "Ön Ayarlar"
+
+#: src/dialog.vala:330
+msgid "No profiles yet"
+msgstr "Henüz profil yok"
+
+#: src/dialog.vala:336
+msgid "Add Profile"
+msgstr "Profil Ekle"
+
+#: src/dialog.vala:411 src/mangojuice.vala:2525
+#, c-format
+msgid "Error when executing the command: %s\n"
+msgstr "Komut yürütülürken hata oluştu: %s\n"
+
+#: src/dialog.vala:512 src/dialog.vala:780
+msgid "Changed"
+msgstr "Değiştirildi"
+
+#: src/dialog.vala:535 src/dialog.vala:836
+msgid "Deleted"
+msgstr "Silindi"
+
+#: src/dialog.vala:543 src/dialog.vala:550
+msgid "Profile"
+msgstr "Profil"
+
+#: src/dialog.vala:562 src/dialog.vala:589
+msgid "Profile preview"
+msgstr "Profil önizlemesi"
+
+#: src/dialog.vala:570
+msgid "Apply the profile to the entire system"
+msgstr "Profili tüm sisteme uygula"
+
+#: src/dialog.vala:579
+msgid "Renaming. Name the name of the game, or name.exe for Wine games,"
+msgstr "Yeniden adlandırma. Oyunun adını veya Wine oyunları için name.exe dosyasını belirtin,"
+
+#: src/dialog.vala:580
+msgid " e.g. DOOM.exe. Attention case is important!"
+msgstr "DOOM.exe gibi. Büyük/küçük harf ayrımı önemlidir!"
+
+#: src/dialog.vala:597
+msgid "Overwrite profile"
+msgstr "Profili üzerine yaz"
+
+#: src/dialog.vala:605
+msgid "Delete profile"
+msgstr "Profili sil"
+
+#: src/dialog.vala:613 src/mangojuice.vala:131
+msgid "Options"
+msgstr "Seçenekler"
+
+#: src/dialog.vala:626
+msgid "Preview"
+msgstr "Önizleme"
+
+#: src/dialog.vala:632
+msgid "Rename"
+msgstr "Yeniden adlandır"
+
+#: src/dialog.vala:638
+msgid "Overwrite"
+msgstr "Üstüne yaz"
+
+#: src/dialog.vala:644
+msgid "Delete"
+msgstr "Sil"
+
+#: src/dialog.vala:725
+msgid "Applied"
+msgstr "Uygulandı"
+
+#: src/dialog.vala:885 src/mangojuice.vala:532 src/mangojuice.vala:2828
+msgid "Restore"
+msgstr "Sıfırla"
+
+#: src/dialog.vala:901
+msgid "Apply"
+msgstr "Uygula"
+
+#: src/dialog.vala:938 src/dialog.vala:974
+msgid "Minimal"
+msgstr "Minimal"
+
+#: src/dialog.vala:938 src/dialog.vala:974 src/load_states.vala:114
+#: src/mangojuice.vala:1940 src/mangojuice.vala:1984 src/mangojuice.vala:2004
+#: src/mangojuice.vala:2026 src/reset_manager.vala:112 src/save_states.vala:827
+#: src/save_states.vala:989
+msgid "Default"
+msgstr "Varsayılan"
+
+#: src/dialog.vala:938 src/dialog.vala:974
+msgid "Advanced"
+msgstr "Gelişmiş"
+
+#: src/dialog.vala:938 src/dialog.vala:974
+msgid "Full"
+msgstr "Tam"
+
+#: src/dialog.vala:938 src/dialog.vala:974
+msgid "Only FPS"
+msgstr "Sadece FPS"
+
+#: src/dialog.vala:975
+#, c-format
+msgid "Applying %s layout\n"
+msgstr "%s düzeni uygulanıyor\n"
+
+#: src/intel_power_fix_handler.vala:20 src/intel_power_fix_handler.vala:81
+#: src/mangojuice.vala:3068
+msgid "Warning"
+msgstr "Uyarı"
+
+#: src/intel_power_fix_handler.vala:21
+msgid ""
+"You are changing the rights to intel energy_uj, which could potentially lead "
+"to security issues."
+msgstr ""
+"Intel energy_uj'nin izinlerini değiştiriyorsunuz, bu potansiyel olarak "
+"güvenlik sorunlarına yol açabilir."
+
+#: src/intel_power_fix_handler.vala:24
+msgid "Cancel"
+msgstr "İptal"
+
+#: src/intel_power_fix_handler.vala:25
+msgid "Until Reboot"
+msgstr "Yeniden Başlatana dek"
+
+#: src/intel_power_fix_handler.vala:26
+msgid "Permanently"
+msgstr "Kalıcı olarak"
+
+#: src/intel_power_fix_handler.vala:82
+msgid ""
+"For the permanent changes to take full effect, a reboot is recommended. "
+"Would you like to reboot now?"
+msgstr ""
+"Kalıcı değişimlerin tamamen etki etmesi için, yeniden başlatma önerilir. "
+"Şimdi yeniden başlatmak ister misiniz?"
+
+#: src/intel_power_fix_handler.vala:85
+msgid "Later"
+msgstr "Sonra"
+
+#: src/intel_power_fix_handler.vala:86
+msgid "Reboot Now"
+msgstr "Şimdi Yeniden Başlat"
+
+#: src/intel_power_fix_handler.vala:102
+msgid "Error"
+msgstr "Hata"
+
+#: src/intel_power_fix_handler.vala:105 src/mangojuice.vala:3071
+msgid "OK"
+msgstr "Tamam"
+
+#: src/intel_power_fix_handler.vala:142
+msgid "Permissions set permanently (systemd service active)"
+msgstr "İzinler kalıcı olarak ayarlandı (systemd servisi aktif)"
+
+#: src/intel_power_fix_handler.vala:143
+msgid "Service exists but not active"
+msgstr "Servis bulunuyor ancak aktif değil"
+
+#: src/intel_power_fix_handler.vala:143
+msgid "Permissions set until reboot"
+msgstr "İzinler yeniden başlatana dek ayarlandı"
+
+#: src/intel_power_fix_handler.vala:149
+msgid "Service active but permissions not set"
+msgstr "Hizmet aktif ancak izinler ayarlanmamış"
+
+#: src/intel_power_fix_handler.vala:150
+msgid "Service exists but inactive"
+msgstr "Hizmet bulunuyor ama aktif değil"
+
+#: src/intel_power_fix_handler.vala:150
+msgid "Permissions not set"
+msgstr "İzinler ayarlanmadı"
+
+#: src/load_states.vala:229 src/mangojuice.vala:1251 src/save_states.vala:802
+msgid "Top Left"
+msgstr "Sol Üst"
+
+#: src/load_states.vala:229 src/mangojuice.vala:1251 src/save_states.vala:803
+msgid "Top Center"
+msgstr "Üst Orta"
+
+#: src/load_states.vala:230 src/mangojuice.vala:1251 src/save_states.vala:804
+msgid "Top Right"
+msgstr "Sağ Üst"
+
+#: src/load_states.vala:230 src/mangojuice.vala:1252 src/save_states.vala:805
+msgid "Middle Left"
+msgstr "Sol Orta"
+
+#: src/load_states.vala:231 src/mangojuice.vala:1252 src/save_states.vala:806
+msgid "Middle Right"
+msgstr "Sağ Orta"
+
+#: src/load_states.vala:231 src/mangojuice.vala:1253 src/save_states.vala:807
+msgid "Bottom Left"
+msgstr "Sol Alt"
+
+#: src/load_states.vala:232 src/mangojuice.vala:1253 src/save_states.vala:808
+msgid "Bottom Center"
+msgstr "Orta Alt"
+
+#: src/load_states.vala:232 src/mangojuice.vala:1253 src/save_states.vala:809
+msgid "Bottom Right"
+msgstr "Sağ Alt"
+
+#. Constants
+#: src/mangojuice.vala:124
+msgid "GPU"
+msgstr "GPU"
+
+#: src/mangojuice.vala:125
+msgid "CPU"
+msgstr "CPU"
+
+#: src/mangojuice.vala:126
+msgid "Memory"
+msgstr "Bellek"
+
+#: src/mangojuice.vala:127
+msgid "Git"
+msgstr "Git"
+
+#: src/mangojuice.vala:129
+msgid "System"
+msgstr "Sistem"
+
+#: src/mangojuice.vala:130 src/mangojuice.vala:1919 src/mangojuice.vala:1999
+msgid "Wine"
+msgstr "Wine"
+
+#: src/mangojuice.vala:132 src/mangojuice.vala:1920
+msgid "Battery"
+msgstr "Pil"
+
+#: src/mangojuice.vala:133
+msgid "Information"
+msgstr "Bilgilendirme"
+
+#: src/mangojuice.vala:189 src/mangojuice.vala:196
+msgid "Color load"
+msgstr "Yüke göre renk"
+
+#: src/mangojuice.vala:189
+msgid "Core frequency"
+msgstr "Çekirdek frekansı"
+
+#: src/mangojuice.vala:190
+msgid "Memory frequency"
+msgstr "Bellek frekansı"
+
+#: src/mangojuice.vala:190 src/mangojuice.vala:197
+msgid "Temperature"
+msgstr "Sıcaklık"
+
+#: src/mangojuice.vala:190
+msgid "Memory temperature"
+msgstr "Bellek sıcaklığı"
+
+#: src/mangojuice.vala:190
+msgid "Max temperature"
+msgstr "Hotspot sıcaklığı"
+
+#: src/mangojuice.vala:191
+msgid "Fans"
+msgstr "Fanlar"
+
+#: src/mangojuice.vala:191
+msgid "Model"
+msgstr "Model"
+
+#: src/mangojuice.vala:191 src/mangojuice.vala:197
+msgid "Power"
+msgstr "Güç"
+
+#: src/mangojuice.vala:191
+msgid "Voltage"
+msgstr "Voltaj"
+
+#: src/mangojuice.vala:192
+msgid "Throttling"
+msgstr "Hız sınırlama"
+
+#: src/mangojuice.vala:192
+msgid "Throttling graph"
+msgstr "Hız sınırlama grafiği"
+
+#: src/mangojuice.vala:192
+msgid "GPU efficiency (F/J)"
+msgstr "GPU verimliliği (F/J)"
+
+#: src/mangojuice.vala:193
+msgid "Power limit"
+msgstr "Güç limiti"
+
+#: src/mangojuice.vala:193
+msgid "VRAM usage"
+msgstr "VRAM kullanımı"
+
+#: src/mangojuice.vala:196
+msgid "Colored cores"
+msgstr "Renkli çekirdekler"
+
+#: src/mangojuice.vala:196
+msgid "Diagram"
+msgstr "Diyagram"
+
+#: src/mangojuice.vala:197
+msgid "Maximum frequency"
+msgstr "Maksimum frekans"
+
+#: src/mangojuice.vala:197
+msgid "Core type"
+msgstr "Çekirdek türü"
+
+#: src/mangojuice.vala:197
+msgid "FPS per Joule"
+msgstr "Joule başına FPS"
+
+#: src/mangojuice.vala:198
+msgid "EconoFlip"
+msgstr "EconoFlip"
+
+#: src/mangojuice.vala:201
+msgid "Disk read"
+msgstr "Disk okuma"
+
+#: src/mangojuice.vala:201
+msgid "Disk write"
+msgstr "Disk yazma"
+
+#: src/mangojuice.vala:202
+msgid "General memory"
+msgstr "Genel bellek"
+
+#: src/mangojuice.vala:202
+msgid "Virtual memory"
+msgstr "Sanal bellek"
+
+#: src/mangojuice.vala:202
+msgid "RAM temperature"
+msgstr "RAM sıcaklığı"
+
+#: src/mangojuice.vala:206 src/mangojuice.vala:207
+msgid "Size, GiB"
+msgstr "Boyut, GiB"
+
+#: src/mangojuice.vala:206
+msgid "Input, MiB/s"
+msgstr "OKuma, MİB/s"
+
+#: src/mangojuice.vala:206
+msgid "Output, MiB/s"
+msgstr "Yazma, MİB/s"
+
+#: src/mangojuice.vala:207
+msgid "Size, MiB/s"
+msgstr "Boyut, MiB/s"
+
+#: src/mangojuice.vala:207
+msgid "DDR5 only"
+msgstr "Sadece DDR5"
+
+#: src/mangojuice.vala:210
+msgid "Hide FSR sharpness"
+msgstr "FSR keskinleştirmeyi gizle"
+
+#: src/mangojuice.vala:215
+msgid "Compact API"
+msgstr "Kısa API Adı"
+
+#: src/mangojuice.vala:218
+msgid "HUD Version"
+msgstr "HUD Sürümü"
+
+#: src/mangojuice.vala:219
+msgid "Fcat"
+msgstr "Fcat"
+
+#: src/mangojuice.vala:219
+msgid "Remove paddings"
+msgstr "İç Boşlukları Sıfırla"
+
+#: src/mangojuice.vala:220 src/mangojuice.vala:1324
+msgid "Hide HUD"
+msgstr "HUD'u gizle"
+
+#: src/mangojuice.vala:220
+msgid "Remove shadows"
+msgstr "Gölgeleri kaldır"
+
+#: src/mangojuice.vala:220
+msgid "Font normalization"
+msgstr "Yazı normalleştirme"
+
+#: src/mangojuice.vala:220
+msgid "Remove margins"
+msgstr "Dış Boşlukları Sıfırla"
+
+#: src/mangojuice.vala:224
+msgid "Device icon"
+msgstr "Cihaz ikonu"
+
+#: src/mangojuice.vala:224
+msgid "More icon"
+msgstr "Ek Simgeler"
+
+#: src/mangojuice.vala:230
+msgid "Full ON"
+msgstr "Tümünü Göster"
+
+#: src/mangojuice.vala:231
+msgid "Full log"
+msgstr "Ayrıntılı Günlük"
+
+#: src/mangojuice.vala:231
+msgid "Upload logs"
+msgstr "Günlükleri Yükle"
+
+#: src/mangojuice.vala:236
+msgid "Color FPS"
+msgstr "FPS'ye göre renk"
+
+#: src/mangojuice.vala:237
+msgid "All lowest"
+msgstr "Tüm düşük FPS'ler"
+
+#: src/mangojuice.vala:238
+msgid "Detailed Frametime"
+msgstr "Detaylı Kare Süresi"
+
+#: src/mangojuice.vala:238
+msgid "Histogram"
+msgstr "Histogram"
+
+#: src/mangojuice.vala:239
+msgid "Frame Counter"
+msgstr "Kare Sayacı"
+
+#: src/mangojuice.vala:239
+msgid "°C to °F"
+msgstr "°C'den °F'ye"
+
+#.
+#. * Descriptions
+#.
+#. Metrics
+#: src/mangojuice.vala:248 src/mangojuice.vala:255
+msgid "Percentage load"
+msgstr "Yük miktarı"
+
+#: src/mangojuice.vala:248 src/mangojuice.vala:255 src/mangojuice.vala:288
+msgid "Color text"
+msgstr "Renkli metin"
+
+#: src/mangojuice.vala:248
+msgid "Amount of video memory"
+msgstr "Video belleği kullanımı"
+
+#: src/mangojuice.vala:248 src/mangojuice.vala:249
+msgid "Frequency, MHz"
+msgstr "Frekans, MHz"
+
+#: src/mangojuice.vala:249
+msgid "GPU temperature"
+msgstr "GPU sıcaklığı"
+
+#: src/mangojuice.vala:249
+msgid "GDDR temperature"
+msgstr "GDDR sıcaklığı"
+
+#: src/mangojuice.vala:249
+msgid "Temperature peak"
+msgstr "GPU sıcak nokta sıcaklığı"
+
+#: src/mangojuice.vala:250
+msgid "Speed, RPM"
+msgstr "Hız, RPM"
+
+#: src/mangojuice.vala:250
+msgid "GPU name"
+msgstr "GPU adı"
+
+#: src/mangojuice.vala:250 src/mangojuice.vala:257 src/mangojuice.vala:275
+msgid "Consumption, W"
+msgstr "Güç tüketimi, W"
+
+#: src/mangojuice.vala:250
+msgid "Consumption, V"
+msgstr "Gerilim, V"
+
+#: src/mangojuice.vala:251
+msgid "Trolling parametrs"
+msgstr "Hız sınırlama değişkenleri"
+
+#: src/mangojuice.vala:251
+msgid "Curve"
+msgstr "Sınırlama miktarı grafik erğisi"
+
+#: src/mangojuice.vala:251
+msgid "Driver Version"
+msgstr "Sürücü Sürümü"
+
+#: src/mangojuice.vala:251
+msgid "Efficiency in FPS/Joule"
+msgstr "FPS/Joule cinsinden verimlilik"
+
+#: src/mangojuice.vala:252
+msgid "OpenGL and Vulkan"
+msgstr "OpenGL ve Vulkan sürüm"
+
+#: src/mangojuice.vala:252
+msgid "Display GPU power limit"
+msgstr "GPU güç limitini göster"
+
+#: src/mangojuice.vala:252
+msgid "Display process' VRAM usage"
+msgstr "İşlemin VRAM kullanımı"
+
+#: src/mangojuice.vala:255
+msgid "All cores"
+msgstr "Tüm çekirdeklerin yükü"
+
+#: src/mangojuice.vala:255
+msgid "Colored cores text"
+msgstr "Çekirdekler için renkli yazı"
+
+#: src/mangojuice.vala:256
+msgid "Peak among all cores"
+msgstr "En yüksek çekirdek frekansı"
+
+#: src/mangojuice.vala:256
+msgid "CPU temperature"
+msgstr "CPU sıcaklığı"
+
+#: src/mangojuice.vala:257
+msgid "For new Intel and ARM"
+msgstr "Yeni Intel ve ARM için"
+
+#: src/mangojuice.vala:258
+msgid "CPU efficiency in FPS/Joule"
+msgstr "FPS/Joule'e göre CPU verimliliği"
+
+#: src/mangojuice.vala:259
+msgid "Swaps FPS/J to J/Frame"
+msgstr "FPS/J değerini J/Kareye çevir"
+
+#: src/mangojuice.vala:262
+msgid "Gamescope"
+msgstr "Gamescope"
+
+#. Extras
+#: src/mangojuice.vala:266 src/mangojuice.vala:271
+msgid "Gamescope only"
+msgstr "Gamescope'a özel"
+
+#: src/mangojuice.vala:266
+msgid "Steam Deck only"
+msgstr "Steam Deck'e özel"
+
+#: src/mangojuice.vala:266
+msgid "Window size"
+msgstr "Pencere boyutu"
+
+#: src/mangojuice.vala:266
+msgid "X11/Wayland"
+msgstr "X11/Wayland"
+
+#: src/mangojuice.vala:267
+msgid "Shortens the name"
+msgstr "API ismini kısaltır"
+
+#: src/mangojuice.vala:267
+msgid "Current time"
+msgstr "Şu anki saat"
+
+#: src/mangojuice.vala:267
+msgid "Processor base"
+msgstr "İşlemci mimarisi"
+
+#: src/mangojuice.vala:267
+msgid "Adapters speed"
+msgstr "Adaptör hızı"
+
+#: src/mangojuice.vala:270
+msgid "MangoHud version"
+msgstr "MangoHud sürümü"
+
+#: src/mangojuice.vala:270
+msgid "Gamemode state"
+msgstr "Gamemode durumu"
+
+#: src/mangojuice.vala:270
+msgid "vkBasalt state"
+msgstr "vkBasalt durumu"
+
+#: src/mangojuice.vala:270
+msgid "Process name"
+msgstr "İşlem adı"
+
+#: src/mangojuice.vala:271
+msgid "Updating visualization"
+msgstr "Oyun performansı ölçer"
+
+#: src/mangojuice.vala:271
+msgid "Internal offsets"
+msgstr "İç boşluk değerleri"
+
+#: src/mangojuice.vala:272
+msgid "Hide overlay"
+msgstr "Arayüzü gizle"
+
+#: src/mangojuice.vala:272
+msgid "Shadows under text"
+msgstr "Metin altı gölgeleri kaldırır"
+
+#: src/mangojuice.vala:272
+msgid "Same font size"
+msgstr "Sabit yazı boyutu"
+
+#: src/mangojuice.vala:272
+msgid "External offsets"
+msgstr "Dış boşluk değerleri"
+
+#: src/mangojuice.vala:275
+msgid "Power level, %"
+msgstr "Pil Seviyesi, %"
+
+#: src/mangojuice.vala:275
+msgid "Battery life"
+msgstr "Kalan pil süresi"
+
+#: src/mangojuice.vala:276
+msgid "This devices"
+msgstr "Cihazlar"
+
+#: src/mangojuice.vala:276
+msgid "Wireless devices"
+msgstr "Kablosuz cihazlar"
+
+#: src/mangojuice.vala:276
+msgid "Wireless battries"
+msgstr "Bağlı cihazların pilleri"
+
+#: src/mangojuice.vala:279
+msgid "Wine or Proton version"
+msgstr "Wine ya da Proton sürümü"
+
+#: src/mangojuice.vala:279
+msgid "Wine sync method"
+msgstr "Wine Sync yöntemi"
+
+#: src/mangojuice.vala:282
+msgid "Current playback"
+msgstr "Şu an oynatılan içerik"
+
+#: src/mangojuice.vala:282
+msgid "All but histograms"
+msgstr "Histogramlar hariç tümü"
+
+#: src/mangojuice.vala:283
+msgid "Log information"
+msgstr "Günlük bilgisi"
+
+#: src/mangojuice.vala:283
+msgid "flightlessmango.com"
+msgstr "flightlessmango.com'a gönder"
+
+#. Performance
+#: src/mangojuice.vala:288
+msgid "Frames per second"
+msgstr "Saniye başına kare"
+
+#: src/mangojuice.vala:288
+msgid "1% is lower than"
+msgstr "En düşük %1 değeri"
+
+#: src/mangojuice.vala:289
+msgid "0.1% is lower than"
+msgstr "En düşük %0.1 değeri"
+
+#: src/mangojuice.vala:289
+msgid "1% and 0.1% lower than"
+msgstr "%1 ve %0.1 değerlerini göster"
+
+#: src/mangojuice.vala:290
+msgid "FPS limitation"
+msgstr "FPS sınırlandırma"
+
+#: src/mangojuice.vala:290 src/mangojuice.vala:1918
+msgid "Frametime"
+msgstr "Frametime"
+
+#: src/mangojuice.vala:291
+msgid "Detailed frame time"
+msgstr "Detaylı frametime grafiği"
+
+#: src/mangojuice.vala:291
+msgid "Graph to histogram"
+msgstr "Histogram grafiği"
+
+#: src/mangojuice.vala:292
+msgid "Display frame count"
+msgstr "Kare sayısını göster"
+
+#: src/mangojuice.vala:292
+msgid "Temperature in °F"
+msgstr "Sıcaklığı °F olarak göster"
+
+#: src/mangojuice.vala:292
+msgid "Present mode"
+msgstr "Vulkan Present Source modu"
+
+#. Vulkan and OpenGL Values
+#: src/mangojuice.vala:296 src/mangojuice.vala:298
+msgid "Unset"
+msgstr "Ayarlanmamış"
+
+#: src/mangojuice.vala:296 src/mangojuice.vala:298
+msgid "Adaptive"
+msgstr "Adaptif"
+
+#: src/mangojuice.vala:296 src/mangojuice.vala:298
+msgid "OFF"
+msgstr "KAPALI"
+
+#: src/mangojuice.vala:296 src/mangojuice.vala:298
+msgid "ON"
+msgstr "AÇIK"
+
+#: src/mangojuice.vala:296 src/mangojuice.vala:298
+msgid "Mailbox"
+msgstr "Mailbox"
+
+#: src/mangojuice.vala:312
+msgid "Title"
+msgstr "Başlık"
+
+#: src/mangojuice.vala:312
+msgid "Artist"
+msgstr "Sanatçı"
+
+#: src/mangojuice.vala:312
+msgid "Album"
+msgstr "Albüm"
+
+#: src/mangojuice.vala:312 src/mangojuice.vala:2331
+msgid "None"
+msgstr "Hiç biri"
+
+#: src/mangojuice.vala:449
+msgid "Metrics"
+msgstr "Ölçütler"
+
+#: src/mangojuice.vala:451
+msgid "Extras"
+msgstr "Ek Seçenekler"
+
+#: src/mangojuice.vala:453
+msgid "Performance"
+msgstr "Performans"
+
+#: src/mangojuice.vala:479
+msgid "Test"
+msgstr "Test"
+
+#: src/mangojuice.vala:530 src/mangojuice.vala:2787
+msgid "Save"
+msgstr "Kaydet"
+
+#: src/mangojuice.vala:531
+msgid "Save As"
+msgstr "Farklı Kaydet"
+
+#: src/mangojuice.vala:536
+msgid "About"
+msgstr "Hakkında"
+
+#: src/mangojuice.vala:546
+msgid "Donate"
+msgstr "Bağış Yapın"
+
+#: src/mangojuice.vala:623
+msgid "MangoHud is not installed. Please install it."
+msgstr "MangoHud kurulmamış. Lütfen kurun."
+
+#: src/mangojuice.vala:626
+msgid "Install"
+msgstr "Kur"
+
+#: src/mangojuice.vala:644
+#, c-format
+msgid "Failed to launch AppStream: %s"
+msgstr "AppStream başlatılamadı: %s"
+
+#: src/mangojuice.vala:668
+msgid "vkcube not found. If you want a test button, install vulkan-tools.\n"
+msgstr "vkcube bulunamadı. Test düğmesi istiyorsanız vulkan-tools kurun.\n"
+
+#: src/mangojuice.vala:669
+msgid "glxgears not found. If you want a test button, install mesa-utils.\n"
+msgstr "glxgears bulunamadı. Test düğmesi istiyorsanız mesa-utils kurun.\n"
+
+#: src/mangojuice.vala:672
+msgid ""
+"vkcube and glxgears not found. Install vulkan-tools and mesa-utils to enable "
+"the test button."
+msgstr ""
+"vkcube ve glxgears bulunamadı. Etkinleştirmek için vulkan-tools ve mesa-utils kurun."
+
+#: src/mangojuice.vala:825
+#, c-format
+msgid "Error closing test apps: %s\n"
+msgstr "Test uygulamaları kapatılırken hata oluştu: %s\n"
+
+#: src/mangojuice.vala:1008
+msgid "Clear"
+msgstr "Temizle"
+
+#: src/mangojuice.vala:1031
+msgid "MangoHud variable"
+msgstr "MangoHud değişkeni"
+
+#: src/mangojuice.vala:1032
+msgid "Enter MangoHud variables separated by commas"
+msgstr "Virgülle ayrılmış MangoHud değişkenlerini girin"
+
+#: src/mangojuice.vala:1041
+msgid "Home"
+msgstr "Ev Dizini"
+
+#: src/mangojuice.vala:1042
+msgid "Directory for logs"
+msgstr "Günlükler için dizin"
+
+#: src/mangojuice.vala:1051
+msgid "Clear path"
+msgstr "Yolu temizle"
+
+#: src/mangojuice.vala:1060
+msgid "The directory for saving the logging"
+msgstr "Günlüklerin kaydedileceği dizin"
+
+#: src/mangojuice.vala:1075
+msgid "Intel Power Fix"
+msgstr "Intel Güç DÜzeltmesi"
+
+#: src/mangojuice.vala:1088
+msgid "Click to record shortcut"
+msgstr "Kısayol kaydetmek için tıklayın"
+
+#: src/mangojuice.vala:1109
+msgid "Reset Config"
+msgstr "Yapılandırmayı Sıfırla"
+
+#: src/mangojuice.vala:1129
+msgid "Blacklist: (vkcube, WatchDogs2.exe)"
+msgstr "Kara liste: (vkcube, WatchDogs2.exe)"
+
+#: src/mangojuice.vala:1139
+msgid "MangoHud Global"
+msgstr "MangoHud Küresel"
+
+#: src/mangojuice.vala:1155
+msgid "Logs key"
+msgstr "Günlük kaydı kısayolu"
+
+#: src/mangojuice.vala:1179
+msgid "Customize"
+msgstr "Özelleştir"
+
+#: src/mangojuice.vala:1208
+msgid "Horizontal HUD"
+msgstr "Yatay HUD"
+
+#: src/mangojuice.vala:1225
+msgid "Borders"
+msgstr "Kenarlar"
+
+#: src/mangojuice.vala:1225
+msgid "Round"
+msgstr "Yuvarlatma miktarı"
+
+#: src/mangojuice.vala:1237
+msgid "Alpha"
+msgstr "Saydamlık"
+
+#: src/mangojuice.vala:1237
+msgid "Transparency"
+msgstr "Saydamlık seviyesi"
+
+#: src/mangojuice.vala:1275
+msgid "Position"
+msgstr "Konum"
+
+#: src/mangojuice.vala:1279
+msgid "Columns"
+msgstr "Sütunlar"
+
+#: src/mangojuice.vala:1279
+msgid "Number of columns"
+msgstr "Sütun sayısı"
+
+#: src/mangojuice.vala:1291
+msgid "Key shortcuts"
+msgstr "Kısayol tuşları"
+
+#: src/mangojuice.vala:1303
+msgid "Click to record a new HUD toggle shortcut"
+msgstr "Yeni HUD açma/kapama kısayolu kaydetmek için tıklayın"
+
+#: src/mangojuice.vala:1339
+msgid "Offset X"
+msgstr "X Konum Kaydırması"
+
+#: src/mangojuice.vala:1339
+msgid "Horizontal offset"
+msgstr "Yatay konum kaydırma miktarı"
+
+#: src/mangojuice.vala:1351
+msgid "Offset Y"
+msgstr "Y Konum Kaydırması"
+
+#: src/mangojuice.vala:1351
+msgid "Vertical offset"
+msgstr "Dikey konum kaydırma miktarı"
+
+#: src/mangojuice.vala:1363
+msgid "Toggle position"
+msgstr "Konum Değiştirme Tuşu"
+
+#: src/mangojuice.vala:1368
+msgid "Click to record a new toggle position shortcut"
+msgstr "Yeni bir konum değiştirme kısayolu kaydetmek için tıklayın"
+
+#: src/mangojuice.vala:1402
+msgid "Font"
+msgstr "Yazı tipi"
+
+#: src/mangojuice.vala:1405
+msgid "Size"
+msgstr "Boyut"
+
+#: src/mangojuice.vala:1405
+msgid "Size in pixels"
+msgstr "Piksel cinsinden boyut"
+
+#: src/mangojuice.vala:1415
+msgid "Small fonts"
+msgstr "İkincil yazı boyutu"
+
+#: src/mangojuice.vala:1415
+msgid "Secondary font size"
+msgstr "İkincil metin boyutu"
+
+#: src/mangojuice.vala:1517
+msgid "Color"
+msgstr "Renk"
+
+#: src/mangojuice.vala:1554
+msgid "GPU custom name"
+msgstr "Özel GPU adı"
+
+#: src/mangojuice.vala:1563
+msgid "Clear GPU name"
+msgstr "GPU adını temizle"
+
+#: src/mangojuice.vala:1575
+msgid "CPU custom name"
+msgstr "Özel CPU adı"
+
+#: src/mangojuice.vala:1584
+msgid "Clear CPU name"
+msgstr "CPU adını temizle"
+
+#: src/mangojuice.vala:1615
+msgid "FPS color levels"
+msgstr "FPS'e göre renkler"
+
+#: src/mangojuice.vala:1619 src/mangojuice.vala:1687 src/mangojuice.vala:1755
+msgid "Medium"
+msgstr "Orta"
+
+#: src/mangojuice.vala:1625 src/mangojuice.vala:1693 src/mangojuice.vala:1761
+msgid "High"
+msgstr "Yüksek"
+
+#: src/mangojuice.vala:1683
+msgid "GPU level colors"
+msgstr "GPU kullanımına göre renkler"
+
+#: src/mangojuice.vala:1751
+msgid "CPU level colors"
+msgstr "CPU kullanımına göre renkler"
+
+#: src/mangojuice.vala:1918
+msgid "Background"
+msgstr "Arka plan"
+
+#: src/mangojuice.vala:1919
+msgid "Engine"
+msgstr "Motor"
+
+#: src/mangojuice.vala:1920
+msgid "Text"
+msgstr "Metin"
+
+#: src/mangojuice.vala:1920
+msgid "Horizontal separator"
+msgstr "Yatay Ayırıcı Çizgi"
+
+#: src/mangojuice.vala:1942
+msgid "If you are going to play through Wine, then you need to select "
+msgstr "Eğer Wine üzerinden oynayacaksanız, seçmeniz gerekiyor "
+
+#: src/mangojuice.vala:1943
+msgid "fonts from the home directory, the system fonts will not work."
+msgstr "ev dizinindeki yazı tipleri kullanıldığında, sistem yazı tipleri çalışmayacaktır."
+
+#: src/mangojuice.vala:1958
+msgid "Search font"
+msgstr "Yazı tipi ara"
+
+#: src/mangojuice.vala:2082
+#, c-format
+msgid "Error when searching for fonts: %s\n"
+msgstr "Yazı tipleri ararken hata: %s\n"
+
+#: src/mangojuice.vala:2172
+msgid "Logging"
+msgstr "Günlük kaydı"
+
+#: src/mangojuice.vala:2185
+msgid "Duration"
+msgstr "Süre"
+
+#: src/mangojuice.vala:2185
+msgid "Autostart"
+msgstr "Otomatik Başlat"
+
+#: src/mangojuice.vala:2185
+msgid "Interval"
+msgstr "Aralık"
+
+#: src/mangojuice.vala:2186
+msgid "Seconds"
+msgstr "Saniye"
+
+#: src/mangojuice.vala:2186 src/mangojuice.vala:2385
+msgid "Milliseconds"
+msgstr "Milisaniye"
+
+#: src/mangojuice.vala:2204
+msgid "Limiters FPS"
+msgstr "FPS sınırlayıcılar"
+
+#: src/mangojuice.vala:2216
+msgid "Limit 1"
+msgstr "Sınır 1"
+
+#: src/mangojuice.vala:2227
+msgid "Limit 2"
+msgstr "Sınır 2"
+
+#: src/mangojuice.vala:2238
+msgid "Limit 3"
+msgstr "Sınır 3"
+
+#: src/mangojuice.vala:2248
+msgid "Click to record FPS limit toggle shortcut"
+msgstr "FPS sınırlama kısayolu kaydetmek için tıklayın"
+
+#: src/mangojuice.vala:2284
+msgid "VSync"
+msgstr "VSync"
+
+#: src/mangojuice.vala:2327
+msgid "Filters"
+msgstr "Filtreler"
+
+#: src/mangojuice.vala:2331
+msgid "Bicubic"
+msgstr "Bicubic"
+
+#: src/mangojuice.vala:2331
+msgid "Trilinear"
+msgstr "Trilinear"
+
+#: src/mangojuice.vala:2331
+msgid "Retro"
+msgstr "Retro"
+
+#: src/mangojuice.vala:2351
+msgid "Anisotropic"
+msgstr "Eşyönsüz"
+
+#: src/mangojuice.vala:2351
+msgid "Filtering"
+msgstr "Filtreleme seviyesi"
+
+#: src/mangojuice.vala:2355
+msgid "Mipmap"
+msgstr "Mipmap"
+
+#: src/mangojuice.vala:2355
+msgid "Aliasing"
+msgstr "Doku detay seviyesi"
+
+#: src/mangojuice.vala:2385
+msgid "FPS Sampling"
+msgstr "FPS Örnekleme"
+
+#: src/mangojuice.vala:2431
+#, c-format
+msgid "Error when restarting vkcube: %s\n"
+msgstr "vkcube yeniden başlatırken hata: %s\n"
+
+#: src/mangojuice.vala:2440
+#, c-format
+msgid "Error when restarting glxgears: %s\n"
+msgstr "glxgears yeniden başlatılırken hata: %s\n"
+
+#: src/mangojuice.vala:2469 src/mangojuice.vala:2486
+#, c-format
+msgid "Error checking running processes: %s\n"
+msgstr "Çalışan işlemleri kontrol ederken hata: %s\n"
+
+#: src/mangojuice.vala:2536
+msgid "vkBasalt.conf file deleted."
+msgstr "vkBasalt.conf dosyası silindi"
+
+#: src/mangojuice.vala:2538
+#, c-format
+msgid "Error deleting vkBasalt.conf: %s\n"
+msgstr "vkBasalt.conf silinirken hata: %s\n"
+
+#: src/mangojuice.vala:2541
+msgid "vkBasalt.conf file does not exist."
+msgstr "vkBasalt.conf dosyası bulunmuyor."
+
+#: src/mangojuice.vala:2554
+msgid ".MangoHud.backup file deleted."
+msgstr ".MangoHud.backup dosyası silindi"
+
+#: src/mangojuice.vala:2556
+#, c-format
+msgid "Error deleting .MangoHud.backup: %s\n"
+msgstr ".MangoHud.backup silinirken hata: %s\n"
+
+#: src/mangojuice.vala:2559
+msgid ".MangoHud.backup file does not exist."
+msgstr ".MangoHud.backup dosyası bulunmuyor."
+
+#: src/mangojuice.vala:2570
+#, c-format
+msgid "Error when selecting a folder: %s\n"
+msgstr "Klasör seçilirken hata oluştu: %s\n"
+
+#: src/mangojuice.vala:2615
+msgid "List GPUs to display"
+msgstr "Görüntülenecek GPU'ları listele"
+
+#: src/mangojuice.vala:2618
+msgid "Video card display order (0,1,2)"
+msgstr "Ekran kartı gösterme sırası (0,1,2)"
+
+#: src/mangojuice.vala:2622 src/mangojuice.vala:2667 src/save_states.vala:980
+msgid "All video cards"
+msgstr "Tüm ekran kartları"
+
+#: src/mangojuice.vala:2716
+msgid "Unknown Videocard"
+msgstr "Bilinmeyen Ekran Kartı"
+
+#: src/mangojuice.vala:2745
+#, c-format
+msgid "Error checking vkcube availability: %s\n"
+msgstr "vkcube kullanılabilirliğini kontrol ederken hata: %s\n"
+
+#: src/mangojuice.vala:2760
+msgid "MangoHud not found. Please install MangoHud to use this application.\n"
+msgstr "MangoHud bulunamadı. Lütfen uygulamayı kullanabilmek için MangoHud'u kurun.\n"
+
+#: src/mangojuice.vala:2764
+#, c-format
+msgid "Error checking MangoHud availability: %s\n"
+msgstr "MangoHud kullanılabilirliğini kontrol ederken hata: %s\n"
+
+#: src/mangojuice.vala:2780
+#, c-format
+msgid "Error checking glxgears availability: %s\n"
+msgstr "glxgears kullanılabilirliğini kontrol ederken hata: %s\n"
+
+#: src/mangojuice.vala:2795
+#, c-format
+msgid "Error when saving the file: %s\n"
+msgstr "Dosyayı kaydederken hata oluştu: %s\n"
+
+#: src/mangojuice.vala:2804
+msgid "MangoHud.conf does not exist.\n"
+msgstr "MangoHud.conf bulunmuyor.\n"
+
+#: src/mangojuice.vala:2827
+msgid "Select config file to restore"
+msgstr "Sıfırlanacak yapılandırma dosyası seçin"
+
+#: src/mangojuice.vala:2854
+#, c-format
+msgid "Configuration restored from %s\n"
+msgstr "Yapılandırma buradan geri yüklendi: %s\n"
+
+#: src/mangojuice.vala:3036
+#, c-format
+msgid "Error deleting MANGOHUD from /etc/environment: %s\n"
+msgstr "MANGOHUD /etc/environment konumundan silinirken hata: %s\n"
+
+#: src/mangojuice.vala:3049
+#, c-format
+msgid "Error adding MANGOHUD to /etc/environment: %s\n"
+msgstr "MANGOHUD /etc/environment konumuna eklenirken hata: %s\n"
+
+#: src/mangojuice.vala:3057
+msgid "Failed to modify /etc/environment.\n"
+msgstr "/etc/environment dosyası değiştirilemedi.\n"
+
+#: src/mangojuice.vala:3069
+msgid "The changes will take effect only after the system is restarted."
+msgstr "Değişiklikler, yalnızca sistem yeniden başlatıldıktan sonra geçerli olacaktır."
+
+#: src/mangojuice.vala:3072
+msgid "Restart"
+msgstr "Yeniden Başlat"
+
+#: src/mangojuice.vala:3083
+#, c-format
+msgid "Error when restarting the system: %s\n"
+msgstr "Sistem yeniden başlatılırken hata: %s\n"
+
+#: src/mangojuice.vala:3114
+#, c-format
+msgid "Error checking the MANGOHUD status: %s\n"
+msgstr "MANGOHUD durumu kontrol edilirken hata: %s\n"
+
+#: src/mangojuice.vala:3242 src/other/OtherBox.vala:836
+msgid "Edit shortcut manually"
+msgstr "Kısayolları elle düzenle"
+
+#: src/other/OtherBox.vala:61
+msgid "Contrast Adaptive Sharpening"
+msgstr "Kontrast Uyarlamalı Keskinleştirme (CAS)"
+
+#: src/other/OtherBox.vala:62
+msgid "Denoised Luma Sharpening"
+msgstr "Denoised Luma Keskinleştirme"
+
+#: src/other/OtherBox.vala:63
+msgid "Fast Approximate Anti-Aliasing"
+msgstr "FXAA (Hızlı Kenar Yumuşatma)"
+
+#: src/other/OtherBox.vala:64
+msgid "Subpixel Morphological Antialiasing"
+msgstr "SMAA Kenar Yumuşatma"
+
+#: src/other/OtherBox.vala:65
+msgid "Color LookUp Table"
+msgstr "Color LookUp Table (LUT)"
+
+#: src/other/OtherBox.vala:119
+msgid "Global vkBasalt"
+msgstr "Küresel vkBasalt"
+
+#: src/other/OtherBox.vala:123
+msgid "Click to record vkBasalt toggle shortcut"
+msgstr "vkBasalt açma/kapama tuşu kaydetmek için tıkla"
+
+#: src/other/OtherBox.vala:148
+msgid "Add Reshade"
+msgstr "Reshade ekle"
+
+#: src/other/OtherBox.vala:160
+msgid "Clear Reshade path"
+msgstr "Reshade yolunu temizle"
+
+#: src/other/OtherBox.vala:188 src/other/OtherBox.vala:348
+msgid "ReShade Shaders"
+msgstr "Reshade Gölgendiricileri"
+
+#: src/other/OtherBox.vala:205
+msgid "Adaptive sharpening that adjusts based on local content"
+msgstr "Yerel içeriğe göre ayarlanan uyarlanabilir keskinleştirme"
+
+#: src/other/OtherBox.vala:206
+msgid "Add customizable borders around the image"
+msgstr "Görselin etrafına özelleştirilebilir kenarlıklar ekleyin"
+
+#: src/other/OtherBox.vala:207
+msgid "RGB curve correction for precise contrast control"
+msgstr "Hassas kontrast kontrolü için RGB eğrisi düzeltmesi"
+
+#: src/other/OtherBox.vala:208
+msgid "Color blindness correction (protanopia, deuteranopia, tritanopia)"
+msgstr "Renk körlüğü düzeltmesi (protanopi, döteronopi, tritanopi)"
+
+#: src/other/OtherBox.vala:209
+msgid "Chromatic aberration correction through channel offset"
+msgstr "Kanal kaydırma yoluyla renk sapması düzeltmesi"
+
+#: src/other/OtherBox.vala:210
+msgid "Professional shadow, midtone, and highlight correction"
+msgstr "Profesyonel gölge, orta ton ve parlak alan düzeltmesi"
+
+#: src/other/OtherBox.vala:211
+msgid "Luminance-based sharpening without color artifacts"
+msgstr "Renk bozulmaları olmaksızın parlaklık tabanlı keskinleştirme"
+
+#: src/other/OtherBox.vala:212
+msgid "Black and white conversion with film presets"
+msgstr "Film ön ayarlarıyla siyah-beyaz dönüştürme"
+
+#: src/other/OtherBox.vala:213
+msgid "Vintage sepia effect with tint control"
+msgstr "Ton kontrolü özellikli nostaljik sepya efekti"
+
+#: src/other/OtherBox.vala:214
+msgid "HDR tone mapping for SDR conversion"
+msgstr "SDR dönüşümü için HDR ton eşleme"
+
+#: src/other/OtherBox.vala:215
+msgid "Progressive edge darkening for artistic effect"
+msgstr "Sanatsal bir etki için kademeli kenar karartma"
+
+#: src/other/OtherBox.vala:216
+msgid "Intelligent zonal saturation enhancement"
+msgstr "Akıllı bölgesel doygunluk artırma"
+
+#: src/other/OtherBox.vala:217
+msgid "Specialized upscaling for pixelated retro images"
+msgstr "Pikselli retro görseller için özelleştirilmiş upscale"
+
+#: src/other/OtherBox.vala:218
+msgid "Cartoon effect through edge detection"
+msgstr "Kenar algılama yoluyla çizgi film efekti"
+
+#: src/other/OtherBox.vala:219
+msgid "Local unsharp mask with integrated denoising"
+msgstr "Entegre gürültü giderme özellikli yerel keskinleştirme maskesi"
+
+#: src/other/OtherBox.vala:220
+msgid "Color transformation using matrix manipulation"
+msgstr "Matris manipülasyonu kullanılarak renk dönüşümü"
+
+#: src/other/OtherBox.vala:221
+msgid "Comic book style effect with enhanced edges and color posterization"
+msgstr "Belirginleştirilmiş kenarlar ve renk posterizasyonu içeren çizgi roman tarzı efekt"
+
+#: src/other/OtherBox.vala:222
+msgid "Cinematic DPX grading process emulation"
+msgstr "Sinematik DPX renk düzenleme süreci simülasyonu"
+
+#: src/other/OtherBox.vala:223
+msgid "Procedural film grain with Gaussian noise control"
+msgstr "Gauss gürültüsü kontrollü prosedürel film greni"
+
+#: src/other/OtherBox.vala:224
+msgid "Color reduction to retro palettes with dithering"
+msgstr "Titreşim yöntemiyle retro paletlere renk indirgeme"
+
+#: src/other/OtherBox.vala:225
+msgid "Intelligent depth-based sharpening with bilateral filtering"
+msgstr "İki taraflı filtreleme ile akıllı, derinlik tabanlı keskinleştirme"
+
+#: src/other/OtherBox.vala:226
+msgid "Advanced vibrance algorithm with intelligent saturation control"
+msgstr "Akıllı doygunluk kontrollü gelişmiş canlılık algoritması"
+
+#: src/other/OtherBox.vala:227
+msgid "Vintage Technicolor process simulation"
+msgstr "Vintage Technicolor süreci simülasyonu"
+
+#: src/other/OtherBox.vala:228
+msgid "Enhanced Technicolor effect with additional controls"
+msgstr "Ek kontrollerle geliştirilmiş Technicolor efekti"
+
+#: src/other/OtherBox.vala:229
+msgid ""
+"Complete CRT monitor simulation with scanlines, curvature, and aperture mask"
+msgstr ""
+"Tarama çizgileri, ekran eğriliği ve diyafram maskesi içeren eksiksiz CRT monitör simülasyonu"
+
+#: src/other/OtherBox.vala:230
+msgid "HDR simulation with multi-scale bloom and halo effects"
+msgstr "Çok ölçekli bloom ve hale efektleriyle HDR simülasyonu"
+
+#: src/other/OtherBox.vala:263
+msgid "Shaders"
+msgstr "Gölgendiricileri"
+
+#: src/other/OtherBox.vala:295 src/other/OtherBox.vala:322
+#: src/other/OtherBox.vala:347
+msgid "Reshade"
+msgstr "Reshade"
+
+#: src/other/OtherBox.vala:356
+msgid "Select Reshade folder"
+msgstr "Reshade klasörü seç"
+
+#: src/other/OtherBox.vala:399
+#, c-format
+msgid "Error reading shaders folder: %s\n"
+msgstr "Gölgendirici klasörü okunurken hata: %s\n"
+
+#: src/other/OtherBox.vala:412
+msgid "Reshade folder selected successfully"
+msgstr "Reshade klasörü başarıyla seçildi"
+
+#: src/other/OtherBox.vala:413
+#, c-format
+msgid "Shader effects: %d"
+msgstr "Gölgendirici efektleri: %d"
+
+#: src/other/OtherBox.vala:416
+#, c-format
+msgid "Error selecting folder: %s\n"
+msgstr "Klasör seçilirken hata: %s\n"
+
+#: src/save_states.vala:827 src/save_states.vala:989
+msgid "Select Font"
+msgstr "Yazı Tipi Seç"
