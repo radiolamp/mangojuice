@@ -27,13 +27,17 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: Create AppImage
-      run: |
-        chmod +x ./build-aux/mangojuice-appimage.sh
-        ./build-aux/mangojuice-appimage.sh
-        
+    - name: Preparing Container
+      uses: pkgforge-dev/anylinux-setup-action@v3
+
+    - name: Install Dependencies
+      run: /bin/sh ./scripts/get-dependencies.sh
+
+    - name: Make AppImage
+      run: /bin/sh ./scripts/make-appimage.sh
+
     - name: Upload AppImage artifact
       uses: actions/upload-artifact@v4
       with:
         name: MangoJuice-AppImagename-${{ matrix.arch }}
-        path: dist/MangoJuice-*.AppImage
+        path: dist/MangoJuice-*.AppImage*
