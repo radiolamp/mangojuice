@@ -1,18 +1,20 @@
-/* save_states.vala // License: GPL-3.0+ */
+/* config/saver.vala // License: GPL-3.0+ */
 using Gtk;
 using Gee;
+using MangoJuice;
 
-public class SaveStates {
+namespace MangoJuice.Config {
 
-    static File? config_file_cache = null;
+public class Saver : GLib.Object {
 
-    static File get_config_file () {
-        if (config_file_cache == null) {
-            var config_dir = File.new_for_path (Environment.get_home_dir ())
-                .get_child (".config").get_child ("MangoHud");
-            config_file_cache = config_dir.get_child ("MangoHud.conf");
-        }
-        return config_file_cache;
+    public Paths paths { get; private set; }
+
+    public Saver (Paths paths) {
+        this.paths = paths;
+    }
+
+    public File get_config_file () {
+        return paths.mangohud_conf;
     }
 
     static string? get_parameter_line (string name, string value) {
@@ -30,7 +32,7 @@ public class SaveStates {
         return "%s=%s".printf (name, value);
     }
 
-    public static void update_parameter (
+    public void update_parameter (
         DataOutputStream data_stream, string parameter_name,
         string parameter_value
     ) throws Error {
@@ -40,170 +42,170 @@ public class SaveStates {
         }
     }
 
-    public static void update_pci_dev_in_file (string pci_dev_value) {
+    public void update_pci_dev_in_file (string pci_dev_value) {
         update_file ("pci_dev=", pci_dev_value);
     }
 
-    public static void update_fps_limit_in_file (string fps_limit_1, string fps_limit_2, string fps_limit_3) {
+    public void update_fps_limit_in_file (string fps_limit_1, string fps_limit_2, string fps_limit_3) {
         update_file ("fps_limit=", "%s,%s,%s".printf (fps_limit_1, fps_limit_2, fps_limit_3));
     }
 
-    public static void update_fps_sampling_period_in_file (string fps_sampling_period_value) {
+    public void update_fps_sampling_period_in_file (string fps_sampling_period_value) {
         update_file ("fps_sampling_period=", fps_sampling_period_value);
     }
 
-    public static void update_logs_key_in_file (string logs_key) {
+    public void update_logs_key_in_file (string logs_key) {
         update_file ("toggle_logging=", logs_key);
     }
 
-    public static void update_toggle_hud_key_in_file (string toggle_hud_position) {
+    public void update_toggle_hud_key_in_file (string toggle_hud_position) {
         update_file ("toggle_hud_position=", toggle_hud_position);
     }
 
-    public static void update_blacklist_in_file (string blacklist_value) {
+    public void update_blacklist_in_file (string blacklist_value) {
         update_file ("blacklist=", blacklist_value);
     }
 
-    public static void update_gpu_in_file (string gpu_value) {
+    public void update_gpu_in_file (string gpu_value) {
         update_file ("gpu_list=", gpu_value);
     }
 
-    public static void update_position_in_file (string position_value) {
+    public void update_position_in_file (string position_value) {
         update_file ("position=", position_value);
     }
 
-    public static void update_toggle_hud_in_file (string toggle_hud_value) {
+    public void update_toggle_hud_in_file (string toggle_hud_value) {
         update_file ("toggle_hud=", toggle_hud_value);
     }
 
-    public static void update_offset_x_in_file (string offset_x_value) {
+    public void update_offset_x_in_file (string offset_x_value) {
         update_file ("offset_x=", offset_x_value);
     }
 
-    public static void update_offset_y_in_file (string offset_y_value) {
+    public void update_offset_y_in_file (string offset_y_value) {
         update_file ("offset_y=", offset_y_value);
     }
 
-    public static void update_gpu_color_in_file (string gpu_color) {
+    public void update_gpu_color_in_file (string gpu_color) {
         update_file ("gpu_color=", gpu_color);
     }
 
-    public static void update_cpu_color_in_file (string cpu_color) {
+    public void update_cpu_color_in_file (string cpu_color) {
         update_file ("cpu_color=", cpu_color);
     }
 
-    public static void update_gpu_text_in_file (string gpu_text) {
+    public void update_gpu_text_in_file (string gpu_text) {
         update_file ("gpu_text=", gpu_text);
     }
 
-    public static void update_cpu_text_in_file (string cpu_text) {
+    public void update_cpu_text_in_file (string cpu_text) {
         update_file ("cpu_text=", cpu_text);
     }
 
-    public static void update_fps_value_in_file (string fps_value_1, string fps_value_2) {
-        if ( fps_value_1 == "" || fps_value_2 == "") {
+    public void update_fps_value_in_file (string fps_value_1, string fps_value_2) {
+        if (fps_value_1 == "" || fps_value_2 == "") {
             return;
         }
         update_file ("fps_value=", "%s,%s".printf (fps_value_1, fps_value_2));
     }
 
-    public static void update_fps_color_in_file (string fps_color_1, string fps_color_2, string fps_color_3) {
+    public void update_fps_color_in_file (string fps_color_1, string fps_color_2, string fps_color_3) {
         update_file ("fps_color=", "%s,%s,%s".printf (fps_color_1, fps_color_2, fps_color_3));
     }
 
-    public static void update_gpu_load_value_in_file (string gpu_load_value_1, string gpu_load_value_2) {
+    public void update_gpu_load_value_in_file (string gpu_load_value_1, string gpu_load_value_2) {
         if (gpu_load_value_1 == "" || gpu_load_value_2 == "") {
             return;
         }
         update_file ("gpu_load_value=", "%s,%s".printf (gpu_load_value_1, gpu_load_value_2));
     }
 
-    public static void update_gpu_load_color_in_file (
+    public void update_gpu_load_color_in_file (
         string gpu_load_color_1, string gpu_load_color_2,
         string gpu_load_color_3
     ) {
         update_file ("gpu_load_color=", "%s,%s,%s".printf (gpu_load_color_1, gpu_load_color_2, gpu_load_color_3));
     }
 
-    public static void update_font_file_in_file (string font_path) {
+    public void update_font_file_in_file (string font_path) {
         update_file ("font_file=", font_path);
     }
 
-    public static void update_cpu_load_value_in_file (string cpu_load_value_1, string cpu_load_value_2) {
+    public void update_cpu_load_value_in_file (string cpu_load_value_1, string cpu_load_value_2) {
         if (cpu_load_value_1 == "" || cpu_load_value_2 == "") {
             return;
         }
         update_file ("cpu_load_value=", "%s,%s".printf (cpu_load_value_1, cpu_load_value_2));
     }
 
-    public static void update_cpu_load_color_in_file (
+    public void update_cpu_load_color_in_file (
         string cpu_load_color_1, string cpu_load_color_2,
         string cpu_load_color_3
     ) {
         update_file ("cpu_load_color=", "%s,%s,%s".printf (cpu_load_color_1, cpu_load_color_2, cpu_load_color_3));
     }
 
-    public static void update_background_color_in_file (string background_color) {
+    public void update_background_color_in_file (string background_color) {
         update_file ("background_color=", background_color);
     }
 
-    public static void update_frametime_color_in_file (string frametime_color) {
+    public void update_frametime_color_in_file (string frametime_color) {
         update_file ("frametime_color=", frametime_color);
     }
 
-    public static void update_vram_color_in_file (string vram_color) {
+    public void update_vram_color_in_file (string vram_color) {
         update_file ("vram_color=", vram_color);
     }
 
-    public static void update_ram_color_in_file (string ram_color) {
+    public void update_ram_color_in_file (string ram_color) {
         update_file ("ram_color=", ram_color);
     }
 
-    public static void update_wine_color_in_file (string wine_color) {
+    public void update_wine_color_in_file (string wine_color) {
         update_file ("wine_color=", wine_color);
     }
 
-    public static void update_engine_color_in_file (string engine_color) {
+    public void update_engine_color_in_file (string engine_color) {
         update_file ("engine_color=", engine_color);
     }
 
-    public static void update_text_color_in_file (string text_color) {
+    public void update_text_color_in_file (string text_color) {
         update_file ("text_color=", text_color);
     }
 
-    public static void update_media_player_color_in_file (string media_player_color) {
+    public void update_media_player_color_in_file (string media_player_color) {
         update_file ("media_player_color=", media_player_color);
     }
 
-    public static void update_network_color_in_file (string network_color) {
+    public void update_network_color_in_file (string network_color) {
         update_file ("network_color=", network_color);
     }
 
-    public static void update_battery_color_in_file (string battery_color) {
+    public void update_battery_color_in_file (string battery_color) {
         update_file ("battery_color=", battery_color);
     }
 
-    public static void update_horizontal_separator_color_in_file (string horizontal_separator_color) {
+    public void update_horizontal_separator_color_in_file (string horizontal_separator_color) {
         update_file ("horizontal_separator_color=", horizontal_separator_color);
     }
 
-    public static void update_media_player_format_in_file (string format_value) {
+    public void update_media_player_format_in_file (string format_value) {
         update_file ("media_player_format=", format_value);
     }
 
-    static Mutex update_file_mutex = Mutex ();
-    static uint? pending_timeout_id = null;
-    static HashMap<string, string>? pending_updates = null;
-    static bool flush_in_progress = false;
+    Mutex update_file_mutex = Mutex ();
+    uint? pending_timeout_id = null;
+    HashMap<string, string>? pending_updates = null;
+    bool flush_in_progress = false;
 
-    static HashMap<string, string> get_pending_updates () {
+    HashMap<string, string> get_pending_updates () {
         if (pending_updates == null) {
             pending_updates = new HashMap<string, string> ();
         }
         return pending_updates;
     }
 
-    static void update_file (string prefix, string value) {
+    void update_file (string prefix, string value) {
         bool should_schedule_flush = false;
 
         update_file_mutex.lock ();
@@ -240,7 +242,7 @@ public class SaveStates {
         update_file_mutex.unlock ();
     }
 
-    static void flush_pending_updates (bool synchronous = false) {
+    void flush_pending_updates (bool synchronous = false) {
         update_file_mutex.lock ();
         if (get_pending_updates ().is_empty) {
             update_file_mutex.unlock ();
@@ -261,7 +263,7 @@ public class SaveStates {
         update_file_mutex.unlock ();
     }
 
-    static void flush_pending_updates_internal (bool synchronous) {
+    void flush_pending_updates_internal (bool synchronous) {
         update_file_mutex.lock ();
         var updates_map = get_pending_updates ();
         if (updates_map.is_empty) {
@@ -364,7 +366,7 @@ public class SaveStates {
         }
     }
 
-    public static void flush_all_pending () {
+    public void flush_all_pending () {
         update_file_mutex.lock ();
         if (pending_timeout_id != null) {
             Source.remove (pending_timeout_id);
@@ -374,16 +376,21 @@ public class SaveStates {
         flush_pending_updates (true);
     }
 
-    public static void save_states_to_file (MangoJuice mango_juice) {
+    Mutex save_mutex = Mutex ();
+
+    public void save_states (State mango_juice) {
+        save_mutex.lock ();
         if (mango_juice.custom_order_changed) {
             save_states_with_diff (mango_juice);
+            save_mutex.unlock ();
             return;
         }
         save_states_full (mango_juice);
+        save_mutex.unlock ();
     }
 
-    static void save_states_full (MangoJuice mango_juice) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+    void save_states_full (State mango_juice) {
+        var config_dir = paths.mangohud_dir;
         var file = get_config_file ();
 
         var kv = new HashMap<string, string> ();
@@ -445,7 +452,7 @@ public class SaveStates {
             save_switches_to_file (data_stream, mango_juice.gpu_switches, mango_juice.gpu_config_vars, (int[]) order_map.get ("gpu_start").to_array ());
             save_switches_to_file (data_stream, mango_juice.cpu_switches, mango_juice.cpu_config_vars, new int[] {0,1,2,3,4,5,6,7,8,9,10});
             save_switches_to_file (data_stream, mango_juice.memory_switches, mango_juice.memory_config_vars, new int[] {0,1,2,3,4,5,6});
-            if (Config.IS_DEVEL) {
+            if (BuildConfig.IS_DEVEL) {
                 save_switches_to_file (data_stream, mango_juice.git_switches, mango_juice.git_config_vars, new int[] {0,1,2});
             }
             save_switches_to_file (data_stream, mango_juice.inform_switches, mango_juice.inform_config_vars, (int[]) order_map.get ("inform_start").to_array ());
@@ -512,32 +519,32 @@ public class SaveStates {
         }
     }
 
-    static void write_kv_line (DataOutputStream data_stream, HashMap<string, string> kv, string name) {
+    void write_kv_line (DataOutputStream data_stream, HashMap<string, string> kv, string name) {
         if (kv.has_key (name)) {
             try {
                 data_stream.put_string ("%s=%s\n".printf (name, kv[name]));
-            } catch (Error e) { }
+            } catch (Error e) {
+                stderr.printf ("Error writing to the file: %s\n", e.message);
+            }
         }
     }
 
     delegate void SpecialWriter (ArrayList<string> list);
 
-    static void write_special (DataOutputStream data_stream, SpecialWriter writer) {
+    void write_special (DataOutputStream data_stream, SpecialWriter writer) {
         var list = new ArrayList<string> ();
         writer (list);
         foreach (string line in list) {
             try {
                 data_stream.put_string (line + "\n");
-            } catch (Error e) { }
+            } catch (Error e) {
+                stderr.printf ("Error writing to the file: %s\n", e.message);
+            }
         }
     }
 
-    public static void reset_config_file_cache () {
-        config_file_cache = null;
-    }
-
-    static void save_states_with_diff (MangoJuice mango_juice) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
+    void save_states_with_diff (State mango_juice) {
+        var config_dir = paths.mangohud_dir;
         var file = get_config_file ();
 
         try {
@@ -563,8 +570,8 @@ public class SaveStates {
         var existing_lines = new ArrayList<string> ();
         try {
             var dis = new DataInputStream (file.read ());
-            string line;
-            while ((line = dis.read_line ()) != null) {
+            string? line;
+            while ((line = dis.read_line (null)) != null) {
                 existing_lines.add (line);
             }
             dis.close ();
@@ -679,7 +686,7 @@ public class SaveStates {
         }
     }
 
-    static void collect_all_bare_states (MangoJuice mango_juice, HashSet<string> all_known, HashSet<string> active) {
+    void collect_all_bare_states (State mango_juice, HashSet<string> all_known, HashSet<string> active) {
         add_bare_states (mango_juice.gpu_switches, mango_juice.gpu_config_vars, all_known, active);
         add_bare_states (mango_juice.cpu_switches, mango_juice.cpu_config_vars, all_known, active);
         add_bare_states (mango_juice.memory_switches, mango_juice.memory_config_vars, all_known, active);
@@ -689,12 +696,12 @@ public class SaveStates {
         add_bare_states (mango_juice.battery_switches, mango_juice.battery_config_vars, all_known, active);
         add_bare_states (mango_juice.other_extra_switches, mango_juice.other_extra_config_vars, all_known, active);
         add_bare_states (mango_juice.inform_switches, mango_juice.inform_config_vars, all_known, active);
-        if (Config.IS_DEVEL) {
+        if (BuildConfig.IS_DEVEL) {
             add_bare_states (mango_juice.git_switches, mango_juice.git_config_vars, all_known, active);
         }
     }
 
-    static void add_bare_states (Switch[] switches, string[] config_vars, HashSet<string> all_known, HashSet<string> active) {
+    void add_bare_states (Switch[] switches, string[] config_vars, HashSet<string> all_known, HashSet<string> active) {
         for (int i = 0; i < config_vars.length; i++) {
             all_known.add (config_vars[i]);
             if (i < switches.length && switches[i] != null && switches[i].active) {
@@ -703,14 +710,14 @@ public class SaveStates {
         }
     }
 
-    static void maybe_add_kv (HashMap<string, string> kv, string name, string value) {
+    void maybe_add_kv (HashMap<string, string> kv, string name, string value) {
         var line = get_parameter_line (name, value);
         if (line != null) {
             kv[name] = value;
         }
     }
 
-    static void collect_kv_desired (MangoJuice mango_juice, HashMap<string, string> kv) {
+    void collect_kv_desired (State mango_juice, HashMap<string, string> kv) {
         bool is_horizontal = mango_juice.custom_switch.active;
 
         maybe_add_kv (kv, "blacklist", mango_juice.blacklist_entry.text);
@@ -916,7 +923,7 @@ public class SaveStates {
         }
     }
 
-    static void add_color_kv (HashMap<string, string> kv, string name, Gtk.ColorDialogButton? button, MangoJuice mango_juice) {
+    void add_color_kv (HashMap<string, string> kv, string name, Gtk.ColorDialogButton? button, State mango_juice) {
         if (button != null) {
             var color = mango_juice.rgba_to_hex (button.get_rgba ());
             if (color != "") {
@@ -925,8 +932,8 @@ public class SaveStates {
         }
     }
 
-    static void add_multi_color_kv (HashMap<string, string> kv, string name,
-        Gtk.ColorDialogButton? b1, Gtk.ColorDialogButton? b2, Gtk.ColorDialogButton? b3, MangoJuice mango_juice) {
+    void add_multi_color_kv (HashMap<string, string> kv, string name,
+        Gtk.ColorDialogButton? b1, Gtk.ColorDialogButton? b2, Gtk.ColorDialogButton? b3, State mango_juice) {
         if (b1 != null && b2 != null && b3 != null) {
             var c1 = mango_juice.rgba_to_hex (b1.get_rgba ());
             var c2 = mango_juice.rgba_to_hex (b2.get_rgba ());
@@ -937,7 +944,7 @@ public class SaveStates {
         }
     }
 
-    static void append_custom_commands_to (MangoJuice mango_juice, ArrayList<string> result) {
+    void append_custom_commands_to (State mango_juice, ArrayList<string> result) {
         var custom_command = mango_juice.custom_command_entry.text;
         if (custom_command == "") return;
         if (custom_command.contains (",")) {
@@ -953,7 +960,7 @@ public class SaveStates {
         }
     }
 
-    static void append_filter_line_to (MangoJuice mango_juice, ArrayList<string> result) {
+    void append_filter_line_to (State mango_juice, ArrayList<string> result) {
         if (mango_juice.filter_dropdown.selected == Gtk.INVALID_LIST_POSITION) return;
         string[] filter_values = {"", "bicubic", "trilinear", "retro"};
         int selected = (int)mango_juice.filter_dropdown.selected;
@@ -965,14 +972,14 @@ public class SaveStates {
         }
     }
 
-    static void append_horizontal_lines_to (MangoJuice mango_juice, ArrayList<string> result) {
+    void append_horizontal_lines_to (State mango_juice, ArrayList<string> result) {
         if (mango_juice.custom_switch.active) {
             result.add ("horizontal");
             result.add ("horizontal_stretch=0");
         }
     }
 
-    static void append_pci_dev_line_to (MangoJuice mango_juice, ArrayList<string> result) {
+    void append_pci_dev_line_to (State mango_juice, ArrayList<string> result) {
         if (mango_juice.gpu_dropdown.selected_item != null) {
             var selected_pci_address = (
                 mango_juice.gpu_dropdown.selected_item as StringObject
@@ -983,7 +990,7 @@ public class SaveStates {
         }
     }
 
-    static void append_font_glyph_ranges_to (MangoJuice mango_juice, ArrayList<string> result) {
+    void append_font_glyph_ranges_to (State mango_juice, ArrayList<string> result) {
         if (mango_juice.font_button != null) {
             var font_name = mango_juice.font_button.label;
             if (font_name != _("Default") && font_name != _("Select Font")) {
@@ -995,7 +1002,7 @@ public class SaveStates {
         }
     }
 
-    public static void save_switches_to_file (
+    public void save_switches_to_file (
         DataOutputStream data_stream, Switch[] switches,
         string[] config_vars, int[] order
     ) {
@@ -1011,5 +1018,7 @@ public class SaveStates {
             }
         }
     }
+
+}
 
 }

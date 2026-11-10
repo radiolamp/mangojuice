@@ -1,76 +1,95 @@
-/* load_states.vala // License: GPL-3.0+ */
+/* config/loader.vala // License: GPL-3.0+ */
 
 using Gtk;
 using Gee;
+using MangoJuice;
 
-delegate void LoadFunc (MangoJuice app, string line);
+namespace MangoJuice.Config {
+
+delegate void LoadFunc (State app, string line);
 
 abstract class LineLoader {
-    public abstract void load (MangoJuice app, string line);
+    public abstract void load (State app, string line);
 }
 
 class SimpleLoader : LineLoader {
     private LoadFunc _func;
     public SimpleLoader (owned LoadFunc func) { _func = (owned) func; }
-    public override void load (MangoJuice app, string line) { _func (app, line); }
+    public override void load (State app, string line) { _func (app, line); }
 }
 
-public class LoadStates {
+public class Loader : GLib.Object {
 
-    static HashMap<string, LineLoader>? _loaders = null;
+    public State state { get; private set; }
+    public Paths paths { get; private set; }
 
-    delegate Scale? ScaleGetter (MangoJuice app);
-    delegate Entry? EntryGetter (MangoJuice app);
-    delegate Label? LabelGetter (MangoJuice app);
-    delegate ColorDialogButton? ColorGetter (MangoJuice app);
+    HashMap<string, LineLoader>? _loaders = null;
 
-    static void add_loader (string prefix, owned LoadFunc func) {
+    public Loader (State state, Paths paths) {
+        this.state = state;
+        this.paths = paths;
+    }
+
+    delegate Scale? ScaleGetter (State app);
+    delegate Entry? EntryGetter (State app);
+    delegate Label? LabelGetter (State app);
+    delegate ColorDialogButton? ColorGetter (State app);
+
+    void add_loader (string prefix, owned LoadFunc func) {
         _loaders[prefix] = new SimpleLoader ((owned) func);
     }
 
-    static void add_scale_entry_loader (string prefix, ScaleGetter sg, EntryGetter eg) {
+    void add_scale_entry_loader (string prefix, ScaleGetter sg, EntryGetter eg) {
         add_loader (prefix, (app, line) => {
             var scale = sg (app);
             if (scale == null) return;
-            int val = int.parse (line.substring (prefix.length));
+            int val;
+            if (!int.try_parse (line.substring (prefix.length).strip (), out val)) return;
             scale.set_value (val);
             var entry = eg (app);
             if (entry != null) entry.text = "%d".printf (val);
         });
     }
 
-    static void add_scale_label_loader (string prefix, ScaleGetter sg, LabelGetter lg, string suffix = "") {
+    void add_scale_label_loader (string prefix, ScaleGetter sg, LabelGetter lg, string suffix = "") {
         add_loader (prefix, (app, line) => {
             var scale = sg (app);
             if (scale == null) return;
-            int val = int.parse (line.substring (prefix.length));
+            int val;
+            if (!int.try_parse (line.substring (prefix.length).strip (), out val)) return;
             scale.set_value (val);
             var label = lg (app);
             if (label != null) label.label = "%d %s".printf (val, suffix).strip ();
         });
     }
 
-    static void add_color_loader (string prefix, ColorGetter cg) {
+    void add_color_loader (string prefix, ColorGetter cg) {
         add_loader (prefix, (app, line) => {
-            var color = line.substring (prefix.length);
+            var button = cg (app);
+            if (button == null) return;
             var rgba = Gdk.RGBA ();
-            rgba.parse ("#" + color);
-            cg (app).set_rgba (rgba);
+            if (rgba.parse ("#" + line.substring (prefix.length).strip ())) {
+                button.set_rgba (rgba);
+            }
         });
     }
 
-    static void add_triple_color_loader (string prefix, ColorGetter c1, ColorGetter c2, ColorGetter c3) {
+    void add_triple_color_loader (string prefix, ColorGetter c1, ColorGetter c2, ColorGetter c3) {
         add_loader (prefix, (app, line) => {
             var parts = line.substring (prefix.length).split (",");
             if (parts.length != 3) return;
-            var rgba = Gdk.RGBA ();
-            rgba.parse ("#" + parts[0]); c1 (app).set_rgba (rgba);
-            rgba.parse ("#" + parts[1]); c2 (app).set_rgba (rgba);
-            rgba.parse ("#" + parts[2]); c3 (app).set_rgba (rgba);
+            ColorDialogButton?[] buttons = { c1 (app), c2 (app), c3 (app) };
+            for (int i = 0; i < 3; i++) {
+                if (buttons[i] == null) continue;
+                var rgba = Gdk.RGBA ();
+                if (rgba.parse ("#" + parts[i].strip ())) {
+                    buttons[i].set_rgba (rgba);
+                }
+            }
         });
     }
 
-    static HashMap<string, LineLoader> get_loaders () {
+    HashMap<string, LineLoader> get_loaders () {
         if (_loaders != null) return _loaders;
         _loaders = new HashMap<string, LineLoader> ();
 
@@ -217,7 +236,8 @@ public class LoadStates {
 
         add_loader ("background_alpha=", (app, line) => {
             if (app.alpha_scale == null) return;
-            double v = double.parse (line.substring ("background_alpha=".length));
+            double v;
+            if (!double.try_parse (line.substring ("background_alpha=".length).strip (), out v)) return;
             app.alpha_scale.set_value (v * 10);
             if (app.alpha_value_label != null)
                 app.alpha_value_label.label = "%.1f".printf (v);
@@ -270,9 +290,10 @@ public class LoadStates {
         return _loaders;
     }
 
-    public static async void load_states_from_file (MangoJuice mango_juice) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        var file = config_dir.get_child ("MangoHud.conf");
+    public async void load () {
+        unowned State mango_juice = state;
+        var config_dir = paths.mangohud_dir;
+        var file = paths.mangohud_conf;
 
         mango_juice.is_loading = true;
 
@@ -300,7 +321,7 @@ public class LoadStates {
                 load_switch_from_file (line, mango_juice.gpu_switches, mango_juice.gpu_config_vars);
                 load_switch_from_file (line, mango_juice.cpu_switches, mango_juice.cpu_config_vars);
                 load_switch_from_file (line, mango_juice.memory_switches, mango_juice.memory_config_vars);
-                if (Config.IS_DEVEL) {
+                if (BuildConfig.IS_DEVEL) {
                     load_switch_from_file (line, mango_juice.git_switches, mango_juice.git_config_vars);
                 }
                 load_switch_from_file (line, mango_juice.system_switches, mango_juice.system_config_vars);
@@ -340,7 +361,7 @@ public class LoadStates {
         mango_juice.is_loading = false;
     }
 
-    public static void load_switch_from_file (string line, Switch[] switches, string[] config_vars) {
+    public void load_switch_from_file (string line, Switch[] switches, string[] config_vars) {
         for (int i = 0; i < config_vars.length; i++) {
             string config_var = config_vars[i];
             if (config_var == "io_read \n io_write") {
@@ -352,4 +373,6 @@ public class LoadStates {
             }
         }
     }
+}
+
 }

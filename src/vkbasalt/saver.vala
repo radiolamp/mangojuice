@@ -1,14 +1,20 @@
-/* OtherSave.vala // License: GPL-3.0+ */
+/* vkbasalt/saver.vala // License: GPL-3.0+ */
 using Gtk;
 using Gee;
 
-public class OtherSave {
+namespace MangoJuice.VkBasalt {
 
-    public static void save_states (OtherBox other_box) {
-        var config_dir = File.new_for_path (Environment.get_home_dir ())
-                             .get_child (".config")
-                             .get_child ("vkBasalt");
-        var config_file = config_dir.get_child ("vkBasalt.conf");
+public class Saver : GLib.Object {
+
+    public MangoJuice.Config.Paths paths { get; private set; }
+
+    public Saver (MangoJuice.Config.Paths paths) {
+        this.paths = paths;
+    }
+
+    public void save_states (OtherBox other_box) {
+        var config_dir = paths.vkbasalt_dir;
+        var config_file = paths.vkbasalt_conf;
 
         if (!config_dir.query_exists ()) {
             try {
@@ -118,7 +124,7 @@ public class OtherSave {
         }
     }
 
-    static void save_scale_value_if_active (
+    void save_scale_value_if_active (
         DataOutputStream file_stream_write, string key,
         Scale scale, Entry entry, string format,
         OtherBox other_box, string switch_name
@@ -130,7 +136,7 @@ public class OtherSave {
         }
     }
 
-    static void save_int_scale_value_if_active (
+    void save_int_scale_value_if_active (
         DataOutputStream file_stream_write, string key,
         Scale scale, Entry entry,
         OtherBox other_box, string switch_name
@@ -141,4 +147,6 @@ public class OtherSave {
             file_stream_write.put_string (line);
         }
     }
+}
+
 }

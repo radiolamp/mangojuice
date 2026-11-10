@@ -1,13 +1,18 @@
-/* advanced.vala // License: GPL-3.0+ */
+/* dialogs/advanced.vala // License: GPL-3.0+ */
 using Gtk;
 using Adw;
+using MangoJuice;
+using MangoJuice.Config;
+using MangoJuice.UI;
 
-public class AdvancedDialog : Adw.Dialog {
+namespace MangoJuice.Dialogs {
+
+public class Advanced : Adw.Dialog {
     File config_file;
     List<string> all_config_lines;
     List<string> filtered_config_lines;
     ListBox list_box;
-    MangoJuice app;
+    MangoJuice.Application app;
     Gtk.Switch mode_switch;
 
     string[] allowed_prefixes = { "custom_text_center=", "custom_text=", "gpu_stats", "vram", "cpu_stats",
@@ -17,14 +22,14 @@ public class AdvancedDialog : Adw.Dialog {
     "frame_timing", "frame_count", "battery", "battery_watt", "battery_time", "device_battery_icon",
     "device_battery=gamepad,mouse", "network", "media_player", "wine", "winesync", "time" };
 
-    public static void show_advanced_dialog (Gtk.Window parent_window, MangoJuice app) {
-        var advanced_dialog = new AdvancedDialog (parent_window, app);
+    public static void show_advanced_dialog (Gtk.Window parent_window, MangoJuice.Application app) {
+        var advanced_dialog = new Advanced (app);
         advanced_dialog.set_content_width (1000);
         advanced_dialog.set_content_height (2000);
         advanced_dialog.present (parent_window);
     }
 
-    public AdvancedDialog (Gtk.Window parent, MangoJuice app) {
+    public Advanced (MangoJuice.Application app) {
         Object ();
         this.app = app;
 
@@ -37,12 +42,7 @@ public class AdvancedDialog : Adw.Dialog {
 
         main_box.append (create_advanced_content ());
 
-        this.closed.connect (() => {
-        //    LoadStates.load_states_from_file.begin(app);
-        });
-
         this.set_child (main_box);
-        this.present (parent);
     }
 
     Gtk.Widget create_advanced_content () {
@@ -51,7 +51,6 @@ public class AdvancedDialog : Adw.Dialog {
         scrolled_window.set_vexpand (true);
 
         var clamp = new Adw.Clamp ();
-        var group = new Adw.PreferencesGroup ();
 
         list_box = new ListBox ();
         list_box.set_selection_mode (SelectionMode.NONE);
@@ -63,42 +62,45 @@ public class AdvancedDialog : Adw.Dialog {
         list_box.set_margin_top (12);
         list_box.set_margin_bottom (12);
 
-        var config_dir = File.new_for_path (Environment.get_home_dir ()).get_child (".config").get_child ("MangoHud");
-        config_file = config_dir.get_child ("MangoHud.conf");
+        config_file = app.paths.mangohud_conf;
+        all_config_lines = new List<string> ();
+        filtered_config_lines = new List<string> ();
 
         if (config_file.query_exists ()) {
             try {
-                var input_stream = config_file.read ();
-                var data_stream = new DataInputStream (input_stream);
-                string line;
+                var data_stream = new DataInputStream (config_file.read ());
+                try {
+                    string line;
+                    while ((line = data_stream.read_line ()) != null) {
+                        all_config_lines.append (line);
 
-                all_config_lines = new List<string> ();
-                filtered_config_lines = new List<string> ();
+                        if (!line.contains ("color") &&
+                            !line.contains ("fps_limit_method=") &&
+                            !line.contains ("fps_limit=") &&
+                            !line.contains ("media_player_format=") &&
+                            !line.contains ("fps_value=")) {
 
-                while ((line = data_stream.read_line ()) != null) {
-                    all_config_lines.append (line);
-
-                    if (!line.contains ("color") &&
-                        !line.contains ("fps_limit_method=") &&
-                        !line.contains ("fps_limit=") &&
-                        !line.contains ("media_player_format=") &&
-                        !line.contains ("fps_value=")) {
-
-                        foreach (var prefix in allowed_prefixes) {
-                            if (line.has_prefix (prefix) || line.has_suffix ("#custom_command")) {
-                                filtered_config_lines.append (line);
-                                add_config_row (list_box, line);
-                                break;
+                            foreach (var prefix in allowed_prefixes) {
+                                if (line.has_prefix (prefix) || line.has_suffix ("#custom_command")) {
+                                    filtered_config_lines.append (line);
+                                    add_config_row (list_box, line);
+                                    break;
+                                }
                             }
                         }
                     }
+                } finally {
+                    try {
+                        data_stream.close ();
+                    } catch (Error e) {
+                        stderr.printf (_("Error closing MangoHud.conf: %s\n"), e.message);
+                    }
                 }
-                input_stream.close ();
             } catch (Error e) {
-                print (_("Error when selecting a file: %s\n"), e.message);
+                stderr.printf (_("Error reading MangoHud.conf: %s\n"), e.message);
             }
         } else {
-            print (_("MangoHud.conf does not exist at: %s\n"), config_file.get_path ());
+            stderr.printf (_("MangoHud.conf does not exist at: %s\n"), config_file.get_path ());
         }
 
         var content_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
@@ -109,11 +111,11 @@ public class AdvancedDialog : Adw.Dialog {
 
         mode_switch = new Gtk.Switch ();
         mode_switch.set_valign (Gtk.Align.CENTER);
-        mode_switch.active = app.custom_order_changed;
+        mode_switch.active = app.state.custom_order_changed;
         mode_switch.notify["active"].connect (() => {
-            app.custom_order_changed = mode_switch.active;
+            app.state.custom_order_changed = mode_switch.active;
             if (!mode_switch.active) {
-                SaveStates.save_states_to_file (app);
+                app.saver.save_states (app.state);
             }
         });
         header_row.add_suffix (mode_switch);
@@ -135,8 +137,7 @@ public class AdvancedDialog : Adw.Dialog {
         content_box.append (list_box);
 
         clamp.set_child (content_box);
-        group.add (clamp);
-        scrolled_window.set_child (group);
+        scrolled_window.set_child (clamp);
 
         var overlay = new Gtk.Overlay ();
         overlay.set_child (scrolled_window);
@@ -158,33 +159,27 @@ public class AdvancedDialog : Adw.Dialog {
         return overlay;
     }
 
-    public void add_config_row (ListBox list_box, string line) {
+    public void add_config_row (ListBox list_box, string config_line) {
         var action_row = new Adw.ActionRow ();
 
-        string key = line.split ("=")[0];
-        if (line.strip () == "custom_text=  #space") {
+        if (config_line.strip () == "custom_text=  #space") {
             action_row.title = "space";
         } else {
-            action_row.title = get_localized_title (key);
+            action_row.title = get_localized_title (config_line);
         }
-        action_row.subtitle = line;
+        action_row.subtitle = config_line;
 
         var drag_icon = new Gtk.Image.from_icon_name ("io.github.radiolamp.mangojuice.list-drag-handle-symbolic");
         drag_icon.add_css_class ("dim-label");
         action_row.add_prefix (drag_icon);
 
-        var row = new Gtk.ListBoxRow ();
-        row.add_css_class ("drag-row");
-        var drag_row = new DragRow (action_row, row);
-        drag_row.build_drag_and_drop ();
+        var list_row = new Gtk.ListBoxRow ();
+        list_row.add_css_class ("drag-row");
+        var drag_row = new DragRow (action_row, list_row);
+        list_row.set_child (drag_row);
 
-        row.set_child (drag_row);
-        row.map.connect (() => {
-            drag_row.draw_motion_widgets ();
-        });
-
-        drag_row.on_drop_end.connect ((lb) => {
-            save_config_to_file (list_box);
+        drag_row.reordered.connect ((source_list_box) => {
+            save_config_to_file (source_list_box);
         });
 
         var up_button = new Gtk.Button ();
@@ -193,7 +188,7 @@ public class AdvancedDialog : Adw.Dialog {
         up_button.set_valign (Align.CENTER);
         up_button.has_frame = false;
         up_button.clicked.connect (() => {
-            move_row_up (list_box, row);
+            move_row_up (list_box, list_row);
             save_config_to_file (list_box);
         });
         action_row.add_suffix (up_button);
@@ -204,7 +199,7 @@ public class AdvancedDialog : Adw.Dialog {
         down_button.set_valign (Align.CENTER);
         down_button.has_frame = false;
         down_button.clicked.connect (() => {
-            move_row_down (list_box, row);
+            move_row_down (list_box, list_row);
             save_config_to_file (list_box);
         });
         action_row.add_suffix (down_button);
@@ -215,12 +210,12 @@ public class AdvancedDialog : Adw.Dialog {
         delete_button.set_valign (Align.CENTER);
         delete_button.has_frame = false;
         delete_button.clicked.connect (() => {
-            list_box.remove (row);
+            list_box.remove (list_row);
             save_config_to_file (list_box);
         });
         action_row.add_suffix (delete_button);
 
-        list_box.append (row);
+        list_box.append (list_row);
     }
 
     int get_row_index (ListBox list_box, ListBoxRow row) {
@@ -299,45 +294,50 @@ public class AdvancedDialog : Adw.Dialog {
     }
 
     void save_config_to_file (ListBox list_box) {
-        app.custom_order_changed = true;
+        app.state.custom_order_changed = true;
         mode_switch.active = true;
         try {
-            var output_stream = config_file.replace (
+            var data_stream = new DataOutputStream (config_file.replace (
                 null,
                 false,
                 FileCreateFlags.NONE,
                 null
-            );
-            var data_stream = new DataOutputStream (output_stream);
+            ));
 
-            var child = list_box.get_first_child ();
-            while (child != null) {
-                var list_row = child as Gtk.ListBoxRow;
-                if (list_row != null) {
-                    var drag_row = list_row.get_child () as DragRow;
-                    if (drag_row != null) {
-                        var action_row = drag_row.content as Adw.ActionRow;
-                        if (action_row != null) {
-                            data_stream.put_string (action_row.subtitle + "\n", null);
+            try {
+                var child = list_box.get_first_child ();
+                while (child != null) {
+                    var list_row = child as Gtk.ListBoxRow;
+                    if (list_row != null) {
+                        var drag_row = list_row.get_child () as DragRow;
+                        if (drag_row != null) {
+                            var action_row = drag_row.content as Adw.ActionRow;
+                            if (action_row != null) {
+                                data_stream.put_string (action_row.subtitle + "\n", null);
+                            }
                         }
                     }
+                    child = child.get_next_sibling ();
                 }
-                child = child.get_next_sibling ();
-            }
 
-            foreach (var config_line in all_config_lines) {
-                if (filtered_config_lines.find_custom (config_line, strcmp) == null) {
-                    data_stream.put_string (config_line + "\n", null);
+                foreach (var config_line in all_config_lines) {
+                    if (filtered_config_lines.find_custom (config_line, strcmp) == null) {
+                        data_stream.put_string (config_line + "\n", null);
+                    }
+                }
+            } finally {
+                try {
+                    data_stream.close ();
+                } catch (Error e) {
+                    stderr.printf (_("Error closing MangoHud.conf: %s\n"), e.message);
                 }
             }
-
-            output_stream.close ();
         } catch (Error e) {
-            print (_("Error writing to the file: %s\n"), e.message);
+            stderr.printf (_("Error writing to the file: %s\n"), e.message);
         }
     }
 
-    string get_localized_title (string key) {
+    string get_localized_title (string config_line) {
         var localized_titles = new Gee.HashMap<string, string> ();
 
         localized_titles["custom_text_center"] = _("Your text");
@@ -382,6 +382,13 @@ public class AdvancedDialog : Adw.Dialog {
         localized_titles["winesync"] = _("Winesync");
         localized_titles["time"] = _("Watch");
 
+        if (localized_titles.has_key (config_line)) {
+            return localized_titles[config_line];
+        }
+
+        string key = config_line.split ("=")[0];
         return localized_titles.has_key (key) ? localized_titles[key] : _("Other");
     }
+}
+
 }

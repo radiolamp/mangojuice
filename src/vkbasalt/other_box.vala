@@ -1,6 +1,9 @@
-/* OtherBox.vala // License: GPL-3.0+ */
+/* vkbasalt/other_box.vala // License: GPL-3.0+ */
 using Gtk;
 using Gee;
+using MangoJuice.UI;
+
+namespace MangoJuice.VkBasalt {
 
 public class OtherBox : Box {
 
@@ -24,10 +27,14 @@ public class OtherBox : Box {
     public string reshade_texture_path { get; set; }
     public string reshade_folders_path { get; set; }
     public string reshade_include_path { get; set; }
-    public OtherLoad.LoadResult load_result { get; set; }
+    public Loader.LoadResult load_result { get; set; }
     public Gee.ArrayList<string> reshade_shaders { get; set; }
     public Button reshade_button;
     public Button reshade_clear_button;
+    public MangoJuice.Config.Paths paths { get; private set; }
+    public MangoJuice.System.TestRunner test_runner { get; private set; }
+    public Saver saver { get; private set; }
+    public Loader vk_loader { get; private set; }
     HashMap<string, ArrayList<Scale>> switch_scale_map;
     HashMap<string, ArrayList<Entry>> switch_entry_map;
     HashMap<string, ArrayList<Button>> switch_reset_map;
@@ -36,9 +43,14 @@ public class OtherBox : Box {
     FlowBox reshade_flow_box;
     FlowBox main_flow_box;
     bool is_loading = false;
+    uint? restart_timeout_id = null;
 
-    public OtherBox () {
+    public OtherBox (MangoJuice.Config.Paths paths, MangoJuice.System.TestRunner test_runner) {
         Object (orientation: Orientation.VERTICAL, spacing: 12);
+        this.paths = paths;
+        this.test_runner = test_runner;
+        this.saver = new Saver (paths);
+        this.vk_loader = new Loader (paths);
         scales = new ArrayList<Scale> ();
         entries = new ArrayList<Entry> ();
         scale_labels = new ArrayList<Label> ();
@@ -68,7 +80,7 @@ public class OtherBox : Box {
         foreach (var switch_widget in switches) {
             switch_widget.state_set.connect ((state) => {
                 if (!is_loading) {
-                    OtherSave.save_states (this);
+                    saver.save_states (this);
                     restart_vkcube ();
                 }
                 update_scale_entry_reset_state (switch_widget);
@@ -136,7 +148,7 @@ public class OtherBox : Box {
 
         hotkey_recorder.shortcut_changed.connect ((shortcut_value) => {
             if (!is_loading) {
-                OtherSave.save_states (this);
+                saver.save_states (this);
             }
         });
 
@@ -171,7 +183,7 @@ public class OtherBox : Box {
         check_vkbasalt_global_status ();
 
         is_loading = true;
-        load_result = OtherLoad.load_states (this);
+        load_result = vk_loader.load_states (this);
         is_loading = false;
 
         foreach (var switch_widget in switches) {
@@ -279,7 +291,7 @@ public class OtherBox : Box {
 
         switch_widget.state_set.connect ((state) => {
             if (!is_loading) {
-                OtherSave.save_states (this);
+                saver.save_states (this);
                 restart_vkcube ();
             }
             return false;
@@ -287,7 +299,7 @@ public class OtherBox : Box {
     }
 
         is_loading = true;
-        OtherLoad.apply_reshade_states (this, load_result.reshade_states);
+        vk_loader.apply_reshade_states (this, load_result.reshade_states);
         is_loading = false;
     }
 
@@ -302,7 +314,7 @@ public class OtherBox : Box {
         hide_reshade_section ();
 
         if (!is_loading) {
-            OtherSave.save_states (this);
+            saver.save_states (this);
         }
     }
 
@@ -404,15 +416,19 @@ public class OtherBox : Box {
                     update_reshade_section ();
 
                     is_loading = true;
-                    OtherLoad.apply_reshade_states (this, previous_states);
+                    vk_loader.apply_reshade_states (this, previous_states);
                     is_loading = false;
 
-                    OtherSave.save_states (this);
+                    saver.save_states (this);
 
                     show_info_dialog (_("Reshade folder selected successfully"),
                                     _("Shader effects: %d").printf (reshade_shaders.size));
                 }
             } catch (Error e) {
+                if (e.matches (Gtk.DialogError.quark (), Gtk.DialogError.DISMISSED)
+                    || e.matches (Gtk.DialogError.quark (), Gtk.DialogError.CANCELLED)) {
+                    return;
+                }
                 print (_("Error selecting folder: %s\n"), e.message);
             }
         });
@@ -435,13 +451,16 @@ public class OtherBox : Box {
     }
 
     void restart_vkcube () {
-        try {
-            Process.spawn_command_line_sync ("pkill vkcube");
-            Thread.usleep (1000);
-            Process.spawn_command_line_async ("bash -c 'ENABLE_VKBASALT=1 mangohud vkcube --wsi xcb'");
-        } catch (Error e) {
-            stderr.printf ("Ошибка при перезапуске vkcube: %s\n", e.message);
+        test_runner.stop_test_app ();
+
+        if (restart_timeout_id != null) {
+            GLib.Source.remove (restart_timeout_id);
         }
+        restart_timeout_id = GLib.Timeout.add (1000, () => {
+            restart_timeout_id = null;
+            test_runner.run_test_with_vkbasalt ();
+            return false;
+        });
     }
 
     public bool is_reshade_switch_active (string shader_name) {
@@ -493,7 +512,7 @@ public class OtherBox : Box {
         reset_button.set_valign (Align.CENTER);
         reset_button.add_css_class ("linked");
         reset_button.set_visible (false);
-        reset_button.set_tooltip_text ("Сбросить значение по умолчанию");
+        reset_button.set_tooltip_text (_ ("Reset to the default value"));
 
         var entry_container = new Box (Orientation.HORIZONTAL, 0);
         entry_container.append (entry);
@@ -508,7 +527,7 @@ public class OtherBox : Box {
                 GLib.Idle.add (() => {
                     update_entry_from_scale (scale, entry, format);
                     if (!is_loading) {
-                        OtherSave.save_states (this);
+                        saver.save_states (this);
                     }
                     is_updating = false;
                     return false;
@@ -528,7 +547,7 @@ public class OtherBox : Box {
                 scale.set_value (initial_value);
                 update_entry_from_scale (scale, entry, format);
                 if (!is_loading) {
-                    OtherSave.save_states (this);
+                    saver.save_states (this);
                 }
                 is_updating = false;
             }
@@ -799,150 +818,4 @@ public class OtherBox : Box {
         return label;
     }
 }
-
-public class ShortcutRecorder : Gtk.Box {
-    Gtk.Button _record_button;
-    Gtk.Label _display_label;
-    Gtk.Button _edit_button;
-    Gtk.Entry _entry;
-    string _shortcut = "";
-    bool _is_recording = false;
-
-    public string shortcut {
-        get { return _shortcut; }
-        set {
-            _shortcut = value;
-            update_display ();
-        }
-    }
-
-    public bool is_recording {
-        get { return _is_recording; }
-    }
-
-    public signal void shortcut_changed (string shortcut);
-
-    public ShortcutRecorder () {
-        Object (orientation: Gtk.Orientation.HORIZONTAL, spacing: 0);
-
-        this.add_css_class ("linked");
-
-        _record_button = new Gtk.Button ();
-        _record_button.hexpand = true;
-        _display_label = new Gtk.Label ("");
-        _record_button.child = _display_label;
-
-        _edit_button = new Gtk.Button.from_icon_name ("document-edit-symbolic");
-        _edit_button.tooltip_text = _("Edit shortcut manually");
-
-        _entry = new Gtk.Entry ();
-        _entry.visible = false;
-        _entry.primary_icon_name = "input-keyboard-symbolic";
-        _entry.secondary_icon_name = "edit-clear-symbolic";
-        _entry.secondary_icon_activatable = true;
-
-        append (_record_button);
-        append (_edit_button);
-        append (_entry);
-
-        _record_button.clicked.connect (() => {
-            if (!_is_recording) start_recording ();
-            else cancel_recording ();
-        });
-
-        _edit_button.clicked.connect (() => {
-            start_editing ();
-        });
-
-        _entry.activate.connect (() => {
-            apply_editing ();
-        });
-
-        _entry.icon_release.connect ((pos) => {
-            if (pos == Gtk.EntryIconPosition.SECONDARY) {
-                cancel_editing ();
-            }
-        });
-    }
-
-    void update_display () {
-        _display_label.label = _shortcut;
-    }
-
-    void start_recording () {
-        _is_recording = true;
-
-        var image = new Gtk.Image.from_icon_name ("input-keyboard-symbolic");
-        image.pixel_size = 16;
-        _record_button.child = image;
-
-        _record_button.add_css_class ("suggested-action");
-        _record_button.grab_focus ();
-    }
-
-    void stop_recording () {
-        _is_recording = false;
-        _record_button.child = _display_label;
-        update_display ();
-        _record_button.remove_css_class ("suggested-action");
-    }
-
-    void cancel_recording () {
-        stop_recording ();
-    }
-
-    void start_editing () {
-        _entry.text = _shortcut;
-        _entry.visible = true;
-        _record_button.visible = false;
-        _edit_button.visible = false;
-        _entry.grab_focus ();
-    }
-
-    void apply_editing () {
-        _shortcut = _entry.text.strip ();
-        shortcut_changed (_shortcut);
-        finish_editing ();
-    }
-
-    void cancel_editing () {
-        finish_editing ();
-    }
-
-    void finish_editing () {
-        _entry.visible = false;
-        _record_button.visible = true;
-        _edit_button.visible = true;
-        update_display ();
-    }
-
-    public bool handle_key_event (uint keyval, Gdk.ModifierType state) {
-        return handle_key_event_with_code (keyval, 0, state);
-    }
-
-    public bool handle_key_event_with_code (uint keyval, uint keycode, Gdk.ModifierType state) {
-        if (!_is_recording) return false;
-        if (keyval == Gdk.Key.Escape) {
-            cancel_recording ();
-            return true;
-        }
-
-        var key = Gdk.keyval_name (keyval) ?? "Unknown";
-
-        string[] ignored_keys = {
-            "Control_L", "Control_R", "Shift_L", "Shift_R",
-            "Alt_L", "Alt_R", "Super_L", "Super_R", "Meta_L", "Meta_R",
-            "Num_Lock", "Caps_Lock", "Scroll_Lock", "ISO_Level3_Shift",
-            "Mode_switch", "Multi_key"
-        };
-
-        foreach (string ignored in ignored_keys) {
-            if (key == ignored) return true;
-        }
-
-        _shortcut = key;
-        shortcut_changed (_shortcut);
-        stop_recording ();
-        return true;
-    }
 }

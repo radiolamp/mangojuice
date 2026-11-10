@@ -1,6 +1,6 @@
 /* config.vapi // License: GPL-3.0+ */
 [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "config.h")]
-namespace Config {
+namespace BuildConfig {
     public const string GETTEXT_PACKAGE;
     public const string GNOMELOCALEDIR;
     public const string VERSION;

@@ -1,8 +1,16 @@
-/* other_load  // License: GPL-3.0+ */
+/* vkbasalt/loader.vala // License: GPL-3.0+ */
 using Gtk;
 using Gee;
 
-public class OtherLoad {
+namespace MangoJuice.VkBasalt {
+
+public class Loader : GLib.Object {
+
+    public MangoJuice.Config.Paths paths { get; private set; }
+
+    public Loader (MangoJuice.Config.Paths paths) {
+        this.paths = paths;
+    }
 
     public class LoadResult {
         public Gee.HashMap<string, bool> reshade_states { get; set; }
@@ -18,7 +26,7 @@ public class OtherLoad {
         }
     }
 
-    static bool contains_string (string[] array, string target) {
+    bool contains_string (string[] array, string target) {
         foreach (string item in array) {
             if (item == target) {
                 return true;
@@ -27,12 +35,10 @@ public class OtherLoad {
         return false;
     }
 
-    public static LoadResult load_states (OtherBox other_box) {
+    public LoadResult load_states (OtherBox other_box) {
         var result = new LoadResult ();
-        var config_dir = File.new_for_path (Environment.get_home_dir ())
-                             .get_child (".config")
-                             .get_child ("vkBasalt");
-        var config_file = config_dir.get_child ("vkBasalt.conf");
+        var config_dir = paths.vkbasalt_dir;
+        var config_file = paths.vkbasalt_conf;
 
         if (!config_dir.query_exists () || !config_file.query_exists ()) {
             create_default_config (config_dir, config_file);
@@ -153,7 +159,7 @@ public class OtherLoad {
         return result;
     }
 
-    public static void apply_reshade_states (OtherBox other_box, Gee.HashMap<string, bool> reshade_states) {
+    public void apply_reshade_states (OtherBox other_box, Gee.HashMap<string, bool> reshade_states) {
 
         foreach (var switch_widget in other_box.reshade_switches) {
             string shader_name = switch_widget.get_name ().replace ("reshade_", "");
@@ -167,7 +173,7 @@ public class OtherLoad {
         }
     }
 
-    static void set_default_values (OtherBox other_box, bool[] found) {
+    void set_default_values (OtherBox other_box, bool[] found) {
         if (!found[0]) set_default_scale_value (other_box.scales[0], other_box.entries[0], 0, "%.2f");
         if (!found[1]) set_default_scale_value (other_box.scales[1], other_box.entries[1], 0.5, "%.2f");
         if (!found[2]) set_default_scale_value (other_box.scales[2], other_box.entries[2], 0.17, "%.2f");
@@ -180,7 +186,7 @@ public class OtherLoad {
         if (!found[9]) set_default_int_scale_value (other_box.scales[9], other_box.entries[9], 25);
     }
 
-    static void create_default_config (File config_dir, File config_file) {
+    void create_default_config (File config_dir, File config_file) {
         try {
             if (!config_dir.query_exists ()) {
                 config_dir.make_directory_with_parents ();
@@ -207,11 +213,11 @@ public class OtherLoad {
         }
     }
 
-    static void load_scale_value (string line, Scale scale, Entry entry, string format) {
+    void load_scale_value (string line, Scale scale, Entry entry, string format) {
         string[] parts = line.split ("=");
         if (parts.length < 2) return;
-        string value_str = parts[1].replace (",", ".");
-        double value = double.parse (value_str);
+        double value;
+        if (!double.try_parse (parts[1].replace (",", "."), out value)) return;
         if (scale != null) {
             scale.set_value (value);
             if (entry != null) {
@@ -220,7 +226,7 @@ public class OtherLoad {
         }
     }
 
-    static void load_int_scale_value (string line, Scale scale, Entry entry) {
+    void load_int_scale_value (string line, Scale scale, Entry entry) {
         string[] parts = line.split ("=");
         if (parts.length < 2) return;
         string value_str = parts[1].replace (",", ".");
@@ -228,7 +234,8 @@ public class OtherLoad {
             string[] dot_parts = value_str.split (".");
             value_str = dot_parts[0];
         }
-        int value = int.parse (value_str);
+        int value;
+        if (!int.try_parse (value_str, out value)) return;
         if (scale != null) {
             scale.set_value (value);
             if (entry != null) {
@@ -237,7 +244,7 @@ public class OtherLoad {
         }
     }
 
-    static void set_default_scale_value (Scale scale, Entry entry, double default_value, string format) {
+    void set_default_scale_value (Scale scale, Entry entry, double default_value, string format) {
         if (scale != null) {
             scale.set_value (default_value);
             if (entry != null) {
@@ -246,7 +253,7 @@ public class OtherLoad {
         }
     }
 
-    static void set_default_int_scale_value (Scale scale, Entry entry, int default_value) {
+    void set_default_int_scale_value (Scale scale, Entry entry, int default_value) {
         if (scale != null) {
             scale.set_value (default_value);
             if (entry != null) {
@@ -254,4 +261,6 @@ public class OtherLoad {
             }
         }
     }
+}
+
 }

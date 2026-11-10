@@ -1,0 +1,35 @@
+{
+  "name": "MangoJuice (Arch Linux)",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "remoteUser": "root",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached",
+  "mounts": [
+    "source=${localEnv:XDG_RUNTIME_DIR},target=/run/user/1000,type=bind",
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
+    "source=/dev/dri,target=/dev/dri,type=bind",
+  ],
+  "runArgs": [
+    "--init",
+    "--cap-add=SYS_ADMIN",
+    "--security-opt=seccomp=unconfined",
+    "--shm-size=2g"
+  ],
+  "containerEnv": {
+    "XDG_RUNTIME_DIR": "/run/user/1000",
+    "WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
+    "DBUS_SESSION_BUS_ADDRESS": "unix:path=/run/user/1000/bus",
+    "DISPLAY": ":0",
+    "XAUTHORITY": "/tmp/.docker.xauth",
+    "NO_AT_BRIDGE": "1",
+    "GTK_A11Y": "none",
+    "LIBGL_ALWAYS_SOFTWARE": "0",
+    "MANGOHUD": "1",
+    "LANG": "C.UTF-8"
+  },
+  "onCreateCommand": "dev-xauth",
+  "postCreateCommand": "sh .devcontainer/update-icon-cache.sh",
+}
