@@ -46,13 +46,26 @@ public class TestRunner : GLib.Object {
         return wayland_display != null && wayland_display != "";
     }
 
+    static bool has_x11_display () {
+        string? display = Environment.get_variable ("DISPLAY");
+        return display != null && display != "";
+    }
+
+    static bool should_use_wayland_wsi () {
+        return is_wayland_session () && !has_x11_display ();
+    }
+
     void start_test_app (string? config_file) {
         stop_test_app ();
 
         if (env.is_flatpak () && is_wayland_session ()) {
             spawn_vkcube_wayland (config_file);
         } else if (test_apps.is_vkcube_available ()) {
-            spawn_vkcube_xcb (config_file);
+            if (should_use_wayland_wsi ()) {
+                spawn_vkcube_wayland_wsi (config_file);
+            } else {
+                spawn_vkcube_xcb (config_file);
+            }
         } else if (test_apps.is_glxgears_available ()) {
             spawn_glxgears (config_file);
         }
@@ -69,6 +82,14 @@ public class TestRunner : GLib.Object {
     void spawn_vkcube_wayland (string? config_file) {
         try {
             running_test_app = build_launcher (config_file).spawn ("mangohud", "vkcube-wayland");
+        } catch (Error e) {
+            stderr.printf (_ ("Error when starting the test app: %s\n"), e.message);
+        }
+    }
+
+    void spawn_vkcube_wayland_wsi (string? config_file) {
+        try {
+            running_test_app = build_launcher (config_file).spawn ("mangohud", "vkcube", "--wsi", "wayland");
         } catch (Error e) {
             stderr.printf (_ ("Error when starting the test app: %s\n"), e.message);
         }
@@ -118,7 +139,11 @@ public class TestRunner : GLib.Object {
         try {
             var launcher = new SubprocessLauncher (SubprocessFlags.NONE);
             launcher.setenv ("ENABLE_VKBASALT", "1", true);
-            running_test_app = launcher.spawn ("mangohud", "vkcube", "--wsi", "xcb");
+            if (should_use_wayland_wsi ()) {
+                running_test_app = launcher.spawn ("mangohud", "vkcube", "--wsi", "wayland");
+            } else {
+                running_test_app = launcher.spawn ("mangohud", "vkcube", "--wsi", "xcb");
+            }
         } catch (Error e) {
             stderr.printf (_ ("Error when starting the test app: %s\n"), e.message);
         }
