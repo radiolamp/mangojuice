@@ -1727,6 +1727,31 @@ msgstr "Включить продвинутый режим"
 msgid "All new parameters will appear at the end of the list"
 msgstr "Все новые параметры будут появляться в конце списка"
 
+#: src/system/intel_power_fix.vala:111 src/system/intel_power_fix.vala:120
+msgid "Flatpak permission required"
+msgstr "Требуется разрешение Flatpak"
+
+#: src/system/intel_power_fix.vala:127
+msgid ""
+"To use the Intel Power Fix in Flatpak, MangoJuice needs permission to run "
+"commands on the host. Run this command in a terminal and restart MangoJuice:"
+msgstr ""
+"Чтобы использовать Intel Power Fix в Flatpak, MangoJuice требуется "
+"разрешение на выполнение команд на хосте. Выполните эту команду в терминале "
+"и перезапустите MangoJuice:"
+
+#: src/system/intel_power_fix.vala:151 src/system/intel_power_fix.vala:157
+msgid "Copy"
+msgstr "Копировать"
+
+#: src/system/intel_power_fix.vala:162 src/system/intel_power_fix.vala:188
+msgid "Close"
+msgstr "Закрыть"
+
+#: src/system/intel_power_fix.vala:207 src/system/intel_power_fix.vala:305
+msgid "Failed to change permissions."
+msgstr "Не удалось изменить права."
+
 #~ msgid "Mango Juice"
 #~ msgstr "Mango Juice"
 

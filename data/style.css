@@ -65,3 +65,8 @@ flowboxchild {
     background-color: alpha(@accent_bg_color, 0.12);
     transition: outline-color 250ms ease, background-color 250ms ease;
 }
+
+.override-command {
+    font-family: monospace;
+    font-size: 9pt;
+}

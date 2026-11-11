@@ -42,26 +42,44 @@ public class IntelPowerFix : GLib.Object {
     }
 
     public static bool is_available () {
+        if (BuildConfig.IS_DEVEL) {
+            return true;
+        }
         return FileUtils.test (ENERGY_UJ_PATH, FileTest.EXISTS);
     }
 
     public static bool is_flatpak () {
+        if (BuildConfig.IS_DEVEL) {
+            return true;
+        }
         string? flatpak_id = Environment.get_variable ("FLATPAK_ID");
         return flatpak_id != null && flatpak_id != "";
     }
 
-    public string get_flatpak_override_command () {
+    private static string get_flatpak_app_id () {
         string? flatpak_id = Environment.get_variable ("FLATPAK_ID");
-        string app_id = (flatpak_id != null && flatpak_id != "")
+        return (flatpak_id != null && flatpak_id != "")
             ? flatpak_id
             : FLATPAK_APP_ID_FALLBACK;
+    }
 
-        return "flatpak override --user --talk-name=" + FLATPAK_DBUS_NAME + " " + app_id;
+    /*
+     * Running pkexec from inside a Flatpak sandbox is not possible, so the
+     * chmod has to be executed on the host through flatpak-spawn. That call
+     * requires the org.freedesktop.Flatpak D-Bus name, which is only
+     * available after the user grants it with a flatpak override.
+     */
+    public string get_flatpak_override_command () {
+        return "flatpak override --user --talk-name=" + FLATPAK_DBUS_NAME + " " + get_flatpak_app_id ();
     }
 
     public bool has_flatpak_override () {
         if (!is_flatpak ()) {
             return true;
+        }
+
+        if (!FileUtils.test (FLATPAK_INFO_PATH, FileTest.EXISTS)) {
+            return false;
         }
 
         try {
@@ -89,44 +107,70 @@ public class IntelPowerFix : GLib.Object {
     private void show_flatpak_override_dialog (Gtk.Window window) {
         string command = get_flatpak_override_command ();
 
-        var command_entry = new Gtk.Entry () {
-            text = command,
-            editable = false,
-            hexpand = true
-        };
-        command_entry.add_css_class ("monospace");
-        command_entry.set_position (-1);
+        var dialog = new Adw.Dialog ();
+        dialog.set_title (_("Flatpak permission required"));
+        dialog.set_content_width (520);
 
-        var copy_button = new Gtk.Button () {
-            icon_name = "edit-copy-symbolic",
-            tooltip_text = _ ("Copy"),
-            valign = Align.CENTER
-        };
-        copy_button.add_css_class ("flat");
+        var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 18);
+        content.set_margin_top (24);
+        content.set_margin_bottom (24);
+        content.set_margin_start (24);
+        content.set_margin_end (24);
 
-        var command_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-        command_box.append (command_entry);
-        command_box.append (copy_button);
+        var heading = new Gtk.Label (_("Flatpak permission required"));
+        heading.add_css_class ("title-2");
+        heading.set_xalign (0);
+        heading.set_wrap (true);
+        content.append (heading);
 
+        var description = new Gtk.Label (
+            _("To use the Intel Power Fix in Flatpak, MangoJuice needs permission to run commands on the host. Run this command in a terminal and restart MangoJuice:")
+        );
+        description.set_xalign (0);
+        description.set_wrap (true);
+        content.append (description);
+
+        string app_id = get_flatpak_app_id ();
+        string display_command = command.replace (" " + app_id, "\n" + app_id);
+
+        var command_label = new Gtk.Label (display_command);
+        command_label.add_css_class ("override-command");
+        command_label.set_xalign (0);
+        command_label.set_wrap (true);
+        command_label.set_wrap_mode (Pango.WrapMode.WORD_CHAR);
+        command_label.set_selectable (true);
+        command_label.set_margin_top (12);
+        command_label.set_margin_bottom (12);
+        command_label.set_margin_start (12);
+        command_label.set_margin_end (12);
+
+        var command_frame = new Gtk.Frame (null);
+        command_frame.set_child (command_label);
+        content.append (command_frame);
+
+        var copy_button = new Gtk.Button.with_label (_("Copy"));
+        copy_button.add_css_class ("suggested-action");
         copy_button.clicked.connect (() => {
-            window.get_clipboard ().set_text (command);
-            copy_button.set_icon_name ("object-select-symbolic");
+            Gdk.Display.get_default ().get_clipboard ().set_text (command);
+            copy_button.set_label (_("Copied"));
             GLib.Timeout.add (1500, () => {
-                copy_button.set_icon_name ("edit-copy-symbolic");
+                copy_button.set_label (_("Copy"));
                 return false;
             });
         });
 
-        var dialog = new Adw.AlertDialog (
-            _("Flatpak permission required"),
-            _("To use the Intel Power Fix in Flatpak, MangoJuice needs permission to run commands on the host. Run this command in a terminal and restart MangoJuice:")
-        );
-        dialog.set_prefer_wide_layout (true);
-        dialog.set_extra_child (command_box);
-        dialog.add_response ("close", _("Close"));
-        dialog.set_default_response ("close");
-        dialog.set_close_response ("close");
+        var close_button = new Gtk.Button.with_label (_("Close"));
+        close_button.clicked.connect (() => {
+            dialog.close ();
+        });
 
+        var button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        button_box.set_halign (Gtk.Align.END);
+        button_box.append (copy_button);
+        button_box.append (close_button);
+        content.append (button_box);
+
+        dialog.set_child (content);
         dialog.present (window);
     }
 
@@ -199,7 +243,7 @@ public class IntelPowerFix : GLib.Object {
                 status.service_active = (exit_status == 0);
             }
         } catch (Error e) {
-            if (!e.matches (FileError.quark (), FileError.NOENT)) {
+            if (!e.matches (IOError.quark (), IOError.NOT_FOUND)) {
                 stderr.printf ("Permission check failed: %s\n", e.message);
             }
         }

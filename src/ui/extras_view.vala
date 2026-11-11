@@ -593,7 +593,7 @@ public class ExtrasView : GLib.Object {
 
         button.set_visible (true);
 
-        if (app.env.is_flatpak ()) {
+        if (IntelPowerFix.is_flatpak ()) {
             if (!app.intel_power_fix.has_flatpak_override ()) {
                 button.remove_css_class ("suggested-action");
                 button.set_tooltip_text (_ ("Flatpak permission required"));
