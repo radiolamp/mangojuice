@@ -133,6 +133,21 @@ color_box.append (gpu_linked_box);
 color_box.append (cpu_linked_box);
 visual_box.append (color_box);
 
+app.search.add_setting ("visual_box", _ ("Color"), _ ("GPU custom name"),
+                        _ ("Override the GPU name"),
+                        new string[] { "gpu_text" },
+                        state.gpu_text_entry, gpu_linked_box);
+app.search.add_setting ("visual_box", _ ("Color"), _ ("GPU color"),
+                        _ ("Color text"), new string[] { "gpu_color" },
+                        state.gpu_color_button, gpu_linked_box);
+app.search.add_setting ("visual_box", _ ("Color"), _ ("CPU custom name"),
+                        _ ("Override the CPU name"),
+                        new string[] { "cpu_text" },
+                        state.cpu_text_entry, cpu_linked_box);
+app.search.add_setting ("visual_box", _ ("Color"), _ ("CPU color"),
+                        _ ("Color text"), new string[] { "cpu_color" },
+                        state.cpu_color_button, cpu_linked_box);
+
     var fps_clarge_label = Common.create_label (_ ("FPS color levels"), Align.START, { "title-4" }, Common.FLOW_BOX_MARGIN);
     visual_box.append (fps_clarge_label);
 
@@ -200,6 +215,11 @@ visual_box.append (color_box);
     fps_color_box.append (fps_entry_box);
     fps_color_box.append (fps_color_buttons_box);
     visual_box.append (fps_color_box);
+
+    app.search.add_setting ("visual_box", _ ("FPS color levels"), _ ("FPS color levels"),
+                            _ ("Thresholds and colors"),
+                            new string[] { "fps_color", "fps_value" },
+                            state.fps_value_entry_1, fps_color_box);
 
     var gpu_load_clarge_label = Common.create_label (_ ("GPU level colors"), Align.START, { "title-4" }, Common.FLOW_BOX_MARGIN);
     visual_box.append (gpu_load_clarge_label);
@@ -269,6 +289,11 @@ visual_box.append (color_box);
     gpu_load_color_box.append (gpu_load_color_buttons_box);
     visual_box.append (gpu_load_color_box);
 
+    app.search.add_setting ("visual_box", _ ("GPU level colors"), _ ("GPU level colors"),
+                            _ ("Thresholds and colors"),
+                            new string[] { "gpu_load_color", "gpu_load_value" },
+                            state.gpu_load_value_entry_1, gpu_load_color_box);
+
     var cpu_load_clarge_label = Common.create_label (_ ("CPU level colors"), Align.START, { "title-4" }, Common.FLOW_BOX_MARGIN);
     visual_box.append (cpu_load_clarge_label);
 
@@ -336,6 +361,11 @@ visual_box.append (color_box);
     cpu_load_color_box.append (cpu_load_entry_box);
     cpu_load_color_box.append (cpu_load_color_buttons_box);
     visual_box.append (cpu_load_color_box);
+
+    app.search.add_setting ("visual_box", _ ("CPU level colors"), _ ("CPU level colors"),
+                            _ ("Thresholds and colors"),
+                            new string[] { "cpu_load_color", "cpu_load_value" },
+                            state.cpu_load_value_entry_1, cpu_load_color_box);
 
     if (color_flow_box.get_parent () == null) {
         visual_box.append (color_flow_box);
@@ -440,6 +470,11 @@ visual_box.append (color_box);
         _ ("Wine"), _ ("Engine"), _ ("Media"), _ ("Network"),
         _ ("Text"), _ ("Battery"), _ ("Horizontal separator")
     };
+    string[] color_keys = {
+        "background_color", "frametime_color", "vram_color", "ram_color",
+        "wine_color", "engine_color", "media_player_color", "network_color",
+        "text_color", "battery_color", "horizontal_separator_color"
+    };
 
     assert (color_buttons.length == color_labels.length);
 
@@ -454,6 +489,10 @@ visual_box.append (color_box);
         box.append (label);
 
         color_flow_box.insert (box, -1);
+
+        app.search.add_setting ("visual_box", _ ("Color"), color_labels[i],
+                                _ ("HUD color"), new string[] { color_keys[i] },
+                                color_buttons[i], box);
     }
 }}
 

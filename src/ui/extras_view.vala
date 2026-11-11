@@ -22,6 +22,11 @@ public class ExtrasView : GLib.Object {
         state.custom_command_entry.changed.connect (() => {
             app.save_config ();
         });
+        app.search.add_setting ("extras_box", _ ("Customize"),
+                                _ ("MangoHud variable"),
+                                _ ("Enter MangoHud variables separated by commas"),
+                                new string[] { "custom_command" },
+                                state.custom_command_entry, custom_command_box);
 
         var custom_logs_path_container = new Box (Orientation.HORIZONTAL, 0);
         custom_logs_path_container.add_css_class ("linked");
@@ -59,6 +64,11 @@ public class ExtrasView : GLib.Object {
         custom_logs_path_container.append (clear_logs_path_button);
         custom_logs_path_container.append (state.logs_path_button);
 
+        app.search.add_setting ("extras_box", _ ("Customize"), _ ("Logs folder"),
+                                _ ("Directory for logs"),
+                                new string[] { "custom_logs_path" },
+                                state.custom_logs_path_entry, custom_logs_path_container);
+
         state.intel_power_fix_button = new Button () {
             hexpand = true,
             child = new Label (_ ("Intel Power Fix")) {
@@ -93,6 +103,11 @@ public class ExtrasView : GLib.Object {
             app.save_config ();
         });
 
+        app.search.add_setting ("extras_box", _ ("Customize"), _ ("Logs key"),
+                                _ ("Keyboard shortcut"),
+                                new string[] { "toggle_log" },
+                                state.logs_key_recorder, state.logs_key_recorder);
+
         state.reset_button = new Button () {
             hexpand = true,
             child = new Label (_ ("Reset Config")) {
@@ -107,6 +122,15 @@ public class ExtrasView : GLib.Object {
             app.delete_mangohud_backup ();
             app.reset_manager.reset_all_widgets ();
         });
+
+        app.search.add_setting ("extras_box", _ ("Customize"), _ ("Intel Power Fix"),
+                                _ ("Set Intel GPU power permissions"),
+                                new string[] { "intel_power_fix" },
+                                state.intel_power_fix_button, state.intel_power_fix_button);
+        app.search.add_setting ("extras_box", _ ("Customize"), _ ("Reset Config"),
+                                _ ("Restore default settings"),
+                                new string[] { "reset_config" },
+                                state.reset_button, state.reset_button);
 
         var blacklist_row = new Box (Orientation.HORIZONTAL, 5) {
             margin_start = 15,
@@ -123,6 +147,11 @@ public class ExtrasView : GLib.Object {
         });
 
         blacklist_row.append (blacklist_box);
+
+        app.search.add_setting ("extras_box", _ ("Blacklist"), _ ("Blacklist"),
+                                _ ("Games excluded from MangoHud"),
+                                new string[] { "blacklist" },
+                                state.blacklist_entry, blacklist_row);
 
         if (!app.env.is_flatpak ()) {
             state.mangohud_global_button = new Button.with_label (_ ("MangoHud Global"));
@@ -183,6 +212,11 @@ public class ExtrasView : GLib.Object {
         custom_text_box.append (custom_text_center_box);
         visual_box.append (custom_text_box);
 
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Your text"),
+                                _ ("Text shown in the HUD"),
+                                new string[] { "custom_text_center" },
+                                state.custom_text_center_entry, custom_text_box);
+
         var combined_flow_box = new FlowBox () {
             row_spacing = Common.FLOW_BOX_ROW_SPACING,
             column_spacing = Common.FLOW_BOX_COLUMN_SPACING,
@@ -211,6 +245,11 @@ public class ExtrasView : GLib.Object {
         custom_switch_pair.set_size_request (50, -1);
         combined_flow_box.insert (custom_switch_pair, -1);
 
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Horizontal HUD"),
+                                _ ("Arrange HUD in one row"),
+                                new string[] { "horizontal" },
+                                state.custom_switch, custom_switch_pair);
+
         var borders_widget = app.create_scale_entry_widget (_ ("Borders"), _ ("Round"), 0, 40, 0);
         state.borders_scale = borders_widget.scale;
         state.borders_entry = borders_widget.entry;
@@ -222,6 +261,10 @@ public class ExtrasView : GLib.Object {
             }
         });
         combined_flow_box.insert (borders_widget.widget, -1);
+
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Borders"),
+                                _ ("Round"), new string[] { "round_corners" },
+                                state.borders_scale, borders_widget.widget);
 
         var alpha_widget = app.create_scale_entry_widget (_ ("Alpha"), _ ("Transparency"), 0, 10, 5);
         state.alpha_scale = alpha_widget.scale;
@@ -235,6 +278,10 @@ public class ExtrasView : GLib.Object {
             app.save_config ();
         });
         combined_flow_box.insert (alpha_widget.widget, -1);
+
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Alpha"),
+                                _ ("Transparency"), new string[] { "background_alpha" },
+                                state.alpha_scale, alpha_widget.widget);
 
         var position_labels = new string[] {
             _ ("Top Left"), _ ("Top Center"), _ ("Top Right"),
@@ -265,6 +312,11 @@ public class ExtrasView : GLib.Object {
         position_pair.append (state.position_dropdown);
         combined_flow_box.insert (position_pair, -1);
 
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Position"),
+                                _ ("HUD position on screen"),
+                                new string[] { "position" },
+                                state.position_dropdown, position_pair);
+
         var colums_widget = app.create_scale_entry_widget (_ ("Columns"), _ ("Number of columns"), 1, 6, 3);
         state.colums_scale = colums_widget.scale;
         state.colums_entry = colums_widget.entry;
@@ -275,6 +327,11 @@ public class ExtrasView : GLib.Object {
             }
         });
         combined_flow_box.insert (colums_widget.widget, -1);
+
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Columns"),
+                                _ ("Number of columns"),
+                                new string[] { "hud_columns" },
+                                state.colums_scale, colums_widget.widget);
 
         state.toggle_hud_entry = new Entry () {
             placeholder_text = _ ("Key shortcuts"),
@@ -313,6 +370,11 @@ public class ExtrasView : GLib.Object {
         toggle_hud_box.append (new Label (_ ("Hide HUD")));
         toggle_hud_box.append (state.toggle_posic);
         combined_flow_box.insert (toggle_hud_box, -1);
+
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Hide HUD"),
+                                _ ("Toggle overlay shortcut"),
+                                new string[] { "toggle_hud" },
+                                state.toggle_posic, toggle_hud_box);
 
         var toggle_hud_key_controller = new EventControllerKey ();
         toggle_hud_key_controller.key_pressed.connect ((keyval, keycode, mod_state) => {
@@ -380,13 +442,28 @@ public class ExtrasView : GLib.Object {
         toggle_position_pair.append (state.toggle_hud_key_recorder);
         combined_flow_box.insert (toggle_position_pair, -1);
 
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Toggle position"),
+                                _ ("Shortcut to change HUD position"),
+                                new string[] { "toggle_hud_position" },
+                                state.toggle_hud_key_recorder, toggle_position_pair);
+
         var offset_x_pair = new Box (Orientation.HORIZONTAL, Common.MAIN_BOX_SPACING);
         offset_x_pair.append (offset_x_widget.widget);
         combined_flow_box.insert (offset_x_pair, -1);
 
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Offset X"),
+                                _ ("Horizontal offset"),
+                                new string[] { "offset_x" },
+                                state.offset_x_scale, offset_x_pair);
+
         var offset_y_pair = new Box (Orientation.HORIZONTAL, Common.MAIN_BOX_SPACING);
         offset_y_pair.append (offset_y_widget.widget);
         combined_flow_box.insert (offset_y_pair, -1);
+
+        app.search.add_setting ("visual_box", _ ("Customize"), _ ("Offset Y"),
+                                _ ("Vertical offset"),
+                                new string[] { "offset_y" },
+                                state.offset_y_scale, offset_y_pair);
 
         var fonts_label = Common.create_label (_ ("Font"), Align.START, { "title-4" }, Common.FLOW_BOX_MARGIN);
         visual_box.append (fonts_label);
@@ -427,6 +504,16 @@ public class ExtrasView : GLib.Object {
         fonts_flow_box.insert (font_selector_widget, -1);
         fonts_flow_box.insert (font_size_widget.widget, -1);
         fonts_flow_box.insert (font_size_secondary_widget.widget, -1);
+
+        app.search.add_setting ("visual_box", _ ("Font"), _ ("Font"),
+                                _ ("HUD font file"), new string[] { "font_file" },
+                                state.font_button, font_selector_widget);
+        app.search.add_setting ("visual_box", _ ("Font"), _ ("Size"),
+                                _ ("Size in pixels"), new string[] { "font_size" },
+                                state.font_size_scale, font_size_widget.widget);
+        app.search.add_setting ("visual_box", _ ("Font"), _ ("Small fonts"),
+                                _ ("Secondary font size"), new string[] { "font_size_secondary" },
+                                state.font_size_secondary_scale, font_size_secondary_widget.widget);
 
         visual_box.append (fonts_flow_box);
 
@@ -479,6 +566,10 @@ public class ExtrasView : GLib.Object {
         }
 
         visual_box.append (media_flow_box);
+
+        app.search.add_setting ("visual_box", _ ("Media"), _ ("Media"),
+                                _ ("Media player format"), new string[] { "media_player_format" },
+                                state.media_format_dropdowns.get (0), media_flow_box);
 
         app.color_controls.initialize (visual_box);
     }

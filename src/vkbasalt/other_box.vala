@@ -19,8 +19,13 @@ public class OtherBox : Box {
     public ArrayList<Label> scale_labels { get; set; }
     public ArrayList<Switch> switches { get; set; }
     public ArrayList<Label> labels { get; set; }
+    public ArrayList<Label> switch_descriptions { get; set; }
+    public ArrayList<Box> switch_rows { get; set; }
     public ArrayList<Switch> reshade_switches { get; set; }
     public ArrayList<Label> reshade_labels { get; set; }
+    public ArrayList<Box> reshade_rows { get; set; }
+    MangoJuice.UI.SearchController? search_controller;
+    bool search_enabled = false;
     public Button vkbasalt_global_button { get; set; }
     public bool vkbasalt_global_enabled { get; set; }
     public ShortcutRecorder hotkey_recorder;
@@ -56,8 +61,11 @@ public class OtherBox : Box {
         scale_labels = new ArrayList<Label> ();
         switches = new ArrayList<Switch> ();
         labels = new ArrayList<Label> ();
+        switch_descriptions = new ArrayList<Label> ();
+        switch_rows = new ArrayList<Box> ();
         reshade_switches = new ArrayList<Switch> ();
         reshade_labels = new ArrayList<Label> ();
+        reshade_rows = new ArrayList<Box> ();
         reshade_shaders = new Gee.ArrayList<string> ();
         switch_scale_map = new HashMap<string, ArrayList<Scale>> ();
         switch_entry_map = new HashMap<string, ArrayList<Entry>> ();
@@ -172,6 +180,7 @@ public class OtherBox : Box {
         reshade_clear_button.set_tooltip_text (_("Clear Reshade path"));
         reshade_clear_button.set_sensitive (false);
         reshade_clear_button.clicked.connect (on_reshade_clear_button_clicked);
+
         reshade_container.append (reshade_clear_button);
 
         buttons_flow_box.append (reshade_container);
@@ -250,6 +259,7 @@ public class OtherBox : Box {
         switch_widget.set_valign (Align.CENTER);
         switch_widget.set_name ("reshade_" + shader_name);
         reshade_switches.add (switch_widget);
+        reshade_rows.add (row_box);
         var text_box = new Box (Orientation.VERTICAL, 0);
         text_box.set_valign (Align.CENTER);
         text_box.set_halign (Align.START);
@@ -316,6 +326,71 @@ public class OtherBox : Box {
         if (!is_loading) {
             saver.save_states (this);
         }
+
+        if (search_enabled) {
+            register_search_items ();
+        }
+    }
+
+    public void enable_search (MangoJuice.UI.SearchController search) {
+        search_controller = search;
+        search_enabled = true;
+        register_search_items ();
+    }
+
+    void register_search_items () {
+        if (!search_enabled || search_controller == null) {
+            return;
+        }
+
+        search_controller.clear_page ("other_box");
+
+        for (int i = 0; i < switches.size; i++) {
+            var switch_widget = switches[i];
+            string title = i < labels.size ? labels[i].get_text () : _ ("vkBasalt");
+            string description = i < switch_descriptions.size ? switch_descriptions[i].get_text () : "";
+            Gtk.Widget highlight = switch_widget;
+            if (i < switch_rows.size) {
+                highlight = switch_rows[i];
+            }
+            search_controller.add_setting ("other_box", "vkBasalt", title, description,
+                                           new string[] { switch_widget.get_name () },
+                                           switch_widget, highlight);
+        }
+
+        for (int i = 0; i < scales.size; i++) {
+            string title = i < scale_labels.size ? scale_labels[i].get_text () : _ ("vkBasalt");
+            search_controller.add_setting ("other_box", "vkBasalt", title,
+                                           _ ("vkBasalt setting"),
+                                           new string[] {},
+                                           scales[i], scales[i]);
+        }
+
+        for (int i = 0; i < reshade_switches.size; i++) {
+            var switch_widget = reshade_switches[i];
+            string title = i < reshade_labels.size ? reshade_labels[i].get_text () : _ ("ReShade shader");
+            string description = i < reshade_descriptions.size ? reshade_descriptions[i].get_text () : _ ("ReShade shader");
+            Gtk.Widget highlight = switch_widget;
+            if (i < reshade_rows.size) {
+                highlight = reshade_rows[i];
+            }
+            search_controller.add_setting ("other_box", _ ("ReShade Shaders"), title, description,
+                                           new string[] { switch_widget.get_name () },
+                                           switch_widget, highlight);
+        }
+
+        search_controller.add_setting ("other_box", "vkBasalt", _ ("Global vkBasalt"),
+                                       _ ("Enable vkBasalt globally"),
+                                       new string[] { "vkbasalt_global" },
+                                       vkbasalt_global_button, vkbasalt_global_button);
+        search_controller.add_setting ("other_box", "vkBasalt", _ ("Hotkey"),
+                                       _ ("vkBasalt toggle shortcut"),
+                                       new string[] { "vkbasalt_hotkey" },
+                                       hotkey_recorder, hotkey_recorder);
+        search_controller.add_setting ("other_box", _ ("ReShade Shaders"), _ ("Add Reshade"),
+                                       _ ("Select ReShade folder"),
+                                       new string[] { "reshade_path" },
+                                       reshade_button, reshade_button);
     }
 
     public void set_reshade_button_text (string text) {
@@ -351,6 +426,7 @@ public class OtherBox : Box {
         reshade_flow_box.remove_all ();
         reshade_switches.clear ();
         reshade_labels.clear ();
+        reshade_rows.clear ();
     }
 
     public void update_reshade_section () {
@@ -360,6 +436,10 @@ public class OtherBox : Box {
             reshade_section_label = create_label (_("ReShade Shaders"), Align.START, { "title-4" }, FLOW_BOX_MARGIN);
             this.insert_child_after (reshade_section_label, main_flow_box);
             populate_reshade_flow_box ();
+        }
+
+        if (search_enabled) {
+            register_search_items ();
         }
     }
 
@@ -708,6 +788,10 @@ public class OtherBox : Box {
             row_box.append (switch_widget);
             row_box.append (text_box);
             flow_box.insert (row_box, -1);
+
+            labels.add (label1);
+            switch_descriptions.add (label2);
+            switch_rows.add (row_box);
         }
 
         parent_box.append (flow_box);

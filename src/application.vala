@@ -35,6 +35,7 @@ public class Application : Adw.Application {
     public FileActions file_actions { get; private set; }
     public AdvancedMode advanced_mode { get; private set; }
     public WidgetFactory widget_factory { get; private set; }
+    public SearchController search { get; private set; }
 
     // UI Elements
     public MangoJuice.VkBasalt.OtherBox other_box;
@@ -60,6 +61,7 @@ public class Application : Adw.Application {
         gpu = new GPU ();
         test_apps = new TestApps ();
         intel_power_fix = new IntelPowerFix ();
+        search = new SearchController (this);
         controls_view = new ControlsView (this);
         extras_view = new ExtrasView (this);
         gpu_selector = new GpuSelector (this);
@@ -94,6 +96,7 @@ public class Application : Adw.Application {
         const string[] PRESETS_ACCELS = { "<Primary>P", null };
         const string[] PROFILES_ACCELS = { "<Primary>Y", null };
         const string[] ADVANCED_ACCELS = { "<Primary>A", null };
+        const string[] SEARCH_ACCELS = { "<Primary>F", null };
 
         // Handlers must be method references: a lambda that touches this member and is
         // connected to GSimpleAction::activate is marshalled with a null instance, because
@@ -107,6 +110,8 @@ public class Application : Adw.Application {
         add_app_action ("preset_dialog").activate.connect (on_profiles_clicked);
         add_app_action ("advanced").activate.connect (on_advanced_clicked);
         add_app_action ("about").activate.connect (on_about_button_clicked);
+        add_app_action ("donate").activate.connect (on_donate_clicked);
+        add_app_action ("search").activate.connect (on_search_clicked);
 
         this.set_accels_for_action ("app.quit", QUIT_ACCELS);
         this.set_accels_for_action ("app.test_new", TEST_NEW_ACCELS);
@@ -116,6 +121,7 @@ public class Application : Adw.Application {
         this.set_accels_for_action ("app.presets_carousel", PRESETS_ACCELS);
         this.set_accels_for_action ("app.preset_dialog", PROFILES_ACCELS);
         this.set_accels_for_action ("app.advanced", ADVANCED_ACCELS);
+        this.set_accels_for_action ("app.search", SEARCH_ACCELS);
     }
 
     protected override void activate () {
@@ -164,7 +170,7 @@ public class Application : Adw.Application {
         var extras_box = new Gtk.Box (Gtk.Orientation.VERTICAL, Common.MAIN_BOX_SPACING);
         var performance_box = new Gtk.Box (Gtk.Orientation.VERTICAL, Common.MAIN_BOX_SPACING);
         var visual_box = new Gtk.Box (Gtk.Orientation.VERTICAL, Common.MAIN_BOX_SPACING);
-        var other_box = new MangoJuice.VkBasalt.OtherBox (paths, test_runner);
+        other_box = new MangoJuice.VkBasalt.OtherBox (paths, test_runner);
 
         controls_view.initialize (metrics_box, extras_box, performance_box, visual_box);
         extras_view.initialize (extras_box, visual_box);
@@ -174,6 +180,11 @@ public class Application : Adw.Application {
         var performance_scrolled_window = Common.create_scrolled_window (performance_box);
         var visual_scrolled_window = Common.create_scrolled_window (visual_box);
         other_scrolled_window = Common.create_scrolled_window (other_box);
+
+        search.register_page ("metrics_box", metrics_scrolled_window);
+        search.register_page ("extras_box", extras_scrolled_window);
+        search.register_page ("performance_box", performance_scrolled_window);
+        search.register_page ("visual_box", visual_scrolled_window);
 
         string? current_desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
         bool is_gnome = (current_desktop != null && current_desktop.contains ("GNOME"));
@@ -212,11 +223,15 @@ public class Application : Adw.Application {
         test_button.clicked.connect (run_test);
         header_bar.pack_start (test_button);
 
+        var search_button = new Gtk.Button () {
+            icon_name = "system-search-symbolic",
+            tooltip_text = _ ("Search settings (Ctrl+F)")
+        };
+        search_button.clicked.connect (on_search_clicked);
+
         var menu_button = create_menu_button ();
         header_bar.pack_end (menu_button);
-
-        var heart_button = create_heart_button ();
-        header_bar.pack_end (heart_button);
+        header_bar.pack_end (search_button);
 
         content_box.append (header_bar);
         content_box.append (view_stack);
@@ -247,36 +262,12 @@ public class Application : Adw.Application {
         menu_model.append_item (new GLib.MenuItem (_ ("Your profiles"), "app.preset_dialog"));
         menu_model.append_item (new GLib.MenuItem (_ ("Presets"), "app.presets_carousel"));
         menu_model.append_item (new GLib.MenuItem (_ ("Change order"), "app.advanced"));
+        menu_model.append_item (new GLib.MenuItem (_ ("Donate"), "app.donate"));
         menu_model.append_item (new GLib.MenuItem (_ ("About"), "app.about"));
 
         menu_button.set_menu_model (menu_model);
         menu_button.set_icon_name ("open-menu-symbolic");
         return menu_button;
-    }
-
-    Gtk.Button create_heart_button () {
-        var button = new Gtk.Button ();
-        button.set_icon_name ("io.github.radiolamp.mangojuice.donate-symbolic");
-        button.set_tooltip_text (_ ("Donate"));
-
-        var motion_controller = new Gtk.EventControllerMotion ();
-        motion_controller.enter.connect (() => {
-            button.add_css_class ("love-hover");
-            button.add_css_class ("circular");
-            button.add_css_class ("flat");
-        });
-        motion_controller.leave.connect (() => {
-            button.remove_css_class ("love-hover");
-        });
-        button.add_controller (motion_controller);
-
-        button.clicked.connect (() => {
-            support_dialog.show_support_dialog.begin (this.active_window, (obj, res) => {
-                support_dialog.show_support_dialog.end (res);
-            });
-        });
-
-        return button;
     }
 
     void setup_initial_checks (Adw.ApplicationWindow window, Adw.ToastOverlay toast_overlay, Gtk.Button test_button) {
@@ -448,9 +439,25 @@ public class Application : Adw.Application {
         }
     }
 
+    public void show_page (string page_id) {
+        view_stack.set_visible_child_name (page_id);
+    }
+
+    void on_search_clicked () {
+        search.open ();
+    }
+
+    void on_donate_clicked () {
+        support_dialog.show_support_dialog.begin (this.active_window, (obj, res) => {
+            support_dialog.show_support_dialog.end (res);
+        });
+    }
+
     async void add_other_box_if_needed () {
         if (BuildConfig.IS_DEVEL || yield check_vkbasalt_installed_async ()) {
             view_stack.add_titled (other_scrolled_window, "other_box", _ ("Other")).icon_name = "view-grid-symbolic";
+            search.register_page ("other_box", other_scrolled_window);
+            other_box.enable_search (search);
         }
     }
 

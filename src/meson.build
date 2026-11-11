@@ -23,6 +23,7 @@ sources = files(
     'system/mangohud_global.vala',
     'system/intel_power_fix.vala',
     'ui/common.vala',
+    'ui/search.vala',
     'ui/widget_factory.vala',
     'ui/color_controls.vala',
     'ui/font_selector.vala',

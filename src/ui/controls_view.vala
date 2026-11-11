@@ -43,40 +43,40 @@ public void initialize (Box metrics_box, Box extras_box, Box performance_box, Bo
     state.other_extra_labels = new Label[app.labels.other_extra_label_texts.length];
     state.inform_labels = new Label[app.labels.inform_label_texts.length];
 
-    create_switches_and_labels (metrics_box, Common.GPU_TITLE,
+    create_switches_and_labels (metrics_box, "metrics_box", Common.GPU_TITLE,
                                 state.gpu_switches, state.gpu_labels,
                                 state.gpu_config_vars, app.labels.gpu_label_texts,
                                 app.labels.gpu_label_texts_2);
-    create_switches_and_labels (metrics_box, Common.CPU_TITLE,
+    create_switches_and_labels (metrics_box, "metrics_box", Common.CPU_TITLE,
                                 state.cpu_switches, state.cpu_labels,
                                 state.cpu_config_vars, app.labels.cpu_label_texts,
                                 app.labels.cpu_label_texts_2);
-    create_switches_and_labels (metrics_box, Common.MEMORY_TITLE,
+    create_switches_and_labels (metrics_box, "metrics_box", Common.MEMORY_TITLE,
                                 state.memory_switches, state.memory_labels,
                                 state.memory_config_vars, app.labels.memory_label_texts,
                                 app.labels.memory_label_texts_2);
-    create_switches_and_labels (extras_box, Common.SYSTEM_TITLE,
+    create_switches_and_labels (extras_box, "extras_box", Common.SYSTEM_TITLE,
                                 state.system_switches, state.system_labels,
                                 state.system_config_vars, app.labels.system_label_texts,
                                 app.labels.system_label_texts_2);
-    create_switches_and_labels (extras_box, Common.OPTIONS_TITLE,
+    create_switches_and_labels (extras_box, "extras_box", Common.OPTIONS_TITLE,
                                 state.options_switches, state.options_labels,
                                 state.options_config_vars, app.labels.options_label_texts,
                                 app.labels.options_label_texts_2);
-    create_switches_and_labels (extras_box, Common.BATTERY_TITLE,
+    create_switches_and_labels (extras_box, "extras_box", Common.BATTERY_TITLE,
                                 state.battery_switches, state.battery_labels,
                                 state.battery_config_vars, app.labels.battery_label_texts,
                                 app.labels.battery_label_texts_2);
-    create_switches_and_labels (extras_box, Common.WINE_TITLE, state.wine_switches,
+    create_switches_and_labels (extras_box, "extras_box", Common.WINE_TITLE, state.wine_switches,
                                 state.wine_labels, state.wine_config_vars,
                                 app.labels.wine_label_texts, app.labels.wine_label_texts_2);
-    create_switches_and_labels (extras_box, Common.OTHER_TITLE,
+    create_switches_and_labels (extras_box, "extras_box", Common.OTHER_TITLE,
                                 state.other_extra_switches, state.other_extra_labels,
                                 state.other_extra_config_vars,
                                 app.labels.other_extra_label_texts,
                                 app.labels.other_extra_label_texts_2);
     create_scales_and_labels (extras_box);
-    create_switches_and_labels (performance_box, Common.INFORM_TITLE,
+    create_switches_and_labels (performance_box, "performance_box", Common.INFORM_TITLE,
                                 state.inform_switches, state.inform_labels,
                                 state.inform_config_vars, app.labels.inform_label_texts,
                                 app.labels.inform_label_texts_2);
@@ -94,7 +94,7 @@ public void initialize (Box metrics_box, Box extras_box, Box performance_box, Bo
     if (BuildConfig.IS_DEVEL) {
         state.git_switches = new Switch[state.git_config_vars.length];
         state.git_labels = new Label[app.labels.git_label_texts.length];
-        create_switches_and_labels (metrics_box, Common.GIT_TITLE, state.git_switches,
+        create_switches_and_labels (metrics_box, "metrics_box", Common.GIT_TITLE, state.git_switches,
                                     state.git_labels, state.git_config_vars,
                                     app.labels.git_label_texts, app.labels.git_label_texts_2);
         add_switch_handler (state.git_switches);
@@ -298,7 +298,7 @@ public void update_cpu_stats_state () {
     state.cpu_switches[0].active = any_cpu_switch_active;
 }
 
-public void create_switches_and_labels (Box parent_box, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
+public void create_switches_and_labels (Box parent_box, string page_id, string title, Switch[] switches, Label[] labels, string[] config_vars, string[] label_texts, string[] label_texts_2) {
     var label = Common.create_label (title, Align.START, { "title-4" }, Common.FLOW_BOX_MARGIN, Common.FLOW_BOX_MARGIN, Common.FLOW_BOX_MARGIN);
     parent_box.append (label);
 
@@ -351,6 +351,10 @@ public void create_switches_and_labels (Box parent_box, string title, Switch[] s
         row_box.append (switches[i]);
         row_box.append (text_box);
         flow_box.insert (row_box, -1);
+
+        app.search.add_setting (page_id, title, label_texts[i], label_texts_2[i],
+                                new string[] { config_vars[i] },
+                                switches[i], row_box);
     }
 
     parent_box.append (flow_box);
@@ -377,14 +381,23 @@ public void create_scales_and_labels (Box parent_box) {
     var duracion_widget = app.create_scale_entry_widget(label_texts[0], label_texts_2[0], 0, 200, 30);
     state.duracion_scale = duracion_widget.scale;
     scales_flow_box.insert (duracion_widget.widget, -1);
+    app.search.add_setting ("extras_box", _ ("Logging"), label_texts[0], label_texts_2[0],
+                            new string[] { "log_duration" },
+                            duracion_widget.scale, duracion_widget.widget);
 
     var autostart_widget = app.create_scale_entry_widget(label_texts[1], label_texts_2[1], 0, 30, 0);
     state.autostart_scale = autostart_widget.scale;
     scales_flow_box.insert (autostart_widget.widget, -1);
+    app.search.add_setting ("extras_box", _ ("Logging"), label_texts[1], label_texts_2[1],
+                            new string[] { "autostart_log" },
+                            autostart_widget.scale, autostart_widget.widget);
 
     var interval_widget = app.create_scale_entry_widget(label_texts[2], label_texts_2[2], 0, 500, 100);
     state.interval_scale = interval_widget.scale;
     scales_flow_box.insert (interval_widget.widget, -1);
+    app.search.add_setting ("extras_box", _ ("Logging"), label_texts[2], label_texts_2[2],
+                            new string[] { "log_interval" },
+                            interval_widget.scale, interval_widget.widget);
 
     parent_box.append (scales_flow_box);
 }
@@ -471,6 +484,22 @@ public void create_limiters_and_filters (Box performance_box) {
     limiters_box.append (toggle_fps_limit_box);
     performance_box.append (limiters_box);
 
+    app.search.add_setting ("performance_box", _ ("Limiters FPS"), _ ("FPS limit method"),
+                            _ ("late or early"), new string[] { "fps_limit_method" },
+                            state.fps_limit_method, state.fps_limit_method);
+    app.search.add_setting ("performance_box", _ ("Limiters FPS"), _ ("Limit 1"),
+                            _ ("FPS limitation"), new string[] { "fps_limit" },
+                            state.fps_limit_entry_1, fps_limit_entry_1_box);
+    app.search.add_setting ("performance_box", _ ("Limiters FPS"), _ ("Limit 2"),
+                            _ ("FPS limitation"), new string[] { "fps_limit" },
+                            state.fps_limit_entry_2, fps_limit_entry_2_box);
+    app.search.add_setting ("performance_box", _ ("Limiters FPS"), _ ("Limit 3"),
+                            _ ("FPS limitation"), new string[] { "fps_limit" },
+                            state.fps_limit_entry_3, fps_limit_entry_3_box);
+    app.search.add_setting ("performance_box", _ ("Limiters FPS"), _ ("Toggle FPS limit"),
+                            _ ("Keyboard shortcut"), new string[] { "toggle_fps_limit" },
+                            state.toggle_fps_limit_recorder, toggle_fps_limit_box);
+
     var vsync_label = Common.create_label (_ ("VSync"), Align.START, { "title-4" }, Common.FLOW_BOX_MARGIN);
     performance_box.append (vsync_label);
 
@@ -513,6 +542,13 @@ public void create_limiters_and_filters (Box performance_box) {
     vsync_box.append (opengl_label);
     vsync_box.append (state.opengl_dropdown);
     performance_box.append (vsync_box);
+
+    app.search.add_setting ("performance_box", _ ("VSync"), "Vulkan",
+                            _ ("VSync mode"), new string[] { "vsync" },
+                            state.vulkan_dropdown, state.vulkan_dropdown);
+    app.search.add_setting ("performance_box", _ ("VSync"), "OpenGL",
+                            _ ("VSync mode"), new string[] { "gl_vsync" },
+                            state.opengl_dropdown, state.opengl_dropdown);
 
     var filters_label = Common.create_label (_ ("Filters"), Align.START, { "title-4" }, Common.FLOW_BOX_MARGIN);
     performance_box.append (filters_label);
@@ -568,6 +604,16 @@ public void create_limiters_and_filters (Box performance_box) {
 
     performance_box.append (filters_flow_box);
 
+    app.search.add_setting ("performance_box", _ ("Filters"), _ ("Filter"),
+                            _ ("Texture filtering"), new string[] { "filter" },
+                            state.filter_dropdown, filter_pair);
+    app.search.add_setting ("performance_box", _ ("Filters"), _ ("Anisotropic"),
+                            _ ("Filtering"), new string[] { "af" },
+                            state.af, af_widget.widget);
+    app.search.add_setting ("performance_box", _ ("Filters"), _ ("Mipmap"),
+                            _ ("Aliasing"), new string[] { "picmip" },
+                            state.picmip, picmip_widget.widget);
+
     var fps_sampling_period_label = Common.create_label (_ ("Other"), Align.START, { "title-4" }, Common.FLOW_BOX_MARGIN);
     performance_box.append (fps_sampling_period_label);
 
@@ -609,6 +655,10 @@ public void create_limiters_and_filters (Box performance_box) {
     fps_sampling_period_box.set_margin_bottom (Common.FLOW_BOX_MARGIN);
     fps_sampling_period_box.append (fps_sampling_period_widget.widget);
     performance_box.append (fps_sampling_period_box);
+
+    app.search.add_setting ("performance_box", _ ("Other"), _ ("FPS Sampling"),
+                            _ ("Milliseconds"), new string[] { "fps_sampling_period" },
+                            state.fps_sampling_period_scale, fps_sampling_period_widget.widget);
 }
 }
 

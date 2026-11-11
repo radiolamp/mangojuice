@@ -1,5 +1,7 @@
 data/io.github.radiolamp.mangojuice.metainfo.xml
 src/application.vala
+src/config/file_actions.vala
+src/config/labels.vala
 src/config/loader.vala
 src/config/reset_manager.vala
 src/config/saver.vala
@@ -11,12 +13,15 @@ src/dialogs/profiles.vala
 src/dialogs/support.vala
 src/system/gpu.vala
 src/system/intel_power_fix.vala
+src/system/mangohud_global.vala
 src/system/test_apps.vala
+src/system/test_runner.vala
 src/ui/color_controls.vala
 src/ui/common.vala
 src/ui/controls_view.vala
 src/ui/extras_view.vala
 src/ui/font_selector.vala
 src/ui/gpu_selector.vala
+src/ui/search.vala
 src/ui/widgets/shortcut_recorder.vala
 src/vkbasalt/other_box.vala
