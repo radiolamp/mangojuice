@@ -185,9 +185,7 @@ public class ExtrasView : GLib.Object {
         custom_command_flow_box.insert (logs_path_box, -1);
 
         var intel_reset_box = new Box (Orientation.HORIZONTAL, 5);
-        if (!app.env.is_flatpak ()) {
-            intel_reset_box.append (state.intel_power_fix_button);
-        }
+        intel_reset_box.append (state.intel_power_fix_button);
         intel_reset_box.append (state.reset_button);
         custom_command_flow_box.insert (intel_reset_box, -1);
 
@@ -594,6 +592,20 @@ public class ExtrasView : GLib.Object {
         }
 
         button.set_visible (true);
+
+        if (app.env.is_flatpak ()) {
+            if (!app.intel_power_fix.has_flatpak_override ()) {
+                button.remove_css_class ("suggested-action");
+                button.set_tooltip_text (_ ("Flatpak permission required"));
+            } else if (status.has_permissions) {
+                button.add_css_class ("suggested-action");
+                button.set_tooltip_text (_ ("Permissions set until reboot"));
+            } else {
+                button.remove_css_class ("suggested-action");
+                button.set_tooltip_text (_ ("Permissions not set"));
+            }
+            return;
+        }
 
         if (status.has_permissions) {
             button.add_css_class ("suggested-action");

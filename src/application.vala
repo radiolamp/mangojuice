@@ -314,7 +314,9 @@ public class Application : Adw.Application {
         reset_manager = new ResetManager (state);
         file_actions.reset_manager = reset_manager;
         controls_view.register_scale_handlers ();
-        mangohud_global.check_status ();
+        if (!env.is_flatpak ()) {
+            mangohud_global.check_status ();
+        }
 
     }
 
