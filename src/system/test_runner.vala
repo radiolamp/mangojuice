@@ -76,6 +76,13 @@ public class TestRunner : GLib.Object {
         if (config_file != null && config_file != "") {
             launcher.setenv ("MANGOHUD_CONFIGFILE", config_file, true);
         }
+        if (env.is_appimage ()) {
+            string? appdir = Environment.get_variable ("APPDIR");
+            if (appdir != null && appdir != "") {
+                launcher.setenv ("VK_ADD_IMPLICIT_LAYER_PATH",
+                                 appdir + "/share/vulkan/implicit_layer.d", true);
+            }
+        }
         return launcher;
     }
 
@@ -88,16 +95,22 @@ public class TestRunner : GLib.Object {
     }
 
     void spawn_vkcube_wayland_wsi (string? config_file) {
-        try {
-            running_test_app = build_launcher (config_file).spawn ("mangohud", "vkcube", "--wsi", "wayland");
-        } catch (Error e) {
-            stderr.printf (_ ("Error when starting the test app: %s\n"), e.message);
-        }
+        spawn_vkcube (config_file, "wayland");
     }
 
     void spawn_vkcube_xcb (string? config_file) {
+        spawn_vkcube (config_file, "xcb");
+    }
+
+    void spawn_vkcube (string? config_file, string wsi) {
         try {
-            running_test_app = build_launcher (config_file).spawn ("mangohud", "vkcube", "--wsi", "xcb");
+            var launcher = build_launcher (config_file);
+            if (env.is_appimage ()) {
+                launcher.setenv ("MANGOHUD", "1", true);
+                running_test_app = launcher.spawn ("vkcube", "--wsi", wsi);
+            } else {
+                running_test_app = launcher.spawn ("mangohud", "vkcube", "--wsi", wsi);
+            }
         } catch (Error e) {
             stderr.printf (_ ("Error when starting the test app: %s\n"), e.message);
         }
@@ -105,7 +118,13 @@ public class TestRunner : GLib.Object {
 
     void spawn_glxgears (string? config_file) {
         try {
-            running_test_app = build_launcher (config_file).spawn ("mangohud", "glxgears");
+            var launcher = build_launcher (config_file);
+            if (env.is_appimage ()) {
+                launcher.setenv ("MANGOHUD", "1", true);
+                running_test_app = launcher.spawn ("glxgears");
+            } else {
+                running_test_app = launcher.spawn ("mangohud", "glxgears");
+            }
         } catch (Error e) {
             stderr.printf (_ ("Error when starting the test app: %s\n"), e.message);
         }
@@ -137,12 +156,14 @@ public class TestRunner : GLib.Object {
 
         stop_test_app ();
         try {
-            var launcher = new SubprocessLauncher (SubprocessFlags.NONE);
+            var launcher = build_launcher (null);
             launcher.setenv ("ENABLE_VKBASALT", "1", true);
-            if (should_use_wayland_wsi ()) {
-                running_test_app = launcher.spawn ("mangohud", "vkcube", "--wsi", "wayland");
+            string wsi = should_use_wayland_wsi () ? "wayland" : "xcb";
+            if (env.is_appimage ()) {
+                launcher.setenv ("MANGOHUD", "1", true);
+                running_test_app = launcher.spawn ("vkcube", "--wsi", wsi);
             } else {
-                running_test_app = launcher.spawn ("mangohud", "vkcube", "--wsi", "xcb");
+                running_test_app = launcher.spawn ("mangohud", "vkcube", "--wsi", wsi);
             }
         } catch (Error e) {
             stderr.printf (_ ("Error when starting the test app: %s\n"), e.message);
