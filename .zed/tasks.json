@@ -1,0 +1,8 @@
+[
+  {
+    "label": "build",
+    "command": "rm -rf ./build/ && meson setup --wipe build --reconfigure && ninja -C build",
+    "use_new_terminal": true,
+    "hide": "on_success",
+  },
+]
